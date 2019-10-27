@@ -13,7 +13,7 @@
 			OutputDebugStringA("\n");\
 		END_MACRO
 
-		#define ASSERT(condition, format, ...) \
+		#define OMEGAASSERT(condition, format, ...) \
 		BEGIN_MACRO\
 			if (!(condition))\
 			{\
