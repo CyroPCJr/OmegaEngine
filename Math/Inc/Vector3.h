@@ -23,6 +23,7 @@ namespace Omega::Math
 		constexpr Vector3 operator+(const Vector3& v) const { return { x + v.x, y + v.y, z + v.z }; }
 		constexpr Vector3 operator-(const Vector3& v) const { return { x - v.x, y - v.y, z - v.z }; }
 		constexpr Vector3 operator*(const Vector3& v) const { return { x * v.x, y * v.y, z * v.z }; }
+		// multiplity vector by value scalar
 		constexpr Vector3 operator*(const float v) const { return { x * v, y * v, z * v }; }
 
 		inline Vector3 operator/(const float v) const
@@ -38,19 +39,36 @@ namespace Omega::Math
 		}
 
 		// homework: add -=, /=
-		Vector3& operator+=(const Vector3& v) { x += v.x;  y += v.y; z += v.z; }
-		Vector3& operator-=(const Vector3& v) { x -= v.x;  y -= v.y; z -= v.z; }
-		Vector3& operator*=(const Vector3& v) { x *= v.x;  y *= v.y; z *= v.z; }
-		Vector3& operator/=(const float v)
+		constexpr Vector3& operator+=(const Vector3& v)
+		{
+			x += v.x; y += v.y; z += v.z;
+			return *this;
+		}
+		
+		constexpr Vector3& operator-=(const Vector3& v)
+		{
+			x -= v.x;  y -= v.y; z -= v.z;
+			return *this;
+		}
+		
+		constexpr Vector3& operator*=(const Vector3& v)
+		{
+			x *= v.x;  y *= v.y; z *= v.z;
+			return *this;
+		}
+		
+		inline Vector3& operator/=(const float v)
 		{
 			OMEGAASSERT(v != 0.0f, "value cannot be zero");
 			x /= v; y /= v; z /= v;
+			return *this;
 		}
 
-		Vector3& operator/=(const Vector3& v)
+		inline Vector3& operator/=(const Vector3& v)
 		{
 			OMEGAASSERT(v.x != 0.0f && v.y != 0.0f && v.z != 0.0f, "Vector values cannot be zero");
-			x / v.x; y / v.y; z / v.z;
+			x /= v.x; y /= v.y; z /= v.z;
+			return *this;
 		}
 
 	};
