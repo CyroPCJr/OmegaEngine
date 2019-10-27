@@ -21,9 +21,15 @@
     <ClInclude Include="Inc\Vector3.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Matrix4.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\EngineMath.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>
