@@ -10,32 +10,31 @@ namespace Omega::Math
 
 	constexpr float Dot(const Vector3& a, const Vector3& b)
 	{
-		return (a.x*b.x) + (a.y*b.y) + (a.z*b.z);
+		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 	}
 
 	constexpr Vector3 Cross(const Vector3& a, const Vector3& b)
 	{
-		const float i = (a.y*b.z) - (a.z*b.y);
-		const float j = (a.z*b.x) - (a.x*b.z);
-		const float k = (a.x*b.y) - (a.y*b.x);
-		return { i,j,k };
+		return { (a.y * b.z) - (a.z * b.y),
+				-((a.z * b.x) - (a.x * b.z)),
+				 (a.x * b.y) - (a.y * b.x) };
 	}
 
 	constexpr float MagnitudeSqr(const Vector3& v)
 	{
-		return (v.x *v.x) + (v.y*v.y) + (v.z*v.z);
+		return (v.x * v.x) + (v.y * v.y) + (v.z * v.z);
 	}
 
 	inline float Magnitude(const Vector3& v)
 	{
-		return sqrt(MagnitudeSqr(v));
+		return sqrtf(MagnitudeSqr(v));
 	}
 
 	inline Vector3 Normalize(const Vector3& v)
 	{
-		return 0.0f;
+		const float lenght = Magnitude(v);
+		return { v / lenght };
 	}
-
 
 	constexpr Matrix4 Transpose(const Matrix4& m)
 	{
