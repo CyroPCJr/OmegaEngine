@@ -233,17 +233,16 @@ namespace Omega::Math
 			return rotZ;
 		}
 
-		static Matrix4 RotationAxis(const Vector3& axis, float radian)
+		static Matrix4 RotationAxis(const Vector3& v, float radian)
 		{
 			const float degree = rad2deg(radian);
 			const float cos = cosf(degree);
 			const float sin = sinf(degree);
 			const float oneMinusCos = (1 - cos);
-			// fix this function
 			Matrix4 rot = Identity;
-			rot._11 = oneMinusCos + cos; rot._12 = oneMinusCos - sin; rot._13 = oneMinusCos + sin;
-			rot._21 = oneMinusCos + sin; rot._22 = oneMinusCos + cos; rot._23 = oneMinusCos - sin;
-			rot._31 = oneMinusCos - sin; rot._32 = oneMinusCos + sin; rot._33 = oneMinusCos + cos;
+			rot._11 = cos * (v.x*v.x) *oneMinusCos;		 rot._12 = (v.x*v.y)*oneMinusCos - (v.z*sin); rot._13 = (v.x*v.z)*oneMinusCos + (v.y*sin);
+			rot._21 = (v.y*v.x)*oneMinusCos + (v.z*sin); rot._22 = (v.y*v.y)*oneMinusCos + cos;       rot._23 = (v.y*v.z)*oneMinusCos - (v.x*sin);
+			rot._31 = (v.z*v.x)*oneMinusCos - (v.y*sin); rot._32 = (v.z*v.y)*oneMinusCos + (v.x*sin); rot._33 = (v.z*v.z)*oneMinusCos + cos;
 			return rot;
 		}
 
@@ -254,7 +253,6 @@ namespace Omega::Math
 			sca._11 *= scale;
 			sca._22 *= scale;
 			sca._33 *= scale;
-			sca._44 *= scale;
 			return sca;
 		}
 	};

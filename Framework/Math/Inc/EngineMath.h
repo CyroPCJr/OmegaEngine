@@ -52,9 +52,9 @@ namespace Omega::Math
 		 _14, _24, _34, _44;
 
 		*/
-	inline Matrix4 Transpose(const Matrix4& m)
+	constexpr Matrix4 Transpose(const Matrix4& m)
 	{
-		Matrix4 result;
+		Matrix4 result{};
 		result._11 = m._11;
 		result._12 = m._21;
 		result._13 = m._31;
@@ -87,7 +87,7 @@ namespace Omega::Math
 		return det;
 	}
 
-	inline Matrix4 Inverse(const Matrix4& m)
+	constexpr Matrix4 Inverse(const Matrix4& m)
 	{
 		const float det = Determinant(m);
 		const float inverseDet = 1.f / det;
@@ -98,14 +98,22 @@ namespace Omega::Math
 		return matrix;
 	}
 
-	constexpr Matrix4 TransformCoord(const Matrix4& v, const Matrix4& m)
+	constexpr Vector3 TransformCoord(const Vector3& v, const Matrix4& m)
 	{
-		return {};
+		Vector3 vec;
+		vec.x = (m._11*v.x) + (m._21*v.y) + (m._31*v.z) + m._41;
+		vec.y = (m._12*v.x) + (m._22*v.y) + (m._32*v.z) + m._42;
+		vec.z = (m._13*v.x) + (m._23*v.y) + (m._33*v.z) + m._43;
+		return vec;
 	}
 
-	constexpr Matrix4 TransformNormal(const Matrix4& v, const Matrix4& m)
+	constexpr Vector3 TransformNormal(const Vector3& v, const Matrix4& m)
 	{
-		return {};
+		Vector3 vec;
+		vec.x = (m._11*v.x) + (m._21*v.y) + (m._31*v.z);
+		vec.y = (m._12*v.x) + (m._22*v.y) + (m._32*v.z);
+		vec.z = (m._13*v.x) + (m._23*v.y) + (m._33*v.z);
+		return vec;
 	}
 
 } // namespace Omega::Math
