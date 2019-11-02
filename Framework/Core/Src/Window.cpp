@@ -32,7 +32,7 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint
 	classInfo.lpfnWndProc = WndProc;
 	classInfo.hInstance = instance;
 	classInfo.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	classInfo.hCursor = LoadIcon(nullptr, IDC_ARROW);
+	classInfo.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	classInfo.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	classInfo.lpszClassName = appName;
 	classInfo.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
@@ -44,15 +44,17 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint
 
 	const int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	const int winWidth = rc.right - rc.left;
-	const int winHeight = rc.bottom - rc.top;
-	const int posX = (screenWidth - winWidth) / 2; // * 0.5 or >> 1 (bit shift)
-	const int posY = (screenHeight - winHeight) / 2;
+	const int winWidth = (rc.right - rc.left);
+	const int winHeight = (rc.bottom - rc.top);
+	const int posX = (screenWidth - winWidth) / 2; // * 0.5 or >> 1 (bitwise operation) for faster calculation
+	const int posY = (screenHeight - winHeight) / 2;  // * 0.5 or >> 1 (bitwise operation) for faster calculation
 
 	// Create Window
 	mWindow = CreateWindowA(appName, appName, WS_OVERLAPPEDWINDOW, posX, posY, winWidth, winHeight, nullptr, nullptr, instance, nullptr);
-	ShowWindow(mWindow, true);
+
+	ShowWindow(mWindow, SW_SHOWNORMAL);
 	SetCursorPos(screenHeight / 2, screenHeight / 2);
+	mActive = (mWindow != nullptr);
 }
 
 void Window::Terminate()
@@ -64,18 +66,16 @@ void Window::Terminate()
 	mInstance = nullptr;
 }
 
-bool Core::Window::ProcessMessage()
+void Core::Window::ProcessMessage()
 {
 	MSG msg{};
-	bool quit{ false };
 	while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
 		if (WM_QUIT == msg.message)
 		{
-			quit = true;
+			mActive = false;
 		}
 	}
-	return quit;
 }
