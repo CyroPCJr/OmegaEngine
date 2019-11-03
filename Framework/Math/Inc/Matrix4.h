@@ -14,6 +14,7 @@ namespace Omega::Math
 		float _41, _42, _43, _44;
 
 		const static Matrix4 Identity;
+		const static Matrix4 Zero;
 
 #pragma region operator overload
 
@@ -166,6 +167,31 @@ namespace Omega::Math
 
 #pragma endregion
 
+		constexpr Matrix4 Adjoint(const Matrix4& m)
+		{
+			return	{
+				(m._22 * ((m._33 * m._44) - (m._43 * m._34)) - m._23 * ((m._32 * m._44) - (m._42 * m._34)) + m._24 * ((m._32 * m._43) - (m._42 * m._33))),
+				-(m._12 * ((m._33 * m._44) - (m._43 * m._34)) - m._13 * ((m._32 * m._44) - (m._42 * m._34)) + m._14 * ((m._32 * m._43) - (m._42 * m._33))),
+				(m._12 * ((m._23 * m._44) - (m._43 * m._24)) - m._13 * ((m._22 * m._44) - (m._42 * m._24)) + m._14 * ((m._22 * m._43) - (m._42 * m._23))),
+				-(m._12 * ((m._23 * m._34) - (m._33 * m._24)) - m._13 * ((m._22 * m._34) - (m._32 * m._24)) + m._14 * ((m._22 * m._33) - (m._32 * m._23))),
+
+				-(m._21 * ((m._33 * m._44) - (m._43 * m._34)) - m._31 * ((m._23 * m._44) - (m._24 * m._43)) + m._41 * ((m._23 * m._34) - (m._24 * m._33))),
+				(m._11 * ((m._33 * m._44) - (m._43 * m._34)) - m._13 * ((m._31 * m._44) - (m._41 * m._34)) + m._14 * ((m._31 * m._43) - (m._41 * m._33))),
+				-(m._11 * ((m._23 * m._44) - (m._43 * m._24)) - m._13 * ((m._21 * m._44) - (m._41 * m._24)) + m._14 * ((m._21 * m._43) - (m._41 * m._23))),
+				(m._11 * ((m._23 * m._34) - (m._33 * m._24)) - m._13 * ((m._21 * m._34) - (m._31 * m._24)) + m._14 * ((m._21 * m._33) - (m._31 * m._23))),
+
+				(m._21 * ((m._32 * m._44) - (m._42 * m._34)) - m._31 * ((m._22 * m._44) - (m._42 * m._24)) + m._41 * ((m._22 * m._34) - (m._32 * m._24))),
+				-(m._11 * ((m._32 * m._44) - (m._42 * m._34)) - m._31 * ((m._12 * m._44) - (m._42 * m._14)) + m._41 * ((m._12 * m._34) - (m._32 * m._14))),
+				(m._11 * ((m._22 * m._44) - (m._42 * m._24)) - m._12 * ((m._21 * m._44) - (m._41 * m._24)) + m._14 * ((m._21 * m._42) - (m._41 * m._22))),
+				-(m._11 * ((m._22 * m._34) - (m._32 * m._24)) - m._21 * ((m._12 * m._34) - (m._32 * m._14)) + m._31 * ((m._12 * m._24) - (m._22 * m._14))),
+
+				-(m._21 * ((m._32 * m._43) - (m._42 * m._33)) - m._31 * ((m._22 * m._43) - (m._42 * m._23)) + m._41 * ((m._22 * m._33) - (m._32 * m._23))),
+				(m._11 * ((m._32 * m._43) - (m._42 * m._33)) - m._12 * ((m._31 * m._43) - (m._41 * m._33)) + m._13 * ((m._31 * m._42) - (m._41 * m._32))),
+				-(m._11 * ((m._22 * m._43) - (m._42 * m._23)) - m._12 * ((m._21 * m._43) - (m._41 * m._23)) + m._13 * ((m._21 * m._42) - (m._41 * m._22))),
+				(m._11 * ((m._22 * m._33) - (m._32 * m._23)) - m._12 * ((m._21 * m._33) - (m._31 * m._23)) + m._13 * ((m._21 * m._32) - (m._31 * m._22)))
+			};
+		}
+
 		constexpr bool isIdentity() const
 		{
 			return (_11 == 1.f) && (_22 == 1.f) && (_33 == 1.f) && (_44 == 1.f) &&
@@ -240,9 +266,9 @@ namespace Omega::Math
 			const float sin = sinf(degree);
 			const float oneMinusCos = (1 - cos);
 			Matrix4 rot = Identity;
-			rot._11 = cos * (v.x*v.x) *oneMinusCos;		 rot._12 = (v.x*v.y)*oneMinusCos - (v.z*sin); rot._13 = (v.x*v.z)*oneMinusCos + (v.y*sin);
-			rot._21 = (v.y*v.x)*oneMinusCos + (v.z*sin); rot._22 = (v.y*v.y)*oneMinusCos + cos;       rot._23 = (v.y*v.z)*oneMinusCos - (v.x*sin);
-			rot._31 = (v.z*v.x)*oneMinusCos - (v.y*sin); rot._32 = (v.z*v.y)*oneMinusCos + (v.x*sin); rot._33 = (v.z*v.z)*oneMinusCos + cos;
+			rot._11 = cos * (v.x * v.x) * oneMinusCos;		 rot._12 = (v.x * v.y) * oneMinusCos - (v.z * sin); rot._13 = (v.x * v.z) * oneMinusCos + (v.y * sin);
+			rot._21 = (v.y * v.x) * oneMinusCos + (v.z * sin); rot._22 = (v.y * v.y) * oneMinusCos + cos;       rot._23 = (v.y * v.z) * oneMinusCos - (v.x * sin);
+			rot._31 = (v.z * v.x) * oneMinusCos - (v.y * sin); rot._32 = (v.z * v.y) * oneMinusCos + (v.x * sin); rot._33 = (v.z * v.z) * oneMinusCos + cos;
 			return rot;
 		}
 
