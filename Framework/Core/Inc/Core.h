@@ -3,3 +3,4 @@
 
 #include "Debug.h"
 #include "Window.h"
+#include "WindowMessageHandler.h"

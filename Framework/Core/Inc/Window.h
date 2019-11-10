@@ -15,10 +15,10 @@ namespace Omega::Core
 		HWND GetWindow() const { return mWindow; }
 		bool IsActive() const { return mActive; }
 	private:
-		HINSTANCE mInstance{ nullptr };
-		HWND mWindow { nullptr};
+		HINSTANCE mInstance = nullptr;
+		HWND mWindow = nullptr;
 		std::string mAppName;
 
-		bool mActive{false};
+		bool mActive = false;
 	};
 }

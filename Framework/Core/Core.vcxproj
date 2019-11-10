@@ -146,6 +146,7 @@
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Core.h" />
     <ClInclude Include="Inc\Debug.h" />
+    <ClInclude Include="Inc\WindowMessageHandler.h" />
     <ClInclude Include="Src\Precompiled.h" />
     <ClInclude Include="Inc\Window.h" />
   </ItemGroup>
@@ -157,6 +158,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Window.cpp" />
+    <ClCompile Include="Src\WindowMessageHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

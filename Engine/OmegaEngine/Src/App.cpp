@@ -2,6 +2,8 @@
 #include "App.h"
 
 using namespace Omega;
+using namespace Omega::Graphics;
+using namespace Omega::Input;
 
 void App::Run(AppConfig appConfig)
 {
@@ -13,7 +15,16 @@ void App::Run(AppConfig appConfig)
 		appConfig.windowWidth,
 		appConfig.windowHeight);
 
+	// Initialize the input system
+	auto handle = mWindow.GetWindow();
+	InputSystem::StaticInitialize(handle);
+	
+	// Initialize the graphics system
+	GraphicsSystem::StaticInitialize(handle, false);
+
 #pragma region Initialize engine system
+	//OnInit
+
 	mRunning = true;
 	while (mRunning && mWindow.IsActive())
 	{
@@ -24,12 +35,17 @@ void App::Run(AppConfig appConfig)
 			break;
 		}
 		// Do game stuffs ....
+		//OnGameLoop
 	}
-
+	// OnCleanUp
 #pragma endregion
 
 #pragma region Terminate engine system
-
+	
+	GraphicsSystem::StaticTerminate();
+	InputSystem::StaticTerminate();
+	mWindow.Terminate();
+	
 #pragma endregion
 
 }

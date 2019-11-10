@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Inc\App.h" />
+    <ClInclude Include="Inc\AppState.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Omega.h" />
     <ClInclude Include="Src\Precompiled.h" />
@@ -164,6 +165,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Core\Core.vcxproj">
       <Project>{d7549f93-d326-4044-a266-885184e97198}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Graphics\Graphics.vcxproj">
+      <Project>{06e6abde-cf57-4616-a611-454834e8c04a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Input\Input.vcxproj">
+      <Project>{02dc0ce5-72df-4f89-8af2-ff9c0e351a1a}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\Math\Math.vcxproj">
       <Project>{98c6eecd-ed38-49ba-879d-00b960d5985d}</Project>
