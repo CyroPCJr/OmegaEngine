@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Colors.h"
+
 namespace Omega::Graphics {
 
 	class GraphicsSystem
@@ -28,7 +30,7 @@ namespace Omega::Graphics {
 		void ResetRenderTarget();
 		void ResetViewport();
 
-		//void SetClearColor(Color clearColor) { mClearColor = clearColor; }
+		void SetClearColor(Color clearColor) { mClearColor = clearColor; }
 		void SetVSync(bool vSync) { mVSync = vSync ? 1 : 0; }
 
 		uint32_t GetBackBufferWidth() const;
@@ -58,7 +60,7 @@ namespace Omega::Graphics {
 		DXGI_SWAP_CHAIN_DESC mSwapChainDesc{};
 		D3D11_VIEWPORT mViewport{};
 
-		//Color mClearColor = Colors::White;
+		Color mClearColor = Colors::White;
 		UINT mVSync = 1;
 	};
 

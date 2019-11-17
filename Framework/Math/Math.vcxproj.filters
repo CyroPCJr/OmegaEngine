@@ -24,6 +24,9 @@
     <ClInclude Include="Inc\Matrix4.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Vector4.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">

@@ -1,9 +1,9 @@
 #pragma once
 
+#include "AppState.h"
+
 namespace Omega
 {
-	// foward declaration
-	class AppState;
 
 	struct AppConfig
 	{
@@ -19,10 +19,12 @@ namespace Omega
 		template<class StateType, class = std::void_t<std::is_base_of<AppState, StateType>>>
 		void AddState(std::string name) 
 		{
+			// move semantic = ownership transfer, i.e pass the temporarily values to new owner. 
+			// could be represent as swallow copy
 			mAppState.emplace(std::move(name), std::make_unique<StateType>());
 		}
 
-		void ChangeState(std::string name);
+		void ChangeState(const std::string& name);
 
 		void Run(AppConfig appConfig);
 		void Quit() { mRunning = false; }

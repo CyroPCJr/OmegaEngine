@@ -2,11 +2,8 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	Omega::AppConfig appConfig;
-	appConfig.appName = "Hello Window";
-	appConfig.windowWidth = 1280;
-	appConfig.windowHeight = 720;
+	Omega::MainApp().AddState<Omega::AppState>("DummyState");
 
-	Omega::MainApp().Run(appConfig);  
+	Omega::MainApp().Run({ "Hello Window", 1280, 720 });
 	return 0;
 }

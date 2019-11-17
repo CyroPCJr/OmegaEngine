@@ -21,6 +21,9 @@
     <ClInclude Include="Src\Precompiled.h">
       <Filter>Src</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Colors.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">

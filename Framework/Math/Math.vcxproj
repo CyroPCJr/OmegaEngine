@@ -156,6 +156,7 @@
     <ClInclude Include="Inc\EngineMath.h" />
     <ClInclude Include="Inc\Vector3.h" />
     <ClInclude Include="Inc\Matrix4.h" />
+    <ClInclude Include="Inc\Vector4.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

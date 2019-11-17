@@ -5,47 +5,81 @@ using namespace Omega;
 using namespace Omega::Graphics;
 using namespace Omega::Input;
 
+void App::ChangeState(const std::string& name)
+{
+	if (auto iter = mAppState.find(name); iter != mAppState.end())
+	{
+		mNextState = iter->second.get();
+	}
+}
+
 void App::Run(AppConfig appConfig)
 {
-	mAppConfig = appConfig;
+	mAppConfig = std::move(appConfig);
+
 	// Setup our application window
 	mWindow.Initialize(
 		GetModuleHandle(NULL),
-		appConfig.appName.c_str(),
-		appConfig.windowWidth,
-		appConfig.windowHeight);
+		mAppConfig.appName.c_str(),
+		mAppConfig.windowWidth,
+		mAppConfig.windowHeight);
 
 	// Initialize the input system
 	auto handle = mWindow.GetWindow();
 	InputSystem::StaticInitialize(handle);
-	
+
 	// Initialize the graphics system
 	GraphicsSystem::StaticInitialize(handle, false);
 
 #pragma region Initialize engine system
 	//OnInit
 
+	// Initialize the starting state
+	mCurrentState = mAppState.begin()->second.get();
+	mCurrentState->Initialize();
+
 	mRunning = true;
 	while (mRunning && mWindow.IsActive())
 	{
 		mWindow.ProcessMessage();
-		if (GetAsyncKeyState(VK_ESCAPE))
+
+		if (mNextState)
+		{
+			mCurrentState->Terminate();
+			mCurrentState = std::exchange(mNextState, nullptr);
+			mCurrentState->Initialize();
+		}
+
+		auto inputSystem = InputSystem::Get();
+		inputSystem->Update();
+
+		if (inputSystem->IsKeyPressed(KeyCode::ESCAPE))
 		{
 			Quit();
-			break;
+			continue;
 		}
-		// Do game stuffs ....
+
+		float deltaTime = 1.0f / 60.0f;
+		mCurrentState->Update(deltaTime);
+
+		auto graphicsSystem = GraphicsSystem::Get();
+		graphicsSystem->BeginRender();
+
+		mCurrentState->Render();
+
+		graphicsSystem->EndRender();
+
 		//OnGameLoop
 	}
 	// OnCleanUp
 #pragma endregion
 
 #pragma region Terminate engine system
-	
+
 	GraphicsSystem::StaticTerminate();
 	InputSystem::StaticTerminate();
 	mWindow.Terminate();
-	
+
 #pragma endregion
 
 }
