@@ -37,7 +37,9 @@ namespace Omega::Graphics {
 		uint32_t GetBackBufferHeight() const;
 
 		//TODO: Remove theses eventually
+		// Video memory manager
 		ID3D11Device* GetDevice() { return mD3DDevice; }
+		//
 		ID3D11DeviceContext* GetContext() { return mImmediateContext; };
 
 	private:
