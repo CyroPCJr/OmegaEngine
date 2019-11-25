@@ -143,12 +143,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="Polygons.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameState.h" />
+    <ClInclude Include="Polygons.h" />
     <ClInclude Include="Shapes.h" />
   </ItemGroup>
   <ItemGroup>

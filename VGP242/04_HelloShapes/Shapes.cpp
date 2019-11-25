@@ -1,19 +1,17 @@
 #include "Shapes.h"
 
 using namespace Omega::Graphics;
-using namespace Omega::Input;
 using namespace Omega::Math;
-using namespace Omega::Graphics;
 
-void HearShape::Initialize()
+void Shapes::Initialize()
 {
 	GraphicsSystem::Get()->SetClearColor(Colors::LightGray);
 	// Normalize vector mean vector lenght turn 1
 	//NDC - Normalize Device Coordinate
 
-	mVertices.emplace_back(Vertex{ Vector3{ 0.0f, 0.5f, 0.0f }, Color{Colors::Aqua} });
-	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, -0.5f, 0.0f }, Color{Colors::Black} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Red} });
+	/*mVertices.emplace_back(Vertex{ Vector3{ 0.0f, 0.3f, 0.0f }, Color{Colors::Aqua} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.3f, -0.3f, 0.0f }, Color{Colors::Green} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.3f, -0.3f, 0.0f }, Color{Colors::Red} });*/
 
 	auto device = GraphicsSystem::Get()->GetDevice();
 
@@ -21,7 +19,7 @@ void HearShape::Initialize()
 
 	D3D11_BUFFER_DESC bufferDesc{};
 	// size in memory bytes
-	bufferDesc.ByteWidth = 3 * sizeof(Vertex);
+	bufferDesc.ByteWidth = static_cast<UINT>(mVertices.size()) * sizeof(Vertex);
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
@@ -41,7 +39,7 @@ void HearShape::Initialize()
 	ID3DBlob* shaderBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
 	hr = D3DCompileFromFile(
-		L"../../Assets/Shaders/DoNothing.fx",
+		L"../../Assets/Shaders/SimpleDoNothing.fx",
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"VS", "vs_5_0",
@@ -76,7 +74,7 @@ void HearShape::Initialize()
 		D3D11_INPUT_PER_VERTEX_DATA,
 		0 });
 
-		// Create input layout
+	// Create input layout
 	hr = device->CreateInputLayout(
 		vertexLayout.data(),
 		(UINT)vertexLayout.size(),
@@ -89,7 +87,7 @@ void HearShape::Initialize()
 	SafeRelease(errorBlob);
 
 	hr = D3DCompileFromFile(
-		L"../../Assets/Shaders/DoNothing.fx",
+		L"../../Assets/Shaders/SimpleDoNothing.fx",
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"PS", "ps_5_0",
@@ -111,19 +109,19 @@ void HearShape::Initialize()
 	SafeRelease(errorBlob);
 }
 
-void HearShape::Terminate()
-{
+void Shapes::Terminate()
+{	
 	SafeRelease(mVertexBuffer);
 	SafeRelease(mVertexShader);
 	SafeRelease(mInputLayout);
 	SafeRelease(mPixelShader);
 }
 
-void HearShape::Update(float deltaTime)
+void Shapes::Update(float deltaTime)
 {
 }
 
-void HearShape::Render()
+void Shapes::Render()
 {
 	auto context = GraphicsSystem::Get()->GetContext();
 	context->IASetInputLayout(mInputLayout);
@@ -136,5 +134,5 @@ void HearShape::Render()
 	context->VSSetShader(mVertexShader, nullptr, 0);
 	context->PSSetShader(mPixelShader, nullptr, 0);
 
-	context->Draw(mVertices.size(), 0);
+	context->Draw(static_cast<UINT>(mVertices.size()), 0);
 }

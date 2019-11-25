@@ -22,3 +22,16 @@ void SafeRelease(T*& ptr)
 		ptr = nullptr;
 	}
 }
+
+//template<class T>
+//void SafeDelete(T& ptr...)
+//{
+//	for (size_t i = 0; i < 4; ++i)
+//	{
+//		if (ptr)
+//		{
+//			ptr->Release();
+//			ptr = nullptr;
+//		}
+//	}
+//}

@@ -137,14 +137,5 @@ void GameState::Render()
 
 	context->Draw(mVertices.size(), 0);
 
-	// Add 04_HelloShapes project
-	// Copy code from 03_HelloTriangle
-	// Update to use DoSomething fx shaders
-	// Update Vertex to have Color as well
-	// Make sure inputLayout is initializes with correct description
-	// Create multiple meshes and vertex buffers
-	// - Draw a heart
-	// - Draw a triforce (Zelda)
-	// - Draw something with more than 5 triangles
-	// Use input check so you can change between them
+	
 }
