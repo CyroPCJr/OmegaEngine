@@ -9,19 +9,19 @@ HeartShape::HeartShape()
 	mVertices.clear();
 	
 	// upper left triangle
-	mVertices.emplace_back(Vertex{ Vector3{ -0.75f,0.3f,0.0f }, Color{Colors::HotPink} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.9f,0.0f }, Color{Colors::HotPink} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.1f,0.3f,0.0f }, Color{Colors::HotPink} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f,0.0f }, Color{Colors::Firebrick} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.0f,0.0f,0.0f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.7f, 0.0f,0.0f }, Color{Colors::Firebrick} });
 
 	//// upper right triangle
-	mVertices.emplace_back(Vertex{ Vector3{ 0.75f, 0.3f,0.0f }, Color{Colors::Red} });
-	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, 0.2f,0.0f }, Color{Colors::Black} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.1f, 0.3f,0.0f }, Color{Colors::Green} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, 0.5f,0.0f }, Color{Colors::Firebrick} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.7f, 0.0f,0.0f }, Color{Colors::Firebrick} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.0f, 0.0f,0.0f }, Color{Colors::Red} });
 
 	//// botton triangle
-	mVertices.emplace_back(Vertex{ Vector3{ 0.75f,0.3f,0.0f }, Color{Colors::HotPink} });
-	mVertices.emplace_back(Vertex{ Vector3{ 0.0f,-0.75f,0.0f }, Color{Colors::HotPink} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.75f,0.3f,0.0f }, Color{Colors::HotPink} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.7f,0.0f,0.0f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.0f,-1.0f,0.0f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.7f,0.f,0.0f }, Color{Colors::Firebrick} });
 }
 
 void HeartShape::Update(float deltaTime)
