@@ -9,7 +9,7 @@ using Color = Omega::Math::Vector4;
 
 namespace Colors
 {
-	// Colors pulled from https://github.com/Microsoft/DirectXMath
+	// Colors pulled from https://github.com/microsoft/DirectXMath/blob/master/Inc/DirectXColors.h
 
 	constexpr Color AliceBlue				{ 0.941176534f, 0.972549081f, 1.000000000f, 1.000000000f };
 	constexpr Color AntiqueWhite			{ 0.980392218f, 0.921568692f, 0.843137324f, 1.000000000f };
