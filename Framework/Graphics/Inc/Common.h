@@ -23,6 +23,7 @@ void SafeRelease(T*& ptr)
 	}
 }
 
+// TOOD: Ask this to Peter Chan
 //template<class T>
 //void SafeDelete(T& ptr...)
 //{
