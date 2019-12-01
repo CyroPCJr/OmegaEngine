@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h" />
+    <ClInclude Include="Inc\Constants.h" />
     <ClInclude Include="Inc\EngineMath.h" />
     <ClInclude Include="Inc\Vector3.h" />
     <ClInclude Include="Inc\Matrix4.h" />

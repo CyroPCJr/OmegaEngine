@@ -24,12 +24,18 @@
     <ClInclude Include="Inc\Colors.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Camera.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\Precompiled.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>
