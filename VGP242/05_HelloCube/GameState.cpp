@@ -17,6 +17,7 @@ void GameState::Initialize()
 	mVertices.emplace_back(Vertex{ Vector3{ 0.0f, 0.5f, 0.0f },   Color{Colors::Aqua} });
 	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, -0.5f, 0.0f }, Color{Colors::Green} });
 	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Red} });
+	//mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Black} });
 
 	auto device = GraphicsSystem::Get()->GetDevice();
 
@@ -33,7 +34,7 @@ void GameState::Initialize()
 
 	D3D11_BUFFER_DESC bufferDesc{};
 	// size in memory bytes
-	bufferDesc.ByteWidth = 3 * sizeof(Vertex);
+	bufferDesc.ByteWidth = static_cast<UINT>(mVertices.size()) * sizeof(Vertex);
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
@@ -79,15 +80,15 @@ void GameState::Initialize()
 		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA,
 		0 });
-	/*vertexLayout.push_back({ "COLOR",
+	vertexLayout.push_back({ "COLOR",
 		0,
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
 		0,
 		D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_PER_VERTEX_DATA,
-		0 });*/
+		0 });
 
-		// Create input layout
+	// Create input layout
 	hr = device->CreateInputLayout(
 		vertexLayout.data(),
 		(UINT)vertexLayout.size(),
@@ -147,6 +148,7 @@ void GameState::Render()
 
 	context->UpdateSubresource(mConstantBuffer, 0, nullptr, &matWVP, 0, 0);
 	context->VSSetConstantBuffers(0, 1, &mConstantBuffer);
+	context->PSSetConstantBuffers(0, 1, &mConstantBuffer);
 
 	context->IASetInputLayout(mInputLayout);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

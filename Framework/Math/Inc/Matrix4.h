@@ -232,19 +232,19 @@ namespace Omega::Math
 			const float cos = cosf(degree);
 			const float sin = sinf(degree);
 			Matrix4 rotX = Identity;
-			rotX._22 = cos; rotX._23 = -sin;
-			rotX._32 = sin; rotX._33 = cos;
+			rotX._22 = cos; rotX._23 = sin;
+			rotX._32 = -sin; rotX._33 = cos;
 			return rotX;
 		}
 
 		static Matrix4 RotationY(float radian)
 		{
-			const float degree = rad2deg(radian);
-			const float cos = cosf(degree);
-			const float sin = sinf(degree);
+			//const float degree = rad2deg(radian);
+			const float cos = cosf(radian);
+			const float sin = sinf(radian);
 			Matrix4 rotY = Identity;
-			rotY._11 = cos; rotY._13 = sin;
-			rotY._31 = -sin; rotY._33 = cos;
+			rotY._11 = cos; rotY._13 = -sin;
+			rotY._31 = sin; rotY._33 = cos;
 			return rotY;
 		}
 
@@ -254,8 +254,8 @@ namespace Omega::Math
 			const float cos = cosf(degree);
 			const float sin = sinf(degree);
 			Matrix4 rotZ = Identity;
-			rotZ._11 = cos; rotZ._12 = -sin;
-			rotZ._21 = sin; rotZ._22 = cos;
+			rotZ._11 = cos; rotZ._12 = sin;
+			rotZ._21 = -sin; rotZ._22 = cos;
 			return rotZ;
 		}
 
