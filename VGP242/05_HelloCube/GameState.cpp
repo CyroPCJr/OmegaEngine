@@ -68,7 +68,7 @@ void GameState::Initialize()
 
 	// Create constant buffer
 	D3D11_BUFFER_DESC constantBuffer{};
-	constantBuffer.ByteWidth = sizeof(Matrix4) * 3;
+	constantBuffer.ByteWidth = sizeof(Matrix4);
 	constantBuffer.Usage = D3D11_USAGE_DEFAULT;
 	constantBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
