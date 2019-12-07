@@ -32,7 +32,7 @@ namespace Omega::Math
 	template<class T>
 	constexpr T Lerp(T a, T b, float t)
 	{
-		return a + (b - a) *t;
+		return a + (b - a) * t;
 	}
 
 	constexpr float Abs(float value)
@@ -53,7 +53,7 @@ namespace Omega::Math
 	constexpr Vector3 Cross(const Vector3& a, const Vector3& b)
 	{
 		return { (a.y * b.z) - (a.z * b.y),
-				-((a.z * b.x) - (a.x * b.z)),
+				((a.z * b.x) - (a.x * b.z)),
 				 (a.x * b.y) - (a.y * b.x) };
 	}
 

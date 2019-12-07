@@ -87,7 +87,7 @@ Math::Matrix4 Camera::GetViewMatrix() const
 		r.x, u.x, l.x, 0.0f,
 		r.y, u.y, l.y, 0.0f,
 		r.z, u.z, l.z, 0.0f,
-		dx, dy, dz, 1.0f
+		dx,  dy,  dz,  1.0f
 	};
 }
 
@@ -96,16 +96,16 @@ Math::Matrix4 Camera::GetPerspectiveMatrix() const
 	const auto width = GraphicsSystem::Get()->GetBackBufferWidth();
 	const auto height = GraphicsSystem::Get()->GetBackBufferHeight();
 	const float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
-	const float h = 1.0f / tan(mFov*0.5f);
+	const float h = 1.0f / tan(mFov * 0.5f);
 	const float w = h / aspectRatio;
 	const float zf = mFarPlane;
 	const float zn = mNearPlane;
 	const float d = zf / (zf - zn);
 	return
 	{
-		w,    0.0f, 0.0f,   0.0f,
-		0.0f, h,    0.0f,   0.0f,
-		0.0f, 0.0f, d,      1.0f,
-		0.0f, 0.0f, -zn * d,0.0f
+		w,    0.0f, 0.0f,    0.0f,
+		0.0f, h,    0.0f,    0.0f,
+		0.0f, 0.0f, d,       1.0f,
+		0.0f, 0.0f, -zn * d, 0.0f
 	};
 }

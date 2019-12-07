@@ -14,16 +14,61 @@ void GameState::Initialize()
 	// Normalize vector mean vector lenght turn 1
 	//NDC - Normalize Device Coordinate
 
-	mVertices.emplace_back(Vertex{ Vector3{ 0.0f, 0.5f, 0.0f },   Color{Colors::Aqua} });
+	// Testing triangle using previous class
+	/*mVertices.emplace_back(Vertex{ Vector3{ 0.0f, 0.5f, 0.0f },   Color{Colors::Aqua} });
 	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, -0.5f, 0.0f }, Color{Colors::Green} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Red} });*/
 	//mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Black} });
+
+	// CUBEEE
+	//Front
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f,-0.5f }, Color{Colors::Blue} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f,-0.5f }, Color{Colors::Blue} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,-0.5f }, Color{Colors::Blue} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,-0.5f }, Color{Colors::Blue} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f,-0.5f }, Color{Colors::Blue} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, -0.5f,-0.5f }, Color{Colors::Blue} });
+	//left
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f, -0.5f }, Color{Colors::Green} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,0.5f }, Color{Colors::Green} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f, 0.5f }, Color{Colors::Green} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f, 0.5f }, Color{Colors::Green} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f, -0.5f }, Color{Colors::Green} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f, -0.5f }, Color{Colors::Green} });
+	//Back
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,0.5f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f,0.5f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f,0.5f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, -0.5f,0.5f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f,0.5f }, Color{Colors::Red} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,0.5f }, Color{Colors::Red} });
+	//Right
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f,-0.5f }, Color{Colors::Pink} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,-0.5f,0.5f }, Color{Colors::Pink} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,-0.5f,-0.5f }, Color{Colors::Pink} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f, -0.5f }, Color{Colors::Pink} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f, 0.5f }, Color{Colors::Pink} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,-0.5f, 0.5f }, Color{Colors::Pink} });
+	//Top
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f,-0.5f }, Color{Colors::Black} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f,-0.5f }, Color{Colors::Black} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f, 0.5f }, Color{Colors::Black} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f,0.5f }, Color{Colors::Black} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,0.5f,0.5f }, Color{Colors::Black} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,0.5f, -0.5f }, Color{Colors::Black} });
+	//Bottom
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,-0.5f }, Color{Colors::Silver} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,-0.5f,-0.5f }, Color{Colors::Silver} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,-0.5f, 0.5f }, Color{Colors::Silver} });
+	mVertices.emplace_back(Vertex{ Vector3{ 0.5f,-0.5f,0.5f }, Color{Colors::Silver} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,0.5f }, Color{Colors::Silver} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f, -0.5f }, Color{Colors::Silver} });
 
 	auto device = GraphicsSystem::Get()->GetDevice();
 
 	// Create constant buffer
 	D3D11_BUFFER_DESC constantBuffer{};
-	constantBuffer.ByteWidth = sizeof(Matrix4);
+	constantBuffer.ByteWidth = sizeof(Matrix4) * 3;
 	constantBuffer.Usage = D3D11_USAGE_DEFAULT;
 	constantBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
@@ -135,6 +180,28 @@ void GameState::Terminate()
 void GameState::Update(float deltaTime)
 {
 	//TODO fill this function using mouse movements
+
+	const float kMoveSpeed = 7.5f;
+	const float kTurnSpeed = 0.5f;
+	auto inputSystem = InputSystem::Get();
+	if (inputSystem->IsKeyDown(KeyCode::W))
+	{
+		mCamera.Walk(kMoveSpeed * deltaTime);
+	}
+	if (inputSystem->IsKeyDown(KeyCode::S))
+	{
+		mCamera.Walk(-kMoveSpeed * deltaTime);
+	}
+	mCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
+	mCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+	if (inputSystem->IsKeyDown(KeyCode::A))
+	{
+		mRotation += deltaTime;
+	}
+	if (inputSystem->IsKeyDown(KeyCode::D))
+	{
+		mRotation -= deltaTime;
+	}
 }
 
 void GameState::Render()
@@ -148,7 +215,6 @@ void GameState::Render()
 
 	context->UpdateSubresource(mConstantBuffer, 0, nullptr, &matWVP, 0, 0);
 	context->VSSetConstantBuffers(0, 1, &mConstantBuffer);
-	context->PSSetConstantBuffers(0, 1, &mConstantBuffer);
 
 	context->IASetInputLayout(mInputLayout);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

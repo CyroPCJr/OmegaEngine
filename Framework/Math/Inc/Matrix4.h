@@ -228,9 +228,9 @@ namespace Omega::Math
 
 		static Matrix4 RotationX(float radian)
 		{
-			const float degree = rad2deg(radian);
-			const float cos = cosf(degree);
-			const float sin = sinf(degree);
+			//const float degree = rad2deg(radian);
+			const float cos = cosf(radian);
+			const float sin = sinf(radian);
 			Matrix4 rotX = Identity;
 			rotX._22 = cos; rotX._23 = sin;
 			rotX._32 = -sin; rotX._33 = cos;
@@ -250,9 +250,9 @@ namespace Omega::Math
 
 		static Matrix4 RotationZ(float radian)
 		{
-			const float degree = rad2deg(radian);
-			const float cos = cosf(degree);
-			const float sin = sinf(degree);
+			//const float degree = rad2deg(radian);
+			const float cos = cosf(radian);
+			const float sin = sinf(radian);
 			Matrix4 rotZ = Identity;
 			rotZ._11 = cos; rotZ._12 = sin;
 			rotZ._21 = -sin; rotZ._22 = cos;
@@ -261,15 +261,27 @@ namespace Omega::Math
 
 		static Matrix4 RotationAxis(const Vector3& v, float radian)
 		{
-			const float degree = rad2deg(radian);
-			const float cos = cosf(degree);
-			const float sin = sinf(degree);
+			//const float degree = rad2deg(radian);
+			const float cos = cosf(radian);
+			const float sin = sinf(radian);
 			const float oneMinusCos = (1 - cos);
 			Matrix4 rot = Identity;
 			rot._11 = cos * (v.x * v.x) * oneMinusCos;		 rot._12 = (v.x * v.y) * oneMinusCos - (v.z * sin); rot._13 = (v.x * v.z) * oneMinusCos + (v.y * sin);
 			rot._21 = (v.y * v.x) * oneMinusCos + (v.z * sin); rot._22 = (v.y * v.y) * oneMinusCos + cos;       rot._23 = (v.y * v.z) * oneMinusCos - (v.x * sin);
 			rot._31 = (v.z * v.x) * oneMinusCos - (v.y * sin); rot._32 = (v.z * v.y) * oneMinusCos + (v.x * sin); rot._33 = (v.z * v.z) * oneMinusCos + cos;
 			return rot;
+
+			/*float cos = cosf(radian);
+			float sin = sinf(radian);
+			float wx = v.x;
+			float wy = v.y;
+			float wz = v.z;
+			return{
+				cos + wx * wx * (1 - cos), wz * sin + wx * wy * (1 - cos),-wy * sin * wx * wz * (1 - cos),0.0f,
+				wx * wy * (1 - cos) - wz * sin, cos + wy * wy * (1 - cos),wx * sin + wy * wz * (1 - cos),0.0f,
+				wy * sin + wx * wz * (1 - cos),-wx * sin + wy * wz * (1 - cos),cos + wz * wz * (1 - cos),0.0f,
+				0.0f,0.0f,0.0f,1.0f
+			};*/
 		}
 
 		static Matrix4 Scaling(float scale)
