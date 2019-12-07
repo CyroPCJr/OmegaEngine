@@ -270,18 +270,6 @@ namespace Omega::Math
 			rot._21 = (v.y * v.x) * oneMinusCos + (v.z * sin); rot._22 = (v.y * v.y) * oneMinusCos + cos;       rot._23 = (v.y * v.z) * oneMinusCos - (v.x * sin);
 			rot._31 = (v.z * v.x) * oneMinusCos - (v.y * sin); rot._32 = (v.z * v.y) * oneMinusCos + (v.x * sin); rot._33 = (v.z * v.z) * oneMinusCos + cos;
 			return rot;
-
-			/*float cos = cosf(radian);
-			float sin = sinf(radian);
-			float wx = v.x;
-			float wy = v.y;
-			float wz = v.z;
-			return{
-				cos + wx * wx * (1 - cos), wz * sin + wx * wy * (1 - cos),-wy * sin * wx * wz * (1 - cos),0.0f,
-				wx * wy * (1 - cos) - wz * sin, cos + wy * wy * (1 - cos),wx * sin + wy * wz * (1 - cos),0.0f,
-				wy * sin + wx * wz * (1 - cos),-wx * sin + wy * wz * (1 - cos),cos + wz * wz * (1 - cos),0.0f,
-				0.0f,0.0f,0.0f,1.0f
-			};*/
 		}
 
 		static Matrix4 Scaling(float scale)
