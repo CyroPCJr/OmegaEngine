@@ -27,6 +27,15 @@
     <ClInclude Include="Inc\Camera.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\VertexShader.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\D3DUtil.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\PixelShader.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -36,6 +45,15 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\Camera.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\VertexShader.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\D3DUtil.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\PixelShader.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

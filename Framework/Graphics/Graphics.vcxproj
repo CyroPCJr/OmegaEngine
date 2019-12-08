@@ -156,12 +156,18 @@
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Graphics.h" />
     <ClInclude Include="Inc\GraphicsSystem.h" />
+    <ClInclude Include="Inc\PixelShader.h" />
+    <ClInclude Include="Inc\VertexShader.h" />
+    <ClInclude Include="Src\D3DUtil.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Camera.cpp" />
+    <ClCompile Include="Src\D3DUtil.cpp" />
     <ClCompile Include="Src\GraphicsSystem.cpp" />
+    <ClCompile Include="Src\PixelShader.cpp" />
     <ClCompile Include="Src\Precompiled.cpp" />
+    <ClCompile Include="Src\VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\External\DirectXTK\DirectXTK_Desktop_2017.vcxproj">

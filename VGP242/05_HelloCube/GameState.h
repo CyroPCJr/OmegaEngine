@@ -15,21 +15,53 @@ private:
 
 	Omega::Graphics::Camera mCamera;
 
+	//TODO FOR HOMEWORK:
+
+	/*
+	Move theses to Graphics Library
+	*/
+
 	struct Vertex
 	{
 		Omega::Math::Vector3 position;
 		Omega::Graphics::Color color;
 	};
+	// Add a Mesh struct
+	struct Mesh
+	{
+		std::vector<Vertex> mVertices;
+		std::vector<uint32_t> mIndices;
+	};
 
-	std::vector<Vertex> mVertices;
+	/*
 
+		Add ConstantBuffer class to wrap this
+		Initialize(int size) /Terminate
+		Bind
+		Set(void* data)
+	*/
+	// move to other class
 	ID3D11Buffer* mConstantBuffer = nullptr;
+
+
+	/*
+	 Add MeshBuffer class for theses pointers
+	 Initialize(Vertex* vertices, int vertexCount, uint32_t* indices, int indexCount)
+	 Terminate()
+	 Draw()
+
+
+	*/
 	ID3D11Buffer* mVertexBuffer = nullptr;
+	ID3D11Buffer* mIndexBuffer = nullptr;
 
-	ID3D11VertexShader* mVertexShader = nullptr;
-	ID3D11InputLayout* mInputLayout = nullptr;
+	/*
+	Just do theses in HelloCube, add few more please
+	*/
 
-	ID3D11PixelShader* mPixelShader = nullptr;
+	Omega::Graphics::VertexShader mVertexShader;
+	Omega::Graphics::PixelShader mPixelShader;
+	//ID3D11PixelShader* mPixelShader = nullptr;
 
 	float mRotation = 0.0f;
 };
