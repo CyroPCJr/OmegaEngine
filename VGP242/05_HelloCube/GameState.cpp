@@ -22,8 +22,8 @@ void GameState::Initialize()
 
 
 	mVertices.emplace_back(Vertex{ Vector3{  0.0f,  0.5f,  0.0f }, Color{Colors::Orange} });
-	mVertices.emplace_back(Vertex{ Vector3{  0.5f,  0.25f,  0.0f }, Color{Colors::Cornsilk} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.25f,  0.0f }, Color{Colors::DarkBlue} });
+	mVertices.emplace_back(Vertex{ Vector3{  0.5f,  0.0f,  0.0f }, Color{Colors::Cornsilk} });
+	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.0f,  0.0f }, Color{Colors::DarkBlue} });
 	mVertices.emplace_back(Vertex{ Vector3{  0.0f, -0.5f, 0.0f }, Color{Colors::SlateBlue} });
 
 	mIndices.push_back(0);
@@ -108,8 +108,7 @@ void GameState::Initialize()
 
 	// Create index buffer
 	bufferDesc.ByteWidth = static_cast<UINT>(mIndices.size()) * sizeof(uint32_t);
-	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 	initData.pSysMem = mIndices.data();
 

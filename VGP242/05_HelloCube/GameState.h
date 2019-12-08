@@ -27,11 +27,10 @@ private:
 		Omega::Graphics::Color color;
 	};
 	// Add a Mesh struct
-	struct Mesh
-	{
-		std::vector<Vertex> mVertices;
-		std::vector<uint32_t> mIndices;
-	};
+
+	std::vector<Vertex> mVertices;
+	std::vector<uint32_t> mIndices;
+
 
 	/*
 
