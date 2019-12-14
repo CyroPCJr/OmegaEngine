@@ -20,19 +20,18 @@ void GameState::Initialize()
 	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Red} });*/
 	//mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Black} });
 
+	mMesh.mVertices.emplace_back(Vertex{ Vector3{  0.0f,  0.5f,  0.0f }, Color{Colors::Orange} });
+	mMesh.mVertices.emplace_back(Vertex{ Vector3{  0.5f,  0.0f,  0.0f }, Color{Colors::Cornsilk} });
+	mMesh.mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.0f,  0.0f }, Color{Colors::DarkBlue} });
+	mMesh.mVertices.emplace_back(Vertex{ Vector3{  0.0f, -0.5f, 0.0f }, Color{Colors::SlateBlue} });
 
-	mVertices.emplace_back(Vertex{ Vector3{  0.0f,  0.5f,  0.0f }, Color{Colors::Orange} });
-	mVertices.emplace_back(Vertex{ Vector3{  0.5f,  0.0f,  0.0f }, Color{Colors::Cornsilk} });
-	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.0f,  0.0f }, Color{Colors::DarkBlue} });
-	mVertices.emplace_back(Vertex{ Vector3{  0.0f, -0.5f, 0.0f }, Color{Colors::SlateBlue} });
+	mMesh.mIndices.push_back(0);
+	mMesh.mIndices.push_back(1);
+	mMesh.mIndices.push_back(2);
 
-	mIndices.push_back(0);
-	mIndices.push_back(1);
-	mIndices.push_back(2);
-
-	mIndices.push_back(1);
-	mIndices.push_back(3);
-	mIndices.push_back(2);
+	mMesh.mIndices.push_back(1);
+	mMesh.mIndices.push_back(3);
+	mMesh.mIndices.push_back(2);
 
 	// CUBEEE
 	//Front
@@ -78,43 +77,49 @@ void GameState::Initialize()
 	//mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f,0.5f }, Color{Colors::Green} });
 	//mVertices.emplace_back(Vertex{ Vector3{ -0.5f,-0.5f, -0.5f }, Color{Colors::Green} });
 
-	auto device = GraphicsSystem::Get()->GetDevice();
+	//auto device = GraphicsSystem::Get()->GetDevice();
 
-	// Create constant buffer
-	D3D11_BUFFER_DESC constantBuffer{};
-	constantBuffer.ByteWidth = sizeof(Matrix4);
-	constantBuffer.Usage = D3D11_USAGE_DEFAULT;
-	constantBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//// Create constant buffer
+	//D3D11_BUFFER_DESC constantBuffer{};
+	//constantBuffer.ByteWidth = sizeof(Matrix4);
+	//constantBuffer.Usage = D3D11_USAGE_DEFAULT;
+	//constantBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
-	HRESULT hr = device->CreateBuffer(&constantBuffer, nullptr, &mConstantBuffer);
-	OMEGAASSERT(SUCCEEDED(hr), "Fail to create constant buffer.");
+	//HRESULT hr = device->CreateBuffer(&constantBuffer, nullptr, &mConstantBuffer);
+	//OMEGAASSERT(SUCCEEDED(hr), "Fail to create constant buffer.");
 
 #pragma region Create vertex buffer
 
-	D3D11_BUFFER_DESC bufferDesc{};
-	// size in memory bytes
-	bufferDesc.ByteWidth = static_cast<UINT>(mVertices.size()) * sizeof(Vertex);
-	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferDesc.CPUAccessFlags = 0;
-	bufferDesc.MiscFlags = 0;
-	bufferDesc.StructureByteStride = 0;
+	//D3D11_BUFFER_DESC bufferDesc{};
+	//// size in memory bytes
+	//bufferDesc.ByteWidth = static_cast<UINT>(mVertices.size()) * sizeof(Vertex);
+	//bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	//bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//bufferDesc.CPUAccessFlags = 0;
+	//bufferDesc.MiscFlags = 0;
+	//bufferDesc.StructureByteStride = 0;
 
-	D3D11_SUBRESOURCE_DATA initData{};
-	initData.pSysMem = mVertices.data();
+	//D3D11_SUBRESOURCE_DATA initData{};
+	//initData.pSysMem = mVertices.data();
 
-	hr = device->CreateBuffer(&bufferDesc, &initData, &mVertexBuffer);
-	OMEGAASSERT(SUCCEEDED(hr), "Fail to create vertex buffer.");
+	//hr = device->CreateBuffer(&bufferDesc, &initData, &mVertexBuffer);
+	//OMEGAASSERT(SUCCEEDED(hr), "Fail to create vertex buffer.");
 
-	// Create index buffer
-	bufferDesc.ByteWidth = static_cast<UINT>(mIndices.size()) * sizeof(uint32_t);
-	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	//// Create index buffer
+	//bufferDesc.ByteWidth = static_cast<UINT>(mIndices.size()) * sizeof(uint32_t);
+	//bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-	initData.pSysMem = mIndices.data();
+	//initData.pSysMem = mIndices.data();
 
-	hr = device->CreateBuffer(&bufferDesc, &initData, &mIndexBuffer);
-	OMEGAASSERT(SUCCEEDED(hr), "Fail to create index buffer.");
+	//hr = device->CreateBuffer(&bufferDesc, &initData, &mIndexBuffer);
+	//OMEGAASSERT(SUCCEEDED(hr), "Fail to create index buffer.");
 #pragma endregion
+	
+	// TODO: #1 testar aqui
+	mConstantBuffer.Initialize(sizeof(Matrix4));
+	
+	mMeshBuffer.Initialize(mMesh.mVertices.data(), static_cast<UINT>(mMesh.mVertices.size()),
+			mMesh.mIndices.data(), static_cast<UINT>(mMesh.mIndices.size()));
 
 	// Compile and create vertex shader
 	mVertexShader.Initialize();
@@ -125,11 +130,11 @@ void GameState::Initialize()
 void GameState::Terminate()
 {
 	mVertexShader.Terminate();
-
-	SafeRelease(mConstantBuffer);
+	/*SafeRelease(mConstantBuffer);
 	SafeRelease(mIndexBuffer);
-	SafeRelease(mVertexBuffer);
-
+	SafeRelease(mVertexBuffer);*/
+	mConstantBuffer.Terminate();
+	mMeshBuffer.Terminate();
 	mPixelShader.Terminate();
 }
 
@@ -162,27 +167,31 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-	auto context = GraphicsSystem::Get()->GetContext();
 
 	auto matWorld = Matrix4::RotationY(mRotation);
 	auto matView = mCamera.GetViewMatrix();
 	auto matProj = mCamera.GetPerspectiveMatrix();
 	auto matWVP = Transpose(matWorld * matView * matProj);
 
-	context->UpdateSubresource(mConstantBuffer, 0, nullptr, &matWVP, 0, 0);
-	context->VSSetConstantBuffers(0, 1, &mConstantBuffer);
+	mConstantBuffer.Set(&matWVP);
+	mConstantBuffer.Bind();
+
+	//auto context = GraphicsSystem::Get()->GetContext();
+	//context->UpdateSubresource(mConstantBuffer, 0, nullptr, &matWVP, 0, 0);
+	//context->VSSetConstantBuffers(0, 1, &mConstantBuffer);
 
 
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	UINT stride = sizeof(Vertex);
+	/*UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	context->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-	context->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	context->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);*/
 
 	mVertexShader.Bind();
 	mPixelShader.Bind();
-
+	//TODO: #2 Testar aqui tb
+	mMeshBuffer.Draw();
 	//context->Draw(mVertices.size(), 0); <-- This is for when we don't have an index buffer
-	context->DrawIndexed((UINT)mIndices.size(), 0, 0);
+	//context->DrawIndexed((UINT)mIndices.size(), 0, 0);
 }

@@ -7,3 +7,5 @@
 #include "GraphicsSystem.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "MeshBuffer.h"
+#include "ConstantBuffer.h"
