@@ -20,15 +20,63 @@ void GameState::Initialize()
 	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Red} });*/
 	//mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f }, Color{Colors::Black} });
 
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{  0.0f,  0.5f,  -0.5f }, Color{Colors::Orange} });
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{  0.5f,  0.0f,  -0.5f }, Color{Colors::Cornsilk} });
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{ -0.5f, -0.0f,  -0.5f }, Color{Colors::DarkBlue} });
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{  0.0f, -0.5f, -0.5f }, Color{Colors::SlateBlue} });
+	/* FINAL HOMEWORK
 
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{  0.0f,  0.5f, 0.5f }, Color{Colors::Orange} });
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{  0.5f,  0.0f, 0.5f }, Color{Colors::Cornsilk} });
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{ -0.5f, -0.0f, 0.5f }, Color{Colors::DarkBlue} });
-	mMesh.vertices.emplace_back(VertexPC{ Vector3{  0.0f, -0.5f, 0.5f }, Color{Colors::SlateBlue} });
+	Update HelloTexturing to use a MeshPX data to draw texture mapped cubes
+	You will need to add Sampler and Texture classes provided
+	You will need to use DoTexturing fx Shaders
+	Andd a new class called Graphics::MeshBuilder with the following functions:
+
+	namespace Omega::Graphics
+	{
+		class MeshBuilder
+		{
+		public:
+			static MeshPX CreatePlanePX();
+			static MeshPX CreateCylinderPX();
+			static MeshPX CreateSpherePX(float radius, int rings = 16, int slices = 16);
+		}
+	}
+
+	 This will alllow you do create a mesh easilly by doing:
+
+	 auto mesh = MeshBuilder::CreateSpherePX(...);
+
+	 Add HelloEarth to test a texture mapped sphere using Earth texture
+
+	 A plane:
+	 for ( int y = 0; y < height; ++y)
+	 {
+		for (int x=0; x< width; ++x)
+		{
+			vertices.push_back({x,y,0.0f}...);
+		}
+	 }
+
+	 A cylinder:
+	 for ( int y = 0; y < height; ++y)
+	 {
+		for (int theta = 0; theta < TwoPi; theta +=...)
+		{
+			vertices.push_back({ sin(theta), cos(theta)}....);
+		}
+	 }
+
+	 A Sphere:
+	 for (int phi = 0; phi < PI; phi+=...)
+	 {
+		for (int theta = 0; theta < TwoPi; theta +=)
+		{
+			vertices.push_back({ sin(theta)*r, cos(theta) *r}....);
+		}
+	 }
+
+	*/
+
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f,  0.5f,  -0.5f }, 0.0f, 1.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.5f,  0.0f,  -0.5f }, 0.0f, 0.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f, -0.0f,  -0.5f }, 1.0f, 1.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f, -0.5f }, 1.0f, 0.0f });
 
 	// Front
 	mMesh.indices.push_back(0);

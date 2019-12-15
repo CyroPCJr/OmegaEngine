@@ -15,7 +15,7 @@ private:
 
 	Omega::Graphics::Camera mCamera;
 
-	Omega::Graphics::MeshPC mMesh;	
+	Omega::Graphics::MeshPX mMesh;	
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::ConstantBuffer mConstantBuffer;
 	Omega::Graphics::VertexShader mVertexShader;
