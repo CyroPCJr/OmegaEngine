@@ -212,9 +212,9 @@ namespace Omega::Math
 		static Matrix4 Translation(const Vector3& d)
 		{
 			Matrix4 translation = Identity;
-			translation._14 = d.x;
-			translation._24 = d.y;
-			translation._34 = d.z;
+			translation._41 = d.x;
+			translation._42 = d.y;
+			translation._43 = d.z;
 			return translation;
 		}
 

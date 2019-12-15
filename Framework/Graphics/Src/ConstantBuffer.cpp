@@ -6,7 +6,7 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-void ConstantBuffer::Initialize(UINT size)
+void ConstantBuffer::Initialize(uint32_t size)
 {
 	auto device = GetDevice();
 
@@ -25,11 +25,10 @@ void ConstantBuffer::Terminate()
 	SafeRelease(mConstantBuffer);
 }
 
-void ConstantBuffer::Bind()
+void ConstantBuffer::Bind() const
 {
 	auto context = GetContext();
 	context->VSSetConstantBuffers(0, 1, &mConstantBuffer);
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void ConstantBuffer::Set(void* data)

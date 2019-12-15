@@ -78,9 +78,9 @@ void GameState::Initialize()
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
-	mVertexShader.Initialize("../Assets/Shaders/DoTransform.fx", VertexPC::Format);
+	mVertexShader.Initialize("../../Assets/Shaders/DoTransform.fx", VertexPC::Format);
 	// Compile and create pixel shader
-	mPixelShader.Initialize("../Assets/Shaders/DoTransform.fx");
+	mPixelShader.Initialize("../../Assets/Shaders/DoTransform.fx");
 }
 
 void GameState::Terminate()

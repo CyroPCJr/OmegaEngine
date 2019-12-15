@@ -23,6 +23,16 @@ void SafeRelease(T*& ptr)
 	}
 }
 
+//template <class T>
+//void SafeDelete(std::vector<T*>& ptr)
+//{
+//	if (ptr)
+//	{
+//		ptr->Release();
+//		ptr = nullptr;
+//	}
+//}
+
 // TOOD: Ask this to Peter Chan
 //template<class T>
 //void SafeDelete(T& ptr...)

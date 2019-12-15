@@ -6,12 +6,14 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-void MeshBuffer::Initialize(Vertex* vertices, UINT vertexCount, uint32_t* indices, UINT indexCount)
+void MeshBuffer::Initialize(const void* vertices, int vertexSize, int vertexCount, const uint32_t* indices, int indexCount)
 {
 	mIndiceCount = indexCount;
-	D3D11_BUFFER_DESC bufferDesc{};
+	mVertexSize = vertexSize;
+
 	// size in memory bytes
-	bufferDesc.ByteWidth = vertexCount * sizeof(Vertex);
+	D3D11_BUFFER_DESC bufferDesc{};
+	bufferDesc.ByteWidth = vertexCount * mVertexSize;
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
@@ -20,7 +22,6 @@ void MeshBuffer::Initialize(Vertex* vertices, UINT vertexCount, uint32_t* indice
 
 	D3D11_SUBRESOURCE_DATA initData{};
 	initData.pSysMem = vertices;
-	//initData.pSysMem = mVertices.data();
 
 	auto device = GetDevice();
 
@@ -43,10 +44,12 @@ void MeshBuffer::Terminate()
 	SafeRelease(mVertexBuffer);
 }
 
-void MeshBuffer::Draw()
+void MeshBuffer::Draw() const
 {
 	auto context = GetContext();
-	UINT stride = sizeof(Vertex);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	UINT stride = mVertexSize;
 	UINT offset = 0;
 	context->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 	context->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);

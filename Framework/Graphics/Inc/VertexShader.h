@@ -5,7 +5,7 @@ namespace Omega::Graphics
 	class VertexShader
 	{
 	public:
-		void Initialize();
+		void Initialize(const std::filesystem::path& filePath, uint32_t vertexFormat);
 		void Terminate();
 
 		void Bind();
