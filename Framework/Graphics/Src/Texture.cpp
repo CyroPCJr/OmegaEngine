@@ -4,12 +4,12 @@
 #include "D3DUtil.h"
 #include <DirectXTK/Inc/WICTextureLoader.h>
 
-using namespace PCEngine::Graphics;
+using namespace Omega::Graphics;
 
 void Texture::Initialize(const std::filesystem::path& fileName)
 {
 	HRESULT hr = DirectX::CreateWICTextureFromFile(GetDevice(), GetContext(), fileName.c_str(), nullptr, &mShaderResourceView);
-	ASSERT(SUCCEEDED(hr), "Failed to load texture %ls.", fileName.c_str());
+	OMEGAASSERT(SUCCEEDED(hr), "Failed to load texture %ls.", fileName.c_str());
 }
 
 void Texture::Terminate()

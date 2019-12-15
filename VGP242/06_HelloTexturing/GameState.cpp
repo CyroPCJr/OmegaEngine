@@ -77,6 +77,10 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.5f,  0.0f,  -0.5f }, 0.0f, 0.0f });
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f, -0.0f,  -0.5f }, 1.0f, 1.0f });
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f, -0.5f }, 1.0f, 0.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f,  0.5f,  -0.5f }, 0.0f, 1.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.5f,  0.0f,  -0.5f }, 0.0f, 0.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f, -0.0f,  -0.5f }, 1.0f, 1.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f, -0.5f }, 1.0f, 0.0f });
 
 	// Front
 	mMesh.indices.push_back(0);
@@ -121,6 +125,11 @@ void GameState::Initialize()
 	mMesh.indices.push_back(5);
 	mMesh.indices.push_back(7);
 
+	
+	mTexture.Initialize("../../Assets/Shaders/DoTexturing.fx");
+
+	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Border);
+
 	mMeshBuffer.Initialize(mMesh);
 
 	mConstantBuffer.Initialize(sizeof(Matrix4));
@@ -137,6 +146,9 @@ void GameState::Terminate()
 	mConstantBuffer.Terminate();
 	mMeshBuffer.Terminate();
 	mPixelShader.Terminate();
+
+	mTexture.Terminate();
+	mSamplers.Terminate();	
 }
 
 void GameState::Update(float deltaTime)

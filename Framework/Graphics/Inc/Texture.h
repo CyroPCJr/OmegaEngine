@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PCEngine::Graphics {
+namespace Omega::Graphics {
 
 class Texture
 {
@@ -14,4 +14,4 @@ private:
 	ID3D11ShaderResourceView* mShaderResourceView = nullptr;
 };
 
-} // namespace PCEngine::Graphics
+} // namespace Omega::Graphics

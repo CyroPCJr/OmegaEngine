@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PCEngine::Graphics {
+namespace Omega::Graphics {
 
 class Sampler
 {
@@ -17,4 +17,4 @@ private:
 	ID3D11SamplerState* mSampler = nullptr;
 };
 
-} // namespace PCEngine::Graphics
+} // namespace Omega::Graphics

@@ -21,5 +21,9 @@ private:
 	Omega::Graphics::VertexShader mVertexShader;
 	Omega::Graphics::PixelShader mPixelShader;
 
+
+	Omega::Graphics::Texture mTexture;
+	Omega::Graphics::Sampler mSamplers;
+
 	float mRotation = 0.0f;
 };

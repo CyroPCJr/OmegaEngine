@@ -11,3 +11,5 @@
 #include "ConstantBuffer.h"
 #include "VertexTypes.h"
 #include "Mesh.h"
+#include "Texture.h"
+#include "Sampler.h"
