@@ -34,7 +34,7 @@ namespace
 		}
 		if (vertexFormat & VE_TextCoord)
 		{
-			vertexLayout.push_back({ "TEXTCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+			vertexLayout.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 		}
 
 		return vertexLayout;
@@ -72,7 +72,7 @@ void VertexShader::Initialize(const std::filesystem::path& filePath, uint32_t ve
 	// Create input layout
 	hr = device->CreateInputLayout(
 		vertexLayout.data(),
-		static_cast<int>(vertexLayout.size()),
+		static_cast<UINT>(vertexLayout.size()),
 		shaderBlob->GetBufferPointer(),
 		shaderBlob->GetBufferSize(),
 		&mInputLayout);

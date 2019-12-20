@@ -7,12 +7,12 @@ using namespace Omega::Math;
 void GameState::Initialize()
 {
 	GraphicsSystem::Get()->SetClearColor(Colors::LightGray);
+	// Normalize vector mean vector lenght turn 1
+	//NDC - Normalize Device Coordinate
 
 	mCamera.SetPosition({ 0.0f, 0.0f, -5.0f });
 	mCamera.SetDirection({ 0.0f, 0.0f, 1.0f });
 
-	// Normalize vector mean vector lenght turn 1
-	//NDC - Normalize Device Coordinate
 
 	// Testing triangle using previous class
 	/*mVertices.emplace_back(Vertex{ Vector3{ 0.0f, 0.5f, 0.0f },   Color{Colors::Aqua} });
@@ -49,23 +49,23 @@ void GameState::Initialize()
 	 {
 		for (int x=0; x< width; ++x)
 		{
-			vertices.push_back({x,y,0.0f}...);
+			vertices.push_back({x,y,0.0f}, static_cast<float>(1/x), static_cast<float>(1/y));
 		}
 	 }
 
-	 A cylinder:
+	 A cylinder: // radius
 	 for ( int y = 0; y < height; ++y)
 	 {
-		for (int theta = 0; theta < TwoPi; theta +=...)
+		for (int theta = 0; theta < TwoPi; theta +=rings / twopi)
 		{
-			vertices.push_back({ sin(theta), cos(theta)}....);
+			vertices.push_back({ sin(theta)*radius, y ,cos(theta)*radius}....);
 		}
 	 }
 
 	 A Sphere:
-	 for (int phi = 0; phi < PI; phi+=...)
+	 for (int phi = 0; phi < PI; phi+= rings/Pi)
 	 {
-		for (int theta = 0; theta < TwoPi; theta +=)
+		for (int theta = 0; theta < TwoPi; theta += silce/twopi)
 		{
 			vertices.push_back({ sin(theta)*r, cos(theta) *r}....);
 		}
@@ -73,71 +73,27 @@ void GameState::Initialize()
 
 	*/
 
-	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f,  0.5f,  -0.5f }, 0.0f, 1.0f });
+	/*mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f,  0.5f,  -0.5f }, 0.0f, 1.0f });
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.5f,  0.0f,  -0.5f }, 0.0f, 0.0f });
-	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f, -0.0f,  -0.5f }, 1.0f, 1.0f });
-	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f, -0.5f }, 1.0f, 0.0f });
-	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f,  0.5f,  -0.5f }, 0.0f, 1.0f });
-	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.5f,  0.0f,  -0.5f }, 0.0f, 0.0f });
-	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f, -0.0f,  -0.5f }, 1.0f, 1.0f });
-	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f, -0.5f }, 1.0f, 0.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f,  0.0f,  -0.5f }, 1.0f, 1.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  -0.5f }, 1.0f, 0.0f });
 
-	// Front
-	mMesh.indices.push_back(0);
-	mMesh.indices.push_back(1);
-	mMesh.indices.push_back(2);
-	mMesh.indices.push_back(1);
-	mMesh.indices.push_back(3);
-	mMesh.indices.push_back(2);
-	// Right
-	mMesh.indices.push_back(4);
-	mMesh.indices.push_back(6);
-	mMesh.indices.push_back(5);
-	mMesh.indices.push_back(6);
-	mMesh.indices.push_back(7);
-	mMesh.indices.push_back(5);
-	// Back
-	mMesh.indices.push_back(4);
-	mMesh.indices.push_back(5);
-	mMesh.indices.push_back(0);
-	mMesh.indices.push_back(0);
-	mMesh.indices.push_back(5);
-	mMesh.indices.push_back(1);
-	// Left
-	mMesh.indices.push_back(2);
-	mMesh.indices.push_back(3);
-	mMesh.indices.push_back(6);
-	mMesh.indices.push_back(6);
-	mMesh.indices.push_back(3);
-	mMesh.indices.push_back(7);
-	// Top
-	mMesh.indices.push_back(4);
-	mMesh.indices.push_back(0);
-	mMesh.indices.push_back(6);
-	mMesh.indices.push_back(6);
-	mMesh.indices.push_back(0);
-	mMesh.indices.push_back(2);
-	// Botton
-	mMesh.indices.push_back(1);
-	mMesh.indices.push_back(5);
-	mMesh.indices.push_back(3);
-	mMesh.indices.push_back(3);
-	mMesh.indices.push_back(5);
-	mMesh.indices.push_back(7);
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f,  0.5f,  0.5f }, 1.0f, 0.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.5f,  0.0f,  0.5f }, 0.0f, 0.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f,  0.0f,  0.5f }, 1.0f, 1.0f });
+	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
 	
-	mTexture.Initialize("../../Assets/Shaders/DoTexturing.fx");
-
-	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Border);
-
-	mMeshBuffer.Initialize(mMesh);
-
+	mMeshBuffer.Initialize(MeshBuilder::CreateCubePX());
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
-	mVertexShader.Initialize("../../Assets/Shaders/DoTransform.fx", VertexPC::Format);
+	mVertexShader.Initialize("../../Assets/Shaders/DoTexturing.fx", VertexPX::Format);
 	// Compile and create pixel shader
-	mPixelShader.Initialize("../../Assets/Shaders/DoTransform.fx");
+	mPixelShader.Initialize("../../Assets/Shaders/DoTexturing.fx");
+
+	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Clamp);
+	mTexture.Initialize("beer.png");
 }
 
 void GameState::Terminate()
@@ -148,7 +104,7 @@ void GameState::Terminate()
 	mPixelShader.Terminate();
 
 	mTexture.Terminate();
-	mSamplers.Terminate();	
+	mSamplers.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -183,16 +139,27 @@ void GameState::Render()
 	auto matView = mCamera.GetViewMatrix();
 	auto matProj = mCamera.GetPerspectiveMatrix();
 
+	mTexture.Bind();
+	mSamplers.Bind();
 	mConstantBuffer.Bind();
 	mVertexShader.Bind();
 	mPixelShader.Bind();
-	for (float i = 0; i < 10; ++i)
-	{
-		auto matTrans = Matrix4::Translation(Vector3(i, i, i));
-		auto matScale = Matrix4::Scaling(i*0.25f);
-		auto matWVP = Transpose(matScale* matTrans * matWorld * matWorld1 * matView * matProj);
 
-		mConstantBuffer.Set(&matWVP);
-		mMeshBuffer.Draw();
-	}
+	/*auto matTrans = Matrix4::Translation(Vector3(i, i, i));
+	auto matScale = Matrix4::Scaling(i*0.25f);*/
+	auto matTrans = Matrix4::Translation(Vector3(0.f, 0.f, 0.f));
+	auto matWVP = Transpose(matWorld * matTrans* matWorld1 * matView * matProj);
+
+	mConstantBuffer.Set(&matWVP);
+	mMeshBuffer.Draw();
+
+	//for (float i = 0; i < 10; ++i)
+	//{
+	//	auto matTrans = Matrix4::Translation(Vector3(i, i, i));
+	//	auto matScale = Matrix4::Scaling(i*0.25f);
+	//	auto matWVP = Transpose(matScale* matTrans * matWorld * matWorld1 * matView * matProj);
+
+	//	mConstantBuffer.Set(&matWVP);
+	//	mMeshBuffer.Draw();
+	//}
 }
