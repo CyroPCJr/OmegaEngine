@@ -232,8 +232,8 @@ namespace Omega::Math
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
 			Matrix4 rotX = Identity;
-			rotX._22 = cos; rotX._23 = -sin;
-			rotX._32 = sin; rotX._33 = cos;
+			rotX._22 = cos; rotX._23 = sin;
+			rotX._32 = -sin; rotX._33 = cos;
 			return rotX;
 		}
 
@@ -243,8 +243,8 @@ namespace Omega::Math
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
 			Matrix4 rotY = Identity;
-			rotY._11 = cos; rotY._13 = sin;
-			rotY._31 = -sin; rotY._33 = cos;
+			rotY._11 = cos; rotY._13 = -sin;
+			rotY._31 = sin; rotY._33 = cos;
 			return rotY;
 		}
 
@@ -254,8 +254,8 @@ namespace Omega::Math
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
 			Matrix4 rotZ = Identity;
-			rotZ._11 = cos; rotZ._12 = -sin;
-			rotZ._21 = sin; rotZ._22 = cos;
+			rotZ._11 = cos; rotZ._12 = sin;
+			rotZ._21 = -sin; rotZ._22 = cos;
 			return rotZ;
 		}
 
@@ -266,9 +266,6 @@ namespace Omega::Math
 			const float sin = sinf(radian);
 			const float oneMinusCos = (1.0f - cos);
 			Matrix4 rot = Identity;
-			/*rot._11 = cos * (v.x * v.x) * oneMinusCos;         rot._12 = (v.x * v.y) * oneMinusCos + (v.z* sin);  rot._13 = (v.x * v.z) * oneMinusCos - (v.y * sin);
-			rot._21 = (v.y * v.x) * oneMinusCos - (v.z * sin); rot._22 = cos + ((v.y * v.y) * oneMinusCos);       rot._23 = (v.y * v.z) * oneMinusCos - (v.x * sin);
-			rot._31 = (v.z * v.x) * oneMinusCos + (v.y * sin); rot._32 = (v.z * v.y) * oneMinusCos - (v.x * sin); rot._33 = cos + ((v.z * v.z) * oneMinusCos);*/
 			rot._11 = cos * (v.x * v.x) * oneMinusCos;		   rot._12 = (v.x * v.y) * oneMinusCos - (v.z * sin);   rot._13 = (v.x * v.z) * oneMinusCos + (v.y * sin);
 			rot._21 = (v.y * v.x) * oneMinusCos + (v.z * sin); rot._22 = (v.y * v.y) * oneMinusCos + cos;         rot._23 = (v.y * v.z) * oneMinusCos - (v.x * sin);
 			rot._31 = (v.z * v.x) * oneMinusCos - (v.y * sin); rot._32 = (v.z * v.y) * oneMinusCos + (v.x * sin); rot._33 = (v.z * v.z) * oneMinusCos + cos;

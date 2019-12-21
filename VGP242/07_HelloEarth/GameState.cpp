@@ -73,7 +73,7 @@ void GameState::Initialize()
 
 	*/
 	
-	mMeshBuffer.Initialize(MeshBuilder::CreatePlanePX());
+	mMeshBuffer.Initialize(MeshBuilder::CreatePlanePX(10,10));
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
@@ -124,7 +124,7 @@ void GameState::Update(float deltaTime)
 void GameState::Render()
 {
 	auto matWorld = Matrix4::RotationY(mRotation);
-	auto matWorld1 = Matrix4::RotationX(mRotation);
+	//auto matWorld1 = Matrix4::RotationX(mRotation);
 	auto matView = mCamera.GetViewMatrix();
 	auto matProj = mCamera.GetPerspectiveMatrix();
 
@@ -137,7 +137,7 @@ void GameState::Render()
 	/*auto matTrans = Matrix4::Translation(Vector3(i, i, i));
 	auto matScale = Matrix4::Scaling(i*0.25f);*/
 	auto matTrans = Matrix4::Translation(Vector3(0.f, 0.f, 0.f));
-	auto matWVP = Transpose(matWorld * matTrans* matWorld1 * matView * matProj);
+	auto matWVP = Transpose(matWorld * matTrans*  matView * matProj);
 
 	mConstantBuffer.Set(&matWVP);
 	mMeshBuffer.Draw();
