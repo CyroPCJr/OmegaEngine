@@ -136,10 +136,10 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 		for (float x = 0.0f; x <= Constants::TwoPi; x += Constants::TwoPi / row)
 		{
 			float u = x / Constants::TwoPi;
-			float v = y / col;
+			float v = 1.0f - (y / col);
 
 			mesh.vertices.emplace_back(
-				VertexPX{ Vector3{ sinf(x) * radius, y ,cosf(x)* radius}, u,v }
+				VertexPX{ Vector3{ cosf(x) * radius, y , sinf(x)* radius}, u,v }
 			);
 		}
 	}
