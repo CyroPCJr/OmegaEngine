@@ -56,7 +56,7 @@ void GameState::Initialize()
 	 A cylinder: // radius
 	 for ( int y = 0; y < height; ++y)
 	 {
-		for (int theta = 0; theta < TwoPi; theta +=rings / twopi)
+		for (int theta = 0; theta <= TwoPi; theta +=twopi / rows)
 		{
 			vertices.push_back({ sin(theta)*radius, y ,cos(theta)*radius}....);
 		}
@@ -72,8 +72,11 @@ void GameState::Initialize()
 	 }
 
 	*/
-	
-	mMeshBuffer.Initialize(MeshBuilder::CreatePlanePX(10,10));
+
+	//mMeshBuffer.Initialize(MeshBuilder::CreateCubePX());
+	//mMeshBuffer.Initialize(MeshBuilder::CreatePlanePX(2, 2));
+	mMeshBuffer.Initialize(MeshBuilder::CreateCylinderPX(2,2,90.f));
+
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
@@ -136,7 +139,7 @@ void GameState::Render()
 
 	/*auto matTrans = Matrix4::Translation(Vector3(i, i, i));
 	auto matScale = Matrix4::Scaling(i*0.25f);*/
-	auto matTrans = Matrix4::Translation(Vector3(0.f, 0.f, 0.f));
+	auto matTrans = Matrix4::Identity;
 	auto matWVP = Transpose(matWorld * matTrans*  matView * matProj);
 
 	mConstantBuffer.Set(&matWVP);
