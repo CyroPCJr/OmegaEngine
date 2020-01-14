@@ -30,6 +30,7 @@ void App::Run(AppConfig appConfig)
 
 	// Initialize the graphics system
 	GraphicsSystem::StaticInitialize(handle, false);
+	DebugUI::StaticInitialize(handle, false, true);
 
 #pragma region Initialize engine system
 	//OnInit
@@ -64,8 +65,11 @@ void App::Run(AppConfig appConfig)
 
 		auto graphicsSystem = GraphicsSystem::Get();
 		graphicsSystem->BeginRender();
-
 		mCurrentState->Render();
+
+		DebugUI::BeginRender();
+		mCurrentState->DebugUI();
+		DebugUI::EndRender();
 
 		graphicsSystem->EndRender();
 
@@ -76,8 +80,9 @@ void App::Run(AppConfig appConfig)
 
 #pragma region Terminate engine system
 
-	GraphicsSystem::StaticTerminate();
+	DebugUI::StaticTerminate();
 	InputSystem::StaticTerminate();
+	GraphicsSystem::StaticTerminate();
 	mWindow.Terminate();
 
 #pragma endregion

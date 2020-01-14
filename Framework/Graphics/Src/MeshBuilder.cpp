@@ -99,9 +99,9 @@ MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
 		}
 	}
 
-	for (int y = 0; y < col - 1; ++y)
+	for (unsigned int y = 0; y < col - 1; ++y)
 	{
-		for (int x = 0; x < row - 1; ++x)
+		for (unsigned int x = 0; x < row - 1; ++x)
 		{
 			/*
 
@@ -148,9 +148,9 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 	}
 
 	const int ringVertexCount = col + 1;
-	for (int y = 0; y + 1 < col; ++y)
+	for (unsigned int y = 0; y + 1 < col; ++y)
 	{
-		for (int x = 0; x < row; ++x)
+		for (unsigned int x = 0; x < row; ++x)
 		{
 			/*
 
@@ -174,11 +174,11 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 
 	// TopCap
 	//TODO: Need to be fixed
-	int baseIndex = mesh.vertices.size();
+	int baseIndex = static_cast<int>(mesh.vertices.size());
 
 	float y = 0.5f * row;
 
-	for (int i = 0; i <= row; ++i) {
+	for (unsigned int i = 0; i <= row; ++i) {
 		float x = radius * cosf(i * TwoPIRow);
 		float z = radius * sinf(i * TwoPIRow);
 
@@ -187,9 +187,9 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 		mesh.vertices.emplace_back(VertexPX{ Vector3{x,y,z}, u,v });
 	}
 	mesh.vertices.emplace_back(VertexPX{ Vector3{0,y,0}, 0.5f,0.5f });
-	float centerIndex = baseIndex - 1;
+	int centerIndex = baseIndex - 1;
 
-	for (int i = 0; i < row - 1; i++) {
+	for (unsigned int i = 0; i < row - 1; i++) {
 		mesh.indices.push_back(centerIndex);
 		mesh.indices.push_back(baseIndex + i + 1);
 		mesh.indices.push_back(baseIndex + i);
@@ -249,7 +249,7 @@ MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices)
 			mesh.indices.push_back(baseIndex + (i + 1) * ringVertexCount + j + 1);
 		}
 	}
-	int southPoleIndex = mesh.vertices.size() - 1;
+	int southPoleIndex = static_cast<int>(mesh.vertices.size()) - 1;
 	baseIndex = southPoleIndex - ringVertexCount;
 	for (int i = 0; i < slices; ++i)
 	{
