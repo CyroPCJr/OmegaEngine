@@ -84,7 +84,7 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
 	
-	mMeshBuffer.Initialize(MeshBuilder::CreateCubePX());
+	mMeshBuffer.Initialize(MeshBuilder::CreateSpherePX(10.0f));
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
@@ -93,7 +93,7 @@ void GameState::Initialize()
 	mPixelShader.Initialize("../../Assets/Shaders/DoTexturing.fx");
 
 	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Clamp);
-	mTexture.Initialize("beer.png");
+	mTexture.Initialize("beer.png");	
 }
 
 void GameState::Terminate()

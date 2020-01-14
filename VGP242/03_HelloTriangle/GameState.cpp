@@ -135,7 +135,7 @@ void GameState::Render()
 	context->VSSetShader(mVertexShader, nullptr, 0);
 	context->PSSetShader(mPixelShader, nullptr, 0);
 
-	context->Draw(mVertices.size(), 0);
+	context->Draw(static_cast<UINT>(mVertices.size()), 0);
 
 	// Add 04_HelloShapes project
 	// Copy code from 03_HelloTriangle
