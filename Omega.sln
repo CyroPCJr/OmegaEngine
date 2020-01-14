@@ -52,30 +52,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_HelloTexturing", "VGP242
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07_HelloEarth", "VGP242\07_HelloEarth\07_HelloEarth.vcxproj", "{A1084111-8652-49DD-A665-EB479D0753D5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImGui", "ImGui", "{E72A5FF8-5A14-4FC3-A2D7-31ACA6EE0BF2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{A11B2DBB-A044-4513-9710-0560A73A3C2F}"
-	ProjectSection(SolutionItems) = preProject
-		External\ImGui\Src\imgui.cpp = External\ImGui\Src\imgui.cpp
-		External\ImGui\Src\imgui_demo.cpp = External\ImGui\Src\imgui_demo.cpp
-		External\ImGui\Src\imgui_draw.cpp = External\ImGui\Src\imgui_draw.cpp
-		External\ImGui\Src\imgui_impl_dx11.cpp = External\ImGui\Src\imgui_impl_dx11.cpp
-		External\ImGui\Src\imgui_impl_win32.cpp = External\ImGui\Src\imgui_impl_win32.cpp
-		External\ImGui\Src\imgui_internal.h = External\ImGui\Src\imgui_internal.h
-		External\ImGui\Src\imgui_widgets.cpp = External\ImGui\Src\imgui_widgets.cpp
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inc", "Inc", "{F59C2949-513E-496C-8A0E-CDC7B633B5AB}"
-	ProjectSection(SolutionItems) = preProject
-		External\ImGui\Inc\imconfig.h = External\ImGui\Inc\imconfig.h
-		External\ImGui\Inc\imgui.h = External\ImGui\Inc\imgui.h
-		External\ImGui\Inc\imgui_impl_dx11.h = External\ImGui\Inc\imgui_impl_dx11.h
-		External\ImGui\Inc\imgui_impl_win32.h = External\ImGui\Inc\imgui_impl_win32.h
-		External\ImGui\Inc\imstb_rectpack.h = External\ImGui\Inc\imstb_rectpack.h
-		External\ImGui\Inc\imstb_textedit.h = External\ImGui\Inc\imstb_textedit.h
-		External\ImGui\Inc\imstb_truetype.h = External\ImGui\Inc\imstb_truetype.h
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -216,9 +192,6 @@ Global
 		{3DF60454-F60F-4B40-86BA-D09374A02070} = {E86A631D-0371-4FD8-BEC7-5ECE7E455D40}
 		{55656B71-C0BC-462C-B682-FA52A91EAA81} = {E86A631D-0371-4FD8-BEC7-5ECE7E455D40}
 		{A1084111-8652-49DD-A665-EB479D0753D5} = {E86A631D-0371-4FD8-BEC7-5ECE7E455D40}
-		{E72A5FF8-5A14-4FC3-A2D7-31ACA6EE0BF2} = {364FA014-9776-4777-B4DE-4244082FA9BF}
-		{A11B2DBB-A044-4513-9710-0560A73A3C2F} = {E72A5FF8-5A14-4FC3-A2D7-31ACA6EE0BF2}
-		{F59C2949-513E-496C-8A0E-CDC7B633B5AB} = {E72A5FF8-5A14-4FC3-A2D7-31ACA6EE0BF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38C2384C-B47D-4FAC-8347-46C3A4049A14}
