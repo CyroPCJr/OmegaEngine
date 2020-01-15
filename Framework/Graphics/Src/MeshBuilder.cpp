@@ -178,7 +178,8 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 
 	float y = 0.5f * row;
 
-	for (unsigned int i = 0; i <= row; ++i) {
+	for (unsigned int i = 0; i <= row; ++i)
+	{
 		float x = radius * cosf(i * TwoPIRow);
 		float z = radius * sinf(i * TwoPIRow);
 
@@ -189,7 +190,8 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 	mesh.vertices.emplace_back(VertexPX{ Vector3{0,y,0}, 0.5f,0.5f });
 	int centerIndex = baseIndex - 1;
 
-	for (unsigned int i = 0; i < row - 1; i++) {
+	for (unsigned int i = 0; i < row - 1; i++)
+	{
 		mesh.indices.push_back(centerIndex);
 		mesh.indices.push_back(baseIndex + i + 1);
 		mesh.indices.push_back(baseIndex + i);
@@ -217,16 +219,18 @@ MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices)
 
 			float theta = y * thetaStep;
 
-			mesh.vertices.emplace_back(VertexPX{
-				Vector3{
-					sinf(phi) * cosf(theta) * radius,
-					cosf(phi) * radius,
-					sinf(phi) * sinf(theta) * radius
-				},
+			mesh.vertices.emplace_back(VertexPX
+				{
+				Vector3
+					{
+						sinf(phi) * cosf(theta) * radius,
+						cosf(phi) * radius,
+						sinf(phi) * sinf(theta) * radius
+					},
 				u, v });
 		}
 	}
-	mesh.vertices.emplace_back(VertexPX{ Vector3{0.0f, -radius,0.0f},0.0f,0.0f });
+	mesh.vertices.emplace_back(VertexPX{ Vector3{0.0f, -radius, 0.0f},0.0f,0.0f });
 
 	for (int i = 1; i <= slices; ++i)
 	{

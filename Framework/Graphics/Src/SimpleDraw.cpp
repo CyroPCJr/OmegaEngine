@@ -16,6 +16,7 @@ namespace
 	class SimpleDrawImpl
 	{
 	public:
+
 		void Initialize(uint32_t maxVertexCount)
 		{
 			mVertexShader.Initialize("../../Assets/Shaders/SimpleDraw.fx", VertexPC::Format);
@@ -26,6 +27,7 @@ namespace
 			mVertexCount = 0;
 			mMaxVertexCount = maxVertexCount;
 		}
+
 		void Terminate()
 		{
 			mVertexShader.Terminate();
@@ -33,6 +35,7 @@ namespace
 			mConstantBuffer.Terminate();
 			mMeshBuffer.Terminate();
 		}
+
 		void AddLine(const Math::Vector3& v0, const Math::Vector3& v1, const Color& color)
 		{
 			if (mVertexCount + 2 < mMaxVertexCount)
@@ -41,6 +44,7 @@ namespace
 				mLineVertices[mVertexCount++] = VertexPC{ v1,color };
 			}
 		}
+
 		void Render(const Camera& camera)
 		{
 			auto matView = camera.GetViewMatrix();
@@ -58,6 +62,7 @@ namespace
 
 			mVertexCount = 0;
 		}
+
 	private:
 		VertexShader mVertexShader;
 		PixelShader mPixelShader;
