@@ -84,7 +84,7 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
 	
-	mMeshBuffer.Initialize(MeshBuilder::CreateSpherePX(10.0f));
+	mMeshBuffer.Initialize(MeshBuilder::CreateCylinderPX(10.0f, 10.0f,10.0f));
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
