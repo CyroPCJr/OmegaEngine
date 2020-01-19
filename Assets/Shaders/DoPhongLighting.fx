@@ -41,7 +41,7 @@ VS_OUTPUT VS(VS_INPUT input)
 	VS_OUTPUT output;
 
 	float3 worldPosition = mul(float4(input.position, 1.0f), World).xyz;
-	float3 worldNormal = mul(input.normal, (float3x3) world));
+	float3 worldNormal = mul(input.normal, (float3x3) World);
 
 	float4 ambient = LightAmbient * MaterialAmbient;
 
@@ -49,7 +49,7 @@ VS_OUTPUT VS(VS_INPUT input)
 	float diffuseIntensity = saturate(dot(dirToLight, input.normal));
 	float4 diffuse = diffuseIntensity * LightDiffuse * MaterialDiffuse;
 
-	float dirToview = normalize(ViewPosition - worldPosition);
+	float dirToView = normalize(ViewPosition - worldPosition);
 	float halfAngle = normalize(dirToLight * dirToView);
 	float specularBase = saturate(dot(halfAngle, worldNormal));
 	float specularIntensity = pow(specularBase, MaterialPower);
