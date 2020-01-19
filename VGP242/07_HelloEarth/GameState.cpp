@@ -133,7 +133,7 @@ void GameState::Render()
 
 	mTexture.Bind();
 	mSamplers.Bind();
-	mConstantBuffer.Bind();
+	mConstantBuffer.BindVS();
 	mVertexShader.Bind();
 	mPixelShader.Bind();
 
@@ -142,7 +142,7 @@ void GameState::Render()
 	auto matTrans = Matrix4::Identity;
 	auto matWVP = Transpose(matWorld * matTrans*  matView * matProj);
 
-	mConstantBuffer.Set(&matWVP);
+	mConstantBuffer.Update(&matWVP);
 	mMeshBuffer.Draw();
 
 	//for (float i = 0; i < 10; ++i)

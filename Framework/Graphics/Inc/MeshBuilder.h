@@ -11,5 +11,7 @@ namespace Omega::Graphics
 		static MeshPX CreatePlanePX(uint32_t row, uint32_t col);
 		static MeshPX CreateCylinderPX(uint32_t row, uint32_t col, float radius);
 		static MeshPX CreateSpherePX(float radius, int rings = 16, int slices = 16);
+
+		static MeshPN  CreateaSpherePN(float radius, int rings = 16, int slices = 16);
 	};
 }

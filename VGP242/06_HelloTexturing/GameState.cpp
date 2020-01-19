@@ -84,7 +84,7 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
 	
-	mMeshBuffer.Initialize(MeshBuilder::CreateCylinderPX(10.0f, 10.0f,10.0f));
+	mMeshBuffer.Initialize(MeshBuilder::CreateSpherePX(10.0f, 10.0f,10.0f));
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
@@ -141,7 +141,7 @@ void GameState::Render()
 
 	mTexture.Bind();
 	mSamplers.Bind();
-	mConstantBuffer.Bind();
+	mConstantBuffer.BindVS();
 	mVertexShader.Bind();
 	mPixelShader.Bind();
 
@@ -150,7 +150,7 @@ void GameState::Render()
 	auto matTrans = Matrix4::Translation(Vector3(0.f, 0.f, 0.f));
 	auto matWVP = Transpose(matWorld * matTrans* matWorld1 * matView * matProj);
 
-	mConstantBuffer.Set(&matWVP);
+	mConstantBuffer.Update(&matWVP);
 	mMeshBuffer.Draw();
 
 	//for (float i = 0; i < 10; ++i)

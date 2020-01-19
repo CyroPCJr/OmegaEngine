@@ -10,6 +10,7 @@ void MeshBuffer::Initialize(const void* vertices, int vertexSize, int vertexCoun
 {
 	mIndiceCount = indexCount;
 	mVertexSize = vertexSize;
+	mVertexCount = vertexCount;
 
 	// size in memory bytes
 	D3D11_BUFFER_DESC bufferDesc{};

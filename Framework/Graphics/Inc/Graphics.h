@@ -15,3 +15,6 @@
 #include "Sampler.h"
 #include "MeshBuilder.h"
 #include "DebugUI.h"
+#include "SimpleDraw.h"
+#include "Material.h"
+#include "LightTypes.h"

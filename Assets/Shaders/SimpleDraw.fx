@@ -1,10 +1,3 @@
-//====================================================================================================
-// SIEGE - Super Innovative Exciting Game Engine
-// Copyright (c) 2019 Peter Chan. All rights reserved.
-//
-// Description: Shader for simple geometry.
-//====================================================================================================
-
 cbuffer ConstantBuffer : register(b0)
 {
 	matrix wvp;
@@ -15,6 +8,7 @@ struct VS_INPUT
 	float3 position : POSITION;
 	float4 color : COLOR;
 };
+
 struct VS_OUTPUT
 {
 	float4 position : SV_POSITION;

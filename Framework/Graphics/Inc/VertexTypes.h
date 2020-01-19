@@ -30,5 +30,13 @@ namespace Omega::Graphics
 		Math::Vector3 position;
 		float u, v;
 	};
+
+	// Position and Normal
+	struct VertexPN
+	{
+		VERTEX_FORMAT(VE_Position | VE_Normal);
+		Math::Vector3 position;
+		Math::Vector3 normal;
+	};
 	
 }

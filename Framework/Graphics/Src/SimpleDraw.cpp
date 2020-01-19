@@ -7,6 +7,7 @@
 #include "ConstantBuffer.h"
 #include "MeshBuffer.h"
 #include "VertexTypes.h"
+#include "GraphicsSystem.h"
 
 using namespace Omega;
 using namespace Omega::Graphics;
@@ -50,8 +51,8 @@ namespace
 			auto matView = camera.GetViewMatrix();
 			auto matProj = camera.GetPerspectiveMatrix();
 			auto transform = Math::Transpose(matView * matProj);
-			mConstantBuffer.Set(&transform);
-			mConstantBuffer.Bind();
+			mConstantBuffer.Update(&transform);
+			mConstantBuffer.BindVS();
 
 			mVertexShader.Bind();
 			mPixelShader.Bind();
@@ -59,6 +60,16 @@ namespace
 			mMeshBuffer.Update(mLineVertices.get(), mVertexCount);
 			mMeshBuffer.SetTopology(MeshBuffer::Topology::Lines);
 			mMeshBuffer.Draw();
+
+			/*auto system = GraphicsSystem::Get();
+			
+			const uint32_t w = system->GetBackBufferWidth();
+			const uint32_t h = system->GetBackBufferHeight();*/
+			//Math::Matrix4 screenToNDC
+			//{
+			//	
+			//};
+
 
 			mVertexCount = 0;
 		}

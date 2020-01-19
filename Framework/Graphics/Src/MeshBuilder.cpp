@@ -209,7 +209,7 @@ MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices)
 	float phiStep = Constants::Pi / slices;
 	float thetaStep = Constants::TwoPi / slices;
 
-	for (int x = 1; x <= rings - 1; ++x)
+	for (int x = 1; x <= rings ; ++x)
 	{
 		float phi = x * phiStep;
 		for (int y = 0; y <= slices; ++y)
@@ -261,6 +261,14 @@ MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices)
 		mesh.indices.push_back(baseIndex + i);
 		mesh.indices.push_back(baseIndex + i + 1);
 	}
+
+	return mesh;
+}
+
+MeshPN Omega::Graphics::MeshBuilder::CreateaSpherePN(float radius, int rings, int slices)
+{
+	MeshPN mesh;
+
 
 	return mesh;
 }

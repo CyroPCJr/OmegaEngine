@@ -123,7 +123,7 @@ void GameState::Render()
 	auto matView = mCamera.GetViewMatrix();
 	auto matProj = mCamera.GetPerspectiveMatrix();
 
-	mConstantBuffer.Bind();
+	mConstantBuffer.BindVS();
 	mVertexShader.Bind();
 	mPixelShader.Bind();
 	for (float i = 0; i < 10; ++i)
@@ -132,7 +132,7 @@ void GameState::Render()
 		auto matScale = Matrix4::Scaling(i*0.25f);
 		auto matWVP = Transpose(matScale* matTrans * matWorld * matWorld1 * matView * matProj);
 
-		mConstantBuffer.Set(&matWVP);
+		mConstantBuffer.Update(&matWVP);
 		mMeshBuffer.Draw();
 	}
 }
