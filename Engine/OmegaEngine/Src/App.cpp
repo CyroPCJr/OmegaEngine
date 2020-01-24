@@ -31,6 +31,7 @@ void App::Run(AppConfig appConfig)
 	// Initialize the graphics system
 	GraphicsSystem::StaticInitialize(handle, false);
 	DebugUI::StaticInitialize(handle, false, true);
+	SimpleDraw::StaticInitialize();
 
 #pragma region Initialize engine system
 	//OnInit
@@ -83,6 +84,7 @@ void App::Run(AppConfig appConfig)
 	DebugUI::StaticTerminate();
 	InputSystem::StaticTerminate();
 	GraphicsSystem::StaticTerminate();
+	SimpleDraw::StaticTerminate();
 	mWindow.Terminate();
 
 #pragma endregion

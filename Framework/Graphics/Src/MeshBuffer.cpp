@@ -30,15 +30,6 @@ void MeshBuffer::Initialize(const void* vertices, int vertexSize, int vertexCoun
 	OMEGAASSERT(SUCCEEDED(hr), "Fail to create vertex buffer.");
 
 	// Create index buffer
-	bufferDesc.ByteWidth = indexCount * sizeof(uint32_t);
-	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-	initData.pSysMem = indices;
-
-	hr = device->CreateBuffer(&bufferDesc, &initData, &mIndexBuffer);
-	OMEGAASSERT(SUCCEEDED(hr), "Fail to create index buffer.");
-
-	// Create index buffer
 	if (indices && indexCount > 0)
 	{
 		bufferDesc.ByteWidth = indexCount * sizeof(uint32_t);
@@ -80,7 +71,7 @@ void MeshBuffer::Terminate()
 void MeshBuffer::Draw() const
 {
 	auto context = GetContext();
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetPrimitiveTopology(mTopology);
 
 	UINT stride = mVertexSize;
 	UINT offset = 0;

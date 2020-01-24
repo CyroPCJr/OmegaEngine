@@ -130,145 +130,163 @@ MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
 
 MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 {
-	const float TwoPIRow = (Constants::TwoPi / row);
+	const float thetaSteps = (Constants::TwoPi / row);
 
 	MeshPX mesh;
 	for (float y = 0.0f; y < col; ++y)
 	{
-		for (float x = 0.0f; x <= Constants::TwoPi; x += Constants::TwoPi / row)
+		for (float theta = 0.0f; theta <= Constants::TwoPi; theta += thetaSteps)
 		{
-			float u = x / Constants::TwoPi;
-			float v = 1.0f - (y / col);
-			float theta = x * TwoPIRow;
+			auto vec = Vector3
+			{
+			-sinf(theta) * radius,
+			static_cast<float>(y),
+			cosf(theta) * radius
+			};
 
 			mesh.vertices.emplace_back(
-				VertexPX{ Vector3{ -sinf(theta) * radius , y , cosf(theta) * radius}, u,v }
+				VertexPX{ vec, theta / Constants::TwoPi,y / col }
 			);
 		}
 	}
 
-	const int ringVertexCount = col + 1;
-	for (unsigned int y = 0; y + 1 < col; ++y)
+	for (uint32_t y = 0; y <= col; ++y)
 	{
-		for (unsigned int x = 0; x < row; ++x)
+		for (uint32_t x = 0; x <= row; ++x)
 		{
-			/*
+			if ((y == 0) && (x != 0) && (x != row - 1))
+			{
+				mesh.indices.push_back(0);
+				mesh.indices.push_back(0 + x + 1);
+				mesh.indices.push_back(0 + x);
+			}
+			if ((y == col - 1) && (x != 0) && (x != row - 1))
+			{
+				mesh.indices.push_back(y*row);
+				mesh.indices.push_back(y*row + x);
+				mesh.indices.push_back(y*row + x + 1);
+			}
 
-			Indices read to anti-clockwise ->
-			2|-------------|3
-			 |			   |
-			 |			   |
-			0|-------------|1
+			mesh.indices.push_back(y*row + x);
+			mesh.indices.push_back((y + 1)*row + x + 1);
+			mesh.indices.push_back((y + 1)*row + x);
 
-			*/
-			// get the corrnes
-			mesh.indices.push_back((y + 1) * ringVertexCount + x);
-			mesh.indices.push_back((y + 1) * ringVertexCount + x + 1);
-			mesh.indices.push_back(y * ringVertexCount + x);
-
-			mesh.indices.push_back((y + 1) * ringVertexCount + x + 1);
-			mesh.indices.push_back(y * ringVertexCount + x + 1);
-			mesh.indices.push_back(y * ringVertexCount + x);
+			mesh.indices.push_back(y*row + x);
+			mesh.indices.push_back(y*row + x + 1);
+			mesh.indices.push_back((y + 1)*row + x + 1);
 		}
-	}
-
-	// TopCap
-	//TODO: Need to be fixed
-	int baseIndex = static_cast<int>(mesh.vertices.size());
-
-	float y = 0.5f * row;
-
-	for (unsigned int i = 0; i <= row; ++i)
-	{
-		float x = radius * cosf(i * TwoPIRow);
-		float z = radius * sinf(i * TwoPIRow);
-
-		float u = x / col + 0.5f;
-		float v = z / col + 0.5f;
-		mesh.vertices.emplace_back(VertexPX{ Vector3{x,y,z}, u,v });
-	}
-	mesh.vertices.emplace_back(VertexPX{ Vector3{0,y,0}, 0.5f,0.5f });
-	int centerIndex = baseIndex - 1;
-
-	for (unsigned int i = 0; i < row - 1; i++)
-	{
-		mesh.indices.push_back(centerIndex);
-		mesh.indices.push_back(baseIndex + i + 1);
-		mesh.indices.push_back(baseIndex + i);
 	}
 
 	return mesh;
 }
 
-MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices)
+MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices, bool isSpace)
 {
 	MeshPX mesh;
-
-	mesh.vertices.emplace_back(VertexPX{ Vector3{0.0f, radius, 0.0f},0.0f,0.0f });
-
-	float phiStep = Constants::Pi / slices;
-	float thetaStep = Constants::TwoPi / slices;
-
-	for (int x = 1; x <= rings ; ++x)
+	const float phiSteps = (Constants::Pi / rings);
+	const float thetaSteps = (Constants::TwoPi / slices);
+	for (float phi = 0; phi < Constants::Pi; phi += phiSteps)
 	{
-		float phi = x * phiStep;
-		for (int y = 0; y <= slices; ++y)
+		for (float theta = 0; theta < Constants::TwoPi; theta += thetaSteps)
 		{
-			float u = x * 1.0f / slices;
-			float v = 1.0f - (y / (rings - 1.0f));
+			auto vec = Vector3
+			{
+				sinf(phi) * cosf(theta) * radius,
+				cosf(phi) * radius,
+				sinf(phi) * sinf(theta) * radius
+			};
 
-			float theta = y * thetaStep;
-
-			mesh.vertices.emplace_back(VertexPX
-				{
-				Vector3
-					{
-						sinf(phi) * cosf(theta) * radius,
-						cosf(phi) * radius,
-						sinf(phi) * sinf(theta) * radius
-					},
-				u, v });
+			mesh.vertices.emplace_back(VertexPX{ vec, theta / Constants::TwoPi, phi / Constants::Pi });
 		}
 	}
-	mesh.vertices.emplace_back(VertexPX{ Vector3{0.0f, -radius, 0.0f},0.0f,0.0f });
 
-	for (int i = 1; i <= slices; ++i)
+	int a, b, c, d;
+	for (int y = 0; y < rings; ++y)
 	{
-		mesh.indices.push_back(0);
-		mesh.indices.push_back(i + 1);
-		mesh.indices.push_back(i);
-	}
-	int baseIndex = 1;
-	int ringVertexCount = slices + 1;
-	for (int i = 0; i < rings - 2; ++i)
-	{
-		for (int j = 0; j < slices; ++j)
+		for (int x = 0; x <= slices; ++x)
 		{
-			mesh.indices.push_back(baseIndex + i * ringVertexCount + j);
-			mesh.indices.push_back(baseIndex + i * ringVertexCount + j + 1);
-			mesh.indices.push_back(baseIndex + (i + 1) * ringVertexCount + j);
+			a = (x % (slices + 1));
+			b = ((x + 1) % (slices + 1));
+			c = (y * (slices + 1));
+			d = ((y + 1) * (slices + 1));
 
-			mesh.indices.push_back(baseIndex + (i + 1) * ringVertexCount + j);
-			mesh.indices.push_back(baseIndex + i * ringVertexCount + j + 1);
-			mesh.indices.push_back(baseIndex + (i + 1) * ringVertexCount + j + 1);
+			if (!isSpace)
+			{
+				mesh.indices.push_back(a + c);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + d);
+
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(a + d);
+			}
+			else
+			{
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + c);
+
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(b + c);
+			}
 		}
-	}
-	int southPoleIndex = static_cast<int>(mesh.vertices.size()) - 1;
-	baseIndex = southPoleIndex - ringVertexCount;
-	for (int i = 0; i < slices; ++i)
-	{
-		mesh.indices.push_back(southPoleIndex);
-		mesh.indices.push_back(baseIndex + i);
-		mesh.indices.push_back(baseIndex + i + 1);
 	}
 
 	return mesh;
 }
 
-MeshPN Omega::Graphics::MeshBuilder::CreateaSpherePN(float radius, int rings, int slices)
+MeshPN MeshBuilder::CreateaSpherePN(float radius, int rings, int slices, bool isSpace)
 {
 	MeshPN mesh;
+	const float phiSteps = (Constants::Pi / rings);
+	const float thetaSteps = (Constants::TwoPi / slices);
+	for (float phi = 0; phi < Constants::Pi; phi += phiSteps)
+	{
+		for (float theta = 0; theta < Constants::TwoPi; theta += thetaSteps)
+		{
+			auto vec = Vector3
+			{
+				sinf(phi) * cosf(theta) * radius,
+				cosf(phi) * radius,
+				sinf(phi) * sinf(theta) * radius
+			};
+			mesh.vertices.emplace_back(VertexPN{ vec, Normalize(vec) });
+		}
+	}
 
+	int a, b, c, d;
+	for (int y = 0; y < rings; ++y)
+	{
+		for (int x = 0; x <= slices; ++x)
+		{
+			a = (x % (slices + 1));
+			b = ((x + 1) % (slices + 1));
+			c = (y * (slices + 1));
+			d = ((y + 1) * (slices + 1));
+
+			if (!isSpace)
+			{
+				mesh.indices.push_back(a + c);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + d);
+
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(a + d);
+			}
+			else
+			{
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + c);
+
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(b + c);
+			}
+		}
+	}
 
 	return mesh;
 }

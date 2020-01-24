@@ -9,7 +9,7 @@ namespace Omega::Graphics
 		void Terminate();
 		void BindVS(uint32_t slot = 0) const;
 		void BindPS(uint32_t slot = 0) const;
-		void Update(const void* data);
+		void Update(void* data);
 	private:
 		ID3D11Buffer* mConstantBuffer = nullptr;
 	};

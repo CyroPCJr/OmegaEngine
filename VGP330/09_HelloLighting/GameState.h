@@ -16,7 +16,8 @@ private:
 
 	Omega::Graphics::MeshPN mMesh;
 	Omega::Graphics::MeshBuffer mMeshBuffer;
-	
+	Omega::Graphics::Sampler mSampler;
+
 	struct TransformData
 	{
 		Omega::Math::Matrix4 world;

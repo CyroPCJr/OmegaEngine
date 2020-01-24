@@ -35,7 +35,7 @@ void ConstantBuffer::BindPS(uint32_t slot) const
 	GetContext()->PSSetConstantBuffers(slot, 1, &mConstantBuffer);
 }
 
-void ConstantBuffer::Update(const void* data)
+void ConstantBuffer::Update(void* data)
 {
 	GetContext()->UpdateSubresource(mConstantBuffer, 0, nullptr, data, 0, 0);
 }
