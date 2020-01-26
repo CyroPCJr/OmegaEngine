@@ -38,5 +38,14 @@ namespace Omega::Graphics
 		Math::Vector3 position;
 		Math::Vector3 normal;
 	};
+
+	struct Vertex
+	{
+		VERTEX_FORMAT(VE_Position | VE_Normal | VE_Tangent | VE_TextCoord);
+		Math::Vector3 position;
+		Math::Vector3 normal;
+		Math::Vector3 tangent;
+		Math::Vector2 textcoord;
+	};
 	
 }

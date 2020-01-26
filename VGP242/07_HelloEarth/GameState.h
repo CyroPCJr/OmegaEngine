@@ -19,7 +19,7 @@ private:
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::ConstantBuffer mConstantBuffer;
 	Omega::Graphics::VertexShader mVertexShader;
-	Omega::Graphics::PixelShader mPixelShader;
+	Omega::Graphics::PixelShader mGouraudShadingPixelShader;
 
 	Omega::Graphics::Texture mTexture;
 	Omega::Graphics::Sampler mSamplers;

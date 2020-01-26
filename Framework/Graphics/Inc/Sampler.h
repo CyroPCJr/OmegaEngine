@@ -11,7 +11,8 @@ public:
 	void Initialize(Filter filter, AddressMode addressMode);
 	void Terminate();
 
-	void Bind() const;
+	void BindPS(uint32_t slot = 0) const;
+	void BindVS(uint32_t slot = 0) const;
 
 private:
 	ID3D11SamplerState* mSampler = nullptr;

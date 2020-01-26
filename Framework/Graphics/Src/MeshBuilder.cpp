@@ -236,7 +236,7 @@ MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices, bool isS
 	return mesh;
 }
 
-MeshPN MeshBuilder::CreateaSpherePN(float radius, int rings, int slices, bool isSpace)
+MeshPN MeshBuilder::CreateSpherePN(float radius, int rings, int slices, bool isSpace)
 {
 	MeshPN mesh;
 	const float phiSteps = (Constants::Pi / rings);
@@ -252,6 +252,62 @@ MeshPN MeshBuilder::CreateaSpherePN(float radius, int rings, int slices, bool is
 				sinf(phi) * sinf(theta) * radius
 			};
 			mesh.vertices.emplace_back(VertexPN{ vec, Normalize(vec) });
+		}
+	}
+
+	int a, b, c, d;
+	for (int y = 0; y < rings; ++y)
+	{
+		for (int x = 0; x <= slices; ++x)
+		{
+			a = (x % (slices + 1));
+			b = ((x + 1) % (slices + 1));
+			c = (y * (slices + 1));
+			d = ((y + 1) * (slices + 1));
+
+			if (!isSpace)
+			{
+				mesh.indices.push_back(a + c);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + d);
+
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(a + d);
+			}
+			else
+			{
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + c);
+
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(b + c);
+			}
+		}
+	}
+
+	return mesh;
+}
+
+Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace)
+{
+	Mesh mesh;
+
+	const float phiSteps = (Constants::Pi / rings);
+	const float thetaSteps = (Constants::TwoPi / slices);
+	for (float phi = 0; phi < Constants::Pi; phi += phiSteps)
+	{
+		for (float theta = 0; theta < Constants::TwoPi; theta += thetaSteps)
+		{
+			auto vec = Vector3
+			{
+				sinf(phi) * cosf(theta) * radius,
+				cosf(phi) * radius,
+				sinf(phi) * sinf(theta) * radius
+			};
+			mesh.vertices.emplace_back(Vertex{ vec, Normalize(vec) });
 		}
 	}
 

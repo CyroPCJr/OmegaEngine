@@ -102,7 +102,7 @@ void GameState::Initialize()
 		shaderBlob->GetBufferPointer(),
 		shaderBlob->GetBufferSize(),
 		nullptr,
-		&mPixelShader);
+		&mGouraudShadingPixelShader);
 	OMEGAASSERT(SUCCEEDED(hr), "Failed to create pixel shader.");
 
 	SafeRelease(shaderBlob);
@@ -114,7 +114,7 @@ void GameState::Terminate()
 	SafeRelease(mVertexBuffer);
 	SafeRelease(mVertexShader);
 	SafeRelease(mInputLayout);
-	SafeRelease(mPixelShader);
+	SafeRelease(mGouraudShadingPixelShader);
 }
 
 void GameState::Update(float deltaTime)
@@ -133,7 +133,7 @@ void GameState::Render()
 	context->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 	
 	context->VSSetShader(mVertexShader, nullptr, 0);
-	context->PSSetShader(mPixelShader, nullptr, 0);
+	context->PSSetShader(mGouraudShadingPixelShader, nullptr, 0);
 
 	context->Draw(static_cast<UINT>(mVertices.size()), 0);
 

@@ -80,7 +80,7 @@ void GameState::Initialize()
 	// Compile and create vertex shader
 	mVertexShader.Initialize("../Assets/Shaders/DoTransform.fx", VertexPC::Format);
 	// Compile and create pixel shader
-	mPixelShader.Initialize("../Assets/Shaders/DoTransform.fx");
+	mGouraudShadingPixelShader.Initialize("../Assets/Shaders/DoTransform.fx");
 }
 
 void GameState::Terminate()
@@ -88,7 +88,7 @@ void GameState::Terminate()
 	mVertexShader.Terminate();
 	mConstantBuffer.Terminate();
 	mMeshBuffer.Terminate();
-	mPixelShader.Terminate();
+	mGouraudShadingPixelShader.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -125,7 +125,7 @@ void GameState::Render()
 
 	mConstantBuffer.BindVS();
 	mVertexShader.Bind();
-	mPixelShader.Bind();
+	mGouraudShadingPixelShader.Bind();
 	for (float i = 0; i < 10; ++i)
 	{
 		auto matTrans = Matrix4::Translation(Vector3(i, i, i));

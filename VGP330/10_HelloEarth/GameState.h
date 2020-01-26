@@ -12,10 +12,15 @@ public:
 	void Render() override;
 	void DebugUI() override;
 private:
+
 	Omega::Graphics::Camera mCamera;
 
-	Omega::Graphics::MeshPN mMesh;
+	Omega::Graphics::Mesh mMesh;
 	Omega::Graphics::MeshBuffer mMeshBuffer;
+	Omega::Graphics::Sampler mSamplers;
+	Omega::Graphics::Texture mDisplacementTexture;
+	Omega::Graphics::Texture mDifuseTexture;
+	Omega::Graphics::Texture mSpecularTexture;
 
 	struct TransformData
 	{
@@ -31,16 +36,13 @@ private:
 
 	TransformBuffer mTransformBuffer;
 	LightBuffer mLightBuffer;
-	MaterialBuffer mMaterialBuffer;	
+	MaterialBuffer mMaterialBuffer;
 
 	Omega::Graphics::DirectionalLight mDirectionalLight;
 	Omega::Graphics::Material mMaterial;
 
-	Omega::Graphics::VertexShader mGouraudShadingVertexShader;
-	Omega::Graphics::PixelShader mGouraudShadingPixelShader;
-
-	Omega::Graphics::VertexShader mPhongShadingVertexShader;
-	Omega::Graphics::PixelShader mPhongShadingPixelShader;
+	Omega::Graphics::VertexShader mVertexShader;
+	Omega::Graphics::PixelShader mPixelShader;
 
 	Omega::Math::Vector3 mRotation = 0.0f;
 };

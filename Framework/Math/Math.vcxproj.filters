@@ -30,6 +30,9 @@
     <ClInclude Include="Inc\Constants.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Vector2.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">

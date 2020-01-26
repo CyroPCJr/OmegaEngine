@@ -90,7 +90,7 @@ void GameState::Initialize()
 	// Compile and create vertex shader
 	mVertexShader.Initialize("../../Assets/Shaders/DoTexturing.fx", VertexPX::Format);
 	// Compile and create pixel shader
-	mPixelShader.Initialize("../../Assets/Shaders/DoTexturing.fx");
+	mGouraudShadingPixelShader.Initialize("../../Assets/Shaders/DoTexturing.fx");
 
 	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Clamp);
 	mTexture.Initialize("beer.png");	
@@ -101,7 +101,7 @@ void GameState::Terminate()
 	mVertexShader.Terminate();
 	mConstantBuffer.Terminate();
 	mMeshBuffer.Terminate();
-	mPixelShader.Terminate();
+	mGouraudShadingPixelShader.Terminate();
 
 	mTexture.Terminate();
 	mSamplers.Terminate();
@@ -139,11 +139,11 @@ void GameState::Render()
 	auto matView = mCamera.GetViewMatrix();
 	auto matProj = mCamera.GetPerspectiveMatrix();
 
-	mTexture.Bind();
-	mSamplers.Bind();
+	mTexture.BindPS();
+	mSamplers.BindPS();
 	mConstantBuffer.BindVS();
 	mVertexShader.Bind();
-	mPixelShader.Bind();
+	mGouraudShadingPixelShader.Bind();
 
 	/*auto matTrans = Matrix4::Translation(Vector3(i, i, i));
 	auto matScale = Matrix4::Scaling(i*0.25f);*/

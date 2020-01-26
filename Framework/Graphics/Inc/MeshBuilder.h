@@ -12,6 +12,9 @@ namespace Omega::Graphics
 		static MeshPX CreateCylinderPX(uint32_t row, uint32_t col, float radius);
 		static MeshPX CreateSpherePX(float radius, int rings , int slices , bool isSpace = false);
 
-		static MeshPN CreateaSpherePN(float radius, int rings = 12, int slices = 36 , bool isSpace = false);
+		static MeshPN CreateSpherePN(float radius, int rings = 12, int slices = 36 , bool isSpace = false);
+
+		static Mesh CreateSphere(float radius, int rings = 12, int slices = 36, bool isSpace = false);
+
 	};
 }

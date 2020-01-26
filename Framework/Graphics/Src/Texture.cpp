@@ -17,7 +17,12 @@ void Texture::Terminate()
 	SafeRelease(mShaderResourceView);
 }
 
-void Texture::Bind() const
+void Texture::BindPS(uint32_t slot) const
 {
-	GetContext()->PSSetShaderResources(0, 1, &mShaderResourceView);
+	GetContext()->PSSetShaderResources(slot, 1, &mShaderResourceView);
+}
+
+void Texture::BindVS(uint32_t slot) const
+{
+	GetContext()->VSSetShaderResources(slot, 1, &mShaderResourceView);
 }

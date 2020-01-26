@@ -1,9 +1,8 @@
-// Description: Simple Shader applies transformation and lighting.
+// Description: Simple shader that applies transform and lighting.
 
 cbuffer TransformBuffer : register(b0)
 {
 	matrix World;
-	// World View Projection
 	matrix WVP;
 	float3 ViewPosition;
 }
@@ -32,7 +31,7 @@ struct VS_INPUT
 
 struct VS_OUTPUT
 {
-	float4 position : SV_POSITION;
+	float4 position : SV_Position;
 	float4 color : COLOR;
 };
 
@@ -41,24 +40,25 @@ VS_OUTPUT VS(VS_INPUT input)
 	VS_OUTPUT output;
 
 	float3 worldPosition = mul(float4(input.position, 1.0f), World).xyz;
-	float3 worldNormal = mul(input.normal, (float3x3) World);
+	float3 worldNormal = mul(input.normal, (float3x3)World);
 
 	float4 ambient = LightAmbient * MaterialAmbient;
 
 	float3 dirToLight = -LightDirection;
-	float diffuseIntensity = saturate(dot(dirToLight, input.normal));
+	float diffuseIntensity = saturate(dot(dirToLight, worldNormal));
 	float4 diffuse = diffuseIntensity * LightDiffuse * MaterialDiffuse;
 
-	float dirToView = normalize(ViewPosition - worldPosition);
-	float halfAngle = normalize(dirToLight * dirToView);
+	float3 dirToView = normalize(ViewPosition - worldPosition);
+	float3 halfAngle = normalize(dirToLight + dirToView);
 	float specularBase = saturate(dot(halfAngle, worldNormal));
 	float specularIntensity = pow(specularBase, MaterialPower);
-	float4 specular = specularIntensity * LightSpecular * MaterialDiffuse;
+	float4 specular = specularIntensity * LightSpecular * MaterialSpecular;
 
 	float4 color = ambient + diffuse + specular;
 
 	output.position = mul(float4(input.position, 1.0f), WVP);
 	output.color = color;
+
 	return output;
 }
 
@@ -68,8 +68,7 @@ VS_OUTPUT VS(VS_INPUT input)
 //	|
 //	V
 
-// Pixels shaders
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-	return input.color; // Yellow
+	return input.color;
 }

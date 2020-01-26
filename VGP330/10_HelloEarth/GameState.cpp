@@ -12,7 +12,7 @@ void GameState::Initialize()
 	mCamera.SetPosition({ 0.0f, 0.0f, -50.0f });
 	mCamera.SetDirection({ 0.0f, 0.0f, 1.0f });
 
-	mMesh = MeshBuilder::CreateSpherePN(10);
+	mMesh = MeshBuilder::CreateSphere(10, 32, 32);
 	mMeshBuffer.Initialize(mMesh);
 
 	mTransformBuffer.Initialize();
@@ -29,19 +29,22 @@ void GameState::Initialize()
 	mMaterial.specular = { 1.0f };
 	mMaterial.power = { 1.0f };
 
-	mGouraudShadingVertexShader.Initialize("../../Assets/Shaders/DoGouraudShading.fx", VertexPN::Format);
-	mGouraudShadingPixelShader.Initialize("../../Assets/Shaders/DoGouraudShading.fx");
+	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
+	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
 
-	mPhongShadingVertexShader.Initialize("../../Assets/Shaders/DoPhongShading.fx", VertexPN::Format);
-	mPhongShadingPixelShader.Initialize("../../Assets/Shaders/DoPhongShading.fx");
+	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
+	std::filesystem::path root = "../../Assets/Textures";
+	mDifuseTexture.Initialize(root / "earth.jpg");
+	mSpecularTexture.Initialize(root / "earth_spec.jpg");
+	mDisplacementTexture.Initialize(root / "earth_bump.jpg");
 }
 
 void GameState::Terminate()
 {
-	mPhongShadingPixelShader.Terminate();
-	mPhongShadingVertexShader.Terminate();
-	mGouraudShadingPixelShader.Terminate();
-	mGouraudShadingVertexShader.Terminate();
+	mDifuseTexture.Terminate();
+	mSamplers.Terminate();
+	mPixelShader.Terminate();
+	mVertexShader.Terminate();
 	mMaterialBuffer.Terminate();
 	mLightBuffer.Terminate();
 	mTransformBuffer.Terminate();
@@ -77,6 +80,7 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
+	
 	auto maTranslation = Matrix4::Translation({ -11.0f , 0.0f, 0.0f });
 
 	auto matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
@@ -86,7 +90,10 @@ void GameState::Render()
 
 	TransformData transformData;
 	transformData.viewPosition = mCamera.GetPosition();
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
 
+	mTransformBuffer.Update(transformData);
 	mTransformBuffer.BindVS(0);
 
 	mLightBuffer.Update(mDirectionalLight);
@@ -97,36 +104,22 @@ void GameState::Render()
 	mMaterialBuffer.BindVS(2);
 	mMaterialBuffer.BindPS(2);
 
-	//---------------- first transformation -------------------
-	//Left Sphere -> Gouraud Shading
-	{
-		transformData.world = Transpose(matWorld);
-		transformData.wvp = Transpose(matWorld * matView * matProj);
-		
-		mTransformBuffer.Update(transformData);
+	mVertexShader.Bind();
+	mPixelShader.Bind();
 
-		mGouraudShadingVertexShader.Bind();
-		mGouraudShadingPixelShader.Bind();
+	mDifuseTexture.BindPS();
+	mDifuseTexture.BindVS();
 
-		mMeshBuffer.Draw();
-	}
+	mSpecularTexture.BindPS(1);
+	mSpecularTexture.BindVS(1);
 
-	//---------------- second transformation -------------------
-	//Right Sphere -> Phong Shading
-	{
-		maTranslation = Matrix4::Translation({ 11.0f , 0.0f, 0.0f });
-		matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
-		matWorld = matRotation * maTranslation;
-		transformData.world = Transpose(matWorld);
-		transformData.wvp = Transpose(matWorld * matView * matProj);
+	mDisplacementTexture.BindPS(2);
+	mDisplacementTexture.BindVS(2);
 
-		mTransformBuffer.Update(transformData);
+	mSamplers.BindPS();
+	mSamplers.BindVS();
 
-		mPhongShadingVertexShader.Bind();
-		mPhongShadingPixelShader.Bind();
-
-		mMeshBuffer.Draw();
-	}	
+	mMeshBuffer.Draw();
 
 	SimpleDraw::Render(mCamera);
 }
