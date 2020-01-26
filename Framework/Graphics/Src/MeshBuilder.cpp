@@ -307,7 +307,14 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 				cosf(phi) * radius,
 				sinf(phi) * sinf(theta) * radius
 			};
-			mesh.vertices.emplace_back(Vertex{ vec, Normalize(vec) });
+			mesh.vertices.emplace_back(
+				Vertex
+				{ vec,
+				  Normalize(vec),
+				  0 ,
+				{theta / Constants::TwoPi, phi / Constants::Pi}
+				}
+			);
 		}
 	}
 

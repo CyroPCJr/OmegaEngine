@@ -12,7 +12,7 @@ void GameState::Initialize()
 	mCamera.SetPosition({ 0.0f, 0.0f, -50.0f });
 	mCamera.SetDirection({ 0.0f, 0.0f, 1.0f });
 
-	mMesh = MeshBuilder::CreateSphere(10, 32, 32);
+	mMesh = MeshBuilder::CreateSphere(10, 64, 64);
 	mMeshBuffer.Initialize(mMesh);
 
 	mTransformBuffer.Initialize();
@@ -41,6 +41,8 @@ void GameState::Initialize()
 
 void GameState::Terminate()
 {
+	mDisplacementTexture.Terminate();
+	mSpecularTexture.Terminate();
 	mDifuseTexture.Terminate();
 	mSamplers.Terminate();
 	mPixelShader.Terminate();
