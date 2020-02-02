@@ -9,6 +9,7 @@ void GameState::Initialize()
 {
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
 
+	mCamera.SetNearPlane(0000.1f);
 	mCamera.SetPosition({ 0.0f, 0.0f, -50.0f });
 	mCamera.SetDirection({ 0.0f, 0.0f, 1.0f });
 
@@ -18,16 +19,16 @@ void GameState::Initialize()
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
 	mMaterialBuffer.Initialize();
-
+	
 	mDirectionalLight.direction = Normalize({ 1.0f, -1.0f ,1.0f });
-	mDirectionalLight.ambient = { 0.3f };
-	mDirectionalLight.diffuse = { 0.7f };
-	mDirectionalLight.specular = { 0.5f };
+	mDirectionalLight.ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+	mDirectionalLight.diffuse = { 0.75f, 0.75f,0.75f,1.0f };
+	mDirectionalLight.specular = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	mMaterial.ambient = { 1.0f };
 	mMaterial.diffuse = { 1.0f };
 	mMaterial.specular = { 1.0f };
-	mMaterial.power = { 1.0f };
+	mMaterial.power =  10.0f ;
 
 	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
@@ -37,10 +38,15 @@ void GameState::Initialize()
 	mDifuseTexture.Initialize(root / "earth.jpg");
 	mSpecularTexture.Initialize(root / "earth_spec.jpg");
 	mDisplacementTexture.Initialize(root / "earth_bump.jpg");
+	mNormalMap.Initialize(root/ "earth_normal.jpg");
+
+	mSettingsDataBuffer.Initialize();
 }
 
 void GameState::Terminate()
 {
+	mSettingsDataBuffer.Terminate();
+	mNormalMap.Terminate();
 	mDisplacementTexture.Terminate();
 	mSpecularTexture.Terminate();
 	mDifuseTexture.Terminate();
@@ -82,22 +88,6 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-	
-	auto maTranslation = Matrix4::Translation({ -11.0f , 0.0f, 0.0f });
-
-	auto matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
-	auto matWorld = matRotation * maTranslation;
-	auto matView = mCamera.GetViewMatrix();
-	auto matProj = mCamera.GetPerspectiveMatrix();
-
-	TransformData transformData;
-	transformData.viewPosition = mCamera.GetPosition();
-	transformData.world = Transpose(matWorld);
-	transformData.wvp = Transpose(matWorld * matView * matProj);
-
-	mTransformBuffer.Update(transformData);
-	mTransformBuffer.BindVS(0);
-
 	mLightBuffer.Update(mDirectionalLight);
 	mLightBuffer.BindVS(1);
 	mLightBuffer.BindPS(1);
@@ -118,8 +108,29 @@ void GameState::Render()
 	mDisplacementTexture.BindPS(2);
 	mDisplacementTexture.BindVS(2);
 
+	mNormalMap.BindPS(3);
+
 	mSamplers.BindPS();
 	mSamplers.BindVS();
+
+	auto maTranslation = Matrix4::Translation({ 0.0f , 0.0f, 0.0f });
+
+	auto matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
+	auto matWorld = matRotation * maTranslation;
+	auto matView = mCamera.GetViewMatrix();
+	auto matProj = mCamera.GetPerspectiveMatrix();
+
+	TransformData transformData;
+	transformData.viewPosition = mCamera.GetPosition();
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+
+	mTransformBuffer.Update(transformData);
+	mTransformBuffer.BindVS();
+
+	mSettingsDataBuffer.Update(mSettingsData);
+	mSettingsDataBuffer.BindPS(3);
+	mSettingsDataBuffer.BindVS(3);
 
 	mMeshBuffer.Draw();
 
@@ -154,9 +165,26 @@ void GameState::DebugUI()
 		ImGui::DragFloat("Power##Material", &mMaterial.power, 1.0f, 1.0f, 100.0f);
 	}
 
+	if (ImGui::CollapsingHeader("Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		static bool specularMap = true;
+		static bool normalMap = true;
+		ImGui::SliderFloat("Displacement", &mSettingsData.bumpMapWeight, 0.0f, 100.0f);
+		if(ImGui::Checkbox("Specular", &specularMap))
+		{
+			mSettingsData.specularWeight = specularMap ? 1.0f : 0.0f;
+		}
+
+		if (ImGui::Checkbox("Normal", &normalMap))
+		{
+			mSettingsData.normalMapWeight = normalMap ? 1.0f : 0.0f;
+		}
+	}
+
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::DragFloat("Rotation##Transform", &mRotation.x, 0.01f);
+		ImGui::DragFloat("Rotation X##Transform", &mRotation.x, 0.01f);
+		ImGui::DragFloat("Rotation Y##Transform", &mRotation.y, 0.01f);
 	}
 
 	ImGui::End();

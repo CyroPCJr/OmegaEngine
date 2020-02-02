@@ -21,6 +21,7 @@ private:
 	Omega::Graphics::Texture mDisplacementTexture;
 	Omega::Graphics::Texture mDifuseTexture;
 	Omega::Graphics::Texture mSpecularTexture;
+	Omega::Graphics::Texture mNormalMap;
 
 	struct TransformData
 	{
@@ -30,14 +31,26 @@ private:
 		float padding;
 	};
 
+	struct SettingsData
+	{
+		float specularWeight = 1.0f;
+		float bumpMapWeight = 1.0f;
+		float normalMapWeight = 1.0f;
+		float padding;
+	};
+
 	using TransformBuffer = Omega::Graphics::TypedConstantBuffer<TransformData>;
 	using LightBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::DirectionalLight>;
 	using MaterialBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::Material>;
+	
+	using SettingsDataBuffer = Omega::Graphics::TypedConstantBuffer<SettingsData>;
 
+	SettingsDataBuffer mSettingsDataBuffer;
 	TransformBuffer mTransformBuffer;
 	LightBuffer mLightBuffer;
 	MaterialBuffer mMaterialBuffer;
 
+	SettingsData mSettingsData;
 	Omega::Graphics::DirectionalLight mDirectionalLight;
 	Omega::Graphics::Material mMaterial;
 

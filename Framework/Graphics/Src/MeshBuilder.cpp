@@ -299,7 +299,7 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 	const float thetaSteps = (Constants::TwoPi / slices);
 	for (float phi = 0; phi < Constants::Pi; phi += phiSteps)
 	{
-		for (float theta = 0; theta < Constants::TwoPi; theta += thetaSteps)
+		for (float theta = 0.0f; theta < Constants::TwoPi; theta += thetaSteps)
 		{
 			auto vec = Vector3
 			{
@@ -307,11 +307,13 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 				cosf(phi) * radius,
 				sinf(phi) * sinf(theta) * radius
 			};
+			const Vector3 normal = Normalize(vec);
+			const Vector3 normalTangent = { -normal.z ,0.0f, normal.x };
 			mesh.vertices.emplace_back(
 				Vertex
 				{ vec,
-				  Normalize(vec),
-				  0 ,
+				  normal, // vector normalized
+				 normalTangent , // tangent
 				{theta / Constants::TwoPi, phi / Constants::Pi}
 				}
 			);
