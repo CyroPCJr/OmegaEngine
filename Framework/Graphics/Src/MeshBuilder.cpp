@@ -307,8 +307,8 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 				cosf(phi) * radius,
 				sinf(phi) * sinf(theta) * radius
 			};
-			const Vector3 normal = Normalize(vec);
-			const Vector3 normalTangent = { -normal.z ,0.0f, normal.x };
+			Vector3 normal = Normalize(vec);
+			Vector3 normalTangent = { -normal.z ,0.0f, normal.x };
 			mesh.vertices.emplace_back(
 				Vertex
 				{ vec,

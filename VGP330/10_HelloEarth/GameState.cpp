@@ -88,6 +88,21 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
+	auto maTranslation = Matrix4::Translation({ 0.0f , 0.0f, 0.0f });
+
+	auto matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
+	auto matWorld = matRotation * maTranslation;
+	auto matView = mCamera.GetViewMatrix();
+	auto matProj = mCamera.GetPerspectiveMatrix();
+
+	TransformData transformData;
+	transformData.viewPosition = mCamera.GetPosition();
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+
+	mTransformBuffer.Update(transformData);
+	mTransformBuffer.BindVS();
+
 	mLightBuffer.Update(mDirectionalLight);
 	mLightBuffer.BindVS(1);
 	mLightBuffer.BindPS(1);
@@ -113,20 +128,6 @@ void GameState::Render()
 	mSamplers.BindPS();
 	mSamplers.BindVS();
 
-	auto maTranslation = Matrix4::Translation({ 0.0f , 0.0f, 0.0f });
-
-	auto matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
-	auto matWorld = matRotation * maTranslation;
-	auto matView = mCamera.GetViewMatrix();
-	auto matProj = mCamera.GetPerspectiveMatrix();
-
-	TransformData transformData;
-	transformData.viewPosition = mCamera.GetPosition();
-	transformData.world = Transpose(matWorld);
-	transformData.wvp = Transpose(matWorld * matView * matProj);
-
-	mTransformBuffer.Update(transformData);
-	mTransformBuffer.BindVS();
 
 	mSettingsDataBuffer.Update(mSettingsData);
 	mSettingsDataBuffer.BindPS(3);
@@ -183,8 +184,8 @@ void GameState::DebugUI()
 
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::DragFloat("Rotation X##Transform", &mRotation.x, 0.01f);
-		ImGui::DragFloat("Rotation Y##Transform", &mRotation.y, 0.01f);
+		ImGui::DragFloat("Rotation X##Transform", &mRotation.y, 0.01f);
+		ImGui::DragFloat("Rotation Y##Transform", &mRotation.x, 0.01f);
 	}
 
 	ImGui::End();

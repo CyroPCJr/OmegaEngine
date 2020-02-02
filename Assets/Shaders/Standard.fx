@@ -96,7 +96,7 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	if (normalMapWeight != 0.0f)
 	{
 		float3x3 TBNW = { worldTangent, worldBinormal, worldNormal };
-		float4 normalColor = textureMap.Sample(textureSampler, input.texCoord);
+		float4 normalColor = normalMap.Sample(textureSampler, input.texCoord);
 		float3 normalSampled = (normalColor.xyz * 2.0f) - 1.0f;
 		normal = mul(normalSampled, TBNW);
 	}
@@ -114,7 +114,6 @@ float4 PS(VS_OUTPUT input) : SV_Target
 	float4 textureColor = textureMap.Sample(textureSampler, input.texCoord);
 	float specularFactor = specularMap.Sample(textureSampler, input.texCoord).r;
 
-	float4 color = (ambient + diffuse) * textureColor + specular * 
-		(specularMapWeight != 0.0f ? specularFactor : 1.0f);
+	float4 color = (ambient + diffuse) * textureColor + specular * (specularMapWeight != 0.0f ? specularFactor : 1.0f);
 	return color;
 }
