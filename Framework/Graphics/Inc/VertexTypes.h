@@ -47,5 +47,5 @@ namespace Omega::Graphics
 		Math::Vector3 tangent;
 		Math::Vector2 textcoord;
 	};
-	
+
 }

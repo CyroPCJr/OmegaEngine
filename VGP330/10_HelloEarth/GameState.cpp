@@ -16,6 +16,9 @@ void GameState::Initialize()
 	mMesh = MeshBuilder::CreateSphere(10, 64, 64);
 	mMeshBuffer.Initialize(mMesh);
 
+	mMesh = MeshBuilder::CreateSphere(20,64,64);
+	mMeshClouds.Initialize(mMesh);
+
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
 	mMaterialBuffer.Initialize();
@@ -32,6 +35,14 @@ void GameState::Initialize()
 
 	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
+	
+#pragma region Alpha Blending Initialize
+
+	mVSAlphaBlending.Initialize("../../Assets/Shaders/AlphaBlending.fx", VertexPX::Format);
+	mPSAlphaBlending.Initialize("../../Assets/Shaders/AlphaBlending.fx");
+	mAlphaBlending.Initialize();
+
+#pragma endregion
 
 	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
 	std::filesystem::path root = "../../Assets/Textures";
@@ -39,6 +50,8 @@ void GameState::Initialize()
 	mSpecularTexture.Initialize(root / "earth_spec.jpg");
 	mDisplacementTexture.Initialize(root / "earth_bump.jpg");
 	mNormalMap.Initialize(root/ "earth_normal.jpg");
+	
+	mClouds.Initialize(root / "earth_clouds.jpg");
 
 	mSettingsDataBuffer.Initialize();
 }
@@ -46,10 +59,20 @@ void GameState::Initialize()
 void GameState::Terminate()
 {
 	mSettingsDataBuffer.Terminate();
+	mClouds.Terminate();
 	mNormalMap.Terminate();
 	mDisplacementTexture.Terminate();
 	mSpecularTexture.Terminate();
 	mDifuseTexture.Terminate();
+
+#pragma region Alpha Blending terminate
+
+	mVSAlphaBlending.Terminate();
+	mPSAlphaBlending.Terminate();
+	mAlphaBlending.Terminate();
+
+#pragma endregion
+
 	mSamplers.Terminate();
 	mPixelShader.Terminate();
 	mVertexShader.Terminate();
@@ -57,6 +80,7 @@ void GameState::Terminate()
 	mLightBuffer.Terminate();
 	mTransformBuffer.Terminate();
 	mMeshBuffer.Terminate();
+	mMeshClouds.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -114,6 +138,8 @@ void GameState::Render()
 	mVertexShader.Bind();
 	mPixelShader.Bind();
 
+	mAlphaBlending.Bind();
+
 	mDifuseTexture.BindPS();
 	mDifuseTexture.BindVS();
 
@@ -128,11 +154,11 @@ void GameState::Render()
 	mSamplers.BindPS();
 	mSamplers.BindVS();
 
-
 	mSettingsDataBuffer.Update(mSettingsData);
 	mSettingsDataBuffer.BindPS(3);
 	mSettingsDataBuffer.BindVS(3);
 
+	mMeshClouds.Draw();
 	mMeshBuffer.Draw();
 
 	SimpleDraw::Render(mCamera);

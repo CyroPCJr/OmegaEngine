@@ -16,12 +16,15 @@ private:
 	Omega::Graphics::Camera mCamera;
 
 	Omega::Graphics::Mesh mMesh;
+	
 	Omega::Graphics::MeshBuffer mMeshBuffer;
+	Omega::Graphics::MeshBuffer mMeshClouds;
 	Omega::Graphics::Sampler mSamplers;
 	Omega::Graphics::Texture mDisplacementTexture;
 	Omega::Graphics::Texture mDifuseTexture;
 	Omega::Graphics::Texture mSpecularTexture;
 	Omega::Graphics::Texture mNormalMap;
+	Omega::Graphics::Texture mClouds;
 
 	struct TransformData
 	{
@@ -56,6 +59,11 @@ private:
 
 	Omega::Graphics::VertexShader mVertexShader;
 	Omega::Graphics::PixelShader mPixelShader;
+
+	Omega::Graphics::AlphaBlending mAlphaBlending;
+	Omega::Graphics::VertexShader mVSAlphaBlending;
+	Omega::Graphics::PixelShader mPSAlphaBlending;
+	
 
 	Omega::Math::Vector3 mRotation = 0.0f;
 };

@@ -18,3 +18,4 @@
 #include "SimpleDraw.h"
 #include "Material.h"
 #include "LightTypes.h"
+#include "AlphaBlending.h"
