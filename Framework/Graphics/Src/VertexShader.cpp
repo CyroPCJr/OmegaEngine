@@ -43,6 +43,11 @@ namespace
 
 void VertexShader::Initialize(const std::filesystem::path& filePath, uint32_t vertexFormat)
 {
+	Initialize(filePath, "VS", vertexFormat);
+}
+
+void VertexShader::Initialize(const std::filesystem::path& filePath, const char* shaderName, uint32_t vertexFormat)
+{
 	DWORD shaderFlag = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG;
 	ID3DBlob* shaderBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
@@ -50,7 +55,7 @@ void VertexShader::Initialize(const std::filesystem::path& filePath, uint32_t ve
 		filePath.wstring().c_str(),
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"VS", "vs_5_0",
+		shaderName, "vs_5_0",
 		shaderFlag, 0, &shaderBlob, &errorBlob);
 	if (errorBlob && errorBlob->GetBufferPointer())
 	{
@@ -68,7 +73,7 @@ void VertexShader::Initialize(const std::filesystem::path& filePath, uint32_t ve
 	OMEGAASSERT(SUCCEEDED(hr), "Failed to create vertex shader.");
 
 	auto vertexLayout = GetVertexLayout(vertexFormat);
-	
+
 	// Create input layout
 	hr = device->CreateInputLayout(
 		vertexLayout.data(),

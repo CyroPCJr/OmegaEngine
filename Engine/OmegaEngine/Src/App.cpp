@@ -41,9 +41,14 @@ void App::Run(AppConfig appConfig)
 	mCurrentState->Initialize();
 
 	mRunning = true;
-	while (mRunning && mWindow.IsActive())
+	while (mRunning)
 	{
 		mWindow.ProcessMessage();
+		if (!mWindow.IsActive())
+		{
+			Quit();
+			continue;
+		}
 
 		if (mNextState)
 		{

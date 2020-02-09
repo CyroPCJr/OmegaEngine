@@ -7,6 +7,15 @@
     <Filter Include="Src">
       <UniqueIdentifier>{62c8a47b-de4c-4d74-96e7-a4ee300ad30e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\RenderState">
+      <UniqueIdentifier>{77187fb5-3064-4828-8a68-ca8f76688d30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Camera">
+      <UniqueIdentifier>{4cd45ed0-ad39-4046-b72f-8e7bc78bf655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Mesh">
+      <UniqueIdentifier>{bfa834f1-52e4-4624-b8b9-88009e39c0f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -24,9 +33,6 @@
     <ClInclude Include="Inc\Colors.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\Camera.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\VertexShader.h">
       <Filter>Inc</Filter>
     </ClInclude>
@@ -36,13 +42,7 @@
     <ClInclude Include="Inc\PixelShader.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\MeshBuffer.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\ConstantBuffer.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Mesh.h">
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\VertexTypes.h">
@@ -52,9 +52,6 @@
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\Texture.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\MeshBuilder.h">
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\DebugUI.h">
@@ -69,8 +66,20 @@
     <ClInclude Include="Inc\Material.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\AlphaBlending.h">
-      <Filter>Inc</Filter>
+    <ClInclude Include="Inc\BlendState.h">
+      <Filter>Inc\RenderState</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Camera.h">
+      <Filter>Inc\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Mesh.h">
+      <Filter>Inc\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\MeshBuffer.h">
+      <Filter>Inc\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\MeshBuilder.h">
+      <Filter>Inc\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,7 +122,7 @@
     <ClCompile Include="Src\SimpleDraw.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="Src\AlphaBlending.cpp">
+    <ClCompile Include="Src\BlendState.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

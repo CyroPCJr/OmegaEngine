@@ -2,6 +2,7 @@
 
 #include "Common.h"
 
+#include "BlendState.h"
 #include "Camera.h"
 #include "Colors.h"
 #include "GraphicsSystem.h"
@@ -18,4 +19,3 @@
 #include "SimpleDraw.h"
 #include "Material.h"
 #include "LightTypes.h"
-#include "AlphaBlending.h"

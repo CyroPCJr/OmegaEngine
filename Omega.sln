@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29728.190
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{ED9244DE-9652-4673-AFB8-CBA94AAC0AE3}"
 EndProject
@@ -37,12 +37,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{38D4B4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{7B09742D-A0BD-4B0C-9E89-DDD9C2905B66}"
 	ProjectSection(SolutionItems) = preProject
-		Assets\Shaders\AlphaBlending.fx = Assets\Shaders\AlphaBlending.fx
 		Assets\Shaders\DoGouraudShading.fx = Assets\Shaders\DoGouraudShading.fx
 		Assets\Shaders\DoNothing.fx = Assets\Shaders\DoNothing.fx
 		Assets\Shaders\DoPhongShading.fx = Assets\Shaders\DoPhongShading.fx
 		Assets\Shaders\DoTexturing.fx = Assets\Shaders\DoTexturing.fx
 		Assets\Shaders\DoTransform.fx = Assets\Shaders\DoTransform.fx
+		Assets\Shaders\Earth.fx = Assets\Shaders\Earth.fx
 		Assets\Shaders\SimpleDoNothing.fx = Assets\Shaders\SimpleDoNothing.fx
 		Assets\Shaders\SimpleDraw.fx = Assets\Shaders\SimpleDraw.fx
 		Assets\Shaders\Standard.fx = Assets\Shaders\Standard.fx

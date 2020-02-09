@@ -25,6 +25,7 @@ private:
 	Omega::Graphics::Texture mSpecularTexture;
 	Omega::Graphics::Texture mNormalMap;
 	Omega::Graphics::Texture mClouds;
+	Omega::Graphics::Texture mNightLights;
 
 	struct TransformData
 	{
@@ -57,13 +58,15 @@ private:
 	Omega::Graphics::DirectionalLight mDirectionalLight;
 	Omega::Graphics::Material mMaterial;
 
-	Omega::Graphics::VertexShader mVertexShader;
-	Omega::Graphics::PixelShader mPixelShader;
-
-	Omega::Graphics::AlphaBlending mAlphaBlending;
-	Omega::Graphics::VertexShader mVSAlphaBlending;
-	Omega::Graphics::PixelShader mPSAlphaBlending;
+	Omega::Graphics::VertexShader mEarthVertexShader;
+	Omega::Graphics::PixelShader mEarthPixelShader;
+	
+	Omega::Graphics::VertexShader mCloudVertexShader;
+	Omega::Graphics::PixelShader mCloudPixelShader;
 	
 
+	Omega::Graphics::BlendState mBlendState;	
+
 	Omega::Math::Vector3 mRotation = 0.0f;
+	float mCloudRotation = 0.0f;
 };

@@ -16,9 +16,6 @@ void GameState::Initialize()
 	mMesh = MeshBuilder::CreateSphere(10, 64, 64);
 	mMeshBuffer.Initialize(mMesh);
 
-	mMesh = MeshBuilder::CreateSphere(20,64,64);
-	mMeshClouds.Initialize(mMesh);
-
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
 	mMaterialBuffer.Initialize();
@@ -33,16 +30,14 @@ void GameState::Initialize()
 	mMaterial.specular = { 1.0f };
 	mMaterial.power =  10.0f ;
 
-	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
-	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
-	
-#pragma region Alpha Blending Initialize
+	mSettingsData.bumpMapWeight = 0.2f;
 
-	mVSAlphaBlending.Initialize("../../Assets/Shaders/AlphaBlending.fx", VertexPX::Format);
-	mPSAlphaBlending.Initialize("../../Assets/Shaders/AlphaBlending.fx");
-	mAlphaBlending.Initialize();
+	std::filesystem::path assetsEarth = "../../Assets/Shaders/Earth.fx";
+	mEarthVertexShader.Initialize(assetsEarth, "VSEarth", Vertex::Format);
+	mEarthPixelShader.Initialize(assetsEarth, "PSEarth");
 
-#pragma endregion
+	mCloudVertexShader.Initialize(assetsEarth, "VSCloud", Vertex::Format);
+	mCloudPixelShader.Initialize(assetsEarth, "PSCloud");
 
 	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
 	std::filesystem::path root = "../../Assets/Textures";
@@ -50,8 +45,10 @@ void GameState::Initialize()
 	mSpecularTexture.Initialize(root / "earth_spec.jpg");
 	mDisplacementTexture.Initialize(root / "earth_bump.jpg");
 	mNormalMap.Initialize(root/ "earth_normal.jpg");
-	
 	mClouds.Initialize(root / "earth_clouds.jpg");
+	mNightLights.Initialize(root / "earth_lights.jpg");
+
+	mBlendState.Initialize(BlendState::Mode::AlphaPremultipled);
 
 	mSettingsDataBuffer.Initialize();
 }
@@ -59,28 +56,22 @@ void GameState::Initialize()
 void GameState::Terminate()
 {
 	mSettingsDataBuffer.Terminate();
+	mNightLights.Terminate();
+	mBlendState.Terminate();
 	mClouds.Terminate();
 	mNormalMap.Terminate();
 	mDisplacementTexture.Terminate();
 	mSpecularTexture.Terminate();
 	mDifuseTexture.Terminate();
-
-#pragma region Alpha Blending terminate
-
-	mVSAlphaBlending.Terminate();
-	mPSAlphaBlending.Terminate();
-	mAlphaBlending.Terminate();
-
-#pragma endregion
-
 	mSamplers.Terminate();
-	mPixelShader.Terminate();
-	mVertexShader.Terminate();
+	mCloudVertexShader.Terminate();
+	mCloudPixelShader.Terminate();
+	mEarthPixelShader.Terminate();
+	mEarthVertexShader.Terminate();
 	mMaterialBuffer.Terminate();
 	mLightBuffer.Terminate();
 	mTransformBuffer.Terminate();
 	mMeshBuffer.Terminate();
-	mMeshClouds.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -108,6 +99,8 @@ void GameState::Update(float deltaTime)
 	{
 		mCamera.Strafe(kMoveSpeed * deltaTime);
 	}
+
+	mCloudRotation += 0.0001f;
 }
 
 void GameState::Render()
@@ -135,11 +128,6 @@ void GameState::Render()
 	mMaterialBuffer.BindVS(2);
 	mMaterialBuffer.BindPS(2);
 
-	mVertexShader.Bind();
-	mPixelShader.Bind();
-
-	mAlphaBlending.Bind();
-
 	mDifuseTexture.BindPS();
 	mDifuseTexture.BindVS();
 
@@ -158,8 +146,32 @@ void GameState::Render()
 	mSettingsDataBuffer.BindPS(3);
 	mSettingsDataBuffer.BindVS(3);
 
-	mMeshClouds.Draw();
+	mEarthVertexShader.Bind();
+	mEarthPixelShader.Bind();
+
 	mMeshBuffer.Draw();
+
+	mNightLights.BindPS(5);
+	mNightLights.BindVS(5);
+
+	// --- cloud render ------ //
+	matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y + mCloudRotation);
+	matWorld = matRotation * maTranslation;
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+	
+	mTransformBuffer.Update(transformData);
+	
+	mClouds.BindVS(4);
+	mClouds.BindPS(4);	
+
+	mCloudVertexShader.Bind();
+	mCloudPixelShader.Bind();
+
+	mBlendState.Bind();
+
+	mMeshBuffer.Draw();
+	BlendState::ClearState();
 
 	SimpleDraw::Render(mCamera);
 }

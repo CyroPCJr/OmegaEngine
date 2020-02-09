@@ -6,7 +6,7 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-void PixelShader::Initialize(const std::filesystem::path& filePath)
+void PixelShader::Initialize(const std::filesystem::path& filePath, const char* shaderName)
 {
 	DWORD shaderFlag = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG;
 	ID3DBlob* shaderBlob = nullptr;
@@ -16,7 +16,7 @@ void PixelShader::Initialize(const std::filesystem::path& filePath)
 		filePath.wstring().c_str(),
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		"PS", "ps_5_0",
+		shaderName, "ps_5_0",
 		shaderFlag, 0, &shaderBlob, &errorBlob);
 	if (errorBlob && errorBlob->GetBufferPointer())
 	{

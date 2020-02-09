@@ -5,7 +5,13 @@ namespace Omega::Graphics
 	class VertexShader
 	{
 	public:
+		VertexShader() = default;
+
+		VertexShader(const VertexShader&) = delete;
+		VertexShader& operator=(const VertexShader&) = delete;
+
 		void Initialize(const std::filesystem::path& filePath, uint32_t vertexFormat);
+		void Initialize(const std::filesystem::path& filePath, const char* shaderName, uint32_t vertexFormat);
 		void Terminate();
 
 		void Bind();
