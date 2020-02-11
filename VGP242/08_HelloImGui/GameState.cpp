@@ -15,12 +15,12 @@ void GameState::Initialize()
 
 void GameState::Terminate()
 {
-
+	SimpleDraw::StaticTerminate();
 }
 
 void GameState::Update(float deltaTime)
 {
-	const float kMoveSpeed = 100.05f;
+	const float kMoveSpeed = 100.5f;
 	const float kTurnSpeed = 0.5f;
 
 	auto inputSystem = InputSystem::Get();
@@ -34,15 +34,23 @@ void GameState::Update(float deltaTime)
 		mCamera.Walk(-kMoveSpeed * deltaTime);
 	}
 
-	mCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
-	mCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+	if (inputSystem->IsKeyDown(KeyCode::D))
+	{
+		mCamera.Strafe(-kMoveSpeed * deltaTime);
+	}
 
-	SimpleDraw::AddLine({ 0.0f, 0.0f, 0.0f }, { 10.0f, 10.0f, 10.0f }, Colors::Blue);
+	if (inputSystem->IsKeyDown(KeyCode::A))
+	{
+		mCamera.Strafe(kMoveSpeed * deltaTime);
+	}
+	
+	SimpleDraw::AddSphere(10.f, 100, 100, Colors::Black);
 	//mRotation += deltaTime;	
 }
 
 void GameState::Render()
 {
+	
 	SimpleDraw::Render(mCamera);
 }
 

@@ -25,7 +25,7 @@ namespace
 			mConstantBuffer.Initialize(sizeof(Math::Matrix4));
 			mMeshBuffer.Initialize<VertexPC>(nullptr, maxVertexCount, true);
 			mLineVertices = make_unique<VertexPC[]>(maxVertexCount);
-			mFillVertices = make_unique<VertexPC[]>(maxVertexCount * 3.0f);
+			mFillVertices = make_unique<VertexPC[]>(static_cast<size_t>(maxVertexCount * 3.0f));
 			mVertexCount = 0;
 			mFillVertexCount = 0;
 			mMaxVertexCount = maxVertexCount;
@@ -70,23 +70,25 @@ namespace
 			AddLine(Math::Vector3{ -length, -length , -length }, Math::Vector3{ length, -length , -length }, color);
 			AddLine(Math::Vector3{ -length, -length , -length }, Math::Vector3{ -length, length , -length }, color);
 			AddLine(Math::Vector3{ -length, -length , -length }, Math::Vector3{ -length, -length , length }, color);
-			AddLine(Math::Vector3{ -length, length , -length }, Math::Vector3{ length, length , length }, color);
+			AddLine(Math::Vector3{ -length, length , -length }, Math::Vector3{ length, length , -length }, color);
 			AddLine(Math::Vector3{ -length, length , -length }, Math::Vector3{ -length, length , length }, color);
 			AddLine(Math::Vector3{ length, length , -length }, Math::Vector3{ length, length , length }, color);
-			AddLine(Math::Vector3{ length, length , -length }, Math::Vector3{ -length, length , length }, color);
+			AddLine(Math::Vector3{ length, length , length }, Math::Vector3{ -length, length , length }, color);
 			AddLine(Math::Vector3{ length, length , -length }, Math::Vector3{ length, -length , -length }, color);
 			AddLine(Math::Vector3{ length, -length , -length }, Math::Vector3{ length, -length , length }, color);
-			AddLine(Math::Vector3{ length, length , -length }, Math::Vector3{ -length, length , length }, color);
-			AddLine(Math::Vector3{ length, length , -length }, Math::Vector3{ length, -length , length }, color);
+			AddLine(Math::Vector3{ length, length , length }, Math::Vector3{ -length, length , length }, color);
+			AddLine(Math::Vector3{ length, length , length }, Math::Vector3{ length, -length , length }, color);
 			AddLine(Math::Vector3{ length, -length , length }, Math::Vector3{ -length, -length , length }, color);
 			AddLine(Math::Vector3{ -length, -length , length }, Math::Vector3{ -length, length , length }, color);
 		}
 
 		void AddSphere(float radius, int rings, int slices, const Color& color)
 		{
-			for (float phi = 0; phi < Math::Constants::Pi; phi += (Math::Constants::Pi / rings))
+			const float StepsRings = (Math::Constants::Pi / rings);
+			const float StepsSlices = (Math::Constants::TwoPi / slices);
+			for (float phi = 0; phi < Math::Constants::Pi; phi += StepsRings)
 			{
-				for (float theta = 0; theta < Math::Constants::TwoPi; theta += (Math::Constants::TwoPi / slices))
+				for (float theta = 0; theta < Math::Constants::TwoPi; theta += StepsSlices)
 				{
 					auto vec = Math::Vector3
 					{

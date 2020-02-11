@@ -83,8 +83,8 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f,  0.0f,  0.5f }, 1.0f, 1.0f });
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
-	
-	mMeshBuffer.Initialize(MeshBuilder::CreateSpherePX(10.0f, 10.0f,10.0f, false));
+
+	mMeshBuffer.Initialize(MeshBuilder::CreateSpherePX(10.0f, 10, 10, false));
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
 	// Compile and create vertex shader
@@ -93,7 +93,7 @@ void GameState::Initialize()
 	mGouraudShadingPixelShader.Initialize("../../Assets/Shaders/DoTexturing.fx");
 
 	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Clamp);
-	mTexture.Initialize("beer.png");	
+	mTexture.Initialize("beer.png");
 }
 
 void GameState::Terminate()
@@ -148,7 +148,7 @@ void GameState::Render()
 	/*auto matTrans = Matrix4::Translation(Vector3(i, i, i));
 	auto matScale = Matrix4::Scaling(i*0.25f);*/
 	auto matTrans = Matrix4::Translation(Vector3(0.f, 0.f, 0.f));
-	auto matWVP = Transpose(matWorld * matTrans* matWorld1 * matView * matProj);
+	auto matWVP = Transpose(matWorld * matTrans * matWorld1 * matView * matProj);
 
 	mConstantBuffer.Update(&matWVP);
 	mMeshBuffer.Draw();
