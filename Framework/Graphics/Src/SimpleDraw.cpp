@@ -101,6 +101,17 @@ namespace
 			}
 		}
 
+		void AddTransform(const Math::Matrix4& transform)
+		{
+			Math::Vector3 position = Math::GetTranslation(transform);
+			Math::Vector3 right = Math::GetRight(transform);
+			Math::Vector3 up = Math::GetUp(transform);
+			Math::Vector3 forward = Math::GetForward(transform);
+			AddLine(position, position + right, Colors::Red);
+			AddLine(position, position + up, Colors::Green);
+			AddLine(position, position + forward, Colors::Blue);
+		}
+
 		void Render(const Camera& camera)
 		{
 			auto matView = camera.GetViewMatrix();
@@ -148,6 +159,8 @@ namespace
 		uint32_t mVertexCount = 0;
 		uint32_t mMaxVertexCount = 0;
 		uint32_t mFillVertexCount = 0;
+		
+		Math::Matrix4 mTransform;
 	};
 
 	unique_ptr<SimpleDrawImpl> sInstance;
@@ -207,7 +220,7 @@ void SimpleDraw::AddBone(const Math::Matrix4& transform)
 
 void SimpleDraw::AddTransform(const Math::Matrix4& transform)
 {
-	//TODO:
+	sInstance->AddTransform(transform);
 }
 
 void SimpleDraw::Render(const Camera& camera)

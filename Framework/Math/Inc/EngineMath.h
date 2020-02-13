@@ -151,4 +151,24 @@ namespace Omega::Math
 		return vec;
 	}
 
-} // namespace Omega::Math
+	constexpr Vector3 GetTranslation(const Matrix4& matrix)
+	{
+		return Vector3(matrix._41, matrix._42, matrix._43);
+	}
+
+	constexpr Vector3 GetRight(const Matrix4& matrix)
+	{
+		return Vector3(matrix._11, matrix._12, matrix._13);
+	}
+
+	constexpr Vector3 GetUp(const Matrix4& matrix)
+	{
+		return Vector3(matrix._21, matrix._22, matrix._23);
+	}
+
+	constexpr Vector3 GetForward(const Matrix4& matrix)
+	{
+		return Vector3(matrix._31, matrix._32, matrix._33);
+	}
+
+}
