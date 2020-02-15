@@ -42,13 +42,13 @@ void GameState::Initialize()
 	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
 	std::filesystem::path root = "../../Assets/Textures";
 	mDifuseTexture.Initialize(root / "earth.jpg");
-	mSpecularTexture.Initialize(root / "earth_spec.jpg");
+	mSpecularTexture.Initialize(root / "earth_spec.tif");
 	mDisplacementTexture.Initialize(root / "earth_bump.jpg");
-	mNormalMap.Initialize(root/ "earth_normal.jpg");
+	mNormalMap.Initialize(root/ "earth_normal.tif");
 	mClouds.Initialize(root / "earth_clouds.jpg");
 	mNightLights.Initialize(root / "earth_lights.jpg");
 
-	mBlendState.Initialize(BlendState::Mode::AlphaPremultipled);
+	mBlendState.Initialize(BlendState::Mode::AlphaBlending);
 
 	mSettingsDataBuffer.Initialize();
 }
@@ -182,9 +182,9 @@ void GameState::DebugUI()
 	if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		bool directionChanged = false;
-		directionChanged |= ImGui::DragFloat("Direction X##Light", &mDirectionalLight.direction.x, 0.01f, -1.0f, 1.0f);
-		directionChanged |= ImGui::DragFloat("Direction Y##Light", &mDirectionalLight.direction.y, 0.01f, -1.0f, 1.0f);
-		directionChanged |= ImGui::DragFloat("Direction Z##Light", &mDirectionalLight.direction.z, 0.01f, -1.0f, 1.0f);
+		directionChanged |= ImGui::DragFloat("Direction X##Light", &mDirectionalLight.direction.x, 0.01f);
+		directionChanged |= ImGui::DragFloat("Direction Y##Light", &mDirectionalLight.direction.y, 0.01f);
+		directionChanged |= ImGui::DragFloat("Direction Z##Light", &mDirectionalLight.direction.z, 0.01f);
 
 		if (directionChanged)
 		{

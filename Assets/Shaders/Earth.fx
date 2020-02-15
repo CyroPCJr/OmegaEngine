@@ -59,7 +59,9 @@ struct VSOutput
 struct VSCloudOutPut
 {
 	float4 position : SV_Position;
-	float2 texCoord : TEXCOORD;
+	float3 worldNormal : NORMAL;
+	float2 texCoord : TEXCOORD0;
+	float3 dirToLight : TEXCOORD1;
 };
 
 
@@ -107,7 +109,7 @@ float4 PSEarth(VSOutput input) : SV_Target
 		float3x3 TBNW = { worldTangent, worldBinormal, worldNormal };
 		float4 normalColor = normalMap.Sample(textureSampler, input.texCoord);
 		float3 normalSampled = (normalColor.xyz * 2.0f) - 1.0f;
-		normal = mul(normalSampled, TBNW);
+		normal = normalize(mul(normalSampled, TBNW));
 	}
 
 	float4 ambient = LightAmbient * MaterialAmbient;
@@ -139,7 +141,11 @@ VSCloudOutPut VSCloud(VSInput input)
 	VSCloudOutPut output;
 	float3 localPosition = input.position + (input.normal * (0.05f + bumpMapWeight));
 
+	float3 worldNormal = mul(input.normal, (float3x3)World);
+
+	output.worldNormal = worldNormal;
 	output.position = mul(float4(localPosition, 1.0f), WVP);
+	output.dirToLight = -LightDirection;
 	output.texCoord = input.texCoord;
 
 	return output;
@@ -153,7 +159,13 @@ VSCloudOutPut VSCloud(VSInput input)
 
 float4 PSCloud(VSCloudOutPut input) : SV_Target
 {
-	float4 color = cloudMap.Sample(textureSampler, input.texCoord);
-	color.a = 0.2;
-	return color;
+	float3 worldNormal = normalize(input.worldNormal);
+	float3 dirToLight = normalize(input.dirToLight);
+	
+	float diffuseRaw = dot(dirToLight, worldNormal);
+	float diffuseIntensity = saturate(dot(dirToLight, worldNormal));
+	float4 diffuse = diffuseIntensity * LightDiffuse * MaterialDiffuse;
+
+	float4 textureColor = cloudMap.Sample(textureSampler, input.texCoord);
+	return textureColor * diffuse;
 }
