@@ -16,5 +16,6 @@ namespace Omega::Graphics
 
 		static Mesh CreateSphere(float radius, int rings = 12, int slices = 36, bool isSpace = false);
 
+		static MeshPX CreateNDCQuad();
 	};
 }

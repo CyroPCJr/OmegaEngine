@@ -6,6 +6,11 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
+ConstantBuffer::~ConstantBuffer()
+{
+	OMEGAASSERT(mConstantBuffer == nullptr, "[ConstantBuffer] Constant buffer not released.");
+}
+
 void ConstantBuffer::Initialize(uint32_t size)
 {
 	auto device = GetDevice();

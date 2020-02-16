@@ -6,6 +6,7 @@ namespace Omega::Graphics
 	{
 	public:
 		VertexShader() = default;
+		~VertexShader();
 
 		VertexShader(const VertexShader&) = delete;
 		VertexShader& operator=(const VertexShader&) = delete;

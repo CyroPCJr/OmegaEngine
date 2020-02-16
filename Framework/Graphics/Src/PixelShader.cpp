@@ -6,6 +6,11 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
+PixelShader::~PixelShader()
+{
+	OMEGAASSERT(mPixelShader == nullptr, "[PixelShader] Pixel shader not released.");
+}
+
 void PixelShader::Initialize(const std::filesystem::path& filePath, const char* shaderName)
 {
 	DWORD shaderFlag = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG;
@@ -44,6 +49,5 @@ void PixelShader::Terminate()
 
 void PixelShader::Bind() const
 {
-	auto context = GetContext();
-	context->PSSetShader(mPixelShader, nullptr, 0);
+	GetContext()->PSSetShader(mPixelShader, nullptr, 0);
 }

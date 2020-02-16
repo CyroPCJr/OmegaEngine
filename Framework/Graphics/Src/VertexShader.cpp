@@ -4,7 +4,6 @@
 #include "D3DUtil.h"
 #include "VertexTypes.h"
 
-using namespace Omega;
 using namespace Omega::Graphics;
 
 namespace
@@ -39,6 +38,12 @@ namespace
 
 		return vertexLayout;
 	}
+}
+
+VertexShader::~VertexShader()
+{
+	OMEGAASSERT(mInputLayout == nullptr, "[VertexShader] InputLayout not released.");
+	OMEGAASSERT(mVertexShader == nullptr, "[VertexShader] VertexShader not released.");
 }
 
 void VertexShader::Initialize(const std::filesystem::path& filePath, uint32_t vertexFormat)

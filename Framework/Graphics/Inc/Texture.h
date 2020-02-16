@@ -5,6 +5,13 @@ namespace Omega::Graphics {
 	class Texture
 	{
 	public:
+
+		Texture() = default;
+		~Texture();
+
+		Texture(const Texture&) = delete;
+		Texture& operator=(const Texture&) = delete;
+
 		void Initialize(const std::filesystem::path& fileName);
 		void Terminate();
 
@@ -15,4 +22,4 @@ namespace Omega::Graphics {
 		ID3D11ShaderResourceView* mShaderResourceView = nullptr;
 	};
 
-} // namespace Omega::Graphics
+}

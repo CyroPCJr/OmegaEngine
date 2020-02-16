@@ -355,3 +355,22 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 
 	return mesh;
 }
+
+MeshPX Omega::Graphics::MeshBuilder::CreateNDCQuad()
+{
+	MeshPX mesh;
+
+	mesh.vertices.emplace_back(VertexPX{ Vector3{ -1.0f, 1.0f, 0.0f },  0.0f, 0.0f });
+	mesh.vertices.emplace_back(VertexPX{ Vector3{ 1.0f, 1.0f, 0.0f },   0.0f, 1.0f });
+	mesh.vertices.emplace_back(VertexPX{ Vector3{ -1.0f, -1.0f, 0.0f },  1.0f, 0.0f });
+	mesh.vertices.emplace_back(VertexPX{ Vector3{ -1.0f, 1.0f, 0.0f },  1.0f, 1.0f });
+	 
+	mesh.indices.push_back(0);
+	mesh.indices.push_back(1);
+	mesh.indices.push_back(2);
+
+	mesh.indices.push_back(1);
+	mesh.indices.push_back(3);
+	mesh.indices.push_back(2);
+	return mesh;
+}

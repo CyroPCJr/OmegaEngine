@@ -81,6 +81,9 @@
     <ClInclude Include="Inc\MeshBuilder.h">
       <Filter>Inc\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\RenderTarget.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -123,6 +126,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\BlendState.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderTarget.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

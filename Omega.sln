@@ -43,6 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{7B09
 		Assets\Shaders\DoTexturing.fx = Assets\Shaders\DoTexturing.fx
 		Assets\Shaders\DoTransform.fx = Assets\Shaders\DoTransform.fx
 		Assets\Shaders\Earth.fx = Assets\Shaders\Earth.fx
+		Assets\Shaders\PostProcessing.fx = Assets\Shaders\PostProcessing.fx
 		Assets\Shaders\SimpleDoNothing.fx = Assets\Shaders\SimpleDoNothing.fx
 		Assets\Shaders\SimpleDraw.fx = Assets\Shaders\SimpleDraw.fx
 		Assets\Shaders\Standard.fx = Assets\Shaders\Standard.fx
@@ -65,6 +66,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09_HelloLighting", "VGP330\09_HelloLighting\09_HelloLighting.vcxproj", "{9F2856D8-B676-48BB-ABA1-574F1D551F90}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10_HelloEarth", "VGP330\10_HelloEarth\10_HelloEarth.vcxproj", "{A605B27B-0754-46A3-8A2C-476ABC812D5E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "11_HelloPostProcessing", "VGP330\11_HelloPostProcessing\11_HelloPostProcessing.vcxproj", "{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -218,6 +221,14 @@ Global
 		{A605B27B-0754-46A3-8A2C-476ABC812D5E}.Release|x64.Build.0 = Release|x64
 		{A605B27B-0754-46A3-8A2C-476ABC812D5E}.Release|x86.ActiveCfg = Release|Win32
 		{A605B27B-0754-46A3-8A2C-476ABC812D5E}.Release|x86.Build.0 = Release|Win32
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Debug|x64.ActiveCfg = Debug|x64
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Debug|x64.Build.0 = Debug|x64
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Debug|x86.ActiveCfg = Debug|Win32
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Debug|x86.Build.0 = Debug|Win32
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Release|x64.ActiveCfg = Release|x64
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Release|x64.Build.0 = Release|x64
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Release|x86.ActiveCfg = Release|Win32
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -242,6 +253,7 @@ Global
 		{7CADD99B-18D5-4156-8E45-C69CBAF2369B} = {E86A631D-0371-4FD8-BEC7-5ECE7E455D40}
 		{9F2856D8-B676-48BB-ABA1-574F1D551F90} = {CAF31416-DE49-4ABC-AC45-49FCC83950CE}
 		{A605B27B-0754-46A3-8A2C-476ABC812D5E} = {CAF31416-DE49-4ABC-AC45-49FCC83950CE}
+		{00DEC2DC-CB54-49B5-918B-B2D656A7EB51} = {CAF31416-DE49-4ABC-AC45-49FCC83950CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38C2384C-B47D-4FAC-8347-46C3A4049A14}

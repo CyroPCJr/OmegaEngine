@@ -11,12 +11,9 @@ namespace
 	{
 		switch (filter)
 		{
-		case Sampler::Filter::Point:
-			return D3D11_FILTER_MIN_MAG_MIP_POINT;
-		case Sampler::Filter::Linear:
-			return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		case Sampler::Filter::Anisotropic:
-			return D3D11_FILTER_ANISOTROPIC;
+		case Sampler::Filter::Point: 	   return D3D11_FILTER_MIN_MAG_MIP_POINT;
+		case Sampler::Filter::Linear: 	   return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		case Sampler::Filter::Anisotropic: return D3D11_FILTER_ANISOTROPIC;
 		}
 		return D3D11_FILTER_MIN_MAG_MIP_POINT;
 	}
@@ -38,6 +35,11 @@ namespace
 	}
 }
 
+Sampler::~Sampler()
+{
+	OMEGAASSERT(mSampler == nullptr, "[Sampler] Sampler not released.");
+}
+
 void Sampler::Initialize(Filter filter, AddressMode addressMode)
 {
 	auto d3dFilter = GetFilter(filter);
@@ -56,8 +58,7 @@ void Sampler::Initialize(Filter filter, AddressMode addressMode)
 	sampDesc.MinLOD = 0;
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	auto device = GetDevice();
-	auto hr = device->CreateSamplerState(&sampDesc, &mSampler);
+	auto hr = GetDevice()->CreateSamplerState(&sampDesc, &mSampler);
 	OMEGAASSERT(SUCCEEDED(hr), "Failed to create sampler state.");
 }
 

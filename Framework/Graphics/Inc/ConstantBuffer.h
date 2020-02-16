@@ -5,6 +5,13 @@ namespace Omega::Graphics
 	class ConstantBuffer
 	{
 	public:
+
+		ConstantBuffer() = default;
+		~ConstantBuffer();
+
+		ConstantBuffer(const ConstantBuffer&) = delete;
+		ConstantBuffer& operator=(const ConstantBuffer&) = delete;
+
 		void Initialize(uint32_t size);
 		void Terminate();
 		void BindVS(uint32_t slot = 0) const;
