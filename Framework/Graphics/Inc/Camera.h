@@ -22,6 +22,7 @@ namespace Omega::Graphics
 		void Pitch(float radian); // top and down
 
 		void SetFov(float fov);
+		void SetAspectRatio(float ratio);
 		void SetNearPlane(float nearPlane);
 		void SetFarPlane(float farPlane);
 
@@ -36,6 +37,7 @@ namespace Omega::Graphics
 		Math::Vector3 mDirection = Math::Vector3::ZAxis;
 
 		float mFov = 60.0f * Math::Constants::DegToRad;
+		float mAspectRatio = 0.0f;
 		float mNearPlane = 1.0f;
 		float mFarPlane = 10000.0f;
 	};

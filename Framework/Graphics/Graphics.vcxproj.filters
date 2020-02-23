@@ -84,6 +84,9 @@
     <ClInclude Include="Inc\RenderTarget.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\ObjLoader.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -129,6 +132,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\RenderTarget.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ObjLoader.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

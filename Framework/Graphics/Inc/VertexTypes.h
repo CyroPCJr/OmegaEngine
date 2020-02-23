@@ -45,7 +45,7 @@ namespace Omega::Graphics
 		Math::Vector3 position;
 		Math::Vector3 normal;
 		Math::Vector3 tangent;
-		Math::Vector2 textcoord;
+		Math::Vector2 texcoord;
 	};
 
 }

@@ -87,8 +87,8 @@ MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
 {
 	OMEGAASSERT((row > 1 && col > 1), "To create plane, width and height should be more than 1.");
 	MeshPX mesh;
-	const float du = 1.0f / (row - 1.0f);
-	const float dv = 1.0f / (col - 1.0f);
+	const float du = 1.0f / static_cast<float>(row - 1.0f);
+	const float dv = 1.0f / static_cast<float>(col - 1.0f);
 
 	for (float y = 0.0f; y < col; ++y)
 	{
@@ -356,6 +356,57 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 	return mesh;
 }
 
+Mesh Omega::Graphics::MeshBuilder::CreatePlane(float size, int row, int column)
+{
+	Mesh mesh;
+
+	const float xSteps = size / static_cast<float>(row - 1);
+	const float zSteps = size / static_cast<float>(column - 1);
+	const float uSteps = size / static_cast<float>(row - 1);
+	const float vSteps = size / static_cast<float>(column - 1);
+
+	for (float z = 0; z < row; ++z)
+	{
+		for (float x = 0.0f; x < column; ++x)
+		{
+			auto vec = Vector3{ x* xSteps, 0.0f, z* zSteps };
+			Vector3 normal = Normalize(vec);
+			Vector3 normalTangent = { -normal.z ,0.0f, normal.x };
+			mesh.vertices.emplace_back(
+				Vertex
+				{ vec,
+				  normal, // vector normalized
+				 normalTangent , // tangent
+				{x*uSteps,z*vSteps}
+				}
+			);
+		}
+	}
+
+	int a, b, c, d;
+	for (int y = 0; y < row; ++y)
+	{
+		for (int x = 0; x <= column; ++x)
+		{
+			a = (x % (column + 1));
+			b = ((x + 1) % (column + 1));
+			c = (y * (column + 1));
+			d = ((y + 1) * (column + 1));
+
+			mesh.indices.push_back(a + c);
+			mesh.indices.push_back(b + c);
+			mesh.indices.push_back(a + d);
+
+			mesh.indices.push_back(b + c);
+			mesh.indices.push_back(b + d);
+			mesh.indices.push_back(a + d);
+
+		}
+	}
+
+	return mesh;
+}
+
 MeshPX Omega::Graphics::MeshBuilder::CreateNDCQuad()
 {
 	MeshPX mesh;
@@ -364,7 +415,7 @@ MeshPX Omega::Graphics::MeshBuilder::CreateNDCQuad()
 	mesh.vertices.emplace_back(VertexPX{ Vector3{ 1.0f, 1.0f, 0.0f },   1.0f, 0.0f });
 	mesh.vertices.emplace_back(VertexPX{ Vector3{ -1.0f, -1.0f, 0.0f },  0.0f, 1.0f });
 	mesh.vertices.emplace_back(VertexPX{ Vector3{ 1.0f, -1.0f, 0.0f },  1.0f, 1.0f });
-	 
+
 	mesh.indices.push_back(0);
 	mesh.indices.push_back(1);
 	mesh.indices.push_back(2);

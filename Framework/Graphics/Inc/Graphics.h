@@ -10,6 +10,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "MeshBuffer.h"
+#include "ObjLoader.h"
 #include "ConstantBuffer.h"
 #include "VertexTypes.h"
 #include "Mesh.h"
