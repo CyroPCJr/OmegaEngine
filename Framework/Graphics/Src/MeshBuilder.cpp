@@ -128,6 +128,56 @@ MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
 	return mesh;
 }
 
+Mesh Omega::Graphics::MeshBuilder::CreatePlane(float size, int row, int column)
+{
+	Mesh mesh;
+	const float offset = size * -0.5f;
+	const float xSteps = size / static_cast<float>(column - 1);
+	const float zSteps = size / static_cast<float>(row - 1);
+	const float uSteps = size / static_cast<float>(column - 1);
+	const float vSteps = size / static_cast<float>(row - 1);
+
+	for (float z = 0.0f; z < row; ++z)
+	{
+		for (float x = 0.0f; x < column; ++x)
+		{
+			auto vec = Vector3{ x*xSteps + offset, 0.0f, z *zSteps + offset };
+			mesh.vertices.emplace_back(Vertex{ vec,
+				Vector3::YAxis,
+				Vector3::XAxis,
+				{x * uSteps ,  z * vSteps}
+				});
+		}
+	}
+
+	for (unsigned int z = 0; z < column - 1; ++z)
+	{
+		for (unsigned int x = 0; x < row - 1; ++x)
+		{
+			/*
+
+			Indices read to anti-clockwise ->
+			2|-------------|3
+			 |			   |
+			 |			   |
+			0|-------------|1
+
+			*/
+
+			// get the corrnes
+			mesh.indices.push_back(z * column + x);
+			mesh.indices.push_back((z + 1) * column + x);
+			mesh.indices.push_back(z * column + (x + 1));
+
+			mesh.indices.push_back((z + 1) * column + x);
+			mesh.indices.push_back((z + 1) * column + (x + 1));
+			mesh.indices.push_back(z * column + (x + 1));
+		}
+	}
+
+	return mesh;
+}
+
 MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 {
 	const float thetaSteps = (Constants::TwoPi / row);
@@ -176,6 +226,39 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 			mesh.indices.push_back((y + 1)*row + x + 1);
 		}
 	}
+
+	/*
+	// x
+		float initY = height * 0.5f;
+
+	for (uint32_t i = 0, n = sides - 1; i < sides; i++)
+	{
+		// Set vertices
+		float ratio = (float)i / n;
+		float r = ratio * (Math::Pi * 2.0f);
+		float x = cosf(r) * radius;
+		float z = sinf(r) * radius;
+		vertices.push_back({ {0.0f, initY, 0.0f }, {ratio, 1.0f} });	// center of top
+		vertices.push_back({ {x, initY, z},{ratio, 0.0f} });			// side of top
+		vertices.push_back({ {0.0f, -initY, 0.0f }, {ratio, 0.0f} });	// center of base
+		vertices.push_back({ {x, -initY, z}, {ratio, 1.0f} });			// side of base
+		// Set indices
+		uint32_t offset = i * 4;
+		indices.push_back(offset);		//
+		indices.push_back(offset + 5);	//
+		indices.push_back(offset + 1);	// top
+		indices.push_back(offset + 5);	//
+		indices.push_back(offset + 7);	//
+		indices.push_back(offset + 1);	// right side triangle
+		indices.push_back(offset + 1);	//
+		indices.push_back(offset + 7);	//
+		indices.push_back(offset + 3);	// left side triangle
+		indices.push_back(offset + 7);	//
+		indices.push_back(offset + 2);	//
+		indices.push_back(offset + 3);	// base
+	}
+
+	*/
 
 	return mesh;
 }
@@ -356,56 +439,7 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 	return mesh;
 }
 
-Mesh Omega::Graphics::MeshBuilder::CreatePlane(float size, int row, int column)
-{
-	Mesh mesh;
 
-	const float xSteps = size / static_cast<float>(row - 1);
-	const float zSteps = size / static_cast<float>(column - 1);
-	const float uSteps = size / static_cast<float>(row - 1);
-	const float vSteps = size / static_cast<float>(column - 1);
-
-	for (float z = 0; z < row; ++z)
-	{
-		for (float x = 0.0f; x < column; ++x)
-		{
-			auto vec = Vector3{ x* xSteps, 0.0f, z* zSteps };
-			Vector3 normal = Normalize(vec);
-			Vector3 normalTangent = { -normal.z ,0.0f, normal.x };
-			mesh.vertices.emplace_back(
-				Vertex
-				{ vec,
-				  normal, // vector normalized
-				 normalTangent , // tangent
-				{x*uSteps,z*vSteps}
-				}
-			);
-		}
-	}
-
-	int a, b, c, d;
-	for (int y = 0; y < row; ++y)
-	{
-		for (int x = 0; x <= column; ++x)
-		{
-			a = (x % (column + 1));
-			b = ((x + 1) % (column + 1));
-			c = (y * (column + 1));
-			d = ((y + 1) * (column + 1));
-
-			mesh.indices.push_back(a + c);
-			mesh.indices.push_back(b + c);
-			mesh.indices.push_back(a + d);
-
-			mesh.indices.push_back(b + c);
-			mesh.indices.push_back(b + d);
-			mesh.indices.push_back(a + d);
-
-		}
-	}
-
-	return mesh;
-}
 
 MeshPX Omega::Graphics::MeshBuilder::CreateNDCQuad()
 {

@@ -30,6 +30,8 @@ namespace Omega::Graphics
 		void BindPS(uint32_t slot);
 		void UnBindPS(uint32_t slot);
 
+		void* GetShaderResourceView() const { return mShaderResourceView; };
+
 	private:
 		ID3D11ShaderResourceView* mShaderResourceView = nullptr;
 		ID3D11RenderTargetView* mRenderTargetView = nullptr;

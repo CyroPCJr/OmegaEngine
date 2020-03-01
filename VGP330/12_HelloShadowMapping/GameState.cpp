@@ -24,9 +24,14 @@ void GameState::Initialize()
 
 	mActiveCamera = &mDefaultCamera;
 
+	// set the tank
 	std::filesystem::path modelsAssets = "../../Assets/Models/Tank/";
-	ObjLoader::Load(modelsAssets / "tank.obj", 0.01f, mTankMesh);
+	ObjLoader::Load(modelsAssets / "tank.obj", 0.001f, mTankMesh);
 	mTankMeshBuffer.Initialize(mTankMesh);
+
+	// Set a ground plane
+	mGroundPlane = MeshBuilder::CreatePlane(100.0f);
+	mGroundPlaneBuffer.Initialize(mGroundPlane);
 
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
@@ -50,6 +55,9 @@ void GameState::Initialize()
 	mSpecularTexture.Initialize(modelsAssets / "tank_specular.jpg");
 	mNormalMap.Initialize(modelsAssets / "tank_normal.jpg");
 
+	std::filesystem::path texturesAssets = "../../Assets/Textures/";
+	mGroundPlaneMap.Initialize(texturesAssets / "grass.jpg");
+
 	mSettingsDataBuffer.Initialize();
 
 	auto graphicsSystem = GraphicsSystem::Get();
@@ -57,7 +65,7 @@ void GameState::Initialize()
 		graphicsSystem->GetBackBufferHeight(),
 		RenderTarget::Format::RGBA_U8);
 
-	// Createa a Quad
+	// Create a Quad
 	mScreenQuad = MeshBuilder::CreateNDCQuad();
 	mScreenQuadBuffer.Initialize(mScreenQuad);
 
@@ -68,14 +76,28 @@ void GameState::Initialize()
 
 	mPostProcessingVertexShader.Initialize(shadersFolder / "PostProcessing.fx", VertexPX::Format);
 	mPostProcessingPixelShader.Initialize(shadersFolder / "PostProcessing.fx", "PSNoProcessing");
+
+	// DepthMap for cast shadow
+	const uint32_t depthMapSize = 1024;
+	mDepthMapRenderTarget.Initialize(depthMapSize, depthMapSize, RenderTarget::Format::RGBA_U32);
+	mDepthMapVertexShader.Initialize(shadersFolder / "DepthMap.fx", Vertex::Format);
+	mDepthMaPixelShader.Initialize(shadersFolder / "DepthMap.fx");
+	mDepthMapConstantBuffer.Initialize();
+	mShadowConstantBuffer.Initialize();
 }
 
 void GameState::Terminate()
 {
+	mShadowConstantBuffer.Terminate();
+	mDepthMapRenderTarget.Terminate();
+	mDepthMapVertexShader.Terminate();
+	mDepthMaPixelShader.Terminate();
+	mDepthMapConstantBuffer.Terminate();
 	mVertexShader.Terminate();
 	mPixelShader.Terminate();
 	mPostProcessingPixelShader.Terminate();
 	mPostProcessingVertexShader.Terminate();
+	mGroundPlaneMap.Terminate();
 	mScreenQuadBuffer.Terminate();
 	mRenderTarget.Terminate();
 	mSettingsDataBuffer.Terminate();
@@ -99,29 +121,54 @@ void GameState::Update(float deltaTime)
 	auto inputSystem = InputSystem::Get();
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
-		mDefaultCamera.Walk(kMoveSpeed*deltaTime);
+		mDefaultCamera.Walk(kMoveSpeed * deltaTime);
 	}
-
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
 		mDefaultCamera.Walk(-kMoveSpeed * deltaTime);
 	}
-
 	if (inputSystem->IsKeyDown(KeyCode::D))
-	{
-		mDefaultCamera.Strafe(-kMoveSpeed * deltaTime);
-	}
-
-	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
 		mDefaultCamera.Strafe(kMoveSpeed * deltaTime);
 	}
+	if (inputSystem->IsKeyDown(KeyCode::A))
+	{
+		mDefaultCamera.Strafe(-kMoveSpeed * deltaTime);
+	}
+	if (inputSystem->IsMouseDown(MouseButton::RBUTTON))
+	{
+		mDefaultCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
+		mDefaultCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+	}
 
-	mLightCamera.SetPosition(mTankPosition - mLightCamera.GetDirection()* 100.0f);
+	if (inputSystem->IsKeyDown(KeyCode::UP))
+	{
+		mTankRotation.x += deltaTime;
+	}
+	if (inputSystem->IsKeyDown(KeyCode::DOWN))
+	{
+		mTankRotation.x -= deltaTime;
+	}
+	if (inputSystem->IsKeyDown(KeyCode::LEFT))
+	{
+		mTankRotation.y += deltaTime;
+
+	}
+	if (inputSystem->IsKeyDown(KeyCode::RIGHT))
+	{
+		mTankRotation.y -= deltaTime;
+	}
+
+	mLightCamera.SetDirection(mDirectionalLight.direction);
+	mLightCamera.SetPosition(mTankPosition - mLightCamera.GetDirection()* 50.0f);
 }
 
 void GameState::Render()
 {
+	mDepthMapRenderTarget.BeginRender();
+	DrawDepthMap();
+	mDepthMapRenderTarget.EndRender();
+
 	mRenderTarget.BeginRender();
 	DrawScene();
 	mRenderTarget.EndRender();
@@ -141,6 +188,14 @@ void GameState::DebugUI()
 		{
 			mActiveCamera = lightCamera ? &mLightCamera : &mDefaultCamera;
 		}
+
+		ImGui::Image(mDepthMapRenderTarget.GetShaderResourceView(),
+			{ 150.0f, 150.0f },
+			{ 0.0f,0.0f },
+			{ 1.0f, 1.0f },
+			{ 1.0f , 1.0f ,1.0f ,1.0f },
+			{ 1.0f , 1.0f ,1.0f ,1.0f });
+
 	}
 
 	ImGui::Separator();
@@ -173,6 +228,7 @@ void GameState::DebugUI()
 	{
 		static bool specularMap = true;
 		static bool normalMap = true;
+		static bool useShadow = mSettingsData.useShadow == 1;
 		ImGui::SliderFloat("Displacement", &mSettingsData.bumpMapWeight, 0.0f, 100.0f);
 		if (ImGui::Checkbox("Specular", &specularMap))
 		{
@@ -183,32 +239,47 @@ void GameState::DebugUI()
 		{
 			mSettingsData.normalMapWeight = normalMap ? 1.0f : 0.0f;
 		}
+
+		if (ImGui::Checkbox("Use Shadow", &useShadow))
+		{
+			mSettingsData.useShadow = useShadow ? 1.0f : 0.0f;
+		}
 	}
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::DragFloat("Tank Position X##Transform", &mTankPosition.y, 0.01f);
-		ImGui::DragFloat("Tank Position Y##Transform", &mTankPosition.x, 0.01f);
+		ImGui::DragFloat("X##Transform", &mTankPosition.x, 0.01f);
+		ImGui::DragFloat("Y##Transform", &mTankPosition.y, 0.01f);
 	}
 
 	ImGui::End();
 }
 
+void GameState::DrawDepthMap()
+{
+	mDepthMapVertexShader.Bind();
+	mDepthMaPixelShader.Bind();
+	auto matViewLight = mActiveCamera->GetViewMatrix();
+	auto matProjLight = mActiveCamera->GetPerspectiveMatrix();
+
+	auto maTranslation = Matrix4::Translation(mTankPosition);
+	auto matRotation = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);;
+	auto matWorld = matRotation * maTranslation;
+
+	auto wvp = Transpose(matWorld * matViewLight * matProjLight);
+	mDepthMapConstantBuffer.Update(wvp);
+	mDepthMapConstantBuffer.BindVS(0);
+
+	mTankMeshBuffer.Draw();
+
+}
+
 void GameState::DrawScene()
 {
-	auto maTranslation = Matrix4::Translation({ 0.0f , 3.5f, 0.0f });
+	auto matView = mActiveCamera->GetViewMatrix();
+	auto matProj = mActiveCamera->GetPerspectiveMatrix();
 
-	auto matRotation = Matrix4::RotationX(mTankRotation.x);
-	auto matWorld = matRotation * maTranslation;
-	auto matView = mDefaultCamera.GetViewMatrix();
-	auto matProj = mDefaultCamera.GetPerspectiveMatrix();
-
-	TransformData transformData;
-	transformData.viewPosition = mDefaultCamera.GetPosition();
-	transformData.world = Transpose(matWorld);
-	transformData.wvp = Transpose(matWorld * matView * matProj);
-
-	mTransformBuffer.Update(transformData);
-	mTransformBuffer.BindVS();
+	auto matViewLight = mLightCamera.GetViewMatrix();
+	auto matProjLight = mLightCamera.GetPerspectiveMatrix();
 
 	mLightBuffer.Update(mDirectionalLight);
 	mLightBuffer.BindVS(1);
@@ -218,25 +289,57 @@ void GameState::DrawScene()
 	mMaterialBuffer.BindVS(2);
 	mMaterialBuffer.BindPS(2);
 
-	mDifuseTexture.BindPS();
-	mDifuseTexture.BindVS();
-
-	mSpecularTexture.BindPS(1);
-	mSpecularTexture.BindVS(1);
-
-	mNormalMap.BindPS(3);
-
-	mSamplers.BindPS();
-	mSamplers.BindVS();
-
 	mSettingsDataBuffer.Update(mSettingsData);
 	mSettingsDataBuffer.BindPS(3);
 	mSettingsDataBuffer.BindVS(3);
 
+	mSamplers.BindPS();
+	mSamplers.BindVS();
+	mDifuseTexture.BindPS();
+	mSpecularTexture.BindPS(1);
+	mSpecularTexture.BindVS(1);
+	mNormalMap.BindPS(3);
+	mDepthMapRenderTarget.BindPS(5);
+
+	auto maTranslation = Matrix4::Translation(mTankPosition);
+	auto matRotation = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);;
+	auto matWorld = matRotation * maTranslation;
+
+	TransformData transformData;
+	transformData.viewPosition = mDefaultCamera.GetPosition();
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+
+	mTransformBuffer.Update(transformData);
+	mTransformBuffer.BindVS();
+
 	mVertexShader.Bind();
 	mPixelShader.Bind();
 
+	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight);
+	mShadowConstantBuffer.BindPS(4);
+
 	mTankMeshBuffer.Draw();
+
+	matWorld = Matrix4::Identity;
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+	mTransformBuffer.Update(transformData);
+
+	wvpLight = Transpose(matWorld * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight);
+	mShadowConstantBuffer.BindVS(4);
+
+	mGroundPlaneMap.BindPS(0);
+	mSettingsData.bumpMapWeight = 0.0f;
+	mSettingsData.normalMapWeight = 0.0f;
+	mSettingsData.specularWeight = 0.0f;
+	mSettingsData.aoMapWeight = 0.0f;
+	mSettingsData.useShadow = 1;
+	mSettingsDataBuffer.Update(mSettingsData);
+
+	mGroundPlaneBuffer.Draw();
 
 	SimpleDraw::Render(*mActiveCamera);
 }
