@@ -85,7 +85,7 @@ MeshPX MeshBuilder::CreateCubePX()
 
 MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
 {
-	OMEGAASSERT((row > 1 && col > 1), "To create plane, width and height should be more than 1.");
+	OMEGAASSERT((row > 1 && col > 1), "[PlanePX] To create plane, width and height should be more than 1.");
 	MeshPX mesh;
 	const float du = 1.0f / static_cast<float>(row - 1.0f);
 	const float dv = 1.0f / static_cast<float>(col - 1.0f);
@@ -128,185 +128,111 @@ MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
 	return mesh;
 }
 
-Mesh MeshBuilder::CreatePlane(float size, int row, int column)
+MeshPX MeshBuilder::CreateCylinderPX(float radius, int rings, int slices)
 {
-	Mesh mesh;
-	const float xStep = size / (row - 1);
-	const float zStep = size / (column - 1);
-	const float uStep = row / static_cast<float>(row - 1);
-	const float vStep = column / static_cast<float>(column - 1);
-
-	Math::Vector3 offset = { size * -0.5f, 0.0f, size * -0.5f };
-
-	for (int z = 0; z < row; ++z)
-	{
-		for (int x = 0; x < column; ++x)
-		{
-			float xx = xStep * x;
-			float zz = zStep * z;
-			float y = 0.0f;
-			Math::Vector3 position = { xx, 0.0f, zz };
-			Math::Vector3 normal = Math::Vector3::YAxis;
-			Math::Vector3 tangent = Math::Vector3::XAxis;
-			Math::Vector2 uv = { x * uStep, 1.0f - z * vStep };
-			mesh.vertices.emplace_back(Vertex{ position + offset, normal, tangent, uv });
-		}
-	}
-
-	for (int z = 0; z < row; ++z)
-	{
-		for (int x = 0; x < column; ++x)
-		{
-			mesh.indices.push_back((x + 0) + ((z + 0) * column));
-			mesh.indices.push_back((x + 0) + ((z + 1) * column));
-			mesh.indices.push_back((x + 1) + ((z + 1) * column));
-
-			mesh.indices.push_back((x + 0) + ((z + 0) * column));
-			mesh.indices.push_back((x + 1) + ((z + 1) * column));
-			mesh.indices.push_back((x + 1) + ((z + 0) * column));
-		}
-	}
-
-	return mesh;
-}
-
-MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
-{
-	const float thetaSteps = (Constants::TwoPi / row);
-
 	MeshPX mesh;
-	for (float y = 0.0f; y < col; ++y)
-	{
-		for (float theta = 0.0f; theta <= Constants::TwoPi; theta += thetaSteps)
-		{
-			auto vec = Vector3
-			{
-			-sinf(theta) * radius,
-			static_cast<float>(y),
-			cosf(theta)* radius
-			};
+	const float height = 3.0f;
+	const float heightStep = height / (rings - 1);
+	const float angleStep = Math::Constants::TwoPi / slices;
+	const float uStep = 1.0f / slices;
+	const float vStep = 1.0f / (rings - 1);
 
-			mesh.vertices.emplace_back(
-				VertexPX{ vec, theta / Constants::TwoPi,y / col }
-			);
+	for (int j = 0; j <= slices; ++j)
+	{
+		mesh.vertices.emplace_back(VertexPX{ { 0.0f, (height * -0.5f), 0.0f }, j * uStep, 0.0f });
+	}
+
+	for (int i = 0; i < rings; ++i)
+	{
+		for (int j = 0; j <= slices; ++j)
+		{
+			float angle = angleStep * j;
+			float x = cosf(angle) * radius;
+			float z = sinf(angle) * radius;
+			float y = (height * -0.5f) + (heightStep * i);
+			mesh.vertices.emplace_back(VertexPX{ { x, y, z }, j * uStep, 1.0f - i * vStep });
 		}
 	}
 
-	for (uint32_t y = 0; y <= col; ++y)
+	for (int j = 0; j <= slices; ++j)
 	{
-		for (uint32_t x = 0; x <= row; ++x)
+		mesh.vertices.emplace_back(VertexPX{ { 0.0f, (height * 0.5f), 0.0f }, j * uStep, 1.0f });
+	}
+
+	for (int i = 0; i + 1 < rings + 2; ++i)
+	{
+		for (int j = 0; j < slices; ++j)
 		{
-			if ((y == 0) && (x != 0) && (x != row - 1))
-			{
-				mesh.indices.push_back(0);
-				mesh.indices.push_back(0 + x + 1);
-				mesh.indices.push_back(0 + x);
-			}
-			if ((y == col - 1) && (x != 0) && (x != row - 1))
-			{
-				mesh.indices.push_back(y * row);
-				mesh.indices.push_back(y * row + x);
-				mesh.indices.push_back(y * row + x + 1);
-			}
+			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
+			mesh.indices.push_back((j + 0) + ((i + 1) * (slices + 1)));
+			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
 
-			mesh.indices.push_back(y * row + x);
-			mesh.indices.push_back((y + 1) * row + x + 1);
-			mesh.indices.push_back((y + 1) * row + x);
-
-			mesh.indices.push_back(y * row + x);
-			mesh.indices.push_back(y * row + x + 1);
-			mesh.indices.push_back((y + 1) * row + x + 1);
+			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
+			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
+			mesh.indices.push_back((j + 1) + ((i + 0) * (slices + 1)));
 		}
 	}
-
-	/*
-	// x
-		float initY = height * 0.5f;
-
-	for (uint32_t i = 0, n = sides - 1; i < sides; i++)
-	{
-		// Set vertices
-		float ratio = (float)i / n;
-		float r = ratio * (Math::Pi * 2.0f);
-		float x = cosf(r) * radius;
-		float z = sinf(r) * radius;
-		vertices.push_back({ {0.0f, initY, 0.0f }, {ratio, 1.0f} });	// center of top
-		vertices.push_back({ {x, initY, z},{ratio, 0.0f} });			// side of top
-		vertices.push_back({ {0.0f, -initY, 0.0f }, {ratio, 0.0f} });	// center of base
-		vertices.push_back({ {x, -initY, z}, {ratio, 1.0f} });			// side of base
-		// Set indices
-		uint32_t offset = i * 4;
-		indices.push_back(offset);		//
-		indices.push_back(offset + 5);	//
-		indices.push_back(offset + 1);	// top
-		indices.push_back(offset + 5);	//
-		indices.push_back(offset + 7);	//
-		indices.push_back(offset + 1);	// right side triangle
-		indices.push_back(offset + 1);	//
-		indices.push_back(offset + 7);	//
-		indices.push_back(offset + 3);	// left side triangle
-		indices.push_back(offset + 7);	//
-		indices.push_back(offset + 2);	//
-		indices.push_back(offset + 3);	// base
-	}
-
-	*/
-
 	return mesh;
 }
 
 MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices, bool isSpace)
 {
 	MeshPX mesh;
-	const float phiSteps = (Constants::Pi / rings);
-	const float thetaSteps = (Constants::TwoPi / slices);
-	for (float phi = 0; phi < Constants::Pi; phi += phiSteps)
-	{
-		for (float theta = 0; theta < Constants::TwoPi; theta += thetaSteps)
-		{
-			auto vec = Vector3
-			{
-				sinf(phi) * cosf(theta) * radius,
-				cosf(phi) * radius,
-				sinf(phi) * sinf(theta) * radius
-			};
+	const float thetaStep = Math::Constants::Pi / (rings - 1);
+	const float phiStep = Math::Constants::TwoPi / slices;
+	const float uStep = 1.0f / slices;
+	const float vStep = 1.0f / (rings - 1);
 
-			mesh.vertices.emplace_back(VertexPX{ vec, theta / Constants::TwoPi, phi / Constants::Pi });
+	for (int i = 0; i < rings; ++i)
+	{
+		for (int j = 0; j <= slices; ++j)
+		{
+			float theta = thetaStep * i;
+			float phi = phiStep * j;
+			float r = sinf(theta);
+			float x = cosf(phi) * r * radius;
+			float z = sinf(phi) * r * radius;
+			float y = -cosf(theta) * radius;
+
+			Math::Vector3 position = { x, y, z };
+			float u = j * uStep;
+			float v = 1.0f - i * vStep;
+
+			mesh.vertices.emplace_back(VertexPX{ position, u,v });
 		}
 	}
 
-	int a, b, c, d;
-	for (int y = 0; y < rings; ++y)
+	for (int i = 0; i < rings; ++i)
 	{
-		for (int x = 0; x <= slices; ++x)
+		for (int j = 0; j < slices; ++j)
 		{
-			a = (x % (slices + 1));
-			b = ((x + 1) % (slices + 1));
-			c = (y * (slices + 1));
-			d = ((y + 1) * (slices + 1));
+			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
+			mesh.indices.push_back((j + 0) + ((i + 1) * (slices + 1)));
+			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
 
-			if (!isSpace)
-			{
-				mesh.indices.push_back(a + c);
-				mesh.indices.push_back(b + c);
-				mesh.indices.push_back(a + d);
-
-				mesh.indices.push_back(b + c);
-				mesh.indices.push_back(b + d);
-				mesh.indices.push_back(a + d);
-			}
-			else
-			{
-				mesh.indices.push_back(a + d);
-				mesh.indices.push_back(b + c);
-				mesh.indices.push_back(a + c);
-
-				mesh.indices.push_back(a + d);
-				mesh.indices.push_back(b + d);
-				mesh.indices.push_back(b + c);
-			}
+			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
+			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
+			mesh.indices.push_back((j + 1) + ((i + 0) * (slices + 1)));
 		}
 	}
+	return mesh;
+}
+
+MeshPX MeshBuilder::CreateNDCQuad()
+{
+	MeshPX mesh;
+	mesh.vertices.emplace_back(VertexPX{ {-1.0f, -1.0f, 0.0f },  0.0f, 1.0f });
+	mesh.vertices.emplace_back(VertexPX{ {-1.0f, +1.0f, 0.0f },  0.0f, 0.0f });
+	mesh.vertices.emplace_back(VertexPX{ {+1.0f, +1.0f, 0.0f },  1.0f, 0.0f });
+	mesh.vertices.emplace_back(VertexPX{ {+1.0f, -1.0f, 0.0f },  1.0f, 1.0f });
+
+	mesh.indices.emplace_back(0);
+	mesh.indices.emplace_back(1);
+	mesh.indices.emplace_back(2);
+
+	mesh.indices.emplace_back(0);
+	mesh.indices.emplace_back(2);
+	mesh.indices.emplace_back(3);
 
 	return mesh;
 }
@@ -431,23 +357,40 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 	return mesh;
 }
 
-
-
-MeshPX Omega::Graphics::MeshBuilder::CreateNDCQuad()
+Mesh MeshBuilder::CreatePlane(float size, uint32_t row, uint32_t column)
 {
-	MeshPX mesh;
-	mesh.vertices.emplace_back(VertexPX{ {-1.0f, -1.0f, 0.0f },  0.0f, 1.0f });
-	mesh.vertices.emplace_back(VertexPX{ {-1.0f, +1.0f, 0.0f },  0.0f, 0.0f });
-	mesh.vertices.emplace_back(VertexPX{ {+1.0f, +1.0f, 0.0f },  1.0f, 0.0f });
-	mesh.vertices.emplace_back(VertexPX{ {+1.0f, -1.0f, 0.0f },  1.0f, 1.0f });
+	Mesh mesh;
+	const float xStep = size / (row - 1);
+	const float zStep = size / (column - 1);
+	const float uStep = row / static_cast<float>(row - 1);
+	const float vStep = column / static_cast<float>(column - 1);
 
-	mesh.indices.emplace_back(0);
-	mesh.indices.emplace_back(1);
-	mesh.indices.emplace_back(2);
+	Math::Vector3 offset = { size * -0.5f, 0.0f, size * -0.5f };
 
-	mesh.indices.emplace_back(0);
-	mesh.indices.emplace_back(2);
-	mesh.indices.emplace_back(3);
+	for (uint32_t z = 0; z < row; ++z)
+	{
+		for (uint32_t x = 0; x < column; ++x)
+		{
+			float xx = xStep * x;
+			float zz = zStep * z;
+			Math::Vector3 position = { xx, 0.0f, zz };
+			Math::Vector3 normal = Math::Vector3::YAxis;
+			Math::Vector3 tangent = Math::Vector3::XAxis;
+			Math::Vector2 uv = { x * uStep, 1.0f - z * vStep };
+			mesh.vertices.emplace_back(Vertex{ position + offset, normal, tangent, uv });
+
+			mesh.indices.push_back((x + 0) + ((z + 0) * column));
+			mesh.indices.push_back((x + 0) + ((z + 1) * column));
+			mesh.indices.push_back((x + 1) + ((z + 1) * column));
+
+			mesh.indices.push_back((x + 0) + ((z + 0) * column));
+			mesh.indices.push_back((x + 1) + ((z + 1) * column));
+			mesh.indices.push_back((x + 1) + ((z + 0) * column));
+		}
+	}
 
 	return mesh;
 }
+
+
+

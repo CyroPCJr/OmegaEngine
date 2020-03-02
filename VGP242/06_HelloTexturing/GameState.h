@@ -15,14 +15,14 @@ private:
 
 	Omega::Graphics::Camera mCamera;
 
-	//Omega::Graphics::MeshPX mMesh;	
+	Omega::Graphics::MeshPX mMesh;	
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::ConstantBuffer mConstantBuffer;
 	Omega::Graphics::VertexShader mVertexShader;
-	Omega::Graphics::PixelShader mGouraudShadingPixelShader;
+	Omega::Graphics::PixelShader mPixelShader;
 
 	Omega::Graphics::Texture mTexture;
-	Omega::Graphics::Sampler mSamplers;
+	Omega::Graphics::Sampler mSampler;
 
-	float mRotation = 0.0f;
+	Omega::Math::Vector3 mRotation = 0.0f;
 };

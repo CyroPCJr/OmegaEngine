@@ -6,7 +6,7 @@ using namespace Omega::Math;
 
 void GameState::Initialize()
 {
-	GraphicsSystem::Get()->SetClearColor(Colors::LightGray);
+	GraphicsSystem::Get()->SetClearColor(Colors::Black);
 	// Normalize vector mean vector lenght turn 1
 	//NDC - Normalize Device Coordinate
 
@@ -83,28 +83,28 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f,  0.0f,  0.5f }, 1.0f, 1.0f });
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
-
-	mMeshBuffer.Initialize(MeshBuilder::CreateSpherePX(10.0f, 10, 10, false));
+	mMesh = MeshBuilder::CreateSpherePX(10.0f);
+	mMeshBuffer.Initialize(mMesh);
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
+	std::filesystem::path doTexturingShader = "../../Assets/Shaders/DoTexturing.fx";
 	// Compile and create vertex shader
-	mVertexShader.Initialize("../../Assets/Shaders/DoTexturing.fx", VertexPX::Format);
+	mVertexShader.Initialize(doTexturingShader, VertexPX::Format);
 	// Compile and create pixel shader
-	mGouraudShadingPixelShader.Initialize("../../Assets/Shaders/DoTexturing.fx");
+	mPixelShader.Initialize(doTexturingShader);
 
-	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Clamp);
+	mSampler.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
 	mTexture.Initialize("beer.png");
 }
 
 void GameState::Terminate()
 {
-	mVertexShader.Terminate();
-	mConstantBuffer.Terminate();
 	mMeshBuffer.Terminate();
-	mGouraudShadingPixelShader.Terminate();
-
+	mConstantBuffer.Terminate();
+	mVertexShader.Terminate();
+	mPixelShader.Terminate();
+	mSampler.Terminate();
 	mTexture.Terminate();
-	mSamplers.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -134,32 +134,28 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-	auto matWorld = Matrix4::RotationY(mRotation);
-	auto matWorld1 = Matrix4::RotationX(mRotation);
+	auto context = GraphicsSystem::Get()->GetContext();
+
+	auto matRot = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
 	auto matView = mCamera.GetViewMatrix();
 	auto matProj = mCamera.GetPerspectiveMatrix();
-
-	mTexture.BindPS();
-	mSamplers.BindPS();
 	mConstantBuffer.BindVS();
+
 	mVertexShader.Bind();
-	mGouraudShadingPixelShader.Bind();
+	mPixelShader.Bind();
 
-	/*auto matTrans = Matrix4::Translation(Vector3(i, i, i));
-	auto matScale = Matrix4::Scaling(i*0.25f);*/
-	auto matTrans = Matrix4::Translation(Vector3(0.f, 0.f, 0.f));
-	auto matWVP = Transpose(matWorld * matTrans * matWorld1 * matView * matProj);
-
-	mConstantBuffer.Update(&matWVP);
-	mMeshBuffer.Draw();
-
-	//for (float i = 0; i < 10; ++i)
-	//{
-	//	auto matTrans = Matrix4::Translation(Vector3(i, i, i));
-	//	auto matScale = Matrix4::Scaling(i*0.25f);
-	//	auto matWVP = Transpose(matScale* matTrans * matWorld * matWorld1 * matView * matProj);
-
-	//	mConstantBuffer.Set(&matWVP);
-	//	mMeshBuffer.Draw();
-	//}
+	mSampler.BindPS();
+	mTexture.BindPS();
+	
+	const float spacing = 1.8f;
+	for (int y = -1; y <= 1; ++y)
+	{
+		for (float x = -1; x <= 1; ++x)
+		{
+			auto matTrans = Matrix4::Translation({ x * spacing, y * spacing, 0.0f });
+			auto matWVP = Transpose(matTrans * matRot * matView * matProj);
+			mConstantBuffer.Update(&matWVP);
+			mMeshBuffer.Draw();
+		}
+	}
 }
