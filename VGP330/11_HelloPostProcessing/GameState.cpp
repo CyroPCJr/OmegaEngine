@@ -63,7 +63,7 @@ void GameState::Initialize()
 	
 	std::filesystem::path postProcessingShader = "../../Assets/Shaders/PostProcessing.fx";
 	mPostProcessingVertexShader.Initialize(postProcessingShader, VertexPX::Format);
-	mPostProcessingPixelShader.Initialize(postProcessingShader);
+	mPostProcessingPixelShader.Initialize(postProcessingShader, "PSSepiaTone");
 }
 
 void GameState::Terminate()

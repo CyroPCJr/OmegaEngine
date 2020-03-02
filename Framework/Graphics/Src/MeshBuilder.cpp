@@ -128,50 +128,42 @@ MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
 	return mesh;
 }
 
-Mesh Omega::Graphics::MeshBuilder::CreatePlane(float size, int row, int column)
+Mesh MeshBuilder::CreatePlane(float size, int row, int column)
 {
 	Mesh mesh;
-	const float offset = size * -0.5f;
-	const float xSteps = size / static_cast<float>(column - 1);
-	const float zSteps = size / static_cast<float>(row - 1);
-	const float uSteps = size / static_cast<float>(column - 1);
-	const float vSteps = size / static_cast<float>(row - 1);
+	const float xStep = size / (row - 1);
+	const float zStep = size / (column - 1);
+	const float uStep = row / static_cast<float>(row - 1);
+	const float vStep = column / static_cast<float>(column - 1);
 
-	for (float z = 0.0f; z < row; ++z)
+	Math::Vector3 offset = { size * -0.5f, 0.0f, size * -0.5f };
+
+	for (int z = 0; z < row; ++z)
 	{
-		for (float x = 0.0f; x < column; ++x)
+		for (int x = 0; x < column; ++x)
 		{
-			auto vec = Vector3{ x*xSteps + offset, 0.0f, z *zSteps + offset };
-			mesh.vertices.emplace_back(Vertex{ vec,
-				Vector3::YAxis,
-				Vector3::XAxis,
-				{x * uSteps ,  z * vSteps}
-				});
+			float xx = xStep * x;
+			float zz = zStep * z;
+			float y = 0.0f;
+			Math::Vector3 position = { xx, 0.0f, zz };
+			Math::Vector3 normal = Math::Vector3::YAxis;
+			Math::Vector3 tangent = Math::Vector3::XAxis;
+			Math::Vector2 uv = { x * uStep, 1.0f - z * vStep };
+			mesh.vertices.emplace_back(Vertex{ position + offset, normal, tangent, uv });
 		}
 	}
 
-	for (unsigned int z = 0; z < column - 1; ++z)
+	for (int z = 0; z < row; ++z)
 	{
-		for (unsigned int x = 0; x < row - 1; ++x)
+		for (int x = 0; x < column; ++x)
 		{
-			/*
+			mesh.indices.push_back((x + 0) + ((z + 0) * column));
+			mesh.indices.push_back((x + 0) + ((z + 1) * column));
+			mesh.indices.push_back((x + 1) + ((z + 1) * column));
 
-			Indices read to anti-clockwise ->
-			2|-------------|3
-			 |			   |
-			 |			   |
-			0|-------------|1
-
-			*/
-
-			// get the corrnes
-			mesh.indices.push_back(z * column + x);
-			mesh.indices.push_back((z + 1) * column + x);
-			mesh.indices.push_back(z * column + (x + 1));
-
-			mesh.indices.push_back((z + 1) * column + x);
-			mesh.indices.push_back((z + 1) * column + (x + 1));
-			mesh.indices.push_back(z * column + (x + 1));
+			mesh.indices.push_back((x + 0) + ((z + 0) * column));
+			mesh.indices.push_back((x + 1) + ((z + 1) * column));
+			mesh.indices.push_back((x + 1) + ((z + 0) * column));
 		}
 	}
 
@@ -191,7 +183,7 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 			{
 			-sinf(theta) * radius,
 			static_cast<float>(y),
-			cosf(theta) * radius
+			cosf(theta)* radius
 			};
 
 			mesh.vertices.emplace_back(
@@ -212,18 +204,18 @@ MeshPX MeshBuilder::CreateCylinderPX(uint32_t row, uint32_t col, float radius)
 			}
 			if ((y == col - 1) && (x != 0) && (x != row - 1))
 			{
-				mesh.indices.push_back(y*row);
-				mesh.indices.push_back(y*row + x);
-				mesh.indices.push_back(y*row + x + 1);
+				mesh.indices.push_back(y * row);
+				mesh.indices.push_back(y * row + x);
+				mesh.indices.push_back(y * row + x + 1);
 			}
 
-			mesh.indices.push_back(y*row + x);
-			mesh.indices.push_back((y + 1)*row + x + 1);
-			mesh.indices.push_back((y + 1)*row + x);
+			mesh.indices.push_back(y * row + x);
+			mesh.indices.push_back((y + 1) * row + x + 1);
+			mesh.indices.push_back((y + 1) * row + x);
 
-			mesh.indices.push_back(y*row + x);
-			mesh.indices.push_back(y*row + x + 1);
-			mesh.indices.push_back((y + 1)*row + x + 1);
+			mesh.indices.push_back(y * row + x);
+			mesh.indices.push_back(y * row + x + 1);
+			mesh.indices.push_back((y + 1) * row + x + 1);
 		}
 	}
 
@@ -444,18 +436,18 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 MeshPX Omega::Graphics::MeshBuilder::CreateNDCQuad()
 {
 	MeshPX mesh;
+	mesh.vertices.emplace_back(VertexPX{ {-1.0f, -1.0f, 0.0f },  0.0f, 1.0f });
+	mesh.vertices.emplace_back(VertexPX{ {-1.0f, +1.0f, 0.0f },  0.0f, 0.0f });
+	mesh.vertices.emplace_back(VertexPX{ {+1.0f, +1.0f, 0.0f },  1.0f, 0.0f });
+	mesh.vertices.emplace_back(VertexPX{ {+1.0f, -1.0f, 0.0f },  1.0f, 1.0f });
 
-	mesh.vertices.emplace_back(VertexPX{ Vector3{ -1.0f, 1.0f, 0.0f },  0.0f, 0.0f });
-	mesh.vertices.emplace_back(VertexPX{ Vector3{ 1.0f, 1.0f, 0.0f },   1.0f, 0.0f });
-	mesh.vertices.emplace_back(VertexPX{ Vector3{ -1.0f, -1.0f, 0.0f },  0.0f, 1.0f });
-	mesh.vertices.emplace_back(VertexPX{ Vector3{ 1.0f, -1.0f, 0.0f },  1.0f, 1.0f });
+	mesh.indices.emplace_back(0);
+	mesh.indices.emplace_back(1);
+	mesh.indices.emplace_back(2);
 
-	mesh.indices.push_back(0);
-	mesh.indices.push_back(1);
-	mesh.indices.push_back(2);
+	mesh.indices.emplace_back(0);
+	mesh.indices.emplace_back(2);
+	mesh.indices.emplace_back(3);
 
-	mesh.indices.push_back(1);
-	mesh.indices.push_back(3);
-	mesh.indices.push_back(2);
 	return mesh;
 }
