@@ -11,8 +11,8 @@ public:
 	void Update(float deltaTime) override;
 	void Render() override;
 	void DebugUI() override;
-private:
 
+private:
 	void DrawDepthMap();
 	void DrawScene();
 	void PostProcess();
@@ -20,23 +20,13 @@ private:
 private:
 	Omega::Graphics::Camera mDefaultCamera;
 	Omega::Graphics::Camera mLightCamera;
-	Omega::Graphics::Camera* mActiveCamera = nullptr;;
+	Omega::Graphics::Camera* mActiveCamera = nullptr;
 
-	// Tank
 	Omega::Graphics::Mesh mTankMesh;
 	Omega::Graphics::MeshBuffer mTankMeshBuffer;
-	// ground plane
-	Omega::Graphics::Mesh mGroundPlane;
-	Omega::Graphics::MeshBuffer mGroundPlaneBuffer;
-	// textures
-	Omega::Graphics::Sampler mSamplers;
-	Omega::Graphics::Texture mDifuseTexture;
-	Omega::Graphics::Texture mSpecularTexture;
-	Omega::Graphics::Texture mNormalMap;
-	Omega::Graphics::Texture mGroundPlaneMap;
 
-	Omega::Graphics::VertexShader mVertexShader;
-	Omega::Graphics::PixelShader mPixelShader;
+	Omega::Graphics::Mesh mGroundMesh;
+	Omega::Graphics::MeshBuffer mGroundMeshBuffer;
 
 	struct TransformData
 	{
@@ -45,42 +35,64 @@ private:
 		Omega::Math::Vector3 viewPosition;
 		float padding;
 	};
-
 	struct SettingsData
 	{
-		float specularWeight = 1.0f;
+		float specularMapWeight = 1.0f;
 		float bumpMapWeight = 1.0f;
 		float normalMapWeight = 1.0f;
 		float aoMapWeight = 1.0f;
-		float padding[2];
 		float brightness = 1.0f;
 		int useShadow = 1;
+		float depthBias = 0.0f;
+		float padding;
+	};
+	struct PostProcessSettingsData
+	{
+		float screenWidth = 0.0f;
+		float screenHeight = 0.0f;
+		float time = 0.0f;
+		float padding;
 	};
 
-	// Lighting
 	using TransformBuffer = Omega::Graphics::TypedConstantBuffer<TransformData>;
 	using LightBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::DirectionalLight>;
 	using MaterialBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::Material>;
-	// Settings data buffer 
-	using SettingsDataBuffer = Omega::Graphics::TypedConstantBuffer<SettingsData>;
-	//Shadow and depth map data buffer
+	using SettingsBuffer = Omega::Graphics::TypedConstantBuffer<SettingsData>;
+	using PostProcessingSettingsBuffer = Omega::Graphics::TypedConstantBuffer<PostProcessSettingsData>;
 	using DepthMapConstantBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Math::Matrix4>;
 	using ShadowConstantBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Math::Matrix4>;
-
-	SettingsDataBuffer mSettingsDataBuffer;
-	Omega::Graphics::DirectionalLight mDirectionalLight;
-	Omega::Graphics::Material mMaterial;
 
 	TransformBuffer mTransformBuffer;
 	LightBuffer mLightBuffer;
 	MaterialBuffer mMaterialBuffer;
+	SettingsBuffer mSettingsBuffer;
+	PostProcessingSettingsBuffer mPostProcessingSettingsBuffer;
 
-	SettingsData mSettingsData;
+	Omega::Graphics::DirectionalLight mDirectionalLight;
+	Omega::Graphics::Material mMaterial;
+
+	Omega::Graphics::VertexShader mVertexShader;
+	Omega::Graphics::PixelShader mPixelShader;
+
+	Omega::Graphics::Sampler mSampler;
+	Omega::Graphics::Texture mDiffuseMap;
+	Omega::Graphics::Texture mSpecularMap;
+	Omega::Graphics::Texture mDisplacementMap;
+	Omega::Graphics::Texture mNormalMap;
+	Omega::Graphics::Texture mAOMap;
+
+	Omega::Graphics::Texture mGroundDiffuseMap;
+
+	std::vector<Omega::Math::Vector3> mTankPositions{};
+	Omega::Math::Vector3 mTankRotation = 0.0f;
+	float mTankSpacing = 0.5f;
+
+	SettingsData mSettings;
 
 	// Shadow
 	Omega::Graphics::RenderTarget mDepthMapRenderTarget;
 	Omega::Graphics::VertexShader mDepthMapVertexShader;
-	Omega::Graphics::PixelShader mDepthMaPixelShader;
+	Omega::Graphics::PixelShader mDepthMapPixelShader;
 	DepthMapConstantBuffer mDepthMapConstantBuffer;
 	ShadowConstantBuffer mShadowConstantBuffer;
 
@@ -90,8 +102,5 @@ private:
 	Omega::Graphics::MeshBuffer mScreenQuadBuffer;
 	Omega::Graphics::VertexShader mPostProcessingVertexShader;
 	Omega::Graphics::PixelShader mPostProcessingPixelShader;
-
-	Omega::Math::Vector3 mTankPosition = 0.0f;
-	Omega::Math::Vector3 mTankRotation = 0.0f;
-	
+	PostProcessSettingsData mPostProcessSettings;
 };
