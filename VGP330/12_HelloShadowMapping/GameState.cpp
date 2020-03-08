@@ -6,6 +6,22 @@ using namespace Omega::Graphics;
 using namespace Omega::Input;
 using namespace Omega::Math;
 
+namespace
+{
+	void SimpleDrawCamera(const Camera& camera)
+	{
+		auto defaultMatView = camera.GetViewMatrix();
+		Vector3 cameraPosition = camera.GetPosition();
+		Vector3 cameraRight = { defaultMatView._11, defaultMatView._21, defaultMatView._31 };
+		Vector3 cameraUp = { defaultMatView._12, defaultMatView._22, defaultMatView._32 };
+		Vector3 cameraLook = { defaultMatView._13, defaultMatView._23, defaultMatView._33 };
+		//SimpleDraw::AddSphere(cameraPosition, 0.1f, Colors::White, 6, 8);
+		SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraRight, Colors::Red);
+		SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraUp, Colors::Green);
+		SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraLook, Colors::Blue);
+	}
+}
+
 void GameState::Initialize()
 {
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
@@ -248,10 +264,10 @@ void GameState::Update(float deltaTime)
 	auto v6 = lightSide * maxX + lightUp * maxY + lightLook * maxZ;
 	auto v7 = lightSide * maxX + lightUp * minY + lightLook * maxZ;
 
-	SimpleDraw::AddLine(v0, v1, Colors::Red);
-	SimpleDraw::AddLine(v1, v2, Colors::Red);
-	SimpleDraw::AddLine(v2, v3, Colors::Red);
-	SimpleDraw::AddLine(v3, v0, Colors::Red);
+	SimpleDraw::AddLine(v0, v1, Colors::Yellow);
+	SimpleDraw::AddLine(v1, v2, Colors::Yellow);
+	SimpleDraw::AddLine(v2, v3, Colors::Yellow);
+	SimpleDraw::AddLine(v3, v0, Colors::Yellow);
 
 	SimpleDraw::AddLine(v0, v4, Colors::Red);
 	SimpleDraw::AddLine(v1, v5, Colors::Red);
@@ -262,6 +278,8 @@ void GameState::Update(float deltaTime)
 	SimpleDraw::AddLine(v5, v6, Colors::Red);
 	SimpleDraw::AddLine(v6, v7, Colors::Red);
 	SimpleDraw::AddLine(v7, v4, Colors::Red);
+	
+	SimpleDrawCamera(mLightCamera);
 
 }
 
