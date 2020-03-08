@@ -137,10 +137,11 @@ void GameState::Terminate()
 
 void GameState::Update(float deltaTime)
 {
-	const float kMoveSpeed = 10.0f;
+	auto inputSystem = InputSystem::Get();
+
+	const float kMoveSpeed = inputSystem->IsKeyDown(KeyCode::LSHIFT) ? 100.0f : 10.0f;
 	const float kTurnSpeed = 1.0f;
 
-	auto inputSystem = InputSystem::Get();
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
 		mDefaultCamera.Walk(kMoveSpeed * deltaTime);
@@ -251,7 +252,7 @@ void GameState::Update(float deltaTime)
 		lightUp + (minY + maxY) * 0.5f +
 		lightLook + (minZ + maxZ) * 0.5f
 	);
-	mLightCamera.SetNearPlane(minZ);
+	mLightCamera.SetNearPlane(minZ - 300.0f);
 	mLightCamera.SetFarPlane(maxZ);
 	mLightProjectMatrix = mLightCamera.GetOrthoGraphiMatrix(maxX - minX, maxY - minY);
 
@@ -489,16 +490,7 @@ void GameState::DrawScene()
 	SimpleDraw::AddLine(mViewFrustumVertices[6], mViewFrustumVertices[7], Colors::White);
 	SimpleDraw::AddLine(mViewFrustumVertices[7], mViewFrustumVertices[4], Colors::White);
 
-	auto defaultMatView = mDefaultCamera.GetViewMatrix();
-	Vector3 cameraPosition = mDefaultCamera.GetPosition();
-	Vector3 cameraRight = { defaultMatView._11, defaultMatView._21, defaultMatView._31 };
-	Vector3 cameraUp = { defaultMatView._12, defaultMatView._22, defaultMatView._32 };
-	Vector3 cameraLook = { defaultMatView._13, defaultMatView._23, defaultMatView._33 };
-	//TODO: Add position to this function AddSphere
-	//SimpleDraw::AddSphere(cameraPosition, 0.1f, 6, 8, Colors::White);
-	SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraRight, Colors::Red);
-	SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraUp, Colors::Green);
-	SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraLook, Colors::Blue);
+	SimpleDrawCamera(mDefaultCamera);
 
 	SimpleDraw::Render(*mActiveCamera);
 }
