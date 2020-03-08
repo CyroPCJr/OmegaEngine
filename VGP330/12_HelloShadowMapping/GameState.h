@@ -19,8 +19,26 @@ private:
 
 private:
 	Omega::Graphics::Camera mDefaultCamera;
+	Omega::Graphics::Camera mDebugCamera;
 	Omega::Graphics::Camera mLightCamera;
 	Omega::Graphics::Camera* mActiveCamera = nullptr;
+
+	Omega::Math::Matrix4 mLightProjectMatrix;
+
+	std::vector<Omega::Math::Vector3> mViewFrustumVertices =
+	{
+		// Near Plane
+		{-1.0f, -1.0f, 0.0f},
+		{-1.0f,  1.0f, 0.0f},
+		{ 1.0f,  1.0f, 0.0f},
+		{ 1.0f, -1.0f, 0.0f},
+		//Far Plane
+		{-1.0f, -1.0f, 1.0f},
+		{-1.0f,  1.0f, 1.0f},
+		{ 1.0f,  1.0f, 1.0f},
+		{ 1.0f, -1.0f, 1.0f},
+	};
+	
 
 	Omega::Graphics::Mesh mTankMesh;
 	Omega::Graphics::MeshBuffer mTankMeshBuffer;
@@ -85,7 +103,7 @@ private:
 
 	std::vector<Omega::Math::Vector3> mTankPositions{};
 	Omega::Math::Vector3 mTankRotation = 0.0f;
-	float mTankSpacing = 0.5f;
+	float mTankSpacing = 20.0f;
 
 	SettingsData mSettings;
 

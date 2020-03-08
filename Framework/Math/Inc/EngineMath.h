@@ -128,17 +128,18 @@ namespace Omega::Math
 	inline Matrix4 Inverse(const Matrix4& m)
 	{
 		const float det = Determinant(m);
-		const float inverseDet = 1.f / det;
+		const float inverseDet = 1.0f / det;
 		Matrix4 matrix;
 		return matrix.Adjoint(m) * inverseDet;
 	}
 
 	constexpr Vector3 TransformCoord(const Vector3& v, const Matrix4& m)
 	{
+		const float w = (v.x* m._14) + (v.y*m._24) + (v.z*m._34) + (1.0f * m._44);
 		Vector3 vec;
-		vec.x = (m._11 * v.x) + (m._21 * v.y) + (m._31 * v.z) + m._41;
-		vec.y = (m._12 * v.x) + (m._22 * v.y) + (m._32 * v.z) + m._42;
-		vec.z = (m._13 * v.x) + (m._23 * v.y) + (m._33 * v.z) + m._43;
+		vec.x = ((m._11 * v.x) + (m._21 * v.y) + (m._31 * v.z) + m._41) / w;
+		vec.y = ((m._12 * v.x) + (m._22 * v.y) + (m._32 * v.z) + m._42) / w;
+		vec.z = ((m._13 * v.x) + (m._23 * v.y) + (m._33 * v.z) + m._43) / w;
 		return vec;
 	}
 

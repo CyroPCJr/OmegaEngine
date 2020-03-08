@@ -10,11 +10,15 @@ void GameState::Initialize()
 {
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
 
-	
-
-	mDefaultCamera.SetNearPlane(0.001f);
-	mDefaultCamera.SetPosition({ 0.0f, 5.0f, -20.0f });
+	mDefaultCamera.SetNearPlane(0.1f);
+	mDefaultCamera.SetFarPlane(200.0f);
+	mDefaultCamera.SetPosition({ 0.0f, 10.0f, -30.0f });
 	mDefaultCamera.SetLookAt({ 0.0f, 0.0f, 0.0f });
+
+	mDebugCamera.SetNearPlane(0.001f);
+	mDebugCamera.SetFarPlane(10000.0f);
+	mDebugCamera.SetPosition({ 0.0f, 10.0f, -30.0f });
+	mDebugCamera.SetLookAt({ 0.0f, 0.0f, 0.0f });
 
 	mLightCamera.SetDirection(Normalize({ 1.0f, -1.0f, 1.0f }));
 	mLightCamera.SetNearPlane(1.0f);
@@ -27,7 +31,7 @@ void GameState::Initialize()
 	ObjLoader::Load("../../Assets/Models/Tank/tank.obj", 0.001f, mTankMesh);
 	mTankMeshBuffer.Initialize(mTankMesh);
 
-	mGroundMesh = MeshBuilder::CreatePlane(1000.0f);
+	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
 	mGroundMeshBuffer.Initialize(mGroundMesh);
 
 	mTransformBuffer.Initialize();
@@ -67,7 +71,7 @@ void GameState::Initialize()
 
 	auto graphicsSystem = GraphicsSystem::Get();
 
-	constexpr uint32_t depthMapSize = 1024;
+	constexpr uint32_t depthMapSize = 4096;
 	mDepthMapRenderTarget.Initialize(depthMapSize, depthMapSize, RenderTarget::Format::RGBA_U32);
 	mDepthMapVertexShader.Initialize("../../Assets/Shaders/DepthMap.fx", Vertex::Format);
 	mDepthMapPixelShader.Initialize("../../Assets/Shaders/DepthMap.fx");
@@ -124,28 +128,29 @@ void GameState::Update(float deltaTime)
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
 		mDefaultCamera.Walk(kMoveSpeed * deltaTime);
+		mLightCamera.Walk(kMoveSpeed * deltaTime);
 		//mTankPosition.z += kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
-		mDefaultCamera.Walk(-kMoveSpeed * deltaTime);
+		mActiveCamera->Walk(-kMoveSpeed * deltaTime);
 		//mTankPosition.z -= kMoveSpeed * deltaTime;
 	}
 	if (inputSystem->IsKeyDown(KeyCode::D))
 	{
-		mDefaultCamera.Strafe(kMoveSpeed * deltaTime);
+		mActiveCamera->Strafe(kMoveSpeed * deltaTime);
 		mTankRotation.y += kMoveSpeed * deltaTime;
 	}
 	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
-		mDefaultCamera.Strafe(-kMoveSpeed * deltaTime);
+		mActiveCamera->Strafe(-kMoveSpeed * deltaTime);
 		mTankRotation.y -= kMoveSpeed * deltaTime;
 	}
 	if (inputSystem->IsMouseDown(MouseButton::RBUTTON))
 	{
-		mDefaultCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
-		mDefaultCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+		mActiveCamera->Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
+		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::UP))
@@ -168,21 +173,96 @@ void GameState::Update(float deltaTime)
 	mPostProcessSettings.time += deltaTime;
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
-	mLightCamera.SetPosition(mLightCamera.GetDirection() * -50.0f);
+	//mLightCamera.SetPosition(mLightCamera.GetDirection() * -50.0f);
 
 	mTankPositions.clear();
+
 	const int count = 5;
-	const float offSetX = (count-1) *mTankSpacing* -0.5f;
-	const float offSetZ = (count-1) *mTankSpacing* -0.5f;
+	const float offsetX = (count - 1) * mTankSpacing * -0.5f;
+	const float offsetZ = (count - 1) * mTankSpacing * -0.5f;
 	for (int z = 0; z < count; ++z)
 	{
 		for (int x = 0; x < count; ++x)
 		{
-			float posX = (x * mTankSpacing) * offSetX;
-			float posZ = (z * mTankSpacing) * offSetZ;
-			mTankPositions.push_back({ posX, 3.5f,posZ });
+			float posX = (x * mTankSpacing) + offsetX;
+			float posZ = (z * mTankSpacing) + offsetZ;
+			mTankPositions.push_back({ posX, 3.5f, posZ });
 		}
 	}
+
+	mViewFrustumVertices =
+	{
+		// Near plane
+		{ -1.0f, -1.0f, 0.0f },
+		{ -1.0f,  1.0f, 0.0f },
+		{  1.0f,  1.0f, 0.0f },
+		{  1.0f, -1.0f, 0.0f },
+
+		// Far plane
+		{ -1.0f, -1.0f, 1.0f },
+		{ -1.0f,  1.0f, 1.0f },
+		{  1.0f,  1.0f, 1.0f },
+		{  1.0f, -1.0f, 1.0f },
+	};
+	auto defaultMatView = mDefaultCamera.GetViewMatrix();
+	auto defaultMatProj = mDefaultCamera.GetPerspectiveMatrix();
+	auto invViewProj = Inverse(defaultMatView * defaultMatProj);
+	for (auto& vertex : mViewFrustumVertices)
+	{
+		vertex = TransformCoord(vertex, invViewProj);
+	}
+
+	auto lightLook = mLightCamera.GetDirection();
+	auto lightSide = Normalize(Cross(Vector3::YAxis, lightLook));
+	auto lightUp = Normalize(Cross(lightLook, lightSide));
+	float minX = FLT_MAX, maxX = -FLT_MAX;
+	float minY = FLT_MAX, maxY = -FLT_MAX;
+	float minZ = FLT_MAX, maxZ = -FLT_MAX;
+	for (auto& vertex : mViewFrustumVertices)
+	{
+		float projectX = Dot(lightSide, vertex);
+		minX = Min(minX, projectX);
+		maxX = Max(maxX, projectX);
+		float projectY = Dot(lightUp, vertex);
+		minY = Min(minY, projectY);
+		maxY = Max(maxY, projectY);
+		float projectZ = Dot(lightLook, vertex);
+		minZ = Min(minZ, projectZ);
+		maxZ = Max(maxZ, projectZ);
+	}
+	mLightCamera.SetPosition(
+		lightSide + (minX + maxX) * 0.5f +
+		lightUp + (minY + maxY) * 0.5f +
+		lightLook + (minZ + maxZ) * 0.5f
+	);
+	mLightCamera.SetNearPlane(minZ);
+	mLightCamera.SetFarPlane(maxZ);
+	mLightProjectMatrix = mLightCamera.GetOrthoGraphiMatrix(maxX - minX, maxY - minY);
+
+	auto v0 = lightSide * minX + lightUp * minY + lightLook * minZ;
+	auto v1 = lightSide * minX + lightUp * maxY + lightLook * minZ;
+	auto v2 = lightSide * maxX + lightUp * maxY + lightLook * minZ;
+	auto v3 = lightSide * maxX + lightUp * minY + lightLook * minZ;
+	auto v4 = lightSide * minX + lightUp * minY + lightLook * maxZ;
+	auto v5 = lightSide * minX + lightUp * maxY + lightLook * maxZ;
+	auto v6 = lightSide * maxX + lightUp * maxY + lightLook * maxZ;
+	auto v7 = lightSide * maxX + lightUp * minY + lightLook * maxZ;
+
+	SimpleDraw::AddLine(v0, v1, Colors::Red);
+	SimpleDraw::AddLine(v1, v2, Colors::Red);
+	SimpleDraw::AddLine(v2, v3, Colors::Red);
+	SimpleDraw::AddLine(v3, v0, Colors::Red);
+
+	SimpleDraw::AddLine(v0, v4, Colors::Red);
+	SimpleDraw::AddLine(v1, v5, Colors::Red);
+	SimpleDraw::AddLine(v2, v6, Colors::Red);
+	SimpleDraw::AddLine(v3, v7, Colors::Red);
+
+	SimpleDraw::AddLine(v4, v5, Colors::Red);
+	SimpleDraw::AddLine(v5, v6, Colors::Red);
+	SimpleDraw::AddLine(v6, v7, Colors::Red);
+	SimpleDraw::AddLine(v7, v4, Colors::Red);
+
 }
 
 void GameState::Render()
@@ -209,6 +289,11 @@ void GameState::DebugUI()
 		if (ImGui::Checkbox("Use Light Camera", &lightCamera))
 		{
 			mActiveCamera = lightCamera ? &mLightCamera : &mDefaultCamera;
+		}
+		bool debugCamera = mActiveCamera == &mDebugCamera;
+		if (ImGui::Checkbox("Use Debug Camera", &debugCamera))
+		{
+			mActiveCamera = debugCamera ? &mDebugCamera : &mDefaultCamera;
 		}
 
 		ImGui::Image(
@@ -282,7 +367,9 @@ void GameState::DrawDepthMap()
 	mDepthMapPixelShader.Bind();
 
 	auto matViewLight = mLightCamera.GetViewMatrix();
-	auto matProjLight = mLightCamera.GetPerspectiveMatrix();
+	auto matProjLight = mLightProjectMatrix;// mLightCamera.GetPerspectiveMatrix();
+
+	mDepthMapConstantBuffer.BindVS(0);
 
 	for (auto& position : mTankPositions)
 	{
@@ -291,11 +378,8 @@ void GameState::DrawDepthMap()
 		auto matWorld = matRot * matTrans;
 		auto wvp = Transpose(matWorld * matViewLight * matProjLight);
 		mDepthMapConstantBuffer.Update(wvp);
-		mDepthMapConstantBuffer.BindVS(0);
-
 		mTankMeshBuffer.Draw();
 	}
-
 }
 
 void GameState::DrawScene()
@@ -303,7 +387,7 @@ void GameState::DrawScene()
 	auto matView = mActiveCamera->GetViewMatrix();
 	auto matProj = mActiveCamera->GetPerspectiveMatrix();
 	auto matViewLight = mLightCamera.GetViewMatrix();
-	auto matProjLight = mLightCamera.GetPerspectiveMatrix();
+	auto matProjLight = mLightProjectMatrix; //mLightCamera.GetPerspectiveMatrix();
 
 	mLightBuffer.Update(mDirectionalLight);
 	mLightBuffer.BindVS(1);
@@ -327,9 +411,15 @@ void GameState::DrawScene()
 	mAOMap.BindPS(4);
 	mDepthMapRenderTarget.BindPS(5);
 
-	for (auto& positions : mTankPositions)
+	mVertexShader.Bind();
+	mPixelShader.Bind();
+
+	mTransformBuffer.BindVS(0);
+	mShadowConstantBuffer.BindVS(4);
+
+	for (auto& position : mTankPositions)
 	{
-		auto matTrans = Matrix4::Translation(positions);
+		auto matTrans = Matrix4::Translation(position);
 		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
 		auto matWorld = matRot * matTrans;
 
@@ -338,34 +428,21 @@ void GameState::DrawScene()
 		transformData.wvp = Transpose(matWorld * matView * matProj);
 		transformData.viewPosition = mActiveCamera->GetPosition();
 		mTransformBuffer.Update(transformData);
-		mTransformBuffer.BindVS(0);
 
 		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 		mShadowConstantBuffer.Update(wvpLight);
-		mShadowConstantBuffer.BindVS(4);
-
-		mVertexShader.Bind();
-		mPixelShader.Bind();
 
 		mTankMeshBuffer.Draw();
 	}
-	
-	auto matTrans = Matrix4::Identity;
-	auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
-	auto matWorld = matRot * matTrans;
 
+	auto matWorld = Matrix4::Identity;
 	TransformData transformData;
-	transformData.world = Transpose(matWorld);
-	transformData.wvp = Transpose(matWorld * matView * matProj);
-	transformData.viewPosition = mActiveCamera->GetPosition();
-	matWorld = Matrix4::Identity;
 	transformData.world = Transpose(matWorld);
 	transformData.wvp = Transpose(matWorld * matView * matProj);
 	mTransformBuffer.Update(transformData);
 
 	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 	mShadowConstantBuffer.Update(wvpLight);
-	mShadowConstantBuffer.BindVS(4);
 
 	mGroundDiffuseMap.BindPS(0);
 
@@ -378,6 +455,32 @@ void GameState::DrawScene()
 	mSettingsBuffer.Update(settings);
 
 	mGroundMeshBuffer.Draw();
+
+	SimpleDraw::AddLine(mViewFrustumVertices[0], mViewFrustumVertices[1], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[1], mViewFrustumVertices[2], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[2], mViewFrustumVertices[3], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[3], mViewFrustumVertices[0], Colors::White);
+
+	SimpleDraw::AddLine(mViewFrustumVertices[0], mViewFrustumVertices[4], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[1], mViewFrustumVertices[5], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[2], mViewFrustumVertices[6], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[3], mViewFrustumVertices[7], Colors::White);
+
+	SimpleDraw::AddLine(mViewFrustumVertices[4], mViewFrustumVertices[5], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[5], mViewFrustumVertices[6], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[6], mViewFrustumVertices[7], Colors::White);
+	SimpleDraw::AddLine(mViewFrustumVertices[7], mViewFrustumVertices[4], Colors::White);
+
+	auto defaultMatView = mDefaultCamera.GetViewMatrix();
+	Vector3 cameraPosition = mDefaultCamera.GetPosition();
+	Vector3 cameraRight = { defaultMatView._11, defaultMatView._21, defaultMatView._31 };
+	Vector3 cameraUp = { defaultMatView._12, defaultMatView._22, defaultMatView._32 };
+	Vector3 cameraLook = { defaultMatView._13, defaultMatView._23, defaultMatView._33 };
+	//TODO: Add position to this function AddSphere
+	//SimpleDraw::AddSphere(cameraPosition, 0.1f, 6, 8, Colors::White);
+	SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraRight, Colors::Red);
+	SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraUp, Colors::Green);
+	SimpleDraw::AddLine(cameraPosition, cameraPosition + cameraLook, Colors::Blue);
 
 	SimpleDraw::Render(*mActiveCamera);
 }

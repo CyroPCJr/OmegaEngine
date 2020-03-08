@@ -30,6 +30,8 @@ namespace Omega::Graphics
 		const Math::Vector3& GetDirection() const { return mDirection; }
 
 		Math::Matrix4 GetViewMatrix() const;
+		Math::Matrix4 GetOrthoGraphiMatrix(float width, float height) const;
+		
 		Math::Matrix4 GetPerspectiveMatrix() const;	
 
 	private:

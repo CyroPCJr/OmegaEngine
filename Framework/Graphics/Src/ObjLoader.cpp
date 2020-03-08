@@ -17,7 +17,7 @@ void ObjLoader::Load(const std::filesystem::path & filePath, float scale, Mesh &
 	while (true)
 	{
 		char buffer[128];
-		int res = fscanf_s(file, "%s", buffer, std::size(buffer));
+		int res = fscanf_s(file, "%s", buffer, static_cast<unsigned int>(std::size(buffer)));
 		if (res == EOF)
 		{
 			break;
@@ -44,7 +44,7 @@ void ObjLoader::Load(const std::filesystem::path & filePath, float scale, Mesh &
 		else if (strcmp(buffer, "f") == 0)
 		{
 			uint32_t v[4], t[4], n[4];
-			fgets(buffer, std::size(buffer), file);
+			fgets(buffer, static_cast<int>(std::size(buffer)), file);
 			if (sscanf_s(buffer, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n",
 				&v[0], &t[0], &n[0],
 				&v[1], &t[1], &n[1],

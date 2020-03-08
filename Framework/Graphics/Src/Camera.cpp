@@ -96,6 +96,21 @@ Math::Matrix4 Camera::GetViewMatrix() const
 	};
 }
 
+Math::Matrix4 Omega::Graphics::Camera::GetOrthoGraphiMatrix(float width, float height) const
+{
+	const float w = width;
+	const float h = height;
+	const float zf = mFarPlane;
+	const float zn = mNearPlane;
+	return 
+	{
+	    2.0f / w, 0.0f,   0.0f,         0.0f,
+		0.0f,     2.0f/h, 0.0f,         0.0f,
+		0.0f,     0.0f,   1.0f/(zf-zn), 0.0f,
+		0.0f,     0.0f,   zn/(zn-zf),   1.0f
+	};
+}
+
 Math::Matrix4 Camera::GetPerspectiveMatrix() const
 {
 	float aspectRatio = mAspectRatio;
