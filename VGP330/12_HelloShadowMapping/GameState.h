@@ -25,20 +25,7 @@ private:
 
 	Omega::Math::Matrix4 mLightProjectMatrix;
 
-	std::vector<Omega::Math::Vector3> mViewFrustumVertices =
-	{
-		// Near Plane
-		{-1.0f, -1.0f, 0.0f},
-		{-1.0f,  1.0f, 0.0f},
-		{ 1.0f,  1.0f, 0.0f},
-		{ 1.0f, -1.0f, 0.0f},
-		//Far Plane
-		{-1.0f, -1.0f, 1.0f},
-		{-1.0f,  1.0f, 1.0f},
-		{ 1.0f,  1.0f, 1.0f},
-		{ 1.0f, -1.0f, 1.0f},
-	};
-	
+	std::vector<Omega::Math::Vector3> mViewFrustumVertices;
 
 	Omega::Graphics::Mesh mTankMesh;
 	Omega::Graphics::MeshBuffer mTankMeshBuffer;

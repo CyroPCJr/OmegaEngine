@@ -221,6 +221,7 @@ void GameState::Update(float deltaTime)
 		{  1.0f,  1.0f, 1.0f },
 		{  1.0f, -1.0f, 1.0f },
 	};
+	
 	auto defaultMatView = mDefaultCamera.GetViewMatrix();
 	auto defaultMatProj = mDefaultCamera.GetPerspectiveMatrix();
 	auto invViewProj = Inverse(defaultMatView * defaultMatProj);
