@@ -7,11 +7,23 @@
     <Filter Include="Src">
       <UniqueIdentifier>{0d5679dc-9141-4102-83db-3d3ca083fabf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\App">
+      <UniqueIdentifier>{e14a080c-e73a-434d-87c1-e7f0fd4aa3c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Terrain">
+      <UniqueIdentifier>{9fff69af-1013-46f2-8795-31955122bb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\App">
+      <UniqueIdentifier>{7fef8c89-a55e-4cce-b631-22e06988b001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Pch">
+      <UniqueIdentifier>{2e9fb9cc-c696-47aa-a672-8a44dc9a6874}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Terrain">
+      <UniqueIdentifier>{552b4e4a-930f-40e4-b51d-547d5e37d7a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Precompiled.h">
-      <Filter>Src</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\Omega.h">
       <Filter>Inc</Filter>
     </ClInclude>
@@ -19,21 +31,30 @@
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\App.h">
-      <Filter>Inc</Filter>
+      <Filter>Inc\App</Filter>
     </ClInclude>
     <ClInclude Include="Inc\AppState.h">
-      <Filter>Inc</Filter>
+      <Filter>Inc\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Precompiled.h">
+      <Filter>Src\Pch</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Terrain.h">
+      <Filter>Inc\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\App.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Precompiled.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Omega.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\App.cpp">
+      <Filter>Src\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Precompiled.cpp">
+      <Filter>Src\Pch</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Terrain.cpp">
+      <Filter>Src\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -17,5 +17,7 @@ namespace Omega::Graphics
 
 		static Mesh CreateSphere(float radius, int rings = 12, int slices = 36, bool isSpace = false);
 		static Mesh CreatePlane(float size, uint32_t row = 16, uint32_t column = 16);
+
+		static void ComputeNormals(Mesh& mesh);
 	};
 }

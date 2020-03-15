@@ -392,5 +392,19 @@ Mesh MeshBuilder::CreatePlane(float size, uint32_t row, uint32_t column)
 	return mesh;
 }
 
+void MeshBuilder::ComputeNormals(Mesh & mesh)
+{
+	//TODO: Homework
+	std::vector<Math::Vector3> vecNormals{};
+	const int size = mesh.indices.size();
+	for (int i = 0; i < size; ++i)
+	{
+		auto tempCross = Cross(mesh.vertices[i].position, mesh.vertices[i + 1 % size].position);
+		vecNormals.push_back(Normalize(tempCross));
+	}
 
-
+	for (int i = 0; i < vecNormals.size(); ++i)
+	{
+		mesh.vertices[i].normal = vecNormals[i];
+	}
+}
