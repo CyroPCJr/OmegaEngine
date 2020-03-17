@@ -55,7 +55,7 @@ void Terrain::LoadHeightmap(const std::filesystem::path & filePath)
 	}
 	fclose(file);
 
-	//Graphics::MeshBuilder::ComputeNormals(mMesh);
+	Graphics::MeshBuilder::ComputeNormals(mMesh);
 	mMeshBuffer.Update(mMesh.vertices.data(),static_cast<uint32_t>(mMesh.vertices.size()));
 }
 

@@ -394,16 +394,28 @@ Mesh MeshBuilder::CreatePlane(float size, uint32_t row, uint32_t column)
 
 void MeshBuilder::ComputeNormals(Mesh & mesh)
 {
-	//TODO: Homework
 	std::vector<Math::Vector3> vecNormals{};
-	const int size = mesh.indices.size();
-	for (int i = 0; i < size; ++i)
+	const int indiceSize = mesh.indices.size();
+	const int vertexSize = mesh.vertices.size();
+	vecNormals.resize(vertexSize);
+	for (int i = 0; i < indiceSize; i+=3)
 	{
-		auto tempCross = Cross(mesh.vertices[i].position, mesh.vertices[i + 1 % size].position);
-		vecNormals.push_back(Normalize(tempCross));
+		uint32_t idx_0 = mesh.GetIndices(i + 0);
+		uint32_t idx_1 = mesh.GetIndices(i + 1);
+		uint32_t idx_2 = mesh.GetIndices(i + 2);
+
+		auto v_0 = static_cast<Vertex>(mesh.GetVertex(idx_0));
+		auto v_1 = static_cast<Vertex>(mesh.GetVertex(idx_1));
+		auto v_2 = static_cast<Vertex>(mesh.GetVertex(idx_2));
+		
+		Math::Vector3 crossNormalized = Math::Normalize(Cross(v_1.position - v_0.position, v_2.position - v_0.position));
+
+		vecNormals[idx_0] += crossNormalized;
+		vecNormals[idx_1] += crossNormalized;
+		vecNormals[idx_2] += crossNormalized;
 	}
 
-	for (int i = 0; i < vecNormals.size(); ++i)
+	for (int i = 0; i < vertexSize; ++i)
 	{
 		mesh.vertices[i].normal = vecNormals[i];
 	}

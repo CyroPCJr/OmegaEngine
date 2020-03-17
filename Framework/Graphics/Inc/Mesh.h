@@ -9,6 +9,16 @@ namespace Omega::Graphics
 	{
 		std::vector<VertexTypes> vertices;
 		std::vector<uint32_t> indices;
+
+		constexpr VertexTypes& GetVertex(int index) 
+		{
+			return vertices[index];
+		}
+
+		constexpr uint32_t GetIndices(int index) const
+		{
+			return indices[index];
+		}
 	};
 
 	using MeshPC = MeshBase<VertexPC>;

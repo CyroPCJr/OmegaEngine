@@ -1,4 +1,4 @@
-// Description: Standard shader for PCEngine.
+// Description: Standard shader for OmegaEngine.
 
 cbuffer TransformBuffer : register(b0)
 {
