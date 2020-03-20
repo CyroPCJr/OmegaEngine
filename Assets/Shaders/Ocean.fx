@@ -5,40 +5,28 @@ cbuffer TransformBuffer : register(b0)
 	matrix World;
 	matrix WVP;
 	float3 ViewPosition;
-}
-
-cbuffer LightBuffer : register(b1)
-{
 	float3 LightDirection;
 	float4 LightAmbient;
 	float4 LightDiffuse;
 	float4 LightSpecular;
 }
 
-cbuffer MaterialBuffer : register(b2)
+cbuffer SettingsBuffer : register(b1)
 {
-	float4 MaterialAmbient;
-	float4 MaterialDiffuse;
-	float4 MaterialSpecular;
-	float MaterialPower;
+	float DeltaTime;
 }
 
-
-struct VertexShaderInput
-{
-	float4 Position : POSITION0;
-	float2 TexCoord : TEXCOORD0;
-	float3 Normal : NORMAL0;
-	float3 Binormal : BINORMAL0;
-	float3 Tangent : TANGENT0;
-};
+SamplerState textureSampler : register(s0);
+Texture2D diffuseMap : register(t0);
+Texture2D normalMap : register(t1);
+Texture2D bumpMap : register(t2);
 
 struct VS_INPUT
 {
 	float3 position : POSITION;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
-	float2 texCoord	: TEXCOORD;
+	float2 texCoord : TEXCOORD;
 };
 
 struct VS_OUTPUT
@@ -46,107 +34,51 @@ struct VS_OUTPUT
 	float4 position : SV_Position;
 	float3 worldNormal : NORMAL;
 	float3 worldTangent : TEXCOORD0;
-	float3 dirToLight : TEXCOORD1;
-	float3 dirToView : TEXCOORD2;
-	float2 texCoord	: TEXCOORD3;
-	float4 positionNDC : TEXCOORD4;
-
-
-	float4 Position : POSITION0;
-	float2 TexCoord : TEXCOORD0;
-	float3 View : TEXCOORD1;
-	float3x3 WorldToTangentSpace : TEXCOORD2;
+	float3 dirToView : TEXCOORD1;
+	float2 texCoord : TEXCOORD2;
 };
 
-// Matrix
-//float4x4 World;
-//float4x4 View;
-//float4x4 Projection;
-
-// Light related
-float4 AmbientColor;
-float AmbientIntensity;
-
-float3 LightDirection;
-float4 DiffuseColor;
-float DiffuseIntensity;
-
-float4 SpecularColor;
-float3 EyePosition;
-
-float TotalTime;
-
-texture2D ColorMap;
-sampler2D ColorMapSampler = sampler_state
-{
-	Texture = <ColorMap>;
-	MinFilter = linear;
-	MagFilter = linear;
-	MipFilter = linear;
-};
-
-texture2D NormalMap;
-sampler2D NormalMapSampler = sampler_state
-{
-	Texture = <NormalMap>;
-	MinFilter = linear;
-	MagFilter = linear;
-	MipFilter = linear;
-};
-
-// The input for the VertexShader
-
-
-
-
-// The VertexShader.
 VS_OUTPUT VS(VS_INPUT input)
 {
 	VS_OUTPUT output;
-
-	input.Position.z += sin((TotalTime * 16) + (input.Position.y / 1)) / 16;
-
-	float4 worldPosition = mul(input.Position, World);
-	float4 viewPosition = mul(worldPosition, View);
-	output.Position = mul(viewPosition, Projection);
-	output.TexCoord = input.TexCoord;
-
-	output.WorldToTangentSpace[0] = mul(normalize(input.Tangent), World);
-	output.WorldToTangentSpace[1] = mul(normalize(input.Binormal), World);
-	output.WorldToTangentSpace[2] = mul(normalize(input.Normal), World);
-
-	output.View = normalize(float4(EyePosition, 1.0) - worldPosition);
+	input.position.z += sin((DeltaTime * 16.0f) + (input.position.y / 1.0f)) / 16.0f;
+	
+	output.position = mul(float4(input.position, 1.0f), WVP);
+	output.worldNormal = mul(input.normal, (float3x3) World);
+	output.worldTangent = mul(input.tangent, (float3x3) World);;
+	output.dirToView = normalize(ViewPosition - mul(input.position.xyz, (float3x3) World));
+	
+	output.texCoord = input.texCoord;
 
 	return output;
 }
 
-// The Pixel Shader
 float4 PS(VS_OUTPUT input) : SV_Target
 {
-	input.TexCoord.x = input.TexCoord.x*20.0f + sin(TotalTime * 3 + 10) / 256;
-	input.TexCoord.y = input.TexCoord.y*20.0f;
-
-	float4 color = tex2D(ColorMapSampler, input.TexCoord);
-
-	input.TexCoord.y += (sin(TotalTime * 3 + 10) / 256) + (TotalTime / 16);
-	float3 normalMap = 2.0 *(tex2D(NormalMapSampler, input.TexCoord)) - 1.0;
-
-	input.TexCoord.y -= ((sin(TotalTime * 3 + 10) / 256) + (TotalTime / 16)) * 2;
-	float3 normalMap2 = (2 * (tex2D(NormalMapSampler, input.TexCoord))) - 1.0;
-
-	normalMap = (normalMap + normalMap2) / 2;
-
-	normalMap = normalize(mul(normalMap, input.WorldToTangentSpace));
-	float4 normal = float4(normalMap,1.0);
-
-	float4 diffuse = saturate(dot(-LightDirection,normal));
-	float4 reflect = normalize(2.0f * diffuse*normal - float4(LightDirection,1.0));
-	float4 specular = pow(saturate(dot(reflect,input.View)),28.0f);
-
-	float4 finalColor = color * AmbientIntensity +
-			color * DiffuseIntensity * diffuse +
-			specular * 250.0f;
-
+	input.texCoord.x *= 20.0f + sin(DeltaTime * 3.0f + 10.0f) / 256.0f;
+	input.texCoord.y *= 20.0f;
+	
+	float4 colorMap = diffuseMap.Sample(textureSampler, input.texCoord);
+	
+	input.texCoord.y += (sin(DeltaTime * 3.0f + 10.0f) / 256.0f) + (DeltaTime / 16.0f);
+	float3 normalColor = (2.0f * normalMap.Sample(textureSampler, input.texCoord)) - 1.0f;
+	
+	input.texCoord.y -= ((sin(DeltaTime * 3.0f + 10.0f) / 256.0f) + (DeltaTime / 16.0f)) * 2.0f;
+	float3 normalColor2 = (2.0f * normalMap.Sample(textureSampler, input.texCoord)) - 1.0f;
+	
+	normalColor = (normalColor + normalColor2) * 0.5f;
+	
+	normalColor = normalize(mul(normalColor, input.worldTangent));
+	float4 normal = float4(normalColor, 1.0f);
+	
+	float4 diffuse = saturate(dot(-LightDirection, (float3) normal));
+	float4 reflect = normalize(2.0f * diffuse * normal - float4(LightDirection, 1.0f));
+	float4 specular = pow(saturate(dot(reflect, LightSpecular)), 28.0f);
+	
+	float4 finalColor = colorMap * LightAmbient +
+			colorMap * LightDiffuse * diffuse +
+			specular * 256.0f;
+	
 	finalColor.a = 0.3f;
 	return finalColor;
 }

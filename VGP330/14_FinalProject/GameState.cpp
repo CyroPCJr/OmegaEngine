@@ -44,8 +44,8 @@ void GameState::Initialize()
 
 	mActiveCamera = &mDefaultCamera;
 
-	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
-	mGroundMeshBuffer.Initialize(mGroundMesh);
+	mWaterMesh = MeshBuilder::CreatePlane(300.0f);
+	mWaterMeshBuffer.Initialize(mWaterMesh);
 
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
@@ -71,8 +71,10 @@ void GameState::Initialize()
 	mSettings.useShadow = 1;
 	mSettings.depthBias = 0.0003f;
 
-	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
-	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
+	const std::filesystem::path filePathShaders = "../../Assets/Shaders/";
+
+	mVertexShader.Initialize(filePathShaders / "Standard.fx", Vertex::Format);
+	mPixelShader.Initialize(filePathShaders / "Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
 	/*mDiffuseMap.Initialize("../../Assets/Models/Tank/tank_diffuse.jpg");
@@ -81,23 +83,29 @@ void GameState::Initialize()
 	mAOMap.Initialize("../../Assets/Models/Tank/tank_ao.jpg");*/
 
 	//mGroundDiffuseMap.Initialize("../../Assets/Images/grass_2048.jpg");
-	mVertexShaderWater.Initialize("../../Assets/Shaders/Ocean.fx", Vertex::Format);
-	mPixelShaderWater.Initialize("../../Assets/Shaders/Ocean.fx");
-	mWaterDiffuseMap.Initialize("../../Assets/Images/water.jpg");
+	mVertexShaderWater.Initialize(filePathShaders / "Ocean.fx", Vertex::Format);
+	mPixelShaderWater.Initialize(filePathShaders / "Ocean.fx");
+	mOceanDiffuseMap.Initialize("../../Assets/Images/water.jpg");
+	mOceanNormalMap.Initialize("../../Assets/Images/water_normalmap.jpg");
+	mOceanBumpMap.Initialize("../../Assets/Images/water_bumpmap.jpg");
+	mOceanBuffer.Initialize();
 
+	// Render Target
 	auto graphicsSystem = GraphicsSystem::Get();
 
 	mRenderTarget.Initialize(
 		graphicsSystem->GetBackBufferWidth(),
 		graphicsSystem->GetBackBufferHeight(),
 		RenderTarget::Format::RGBA_U8);
-
+	
+	// Post Processing 
 	mScreenQuad = MeshBuilder::CreateNDCQuad();
 	mScreenQuadBuffer.Initialize(mScreenQuad);
 
-	mPostProcessingVertexShader.Initialize("../../Assets/Shaders/PostProcessing.fx", VertexPX::Format);
-	mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSNoProcessing");
+	mPostProcessingVertexShader.Initialize(filePathShaders / "PostProcessing.fx", VertexPX::Format);
+	mPostProcessingPixelShader.Initialize(filePathShaders / "PostProcessing.fx", "PSNoProcessing");
 
+	// Initializa Terrain
 	mTerrain.Initialize(300, 300, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
 	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
@@ -110,9 +118,12 @@ void GameState::Terminate()
 	mPostProcessingVertexShader.Terminate();
 	mScreenQuadBuffer.Terminate();
 	mRenderTarget.Terminate();
-	
-	//mGroundDiffuseMap.Terminate();
-	mWaterDiffuseMap.Terminate();
+	// Ocean
+	mOceanBuffer.Terminate();
+	mOceanBumpMap.Terminate();
+	mOceanBumpMap.Terminate();
+	mOceanDiffuseMap.Terminate();
+
 	mAOMap.Terminate();
 	mNormalMap.Terminate();
 	mDisplacementMap.Terminate();
@@ -126,7 +137,7 @@ void GameState::Terminate()
 	mMaterialBuffer.Terminate();
 	mLightBuffer.Terminate();
 	mTransformBuffer.Terminate();
-	mGroundMeshBuffer.Terminate();
+	mWaterMeshBuffer.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -240,6 +251,7 @@ void GameState::Update(float deltaTime)
 	
 	SimpleDrawCamera(mLightCamera);
 
+	mSettingOcean.deltaTime += deltaTime;
 }
 
 void GameState::Render()
@@ -297,7 +309,7 @@ void GameState::DebugUI()
 		static bool normalMap = mSettings.normalMapWeight > 0.0f;
 		static bool aoMap = mSettings.aoMapWeight > 0.0f;
 		static bool useShadow = mSettings.useShadow == 1;
-		ImGui::SliderFloat("Displacement", &mSettings.bumpMapWeight, 0.0f, 1.0f);
+		ImGui::SliderFloat("Displacement", &mSettings.bumpMapWeight, 0.0f, 100.0f);
 		if (ImGui::Checkbox("Specular Map", &specularMap))
 		{
 			mSettings.specularMapWeight = specularMap ? 1.0f : 0.0f;
@@ -363,7 +375,14 @@ void GameState::DrawScene()
 	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 
 	//mGroundDiffuseMap.BindPS(0);
-	mWaterDiffuseMap.BindPS(0);
+	mOceanBuffer.Update(mSettingOcean);
+	mOceanDiffuseMap.BindVS(0);
+	mOceanNormalMap.BindVS(1);
+	mOceanNormalMap.BindPS(1);
+	mOceanBumpMap.BindVS(2);
+	mOceanBumpMap.BindPS(2);
+	mOceanDiffuseMap.BindPS(0);
+	mWaterMeshBuffer.Draw();
 
 	SettingsData settings;
 	settings.specularMapWeight = 0.0f;
@@ -373,7 +392,6 @@ void GameState::DrawScene()
 	settings.useShadow = 0;
 	mSettingsBuffer.Update(settings);
 
-	mGroundMeshBuffer.Draw();
 
 	mTerrain.SetDirectionalLight(mDirectionalLight);
 	mTerrain.Render(*mActiveCamera);

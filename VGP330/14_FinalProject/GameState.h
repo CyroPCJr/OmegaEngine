@@ -26,8 +26,8 @@ private:
 
 	std::vector<Omega::Math::Vector3> mViewFrustumVertices;
 
-	Omega::Graphics::Mesh mGroundMesh;
-	Omega::Graphics::MeshBuffer mGroundMeshBuffer;
+	Omega::Graphics::Mesh mWaterMesh;
+	Omega::Graphics::MeshBuffer mWaterMeshBuffer;
 
 	struct TransformData
 	{
@@ -47,6 +47,24 @@ private:
 		float depthBias = 0.0f;
 		float padding;
 	};
+
+
+	struct SettingDataOcean
+	{
+		float deltaTime = 0.0f;
+		float padding_1;
+		float padding_2;
+		float padding_3;
+	};
+
+	SettingDataOcean mSettingOcean;
+
+	using OceanConstantBuffer = Omega::Graphics::TypedConstantBuffer<SettingDataOcean>;
+	OceanConstantBuffer mOceanBuffer;
+	Omega::Graphics::Texture mOceanNormalMap;
+	Omega::Graphics::Texture mOceanBumpMap;
+	Omega::Graphics::Texture mOceanDiffuseMap;
+
 	struct PostProcessSettingsData
 	{
 		float screenWidth = 0.0f;
@@ -81,8 +99,8 @@ private:
 	Omega::Graphics::Texture mDisplacementMap;
 	Omega::Graphics::Texture mNormalMap;
 	Omega::Graphics::Texture mAOMap;
-	Omega::Graphics::Texture mGroundDiffuseMap;
-	Omega::Graphics::Texture mWaterDiffuseMap;
+	
+	
 
 	SettingsData mSettings;
 
