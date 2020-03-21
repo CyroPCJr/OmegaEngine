@@ -106,7 +106,7 @@ void GameState::Initialize()
 	mPostProcessingPixelShader.Initialize(filePathShaders / "PostProcessing.fx", "PSNoProcessing");
 
 	// Initializa Terrain
-	mTerrain.Initialize(300, 300, 1.0f);
+	mTerrain.Initialize(200, 200, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
 	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
 }
@@ -121,7 +121,7 @@ void GameState::Terminate()
 	// Ocean
 	mOceanBuffer.Terminate();
 	mOceanBumpMap.Terminate();
-	mOceanBumpMap.Terminate();
+	mOceanNormalMap.Terminate();
 	mOceanDiffuseMap.Terminate();
 
 	mAOMap.Terminate();
@@ -375,13 +375,17 @@ void GameState::DrawScene()
 	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 
 	//mGroundDiffuseMap.BindPS(0);
+	/*mOceanBuffer.BindPS(1);
+	mOceanBuffer.BindVS(1);*/
 	mOceanBuffer.Update(mSettingOcean);
-	mOceanDiffuseMap.BindVS(0);
-	mOceanNormalMap.BindVS(1);
-	mOceanNormalMap.BindPS(1);
-	mOceanBumpMap.BindVS(2);
-	mOceanBumpMap.BindPS(2);
 	mOceanDiffuseMap.BindPS(0);
+	mOceanDiffuseMap.BindVS(0);
+
+	mOceanNormalMap.BindPS(1);
+	mOceanNormalMap.BindVS(1);
+
+	//mOceanBumpMap.BindPS(2);
+	//mOceanBumpMap.BindVS(2);
 	mWaterMeshBuffer.Draw();
 
 	SettingsData settings;
