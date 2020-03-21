@@ -1,6 +1,5 @@
 #pragma once
 
-//TODO: fix this header with new attribute
 namespace Omega::Math
 {
 
