@@ -171,7 +171,7 @@ void GameState::Update(float deltaTime)
 		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 
-	mPostProcessSettings.time += deltaTime;
+	//mPostProcessSettings.time += deltaTime;
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
@@ -328,6 +328,7 @@ void GameState::DebugUI()
 		}
 		ImGui::SliderFloat("Depth Bias", &mSettings.depthBias, 0.0f, 0.01f, "%.4f");
 		ImGui::SliderFloat("Brightness", &mSettings.brightness, 1.0f, 10.0f);
+		ImGui::SliderFloat("water timelapse", &mPostProcessSettings.time, 1.0f, 10.0f);
 	}
 	
 	ImGui::End();
@@ -375,9 +376,9 @@ void GameState::DrawScene()
 	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 
 	//mGroundDiffuseMap.BindPS(0);
-	/*mOceanBuffer.BindPS(1);
-	mOceanBuffer.BindVS(1);*/
 	mOceanBuffer.Update(mSettingOcean);
+	//mOceanBuffer.BindPS(1);
+	//mOceanBuffer.BindVS(1);
 	mOceanDiffuseMap.BindPS(0);
 	mOceanDiffuseMap.BindVS(0);
 
