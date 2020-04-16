@@ -7,6 +7,9 @@
     <Filter Include="Src">
       <UniqueIdentifier>{abdf6d07-4ccf-4089-9a6b-c84eab4af994}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\LinearAlgebra">
+      <UniqueIdentifier>{56f3eb29-fe7f-4b5c-b3a8-7306b4a2ece6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -18,23 +21,26 @@
     <ClInclude Include="Inc\EngineMath.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\Vector3.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Matrix4.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Vector4.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\Constants.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\Vector2.h">
-      <Filter>Inc</Filter>
+    <ClInclude Include="Inc\Matrix4.h">
+      <Filter>Inc\LinearAlgebra</Filter>
     </ClInclude>
     <ClInclude Include="Inc\PerlinNoise.h">
-      <Filter>Inc</Filter>
+      <Filter>Inc\LinearAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Quaternion.h">
+      <Filter>Inc\LinearAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Vector2.h">
+      <Filter>Inc\LinearAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Vector3.h">
+      <Filter>Inc\LinearAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Vector4.h">
+      <Filter>Inc\LinearAlgebra</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

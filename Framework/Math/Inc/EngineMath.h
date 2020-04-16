@@ -6,6 +6,8 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4.h"
+#include "Quaternion.h"
+#include "PerlinNoise.h"
 
 namespace Omega::Math
 {
@@ -135,7 +137,7 @@ namespace Omega::Math
 
 	constexpr Vector3 TransformCoord(const Vector3& v, const Matrix4& m)
 	{
-		const float w = (v.x* m._14) + (v.y*m._24) + (v.z*m._34) + (1.0f * m._44);
+		const float w = (v.x * m._14) + (v.y * m._24) + (v.z * m._34) + (1.0f * m._44);
 		Vector3 vec;
 		vec.x = ((m._11 * v.x) + (m._21 * v.y) + (m._31 * v.z) + m._41) / w;
 		vec.y = ((m._12 * v.x) + (m._22 * v.y) + (m._32 * v.z) + m._42) / w;
@@ -172,4 +174,77 @@ namespace Omega::Math
 		return Vector3(matrix._31, matrix._32, matrix._33);
 	}
 
+
+#pragma region Quaternion Helper Functions
+
+	constexpr float Dot(const Quaternion& from, const Quaternion& to)
+	{
+		return (from.x * to.x) * (from.y * to.y) + (from.z * to.z) + (from.w * to.w);
+	}
+
+	constexpr float MagnitudeSqr(const Quaternion& q)
+	{
+		return (q.x * q.x) + (q.y * q.y) + (q.z * q.z) + (q.w * q.w);
+	}
+
+	inline float Magnitude(const Quaternion& q)
+	{
+		return sqrtf(MagnitudeSqr(q));
+	}
+
+	inline Quaternion Normalize(const Quaternion& q)
+	{
+		float length = Magnitude(q);
+		OMEGAASSERT(length != 0, "[Quaternion] Length cannot be zero.");
+		if (length == 1.0f)
+		{
+			return q;
+		}
+		return 	{ q.x / length, q.y / length, q.z / length, q.w / length };
+	}
+
+	//Linear Interpolations
+	constexpr Quaternion Lerp(const Quaternion& from, const Quaternion& to, float time)
+	{
+		return (from * (1.0f - time) + (to * time));
+	}
+
+	//Spherical Linear Interpolations
+	inline Quaternion Slerp(Quaternion& from, Quaternion& to, float time)
+	{
+		// Only unit quaternions are valid rotations.
+		// Normalize to avoid undefined behavior.
+		from = Normalize(from);
+		to = Normalize(to);
+
+		// Compute the cosine of the angle between the two vectors.
+		float angle = Dot(from, to);
+
+		// If the dot product is negative, slerp won't take
+		// the shorter path. Note that v1 and -v1 are equivalent when
+		// the negation is applied to all four components. Fix by 
+		// reversing one quaternion.
+		if (angle < 0.0f)
+		{
+			to *= -1.0f;
+			angle *= -1.0f;
+		}
+
+		const float angleThreshold = 0.999f;
+		if (angle < angleThreshold)
+		{
+			// Since dot is in range [0, angleThreshold], acos is safe
+			const float theta = acosf(angle);        // theta_0 = angle between input vectors
+			const float inverseSinTheta = 1.0f / sinf(theta);
+			const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
+			const float inverseScale = sinf(theta * time) * inverseSinTheta;
+			return (from * scale) + (to * inverseScale);
+		}
+		else
+		{
+			return Normalize(Lerp(from, to, time));
+		}
+	}
+
+#pragma endregion
 }

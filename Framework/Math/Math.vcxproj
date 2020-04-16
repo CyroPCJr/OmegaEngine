@@ -157,6 +157,7 @@
     <ClInclude Include="Inc\Constants.h" />
     <ClInclude Include="Inc\EngineMath.h" />
     <ClInclude Include="Inc\PerlinNoise.h" />
+    <ClInclude Include="Inc\Quaternion.h" />
     <ClInclude Include="Inc\Vector2.h" />
     <ClInclude Include="Inc\Vector3.h" />
     <ClInclude Include="Inc\Matrix4.h" />

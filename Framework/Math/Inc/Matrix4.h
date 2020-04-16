@@ -4,17 +4,28 @@ constexpr float M_PI = 3.14159265358979323846264338327950288f;
 
 namespace Omega::Math
 {
+	struct Quaternion;
 
 	struct Matrix4
 	{
-		// row + collum subscripts
-		float _11, _12, _13, _14;
-		float _21, _22, _23, _24;
-		float _31, _32, _33, _34;
-		float _41, _42, _43, _44;
+		union
+		{
+			struct  // row + collum subscripts
+			{
+				float _11, _12, _13, _14;
+				float _21, _22, _23, _24;
+				float _31, _32, _33, _34;
+				float _41, _42, _43, _44;
+			};
+			std::array<float, 16>v;
+		};
+
 
 		const static Matrix4 Identity;
 		const static Matrix4 Zero;
+
+		static Matrix4 RotationAxis(const Vector3& axis, float rad);
+		static Matrix4 RotationQuaternion(const Quaternion& q);
 
 #pragma region operator overload
 
@@ -228,48 +239,32 @@ namespace Omega::Math
 
 		static Matrix4 RotationX(float radian)
 		{
-			//const float degree = rad2deg(radian);
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
 			Matrix4 rotX = Identity;
-			rotX._22 = cos; rotX._23 = sin;
-			rotX._32 = -sin; rotX._33 = cos;
+			rotX._22 = cos; rotX._23 = -sin;
+			rotX._32 = sin; rotX._33 = cos;
 			return rotX;
 		}
 
 		static Matrix4 RotationY(float radian)
 		{
-			//const float degree = rad2deg(radian);
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
 			Matrix4 rotY = Identity;
-			rotY._11 = cos; rotY._13 = -sin;
-			rotY._31 = sin; rotY._33 = cos;
+			rotY._11 = cos; rotY._13 = sin;
+			rotY._31 = -sin; rotY._33 = cos;
 			return rotY;
 		}
 
 		static Matrix4 RotationZ(float radian)
 		{
-			//const float degree = rad2deg(radian);
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
 			Matrix4 rotZ = Identity;
-			rotZ._11 = cos; rotZ._12 = sin;
-			rotZ._21 = -sin; rotZ._22 = cos;
+			rotZ._11 = cos; rotZ._12 = -sin;
+			rotZ._21 = sin; rotZ._22 = cos;
 			return rotZ;
-		}
-
-		static Matrix4 RotationAxis(const Vector3& v, float radian)
-		{
-			//const float degree = rad2deg(radian);
-			const float cos = cosf(radian);
-			const float sin = sinf(radian);
-			const float oneMinusCos = (1.0f - cos);
-			Matrix4 rot = Identity;
-			rot._11 = cos * (v.x * v.x) * oneMinusCos;		   rot._12 = (v.x * v.y) * oneMinusCos - (v.z * sin);   rot._13 = (v.x * v.z) * oneMinusCos + (v.y * sin);
-			rot._21 = (v.y * v.x) * oneMinusCos + (v.z * sin); rot._22 = (v.y * v.y) * oneMinusCos + cos;         rot._23 = (v.y * v.z) * oneMinusCos - (v.x * sin);
-			rot._31 = (v.z * v.x) * oneMinusCos - (v.y * sin); rot._32 = (v.z * v.y) * oneMinusCos + (v.x * sin); rot._33 = (v.z * v.z) * oneMinusCos + cos;
-			return rot;
 		}
 
 		static Matrix4 Scaling(float scale)

@@ -395,8 +395,8 @@ Mesh MeshBuilder::CreatePlane(float size, uint32_t row, uint32_t column)
 void MeshBuilder::ComputeNormals(Mesh & mesh)
 {
 	std::vector<Math::Vector3> vecNormals{};
-	const int indiceSize = mesh.indices.size();
-	const int vertexSize = mesh.vertices.size();
+	const int indiceSize = static_cast<int>(mesh.indices.size());
+	const int vertexSize = static_cast<int>(mesh.vertices.size());
 	vecNormals.resize(vertexSize);
 	for (int i = 0; i < indiceSize; i+=3)
 	{

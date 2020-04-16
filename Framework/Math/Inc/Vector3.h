@@ -44,19 +44,19 @@ namespace Omega::Math
 			x += v.x; y += v.y; z += v.z;
 			return *this;
 		}
-		
+
 		constexpr Vector3& operator-=(const Vector3& v)
 		{
 			x -= v.x;  y -= v.y; z -= v.z;
 			return *this;
 		}
-		
+
 		constexpr Vector3& operator*=(const Vector3& v)
 		{
 			x *= v.x;  y *= v.y; z *= v.z;
 			return *this;
 		}
-		
+
 		inline Vector3& operator/=(const float v)
 		{
 			OMEGAASSERT(v != 0.0f, "value cannot be zero");

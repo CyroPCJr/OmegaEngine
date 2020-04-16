@@ -1,6 +1,5 @@
 #pragma once
 
-
 // Engine headers
 #include <Core/Inc/Core.h>
 

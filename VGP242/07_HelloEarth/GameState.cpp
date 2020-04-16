@@ -75,7 +75,7 @@ void GameState::Initialize()
 
 	//mMeshBuffer.Initialize(MeshBuilder::CreateCubePX());
 	//mMeshBuffer.Initialize(MeshBuilder::CreatePlanePX(2, 2));
-	mMeshBuffer.Initialize(MeshBuilder::CreateCylinderPX(2,2,90.f));
+	mMeshBuffer.Initialize(MeshBuilder::CreateCylinderPX(2.0f,2,90));
 
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 

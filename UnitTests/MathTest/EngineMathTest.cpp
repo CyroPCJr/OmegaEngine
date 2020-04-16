@@ -20,12 +20,12 @@ namespace MathTest
 
 		TEST_METHOD(CrossTest)
 		{
-			Vector3 a{ 3.f,5.f,4.f };
-			Vector3 b{ 2.f,7.f,5.f };
+			Vector3 a{ 3.0f, 5.0f, 4.0f };
+			Vector3 b{ 2.0f, 7.0f, 5.0f };
 			const Vector3 res = Cross(a, b);
-			Assert::AreEqual(res.x, -3.f);
-			Assert::AreEqual(res.y, 7.f);
-			Assert::AreEqual(res.z, 11.f);
+			Assert::AreEqual(res.x, -3.0f);
+			Assert::AreEqual(res.y, -7.0f);
+			Assert::AreEqual(res.z, 11.0f);
 		}
 
 		TEST_METHOD(MagnitudeTest)
