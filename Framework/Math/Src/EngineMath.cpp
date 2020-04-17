@@ -32,31 +32,30 @@ Matrix4 Matrix4::RotationAxis(const Vector3& axis, float rad)
 	Vector3 test = Normalize(axis);
 
 	// MY code
-	/*rot._11 = (test.x * test.x) * oneMinusCos + cos;
-	rot._12 = (test.x * test.y) * oneMinusCos - (test.z * sin);
-	rot._13 = (test.x * test.z) * oneMinusCos + (test.y * sin);
-
-	rot._21 = (test.y * test.x) * oneMinusCos + (test.z * sin);
-	rot._22 = (test.y * test.y) * oneMinusCos + cos;
-	rot._23 = (test.y * test.z) * oneMinusCos - (test.x * sin);
-
-	rot._31 = (test.z * test.x) * oneMinusCos - (test.y * sin);
-	rot._32 = (test.z * test.y) * oneMinusCos + (test.x * sin);
-	rot._33 = (test.z * test.z) * oneMinusCos + cos;*/
+	//rot._11 = (axis.x * axis.x) * oneMinusCos + cos;
+	//rot._12 = (axis.x * axis.y) * oneMinusCos - (axis.z * sin);
+	//rot._13 = (axis.x * axis.z) * oneMinusCos + (axis.y * sin);
+	//		   			
+	//rot._21 = (axis.y * axis.x) * oneMinusCos + (axis.z * sin);
+	//rot._22 = (axis.y * axis.y) * oneMinusCos + cos;
+	//rot._23 = (axis.y * axis.z) * oneMinusCos - (axis.x * sin);
+	//		   			
+	//rot._31 = (axis.z * axis.x) * oneMinusCos - (axis.y * sin);
+	//rot._32 = (axis.z * axis.y) * oneMinusCos + (axis.x * sin);
+	//rot._33 = (axis.z * axis.z) * oneMinusCos + cos;
 
 	//TEST CODE
-	rot._11 = (test.x * test.x) * oneMinusCos + cos;
-	rot._12 = (test.x * test.y) * oneMinusCos + (test.z * sin);
-	rot._13 = (test.x * test.z) * oneMinusCos - (test.y * sin);
+	rot._11 = (axis.x * axis.x) * oneMinusCos + cos;
+	rot._12 = (axis.x * axis.y) * oneMinusCos + (axis.z * sin);
+	rot._13 = (axis.x * axis.z) * oneMinusCos - (axis.y * sin);
 
-	rot._21 = (test.y * test.x) * oneMinusCos - (test.z * sin);
-	rot._22 = (test.y * test.y) * oneMinusCos + cos;
-	rot._23 = (test.y * test.z) * oneMinusCos + (test.x * sin);
+	rot._21 = (axis.y * axis.x) * oneMinusCos - (axis.z * sin);
+	rot._22 = (axis.y * axis.y) * oneMinusCos + cos;
+	rot._23 = (axis.y * axis.z) * oneMinusCos + (axis.x * sin);
 
-	rot._31 = (test.z * test.x) * oneMinusCos + (test.y * sin);
-	rot._32 = (test.z * test.y) * oneMinusCos - (test.x * sin);
-	rot._33 = (test.z * test.z) * oneMinusCos + cos;
-
+	rot._31 = (axis.z * axis.x) * oneMinusCos + (axis.y * sin);
+	rot._32 = (axis.z * axis.y) * oneMinusCos - (axis.x * sin);
+	rot._33 = (axis.z * axis.z) * oneMinusCos + cos;
 	return rot;
 }
 
@@ -137,21 +136,73 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& matrix)
 }
 
 
-Quaternion Quaternion::RotationLook(Vector3 direction, Vector3 up)
+Quaternion Quaternion::RotationLook(const Vector3& direction, const Vector3& up)
 {
-	Vector3 z = Normalize(direction);
-	Vector3 x = Normalize(Cross(up, z));
-	Vector3 y = Normalize(Cross(z, x));
+	Vector3 forward = Normalize(direction);
+	Vector3 orth = Normalize(Cross(up, forward));
+	Vector3 right = Cross(forward, orth);
+	//float num;
+	//float average;
+	/*Matrix4 m
+	{
+	orth.x,	orth.y, orth.z, 0.0f,
+	right.x, right.y, right.z, 0.0f,
+	forward.x, forward.y, forward.z, 0.0f,
+	0.0f,0
+	};*/
 
-	Matrix4 mat{ x.x, x.y, x.z, 0.0f,
-				y.x, y.y, y.z, 0.0f,
-				z.x, z.y, z.z, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f
-	};
+	float m11 = orth.x;
+	float m12 = orth.y;
+	float m13 = orth.z;
+	float m21 = right.x;
+	float m22 = right.y;
+	float m23 = right.z;
+	float m31 = forward.x;
+	float m32 = forward.y;
+	float m33 = forward.z;
+	Quaternion result;
 
-	return RotationMatrix(mat);
+	
+	float intencity = (m11 + m22) + m33;
+	if (intencity > 0.0f)
+	{
+		const float num = sqrtf(intencity + 1.0f);
+		result.w = (num) * 0.5f;
+		const float average = 0.5f / num;
+		result.x = (m23 - m32) * average;
+		result.y = (m31 - m13) * average;
+		result.z = (m12 - m21) * average;
+		return result;
+	}
+	if ((m11 >= m22) && (m11 >= m33))
+	{
+		const float num = sqrtf(((1.0f + m11) - m22) - m33);
+		const float average = 0.5f / num;
+		result.x = 0.5f * num;
+		result.y = (m12 + m21) * average;
+		result.z = (m13 + m31) * average;
+		result.w = (m23 + m32) * average;
+		return result;
+	}
+	if (m22 > m33)
+	{
+		const float num = sqrtf(((1.0f + m22) - m11) - m33);
+		const float average = 0.5f / num;
+		result.x = (m21 + m12) * average;
+		result.y = 0.5f * num;
+		result.z = (m32 + m23) * average;
+		result.w = (m31 - m13) * average;
+		return result;
+	}
+	const float num = sqrtf(((1.0f + m33) - m11) - m22);
+	const float average = 0.5f / num;
+	result.x = (m31 + m13) * average;
+	result.y = (m32 + m23) * average;
+	result.z = 0.5f * num;
+	result.w = (m12 - m21) * average;
+	return result;
+
 }
-
 
 Quaternion Quaternion::RotationFromTo(Vector3 from, Vector3 to)
 {

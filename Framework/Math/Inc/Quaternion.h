@@ -22,7 +22,7 @@ namespace Omega::Math
 
 		static Quaternion RotationAxis(const Vector3& axis, float rad);
 		static Quaternion RotationMatrix(const Matrix4& matrix);
-		static Quaternion RotationLook(Vector3 direction, Vector3 up = Vector3::YAxis);
+		static Quaternion RotationLook(const Vector3& direction, const Vector3& up = Vector3::YAxis);
 		static Quaternion RotationFromTo(Vector3 from, Vector3 to);
 
 #pragma region operator overloading
