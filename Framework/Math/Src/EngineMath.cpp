@@ -76,12 +76,14 @@ Quaternion Quaternion::RotationAxis(const Vector3& axis, float rad)
 	return { normalize.x * s, normalize.y * s, normalize.z * s, cosf(halfAngle) };
 }
 
-Quaternion Quaternion::RotationMatrix(const Matrix4& matrix)
+Quaternion Quaternion::RotationMatrix(const Matrix4& m)
 {
 	/*
 	Reference:
 	https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 	*/
+
+	Matrix4 matrix = Transpose(m);
 
 	const float trace = matrix._11 + matrix._22 + matrix._33;
 	if (trace > 0.0f)
@@ -116,122 +118,26 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& matrix)
 			return { (matrix._13 + matrix._31) / s,
 					 (matrix._23 + matrix._32) / s,
 					 0.25f * s,
-					(matrix._12 - matrix._21) / s };
+					(matrix._21 - matrix._12) / s };
 		}
 
 	}
-
-	/*Quaternion result;
-	Matrix4 m = matrix;
-	float trace = m._11 + m._22 + m._33;
-	float s;
-	if (trace >= 0.0f)
-	{
-		s = sqrtf(trace + 1.0f);
-		result.w = 0.5f * s;
-		s = 0.5f / s;
-		result.x = (m._23 - m._32) * s;
-		result.y = (m._31 - m._13) * s;
-		result.z = (m._12 - m._21) * s;
-	}
-	else if ((m._11 > m._22) && (m._11 > m._33))
-	{
-		s = sqrtf(1.0f + m._11 - m._22 - m._33);
-		result.x = s * 0.5f;
-		s = 0.5f / s;
-		result.y = (m._21 + m._12) * s;
-		result.z = (m._31 + m._13) * s;
-		result.w = (m._32 - m._23) * s;
-	}
-	else if (m._22 > m._33)
-	{
-		s = sqrtf(1.0f + m._22 - m._11 - m._33);
-		result.y = s * 0.5f;
-		s = 0.5 / s;
-		result.x = (m._21 + m._12) * s;
-		result.z = (m._32 + m._23) * s;
-		result.w = (m._13 - m._31) * s;
-	}
-	else
-	{
-		s = sqrtf(1.0f + m._33 - m._11 - m._22);
-		result.z = s * 0.5f;
-		s = 0.5f / s;
-		result.x = (m._13 + m._31) * s;
-		result.y = (m._32 + m._23) * s;
-		result.w = (m._21 - m._12) * s;
-	}
-	return result;*/
-
 }
 
 
 Quaternion Quaternion::RotationLook(const Vector3& direction, const Vector3& up)
 {
 	Vector3 forward = Normalize(direction);
-	Vector3 orth = Normalize(Cross(up, forward));
+	Vector3 orth = Normalize(Cross(up, forward)); // real up
 	Vector3 right = Cross(forward, orth);
-	//float num;
-	//float average;
-	/*Matrix4 m
+	Matrix4 m
 	{
-	orth.x,	orth.y, orth.z, 0.0f,
-	right.x, right.y, right.z, 0.0f,
-	forward.x, forward.y, forward.z, 0.0f,
-	0.0f,0
-	};*/
-
-	float m11 = orth.x;
-	float m12 = orth.y;
-	float m13 = orth.z;
-	float m21 = right.x;
-	float m22 = right.y;
-	float m23 = right.z;
-	float m31 = forward.x;
-	float m32 = forward.y;
-	float m33 = forward.z;
-	Quaternion result;
-
-
-	float intencity = (m11 + m22) + m33;
-	if (intencity > 0.0f)
-	{
-		const float num = sqrtf(intencity + 1.0f);
-		result.w = (num) * 0.5f;
-		const float average = 0.5f / num;
-		result.x = (m23 - m32) * average;
-		result.y = (m31 - m13) * average;
-		result.z = (m12 - m21) * average;
-		return result;
-	}
-	if ((m11 >= m22) && (m11 >= m33))
-	{
-		const float num = sqrtf(((1.0f + m11) - m22) - m33);
-		const float average = 0.5f / num;
-		result.x = 0.5f * num;
-		result.y = (m12 + m21) * average;
-		result.z = (m13 + m31) * average;
-		result.w = (m23 + m32) * average;
-		return result;
-	}
-	if (m22 > m33)
-	{
-		const float num = sqrtf(((1.0f + m22) - m11) - m33);
-		const float average = 0.5f / num;
-		result.x = (m21 + m12) * average;
-		result.y = 0.5f * num;
-		result.z = (m32 + m23) * average;
-		result.w = (m31 - m13) * average;
-		return result;
-	}
-	const float num = sqrtf(((1.0f + m33) - m11) - m22);
-	const float average = 0.5f / num;
-	result.x = (m31 + m13) * average;
-	result.y = (m32 + m23) * average;
-	result.z = 0.5f * num;
-	result.w = (m12 - m21) * average;
-	return result;
-
+		orth.x,	orth.y, orth.z, 0.0f,
+		right.x, right.y, right.z, 0.0f,
+		forward.x, forward.y, forward.z, 0.0f,
+		0.0f,0
+	};
+	return RotationMatrix(m);
 }
 
 Quaternion Quaternion::RotationFromTo(Vector3 from, Vector3 to)
