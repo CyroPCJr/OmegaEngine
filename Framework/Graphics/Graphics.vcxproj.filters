@@ -16,6 +16,9 @@
     <Filter Include="Inc\Mesh">
       <UniqueIdentifier>{bfa834f1-52e4-4624-b8b9-88009e39c0f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Animation">
+      <UniqueIdentifier>{1a101094-ecd9-4363-a422-e773dd27f7a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
