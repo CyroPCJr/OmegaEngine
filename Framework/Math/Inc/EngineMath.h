@@ -212,6 +212,10 @@ namespace Omega::Math
 	//Spherical Linear Interpolations
 	inline Quaternion Slerp(Quaternion& from, Quaternion& to, float time)
 	{
+		/*
+		Reference:
+		https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
+		*/
 		// Only unit quaternions are valid rotations.
 		// Normalize to avoid undefined behavior.
 		from = Normalize(from);

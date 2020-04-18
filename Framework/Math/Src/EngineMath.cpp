@@ -29,33 +29,19 @@ Matrix4 Matrix4::RotationAxis(const Vector3& axis, float rad)
 	const float sin = sinf(rad);
 	const float oneMinusCos = (1.0f - cos);
 	Matrix4 rot = Identity;
-	Vector3 test = Normalize(axis);
+	Vector3 axisNormalied = Normalize(axis);
 
-	// MY code
-	//rot._11 = (axis.x * axis.x) * oneMinusCos + cos;
-	//rot._12 = (axis.x * axis.y) * oneMinusCos - (axis.z * sin);
-	//rot._13 = (axis.x * axis.z) * oneMinusCos + (axis.y * sin);
-	//		   			
-	//rot._21 = (axis.y * axis.x) * oneMinusCos + (axis.z * sin);
-	//rot._22 = (axis.y * axis.y) * oneMinusCos + cos;
-	//rot._23 = (axis.y * axis.z) * oneMinusCos - (axis.x * sin);
-	//		   			
-	//rot._31 = (axis.z * axis.x) * oneMinusCos - (axis.y * sin);
-	//rot._32 = (axis.z * axis.y) * oneMinusCos + (axis.x * sin);
-	//rot._33 = (axis.z * axis.z) * oneMinusCos + cos;
+	rot._11 = (axisNormalied.x * axisNormalied.x) * oneMinusCos + cos;
+	rot._12 = (axisNormalied.x * axisNormalied.y) * oneMinusCos + (axisNormalied.z * sin);
+	rot._13 = (axisNormalied.x * axisNormalied.z) * oneMinusCos - (axisNormalied.y * sin);
 
-	//TEST CODE
-	rot._11 = (axis.x * axis.x) * oneMinusCos + cos;
-	rot._12 = (axis.x * axis.y) * oneMinusCos + (axis.z * sin);
-	rot._13 = (axis.x * axis.z) * oneMinusCos - (axis.y * sin);
+	rot._21 = (axisNormalied.y * axisNormalied.x) * oneMinusCos - (axisNormalied.z * sin);
+	rot._22 = (axisNormalied.y * axisNormalied.y) * oneMinusCos + cos;
+	rot._23 = (axisNormalied.y * axisNormalied.z) * oneMinusCos + (axisNormalied.x * sin);
 
-	rot._21 = (axis.y * axis.x) * oneMinusCos - (axis.z * sin);
-	rot._22 = (axis.y * axis.y) * oneMinusCos + cos;
-	rot._23 = (axis.y * axis.z) * oneMinusCos + (axis.x * sin);
-
-	rot._31 = (axis.z * axis.x) * oneMinusCos + (axis.y * sin);
-	rot._32 = (axis.z * axis.y) * oneMinusCos - (axis.x * sin);
-	rot._33 = (axis.z * axis.z) * oneMinusCos + cos;
+	rot._31 = (axisNormalied.z * axisNormalied.x) * oneMinusCos + (axisNormalied.y * sin);
+	rot._32 = (axisNormalied.z * axisNormalied.y) * oneMinusCos - (axisNormalied.x * sin);
+	rot._33 = (axisNormalied.z * axisNormalied.z) * oneMinusCos + cos;
 	return rot;
 }
 
@@ -132,7 +118,9 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& matrix)
 					 0.25f * s,
 					(matrix._12 - matrix._21) / s };
 		}
+
 	}
+
 }
 
 
@@ -162,7 +150,7 @@ Quaternion Quaternion::RotationLook(const Vector3& direction, const Vector3& up)
 	float m33 = forward.z;
 	Quaternion result;
 
-	
+
 	float intencity = (m11 + m22) + m33;
 	if (intencity > 0.0f)
 	{

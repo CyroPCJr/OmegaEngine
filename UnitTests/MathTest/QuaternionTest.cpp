@@ -171,7 +171,6 @@ namespace MathTest
 
 		TEST_METHOD(TestToMatrix)
 		{
-			//TODO TEstar
 			Vector3 axis{ -1.0f, 1.0f, 1.0f };
 			float angle = 0.45f;
 			Matrix4 m0 = Matrix4::RotationQuaternion(Quaternion::RotationAxis(axis, angle));
