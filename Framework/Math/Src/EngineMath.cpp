@@ -83,10 +83,10 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& matrix)
 	https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 	*/
 
-	const float trace = matrix._11 + matrix._22 + matrix._33 + 1.0f;
+	const float trace = matrix._11 + matrix._22 + matrix._33;
 	if (trace > 0.0f)
 	{
-		const float s = 0.5f / sqrtf(trace);
+		const float s = 0.5f / sqrtf(trace + 1.0f);
 		return { (matrix._32 - matrix._23) * s,
 				(matrix._13 - matrix._31) * s,
 				(matrix._21 - matrix._12) * s,
@@ -120,6 +120,48 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& matrix)
 		}
 
 	}
+
+	/*Quaternion result;
+	Matrix4 m = matrix;
+	float trace = m._11 + m._22 + m._33;
+	float s;
+	if (trace >= 0.0f)
+	{
+		s = sqrtf(trace + 1.0f);
+		result.w = 0.5f * s;
+		s = 0.5f / s;
+		result.x = (m._23 - m._32) * s;
+		result.y = (m._31 - m._13) * s;
+		result.z = (m._12 - m._21) * s;
+	}
+	else if ((m._11 > m._22) && (m._11 > m._33))
+	{
+		s = sqrtf(1.0f + m._11 - m._22 - m._33);
+		result.x = s * 0.5f;
+		s = 0.5f / s;
+		result.y = (m._21 + m._12) * s;
+		result.z = (m._31 + m._13) * s;
+		result.w = (m._32 - m._23) * s;
+	}
+	else if (m._22 > m._33)
+	{
+		s = sqrtf(1.0f + m._22 - m._11 - m._33);
+		result.y = s * 0.5f;
+		s = 0.5 / s;
+		result.x = (m._21 + m._12) * s;
+		result.z = (m._32 + m._23) * s;
+		result.w = (m._13 - m._31) * s;
+	}
+	else
+	{
+		s = sqrtf(1.0f + m._33 - m._11 - m._22);
+		result.z = s * 0.5f;
+		s = 0.5f / s;
+		result.x = (m._13 + m._31) * s;
+		result.y = (m._32 + m._23) * s;
+		result.w = (m._21 - m._12) * s;
+	}
+	return result;*/
 
 }
 

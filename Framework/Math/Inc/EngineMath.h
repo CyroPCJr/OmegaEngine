@@ -74,7 +74,8 @@ namespace Omega::Math
 	{
 		const float lenght = Magnitude(v);
 		OMEGAASSERT(lenght != 0, "Length cannot be zero.");
-		return { v / lenght };
+		const float invNorm = 1.0f / lenght;
+		return { v * invNorm };
 	}
 
 
@@ -179,7 +180,7 @@ namespace Omega::Math
 
 	constexpr float Dot(const Quaternion& from, const Quaternion& to)
 	{
-		return (from.x * to.x) * (from.y * to.y) + (from.z * to.z) + (from.w * to.w);
+		return (from.x * to.x) + (from.y * to.y) + (from.z * to.z) + (from.w * to.w);
 	}
 
 	constexpr float MagnitudeSqr(const Quaternion& q)
@@ -194,13 +195,14 @@ namespace Omega::Math
 
 	inline Quaternion Normalize(const Quaternion& q)
 	{
-		float length = Magnitude(q);
+		const float length = Magnitude(q);
 		OMEGAASSERT(length != 0, "[Quaternion] Length cannot be zero.");
 		if (length == 1.0f)
 		{
 			return q;
 		}
-		return 	{ q.x / length, q.y / length, q.z / length, q.w / length };
+		const float invNorm = 1.0f / length;
+		return { q * invNorm };
 	}
 
 	//Linear Interpolations
@@ -230,24 +232,20 @@ namespace Omega::Math
 		// reversing one quaternion.
 		if (angle < 0.0f)
 		{
-			to *= -1.0f;
-			angle *= -1.0f;
+			to = -to;
+			angle = -angle;
 		}
-
-		const float angleThreshold = 0.999f;
-		if (angle < angleThreshold)
-		{
-			// Since dot is in range [0, angleThreshold], acos is safe
-			const float theta = acosf(angle);        // theta_0 = angle between input vectors
-			const float inverseSinTheta = 1.0f / sinf(theta);
-			const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
-			const float inverseScale = sinf(theta * time) * inverseSinTheta;
-			return (from * scale) + (to * inverseScale);
-		}
-		else
+		else if (angle > 0.9995f)
 		{
 			return Normalize(Lerp(from, to, time));
 		}
+
+		// Since dot is in range [0, angleThreshold], acos is safe
+		const float theta = acosf(angle);        // theta_0 = angle between input vectors
+		const float inverseSinTheta = 1.0f / sinf(theta);
+		const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
+		const float inverseScale = sinf(theta * time) * inverseSinTheta;
+		return (from * scale) + (to * inverseScale);
 	}
 
 #pragma endregion
