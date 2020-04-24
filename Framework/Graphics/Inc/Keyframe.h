@@ -8,10 +8,9 @@ namespace Omega::Graphics
 	struct Keyframe
 	{
 		Keyframe() = default;
-		Keyframe(T& t_key, float t_time)
+		Keyframe(const T& t_key, float t_time)
 			: key(t_key), time(t_time) 
 		{}
-
 
 		T key;
 		float time = 0.0f;
@@ -23,5 +22,4 @@ namespace Omega::Graphics
 	using PositionKeys = Keyframes<Math::Vector3>;
 	using RotationKeys = Keyframes<Math::Quaternion>;
 	using ScaleKeys = Keyframes<Math::Vector3>;
-
 }

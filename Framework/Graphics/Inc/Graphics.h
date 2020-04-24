@@ -37,4 +37,5 @@
 // Animation
 #include "Keyframe.h"
 #include "Animation.h"
+#include "AnimationBuilder.h"
 #include "Easing.h"

@@ -276,5 +276,14 @@ namespace Omega::Math
 			sca._33 *= scale;
 			return sca;
 		}
+
+		static Matrix4 Scaling(const Vector3& v)
+		{
+			Matrix4 m = Identity;
+			m._11 *= v.x;
+			m._22 *= v.y;
+			m._33 *= v.z;
+			return m;
+		}
 	};
 }

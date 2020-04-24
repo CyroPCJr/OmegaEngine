@@ -4,10 +4,10 @@
 Reference:
 
 https://easings.net/
+https://gist.github.com/gre/1650294
 */
 namespace Omega::Graphics
 {
-
 
 	// no easing, no acceleration
 	constexpr float Linear(float time)
@@ -28,7 +28,7 @@ namespace Omega::Graphics
 	}
 
 	// acceleration until halfway, then deceleration
-	constexpr float EaseOutQuad(float time)
+	constexpr float EaseInOutQuad(float time)
 	{
 		return (time < 0.5f) ? 2.0f * time * time : -1.0f + (4.0f - 2.0f * time) * time;
 	}

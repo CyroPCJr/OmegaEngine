@@ -220,8 +220,8 @@ namespace Omega::Math
 		*/
 		// Only unit quaternions are valid rotations.
 		// Normalize to avoid undefined behavior.
-		from = Normalize(from);
-		to = Normalize(to);
+		/*from = Normalize(from);
+		to = Normalize(to);*/
 
 		// Compute the cosine of the angle between the two vectors.
 		float angle = Dot(from, to);
