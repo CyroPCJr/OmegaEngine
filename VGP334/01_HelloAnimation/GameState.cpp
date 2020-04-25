@@ -121,12 +121,10 @@ void GameState::Initialize()
 		.AddRotationKey(Quaternion::RotationAxis({ 0.0f,1.0f,0.0f }, -0.35f))
 		.SetTime(6.0f)
 		.AddPositionKey({ 0.0f,-20.0f,-30.0f })
-		.AddRotationKey(Quaternion::RotationAxis({ -1.0f,1.0f,1.0f }, -0.35f))
+		.AddRotationKey(Quaternion::RotationAxis({ -1.0f,1.0f,1.0f }, 0.35f))
 		.SetTime(8.0f)
 		.AddPositionKey({ -50.0f,0.0f,0.0f })
 		.AddRotationKey(Quaternion::Zero);
-
-
 
 }
 
@@ -213,7 +211,7 @@ void GameState::Update(float deltaTime)
 	}
 
 	animationTime += deltaTime;
-	
+
 	mPostProcessSettings.time += deltaTime;
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
@@ -470,7 +468,7 @@ void GameState::DrawScene()
 		auto matTrans = Matrix4::Translation(position);
 		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
 		//auto matWorld =  matRot * matTrans;
-		auto matWorld = mAnimationBuilder.GetAnimation(EaseInQuad(animationTime));
+		auto matWorld = mAnimationBuilder.GetAnimation(animationTime);
 
 		TransformData transformData;
 		//auto wvp = mMatrixAni;

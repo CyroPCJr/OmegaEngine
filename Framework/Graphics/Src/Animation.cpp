@@ -20,7 +20,9 @@ Vector3 Animation::GetPosition(float time) const
 		}
 		const int nextKey = (currentKey + 1) % size;
 		const float total_t = (mPositionKeys[nextKey].time - mPositionKeys[currentKey].time);
-		const float t = (time - mPositionKeys[currentKey].time) / total_t;
+		const float t = (total_t != 0.0) ?
+			(time - mPositionKeys[currentKey].time) / total_t :
+			0.0f;
 
 		Vector3 vBegin = mPositionKeys[currentKey].key;
 		Vector3 vEnd = mPositionKeys[nextKey].key;
@@ -48,7 +50,9 @@ Quaternion Animation::GetRotation(float time) const
 		}
 		const int nextKey = (currentKey + 1) % size;
 		const float total_t = mRotationKeys[nextKey].time - mRotationKeys[currentKey].time;
-		const float t = (time - mRotationKeys[currentKey].time) / total_t;
+		const float t = (total_t != 0.0) ?
+			(time - mRotationKeys[currentKey].time) / total_t :
+			0.0f;
 
 		Quaternion qBegin = mRotationKeys[currentKey].key;
 		Quaternion qEnd = mRotationKeys[currentKey].key;

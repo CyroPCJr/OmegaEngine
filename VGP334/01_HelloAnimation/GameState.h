@@ -114,7 +114,5 @@ private:
 	
 	//Animation
 	Omega::Graphics::AnimationBuilder mAnimationBuilder;
-	Omega::Graphics::Animation mAnimation;
-	Omega::Math::Matrix4 mMatrixAni;
 	float animationTime = 0.0f;
 };
