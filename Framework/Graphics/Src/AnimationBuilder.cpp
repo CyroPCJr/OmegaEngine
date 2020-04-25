@@ -4,7 +4,7 @@
 using namespace Omega::Graphics;
 using namespace Omega::Math;
 
-AnimationBuilder& Omega::Graphics::AnimationBuilder::SetTime(float time)
+AnimationBuilder& AnimationBuilder::SetTime(float time)
 {
 	mTime = time;
 	return *this;
@@ -32,4 +32,3 @@ Matrix4 AnimationBuilder::GetAnimation(float time)
 {
 	return mAnimation.GetTransform(time);
 }
-
