@@ -111,6 +111,12 @@
     <ClInclude Include="Inc\Easing.h">
       <Filter>Inc\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Model.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\MeshIO.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -165,6 +171,12 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\AnimationBuilder.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Model.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MeshIO.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

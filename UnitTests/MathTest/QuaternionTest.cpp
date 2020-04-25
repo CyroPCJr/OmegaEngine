@@ -18,7 +18,7 @@ namespace MathTest
 			Assert::AreEqual(q0.x, 0.0f);
 			Assert::AreEqual(q0.y, 0.0f);
 			Assert::AreEqual(q0.z, 0.0f);
-			Assert::AreEqual(q0.w, 0.0f);
+			Assert::AreEqual(q0.w, 1.0f);
 
 			Quaternion q1(1.0f, 2.0f, 3.0f, 4.0f);
 			Assert::AreEqual(q1.x, 1.0f);

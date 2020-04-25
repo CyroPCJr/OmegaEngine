@@ -12,6 +12,8 @@ namespace Omega::Graphics
 		Math::Matrix4 GetTransform(float time) const;
 
 		bool IsLooping() const { return mLooping; }
+		void SetWrappedTime(float time);
+
 	private:
 		friend class AnimationBuilder;
 		PositionKeys mPositionKeys;

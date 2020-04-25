@@ -14,7 +14,7 @@ namespace Omega::Math
 			};
 		};
 
-		constexpr Quaternion() noexcept : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
+		constexpr Quaternion() noexcept : x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
 		constexpr Quaternion(float t_x, float t_y, float t_z, float t_w) noexcept : x(t_x), y(t_y), z(t_z), w(t_w) {}
 
 		const static Quaternion Zero;
