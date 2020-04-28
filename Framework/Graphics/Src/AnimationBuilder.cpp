@@ -30,7 +30,7 @@ AnimationBuilder& AnimationBuilder::AddScaleKey(const Vector3& scale)
 
 AnimationBuilder& AnimationBuilder::AddPositionKey(const Math::Vector3& position, float time)
 {
-	mAnimation.mPositionKeys.push_back({position, time});
+	mAnimation.mPositionKeys.push_back({ position, time });
 	return *this;
 }
 
@@ -42,17 +42,11 @@ AnimationBuilder& AnimationBuilder::AddRotationKey(const Math::Quaternion& rotat
 
 AnimationBuilder& AnimationBuilder::AddScaleKey(const Math::Vector3& position, float time)
 {
-	//mAnimation
+	mAnimation.mScaleKeys.push_back({ position, time });
 	return *this;
 }
 
-Matrix4 AnimationBuilder::GetAnimation(float time)
+Animation AnimationBuilder::GetAnimation()
 {
-	return mAnimation.GetTransform(time);
-}
-
-AnimationBuilder& AnimationBuilder::GetAnimation(const Animation& animation)
-{
-	mAnimation = std::move(animation);
-	return *this;
+	return std::move(mAnimation);
 }

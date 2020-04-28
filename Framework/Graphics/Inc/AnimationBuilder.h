@@ -16,10 +16,8 @@ namespace Omega::Graphics
 		AnimationBuilder& AddRotationKey(const Math::Quaternion& rotation, float time);
 		AnimationBuilder& AddScaleKey(const Math::Vector3& position, float time);
 
+		Animation GetAnimation();
 
-		Math::Matrix4 GetAnimation(float time);
-
-		AnimationBuilder& GetAnimation(const Animation& animation);
 	private:
 		Animation mAnimation;
 		

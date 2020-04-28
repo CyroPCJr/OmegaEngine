@@ -113,6 +113,6 @@ private:
 	Omega::Terrain mTerrain;
 	
 	//Animation
-	Omega::Graphics::AnimationBuilder mAnimationBuilder;
+	Omega::Graphics::Animation mAnimation;
 	float animationTime = 0.0f;
 };

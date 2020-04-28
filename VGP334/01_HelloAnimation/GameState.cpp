@@ -109,7 +109,7 @@ void GameState::Initialize()
 	mTerrain.Initialize(200, 200, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
 	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
-	mAnimationBuilder.SetTime(0.0f)
+	mAnimation = AnimationBuilder().SetTime(0.0f)
 		.AddPositionKey({ -50.0f,0.0f,0.0 })
 		.AddRotationKey(Quaternion::Identity)
 		.AddScaleKey(Vector3::One)
@@ -124,8 +124,8 @@ void GameState::Initialize()
 		.AddRotationKey(Quaternion::RotationAxis({ -1.0f,1.0f,1.0f }, 0.35f))
 		.SetTime(8.0f)
 		.AddPositionKey({ -50.0f,0.0f,0.0f })
-		.AddRotationKey(Quaternion::Identity);
-
+		.AddRotationKey(Quaternion::Identity)
+		.GetAnimation();
 }
 
 void GameState::Terminate()
@@ -422,7 +422,7 @@ void GameState::DrawDepthMap()
 		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
 		auto matWorld = matRot * matTrans;
 		auto wvp = Transpose(matWorld * matViewLight * matProjLight);*/
-		auto wvp = mAnimationBuilder.GetAnimation(animationTime);
+		auto wvp = mAnimation.GetTransform(animationTime);
 		mDepthMapConstantBuffer.Update(wvp);
 		mTankMeshBuffer.Draw();
 	}
@@ -468,7 +468,7 @@ void GameState::DrawScene()
 		auto matTrans = Matrix4::Translation(position);
 		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
 		//auto matWorld =  matRot * matTrans;
-		auto matWorld = mAnimationBuilder.GetAnimation(animationTime);
+		auto matWorld = mAnimation.GetTransform(animationTime);
 
 		TransformData transformData;
 		//auto wvp = mMatrixAni;
