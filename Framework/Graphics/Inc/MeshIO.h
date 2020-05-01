@@ -3,7 +3,6 @@
 
 namespace Omega::Graphics::MeshIO
 {
-
 	void Write(FILE* file, const Mesh& mesh);
 	void Read(FILE* file, Mesh& mesh);
 }

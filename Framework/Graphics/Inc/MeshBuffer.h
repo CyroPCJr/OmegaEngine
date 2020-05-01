@@ -46,7 +46,8 @@ namespace Omega::Graphics
 
 		ID3D11Buffer* mVertexBuffer = nullptr;
 		ID3D11Buffer* mIndexBuffer = nullptr;
-		D3D11_PRIMITIVE_TOPOLOGY mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		//D3D11_PRIMITIVE_TOPOLOGY mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		D3D11_PRIMITIVE_TOPOLOGY mTopology = D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		int mVertexSize = 0;
 		int mIndiceCount = 0;
 		int mVertexCount = 0;
