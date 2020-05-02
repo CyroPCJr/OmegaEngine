@@ -1,6 +1,7 @@
 #pragma once
 
-namespace Omega::Graphics {
+namespace Omega::Graphics 
+{
 
 	class Texture
 	{

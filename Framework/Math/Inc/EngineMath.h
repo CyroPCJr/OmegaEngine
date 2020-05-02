@@ -212,7 +212,7 @@ namespace Omega::Math
 	}
 
 	//Spherical Linear Interpolations
-	inline Quaternion Slerp(Quaternion& from, Quaternion& to, float time)
+	inline Quaternion Slerp(const Quaternion& from, const Quaternion& to, float time)
 	{
 		/*
 		Reference:
@@ -222,9 +222,9 @@ namespace Omega::Math
 		// Normalize to avoid undefined behavior.
 		/*from = Normalize(from);
 		to = Normalize(to);*/
-
+		Quaternion quaternionAux = to;
 		// Compute the cosine of the angle between the two vectors.
-		float angle = Dot(from, to);
+		float angle = Dot(from, quaternionAux);
 
 		// If the dot product is negative, slerp won't take
 		// the shorter path. Note that v1 and -v1 are equivalent when
@@ -232,12 +232,12 @@ namespace Omega::Math
 		// reversing one quaternion.
 		if (angle < 0.0f)
 		{
-			to = -to;
+			quaternionAux = -quaternionAux;
 			angle = -angle;
 		}
 		else if (angle > 0.9995f)
 		{
-			return Normalize(Lerp(from, to, time));
+			return Normalize(Lerp(from, quaternionAux, time));
 		}
 
 		// Since dot is in range [0, angleThreshold], acos is safe
@@ -245,7 +245,7 @@ namespace Omega::Math
 		const float inverseSinTheta = 1.0f / sinf(theta);
 		const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
 		const float inverseScale = sinf(theta * time) * inverseSinTheta;
-		return (from * scale) + (to * inverseScale);
+		return (from * scale) + (quaternionAux * inverseScale);
 	}
 
 #pragma endregion

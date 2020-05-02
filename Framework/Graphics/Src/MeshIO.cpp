@@ -1,7 +1,6 @@
 #include "Precompiled.h"
 #include "MeshIO.h"
 
-
 using namespace Omega::Graphics;
 
 //Referece
@@ -27,32 +26,82 @@ void MeshIO::Write(FILE* file, const Mesh& mesh)
 	uint32_t numVertices = mesh.vertices.size();
 	fprintf_s(file, "VerticesCount: %d\n", numVertices);
 
-	for (auto& vertex : mesh.vertices)
-	{
-		fprintf_s(file, "v %f %f %f\n", vertex.position.x, vertex.position.y, vertex.position.z);
-	}
 
-	for (auto& vertex : mesh.vertices)
-	{
-		fprintf_s(file, "vn %f %f %f\n", vertex.normal.x, vertex.normal.y, vertex.normal.z);
-	}
+	// old code
+	//const bool containPosition = (mesh.vertices[0].position.x ||
+	//	mesh.vertices[0].position.y ||
+	//	mesh.vertices[0].position.z) != 0.0f;
 
-	for (auto& vertex : mesh.vertices)
-	{
-		fprintf_s(file, "vt %f %f %f\n", vertex.texcoord.x, vertex.texcoord.y, 0.0f);
-	}
+	//const bool containNormal = (mesh.vertices[0].normal.x ||
+	//	mesh.vertices[0].normal.y ||
+	//	mesh.vertices[0].normal.z) != 0.0f;
 
-	for (auto& vertex : mesh.vertices)
-	{
-		fprintf_s(file, " %f %f %f\n", vertex.tangent.x, vertex.tangent.y, vertex.tangent.z);
-	}
+	//const bool containTextcoord = (mesh.vertices[0].texcoord.x ||
+	//	mesh.vertices[0].texcoord.y) != 0.0f;
 
-	fprintf_s(file, "\n\nFaces definition.\n\n");
+	//const bool containTangent = (mesh.vertices[0].tangent.x ||
+	//	mesh.vertices[0].tangent.y ||
+	//	mesh.vertices[0].tangent.z) != 0.0f;
 
-	for (auto& indices : mesh.indices)
-	{
-		fprintf_s(file, "f %d/%d/%d %d/%d/%d %d/%d/%d\n", indices, indices + 1, indices + 2, indices + 3, indices + 4, indices + 5, indices + 6, indices + 7, indices + 8);
-	}
+
+	//if (containPosition)
+	//{
+	//	for (auto& vertex : mesh.vertices)
+	//	{
+	//		fprintf_s(file, "v %f %f %f\n", vertex.position.x, vertex.position.y, vertex.position.z);
+	//	}
+	//}
+
+	//if (containNormal)
+	//{
+	//	for (auto& vertex : mesh.vertices)
+	//	{
+	//		fprintf_s(file, "vn %f %f %f\n", vertex.normal.x, vertex.normal.y, vertex.normal.z);
+	//	}
+	//}
+
+	//if (containTextcoord)
+	//{
+	//	for (auto& vertex : mesh.vertices)
+	//	{
+	//		fprintf_s(file, "vt %f %f %f\n", vertex.texcoord.x, vertex.texcoord.y, 0.0f);
+	//	}
+	//}
+
+	//if (containTangent)
+	//{
+	//	for (auto& vertex : mesh.vertices)
+	//	{
+	//		fprintf_s(file, " %f %f %f\n", vertex.tangent.x, vertex.tangent.y, vertex.tangent.z);
+	//	}
+	//}
+
+	//fprintf_s(file, "\n\nFaces definition.\n\n");
+	//uint32_t indicesSize = mesh.indices.size();
+	////TODO: ta confuso isso, perguntar para o Peter
+	////https://www.braynzarsoft.net/viewtutorial/q16390-22-loading-static-3d-models-obj-format
+	//if (containPosition && containTextcoord && containNormal)
+	//{
+	//	for (uint32_t i = 0; i + 2 < indicesSize; ++i)
+	//	{
+	//		fprintf_s(file, "f %d/%d/%d", mesh.indices[i], mesh.indices[i + 1], mesh.indices[i + 2]);
+	//		fprintf_s(file, " %d/%d/%d", mesh.indices[i + 3], mesh.indices[i + 4], mesh.indices[i + 5]);
+	//		fprintf_s(file, " %d/%d/%d\n", mesh.indices[i + 6], mesh.indices[i + 7], mesh.indices[i + 8]);
+	//	}
+	//}
+
+	//if (containPosition && containNormal)
+	//{
+	//	for (uint32_t i = 0; i + 2 < indicesSize; ++i)
+	//	{
+	//		fprintf_s(file, "f %d/%d/%d", mesh.indices[i], mesh.indices[i + 1], mesh.indices[i + 2]);
+	//		fprintf_s(file, " %d/%d/%d", mesh.indices[i + 3], mesh.indices[i + 4], mesh.indices[i + 5]);
+	//		fprintf_s(file, " %d/%d/%d\n", mesh.indices[i + 6], mesh.indices[i + 7], mesh.indices[i + 8]);
+	//	}
+	//}
+
+	////%d/%d/%d %d/%d/%d
+
 
 }
 

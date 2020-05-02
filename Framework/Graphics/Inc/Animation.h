@@ -11,7 +11,9 @@ namespace Omega::Graphics
 		Math::Vector3 GetScale(float time) const;
 		Math::Matrix4 GetTransform(float time) const;
 
+		//TODO: make use it this function
 		bool IsLooping() const { return mLooping; }
+		//TODO: implement this function
 		void SetWrappedTime(float time);
 
 	private:

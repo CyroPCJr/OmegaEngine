@@ -21,6 +21,6 @@ namespace Omega::Graphics
 	private:
 		Animation mAnimation;
 		
-		float mTime;
+		float mTime = 0.0f;
 	};
 }

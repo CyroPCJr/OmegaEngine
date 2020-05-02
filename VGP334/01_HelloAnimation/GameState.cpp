@@ -47,8 +47,7 @@ void GameState::Initialize()
 
 	ObjLoader::Load("../../Assets/Models/Tank/tank.obj", 0.001f, mTankMesh);
 	
-	mModel.Initialize("../../Assets/Models/raptor_01.model");
-	
+	//mModel.Initialize("../../Assets/Models/raptor_01.model");
 	
 	mTankMeshBuffer.Initialize(mTankMesh);
 
@@ -488,7 +487,7 @@ void GameState::DrawScene()
 		
 	}
 
-	mModel.Draw();
+	//mModel.Draw();
 
 	auto matWorld = Matrix4::Identity;
 	TransformData transformData;

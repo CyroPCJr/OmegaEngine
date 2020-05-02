@@ -19,11 +19,24 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 	{
 		MeshIO::Read(file, model.meshData[i].mesh);
 	}
+
+	// For homework, save out model.materialData as well ...
+	// if diffuseMapName is empty  string, write <none>
+
 	fclose(file);
 
 	for (auto& data: model.meshData)
 	{
 		data.meshBuffer.Initialize(data.mesh);
+	}
+
+	for (auto& data : model.materialData)
+	{
+		if (!data.diffuseMapName.empty())
+		{
+			//data.diffuseMap = std::make_unique<>..
+			data.diffuseMap->Initialize();
+		}
 	}
 }
 
@@ -45,6 +58,8 @@ void Model::Draw() const
 	for (size_t i = 0; i < meshData.size(); ++i)
 	{
 		auto& data = meshData[i];
+		/*materialData[data.materialIndex].diffuseMap->BindVS();
+		materialData[data.materialIndex].diffuseMap->BindPS();*/
 		data.meshBuffer.Draw();
 	}
 }

@@ -1,3 +1,6 @@
+//Referece:
+//https://github.com/assimp/assimp
+
 #include <Graphics/Inc/Graphics.h>
 #include <Math/Inc/EngineMath.h>
 
@@ -7,6 +10,7 @@
 #include <cstdio>
 
 using namespace Omega::Graphics;
+using namespace Omega::Math;
 
 struct Arguments
 {
@@ -54,22 +58,100 @@ void PrintUsage()
 		"	-s	Scale applied to the model.\n");
 }
 
+inline Color Convert(const aiColor3D& c)
+{
+	return { c.r, c.g, c.b, 1.0f };
+}
+
+inline Vector3 Convert(const aiVector3D& v)
+{
+	return { v.x, v.y, v.z };
+}
+
+inline Quaternion Convert(const aiQuaternion& q)
+{
+	return { q.x, q.y, q.z, q.w };
+}
+
+inline Matrix4 Convert(const aiMatrix4x4& m)
+{
+	Matrix4 mat = *(reinterpret_cast<const Matrix4*>(&m));
+	return Transpose(mat);
+}
+
 // For homework. This is basically the opposite of LoadModel..
 void SaveModel(const Arguments& args, Model& model)
 {
-	std::filesystem::path fileName = args.inputFileName;
+	std::filesystem::path fileName = args.outputFileName;
 	fileName.replace_extension("model");
 
 	FILE* file = nullptr;
 	fopen_s(&file, fileName.u8string().c_str(), "w");
-	uint32_t numMeshes = model.meshData.size();
-	fprintf_s(file, "MeshCount: %d\n", numMeshes);
+	uint32_t meshCount = static_cast<uint32_t>(model.meshData.size());
+	fprintf_s(file, "MeshCount: %d\n", meshCount);
 
-	for (uint32_t i = 0; i < numMeshes; ++i)
+	for (uint32_t i = 0; i < meshCount; ++i)
 	{
+		fprintf_s(file, "MaterialIndex: %d\n", model.meshData[i].materialIndex);
 		MeshIO::Write(file, model.meshData[i].mesh);
 	}
+
+	// For homework, save out model.materialData as well ...
+	// if diffuseMapName is empty  string, write <none>
 	fclose(file);
+}
+
+void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& fileName)
+{
+	printf("Extracting embedded texture...\n");
+
+	std::string fullFileName = args.outputFileName;
+	fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
+	fullFileName += fileName;
+
+	FILE* file = nullptr;
+	fopen_s(&file, fullFileName.c_str(), "wb");
+	size_t written = fwrite(texture.pcData, 1, texture.mWidth, file);
+	OMEGAASSERT(written == texture.mWidth, "Error: Failed to extract embedded texture!");
+	fclose(file);
+}
+
+std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
+	aiTextureType textureType, const Arguments& args, const char* suffix)
+{
+	std::filesystem::path textureName;
+
+	const uint32_t textureCount = inputMaterial.GetTextureCount(textureType);
+	if (textureCount > 0)
+	{
+		aiString texturePath;
+		if (inputMaterial.GetTexture(textureType, 0, &texturePath) == aiReturn_SUCCESS)
+		{
+			// For FBX files, embedded textures is now accessed using GetEmbeddedTexture
+			// https://github.com/assimp/assimp/issues/1830
+			if (auto embeddedTexture = scene.GetEmbeddedTexture(texturePath.C_Str()); embeddedTexture)
+			{
+				std::filesystem::path embeddedFilePath = texturePath.C_Str();
+				std::string fileName = args.inputFileName;
+				fileName.erase(fileName.length() - 4); // remove ".fbx" extension
+				fileName += suffix;
+				fileName += embeddedFilePath.extension().u8string();
+
+				ExportEmbeddedTexture(*embeddedTexture, args, fileName);
+
+				printf("Exporting embedded texture to %s\n", fileName.c_str());
+				textureName = fileName;
+			}
+			else
+			{
+				std::filesystem::path filePath = texturePath.C_Str();
+				std::string fileName = filePath.filename().u8string();
+				printf("Adding texture %s\n", fileName.c_str());
+				textureName = fileName;
+			}
+		}
+	}
+	return textureName.filename().u8string().c_str();
 }
 
 int main(int argc, char* argv[])
@@ -127,6 +209,10 @@ int main(int argc, char* argv[])
 			const uint32_t numFaces = inputMesh->mNumFaces;
 			const uint32_t numIndices = numFaces * 3;
 
+			printf("Reading material index...\n");
+
+			model.meshData[meshIndex].materialIndex = inputMesh->mMaterialIndex;
+
 			printf("Reading vertices...\n");
 
 			std::vector<Vertex> vertices;
@@ -145,17 +231,17 @@ int main(int argc, char* argv[])
 				{
 					vertex.position = { positions[i].x, positions[i].y, positions[i].z };
 				}
-				
+
 				if (normals)
 				{
 					vertex.normal = { normals[i].x, normals[i].y, normals[i].z };
 				}
-				
+
 				if (tangents)
 				{
 					vertex.tangent = { tangents[i].x, tangents[i].y, tangents[i].z };
 				}
-				
+
 				if (texCoords)
 				{
 					vertex.texcoord = { texCoords[i].x, texCoords[i].y };
@@ -180,6 +266,35 @@ int main(int argc, char* argv[])
 			mesh.vertices = std::move(vertices);
 			mesh.indices = std::move(indices);
 			model.meshData[meshIndex].mesh = std::move(mesh);
+		}
+	}
+
+	// Look for material data.
+	if (scene->HasMaterials())
+	{
+		printf("Reading materials...\n");
+		const uint32_t numMaterials = scene->mNumMaterials;
+		model.materialData.resize(numMaterials);
+
+		for (uint32_t i = 0; i < numMaterials; ++i)
+		{
+			const aiMaterial* inputMaterial = scene->mMaterials[i];
+
+			aiColor3D ambientColor(0.0f, 0.0f, 0.0f);
+			inputMaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor);
+			aiColor3D diffuseColor(0.0f, 0.0f, 0.0f);
+			inputMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
+			aiColor3D specularColor(0.0f, 0.0f, 0.0f);
+			inputMaterial->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
+			ai_real specularPower;
+			inputMaterial->Get(AI_MATKEY_SHININESS, specularPower);
+
+			auto& material = model.materialData[i];
+			material.material.ambient = Convert(ambientColor);
+			material.material.diffuse = Convert(diffuseColor);
+			material.material.specular = Convert(specularColor);
+			material.material.power = specularPower;
+			material.diffuseMapName = FindTexture(*scene, *inputMaterial, aiTextureType_DIFFUSE, args, "_diffuse");
 		}
 	}
 

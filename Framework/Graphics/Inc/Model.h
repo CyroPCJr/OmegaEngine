@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Material.h"
+#include "Texture.h"
 #include "Mesh.h"
 #include "MeshBuffer.h"
 
@@ -24,12 +26,20 @@ namespace Omega::Graphics
 	public:
 		struct MeshData
 		{
-			Mesh mesh;
+			Mesh mesh; // CPU data
 			uint32_t materialIndex = 0;
-			MeshBuffer meshBuffer;
+			MeshBuffer meshBuffer; //GPU data
+		};
+		
+		struct MaterialData
+		{
+			Material material; // CPU data
+			std::string diffuseMapName;
+			std::unique_ptr<Texture> diffuseMap; // GPU data
 		};
 
-		std::vector<MeshData> meshData;		
+		std::vector<MeshData> meshData;
+		std::vector<MaterialData> materialData;
 	};
 
 }
