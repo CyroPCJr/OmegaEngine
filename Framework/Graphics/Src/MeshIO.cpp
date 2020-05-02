@@ -23,8 +23,28 @@ void MeshIO::Write(FILE* file, const Mesh& mesh)
 	// 2.3 4.5 7.9 .....
 	// 2.3 4.5 7.9 .....
 
-	uint32_t numVertices = mesh.vertices.size();
+	uint32_t numVertices = static_cast<uint32_t>(mesh.vertices.size());
 	fprintf_s(file, "VerticesCount: %d\n", numVertices);
+
+	for (auto& vertex : mesh.vertices)
+	{
+		fprintf_s(file, "v %f %f %f %f %f %f %f %f %f %f %f\n",
+			vertex.position.x, vertex.position.y, vertex.position.z,
+			vertex.normal.x, vertex.normal.y, vertex.normal.z,
+			vertex.tangent.x, vertex.tangent.y, vertex.tangent.z,
+			vertex.texcoord.x, vertex.texcoord.y);
+	}
+
+	fprintf_s(file, "\n\nFaces definition.\n\n");
+	uint32_t indicesSize = static_cast<uint32_t>(mesh.indices.size());
+	for (uint32_t i = 0; i < indicesSize; i += 3)
+	{
+		fprintf_s(file, "f %d/%d/%d",
+			mesh.indices[i + 0],
+			mesh.indices[i + 1],
+			mesh.indices[i + 2]);
+	}
+
 
 
 	// old code
