@@ -115,4 +115,7 @@ private:
 	//Animation
 	Omega::Graphics::Animation mAnimation;
 	float animationTime = 0.0f;
+
+	//Model
+	Omega::Graphics::Model mModel;
 };

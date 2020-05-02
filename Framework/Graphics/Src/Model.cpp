@@ -14,7 +14,6 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 
 	uint32_t numMeshes = 0;
 	fscanf_s(file, "MeshCount: %d", &numMeshes);
-
 	model.meshData.resize(numMeshes);
 	for (uint32_t i = 0; i < numMeshes; ++i)
 	{

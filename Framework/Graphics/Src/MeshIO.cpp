@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "MeshIO.h"
 
+
 using namespace Omega::Graphics;
 
 //Referece
@@ -62,13 +63,13 @@ void MeshIO::Read(FILE* file, Mesh& mesh)
 	std::vector<Math::Vector3> normals;
 	std::vector<Math::Vector2> uvs;
 
-	int numVertices;
+	uint32_t numVertices = 0;
 	fscanf_s(file, "VerticesCount: %d", &numVertices);
 	mesh.vertices.resize(numVertices);
-	for (int i = 0; i < numVertices; ++i)
+	for (uint32_t i = 0; i < numVertices; ++i)
 	{
 		char buffer[128];
-		int res = fscanf_s(file, "%s", static_cast<unsigned int>(std::size(buffer)));
+		int res = fscanf_s(file, "%", static_cast<unsigned int>(std::size(buffer)));
 		if (res == EOF)
 		{
 			break;
@@ -165,3 +166,4 @@ void MeshIO::Read(FILE* file, Mesh& mesh)
 		mesh.vertices = std::move(vertices);
 		mesh.indices = std::move(indices);
 	}
+}
