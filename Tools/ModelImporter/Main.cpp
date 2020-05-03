@@ -246,6 +246,11 @@ int main(int argc, char* argv[])
 				{
 					vertex.texcoord = { texCoords[i].x, texCoords[i].y };
 				}
+			/*	vertex.position = Convert(*positions);
+				vertex.normal = Convert(*normals);
+				vertex.tangent = Convert(*normals);
+				vertex.texcoord = Convert(*texcoord);*/
+
 				vertices.push_back(vertex);
 			}
 
@@ -270,7 +275,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Look for material data.
-	if (scene->HasMaterials())
+	/*if (scene->HasMaterials())
 	{
 		printf("Reading materials...\n");
 		const uint32_t numMaterials = scene->mNumMaterials;
@@ -296,7 +301,7 @@ int main(int argc, char* argv[])
 			material.material.power = specularPower;
 			material.diffuseMapName = FindTexture(*scene, *inputMaterial, aiTextureType_DIFFUSE, args, "_diffuse");
 		}
-	}
+	}*/
 
 	SaveModel(args, model);	// ../../Assets/Models/<name>.model
 

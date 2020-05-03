@@ -35,7 +35,7 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 		if (!data.diffuseMapName.empty())
 		{
 			//data.diffuseMap = std::make_unique<>..
-			data.diffuseMap->Initialize();
+			//data.diffuseMap->Initialize();
 		}
 	}
 }
