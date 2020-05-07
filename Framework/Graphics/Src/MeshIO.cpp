@@ -15,7 +15,6 @@ void MeshIO::Write(FILE* file, const Mesh& mesh)
 			vertex.texcoord.x, vertex.texcoord.y);
 	}
 
-	fprintf_s(file, "\n\nFaces definition.\n\n");
 	uint32_t indicesSize = static_cast<uint32_t>(mesh.indices.size());
 	fprintf_s(file, "IndexCount: %d\n", indicesSize);
 	for (uint32_t i = 0; i < indicesSize; i += 3)
@@ -35,7 +34,6 @@ void MeshIO::Read(FILE* file, Mesh& mesh)
 	// to read in binary
 	//fread_s()
 	
-	//TODO: problema com leitura do fscan_f simplemesmente naole
 	uint32_t numVertices = 0;
 	fscanf_s(file, "VerticesCount: %d\n", &numVertices);
 	mesh.vertices.resize(numVertices);

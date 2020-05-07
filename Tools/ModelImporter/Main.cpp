@@ -79,14 +79,13 @@ inline Matrix4 Convert(const aiMatrix4x4& m)
 	return Transpose(mat);
 }
 
-// For homework. This is basically the opposite of LoadModel..
 void SaveModel(const Arguments& args, Model& model)
 {
-	std::filesystem::path fileName = args.outputFileName;
-	fileName.replace_extension("model");
+	printf_s("Saving model: %s...\n", args.outputFileName);
 
 	FILE* file = nullptr;
-	fopen_s(&file, fileName.u8string().c_str(), "w");
+	fopen_s(&file, args.outputFileName, "w");
+
 	uint32_t meshCount = static_cast<uint32_t>(model.meshData.size());
 	fprintf_s(file, "MeshCount: %d\n", meshCount);
 
@@ -223,35 +222,13 @@ int main(int argc, char* argv[])
 			const aiVector3D* tangents = inputMesh->mTangents;
 			const aiVector3D* texCoords = inputMesh->HasTextureCoords(0) ? inputMesh->mTextureCoords[0] : nullptr;
 
-			// For homework, add data to vertices
 			for (uint32_t i = 0; i < numVertices; ++i)
 			{
-				Vertex vertex;
-				if (positions)
-				{
-					vertex.position = { positions[i].x, positions[i].y, positions[i].z };
-				}
-
-				if (normals)
-				{
-					vertex.normal = { normals[i].x, normals[i].y, normals[i].z };
-				}
-
-				if (tangents)
-				{
-					vertex.tangent = { tangents[i].x, tangents[i].y, tangents[i].z };
-				}
-
-				if (texCoords)
-				{
-					vertex.texcoord = { texCoords[i].x, texCoords[i].y };
-				}
-			/*	vertex.position = Convert(*positions);
-				vertex.normal = Convert(*normals);
-				vertex.tangent = Convert(*normals);
-				vertex.texcoord = Convert(*texcoord);*/
-
-				vertices.push_back(vertex);
+				auto& vertex = vertices.emplace_back(Vertex{});
+				vertex.position = Convert(positions[i]) * args.scale;
+				vertex.normal = Convert(normals[i]);
+				vertex.tangent = Convert(normals[i]);
+				vertex.texcoord = texCoords ? Vector2(texCoords[i].x, texCoords[i].y) : 0.0f;
 			}
 
 			printf("Reading indices...\n");

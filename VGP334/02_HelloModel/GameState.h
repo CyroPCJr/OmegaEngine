@@ -109,13 +109,6 @@ private:
 	Omega::Graphics::PixelShader mPostProcessingPixelShader;
 	PostProcessSettingsData mPostProcessSettings;
 	
-	// Terrain
-	Omega::Terrain mTerrain;
-	
-	//Animation
-	Omega::Graphics::Animation mAnimation;
-	float animationTime = 0.0f;
-
 	//Model
 	Omega::Graphics::Model mModel;
 };

@@ -46,10 +46,9 @@ void GameState::Initialize()
 	mActiveCamera = &mDefaultCamera;
 
 	//ObjLoader::Load("../../Assets/Models/Tank/tank.obj", 0.001f, mTankMesh);
-	
-	mModel.Initialize("../../Assets/Models/Tank/tank.model");
-
 	//mTankMeshBuffer.Initialize(mTankMesh);
+
+	mModel.Initialize("../../Assets/Models/Tank/tank");
 
 	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
 	mGroundMeshBuffer.Initialize(mGroundMesh);
@@ -82,10 +81,10 @@ void GameState::Initialize()
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
-	mDiffuseMap.Initialize("../../Assets/Models/Tank/tank_diffuse.jpg");
+	/*mDiffuseMap.Initialize("../../Assets/Models/Tank/tank_diffuse.jpg");
 	mSpecularMap.Initialize("../../Assets/Models/Tank/tank_specular.jpg");
 	mNormalMap.Initialize("../../Assets/Models/Tank/tank_normal.jpg");
-	mAOMap.Initialize("../../Assets/Models/Tank/tank_ao.jpg");
+	mAOMap.Initialize("../../Assets/Models/Tank/tank_ao.jpg");*/
 
 	mGroundDiffuseMap.Initialize("../../Assets/Images/grass_2048.jpg");
 
@@ -108,32 +107,11 @@ void GameState::Initialize()
 
 	mPostProcessingVertexShader.Initialize("../../Assets/Shaders/PostProcessing.fx", VertexPX::Format);
 	mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSNoProcessing");
-
-	mTerrain.Initialize(200, 200, 1.0f);
-	mTerrain.SetHeightScale(30.0f);
-	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
-	mAnimation = AnimationBuilder().SetTime(0.0f)
-		.AddPositionKey({ -50.0f,0.0f,0.0 })
-		.AddRotationKey(Quaternion::Identity)
-		.AddScaleKey(Vector3::One)
-		.SetTime(2.0f)
-		.AddPositionKey({ 0.0f,20.0f,30.0f })
-		.AddRotationKey(Quaternion::RotationAxis({ -1.0f,1.0f,1.0f }, 0.35f))
-		.SetTime(4.0f)
-		.AddPositionKey({ 5.0f,0.0f,0.0f })
-		.AddRotationKey(Quaternion::RotationAxis({ 0.0f,1.0f,0.0f }, -0.35f))
-		.SetTime(6.0f)
-		.AddPositionKey({ 0.0f,-20.0f,-30.0f })
-		.AddRotationKey(Quaternion::RotationAxis({ -1.0f,1.0f,1.0f }, 0.35f))
-		.SetTime(8.0f)
-		.AddPositionKey({ -50.0f,0.0f,0.0f })
-		.AddRotationKey(Quaternion::Identity)
-		.GetAnimation();
 }
 
 void GameState::Terminate()
 {
-	mTerrain.Terminate();
+
 	mPostProcessingPixelShader.Terminate();
 	mPostProcessingVertexShader.Terminate();
 	mScreenQuadBuffer.Terminate();
@@ -159,6 +137,7 @@ void GameState::Terminate()
 	mTransformBuffer.Terminate();
 	mGroundMeshBuffer.Terminate();
 	mTankMeshBuffer.Terminate();
+	mModel.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -212,8 +191,6 @@ void GameState::Update(float deltaTime)
 	{
 		mTankRotation.y -= deltaTime;
 	}
-
-	animationTime += deltaTime;
 
 	mPostProcessSettings.time += deltaTime;
 
@@ -421,13 +398,14 @@ void GameState::DrawDepthMap()
 
 	for (auto& position : mTankPositions)
 	{
-		/*auto matTrans = Matrix4::Translation(position);
+		auto matTrans = Matrix4::Translation(position);
 		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
 		auto matWorld = matRot * matTrans;
-		auto wvp = Transpose(matWorld * matViewLight * matProjLight);*/
-		auto wvp = mAnimation.GetTransform(animationTime);
+		auto wvp = Transpose(matWorld * matViewLight * matProjLight);
+		
 		mDepthMapConstantBuffer.Update(wvp);
-		mTankMeshBuffer.Draw();
+		mModel.Draw();
+		//mTankMeshBuffer.Draw();
 	}
 }
 
@@ -470,11 +448,9 @@ void GameState::DrawScene()
 	{
 		auto matTrans = Matrix4::Translation(position);
 		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
-		//auto matWorld =  matRot * matTrans;
-		auto matWorld = mAnimation.GetTransform(animationTime);
+		auto matWorld =  matRot * matTrans;
 
 		TransformData transformData;
-		//auto wvp = mMatrixAni;
 		transformData.world = Transpose(matWorld);
 		transformData.wvp = Transpose(matWorld * matView * matProj);
 		transformData.viewPosition = mActiveCamera->GetPosition();
@@ -484,12 +460,11 @@ void GameState::DrawScene()
 		mShadowConstantBuffer.Update(wvpLight);
 
 		//mTankMeshBuffer.Draw();
-
-
+		
 		mModel.Draw();
 		
 	}
-
+	
 	auto matWorld = Matrix4::Identity;
 	TransformData transformData;
 	transformData.world = Transpose(matWorld);
@@ -509,11 +484,10 @@ void GameState::DrawScene()
 	settings.useShadow = 1;
 	mSettingsBuffer.Update(settings);
 
-
 	mGroundMeshBuffer.Draw();
 
-	mTerrain.SetDirectionalLight(mDirectionalLight);
-	mTerrain.Render(*mActiveCamera);
+	//mTerrain.SetDirectionalLight(mDirectionalLight);
+	//mTerrain.Render(*mActiveCamera);
 
 	SimpleDraw::AddLine(mViewFrustumVertices[0], mViewFrustumVertices[1], Colors::White);
 	SimpleDraw::AddLine(mViewFrustumVertices[1], mViewFrustumVertices[2], Colors::White);

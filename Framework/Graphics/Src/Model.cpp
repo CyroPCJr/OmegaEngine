@@ -13,10 +13,12 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 	fopen_s(&file, fileName.u8string().c_str(), "r");
 
 	uint32_t numMeshes = 0;
-	fscanf_s(file, "MeshCount: %d", &numMeshes);
+	fscanf_s(file, "MeshCount: %d\n", &numMeshes);
+
 	model.meshData.resize(numMeshes);
 	for (uint32_t i = 0; i < numMeshes; ++i)
 	{
+		fscanf_s(file, "MaterialIndex: %d\n", &model.meshData[i].materialIndex);
 		MeshIO::Read(file, model.meshData[i].mesh);
 	}
 
