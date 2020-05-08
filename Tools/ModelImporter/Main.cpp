@@ -86,7 +86,7 @@ void SaveModel(const Arguments& args, Model& model)
 	FILE* file = nullptr;
 	fopen_s(&file, args.outputFileName, "w");
 
-	uint32_t meshCount = static_cast<uint32_t>(model.meshData.size());
+	const uint32_t meshCount = static_cast<uint32_t>(model.meshData.size());
 	fprintf_s(file, "MeshCount: %d\n", meshCount);
 
 	for (uint32_t i = 0; i < meshCount; ++i)
@@ -94,10 +94,29 @@ void SaveModel(const Arguments& args, Model& model)
 		fprintf_s(file, "MaterialIndex: %d\n", model.meshData[i].materialIndex);
 		MeshIO::Write(file, model.meshData[i].mesh);
 	}
+	fclose(file);
 
 	// For homework, save out model.materialData as well ...
 	// if diffuseMapName is empty  string, write <none>
-	fclose(file);
+	FILE* fileMaterial = nullptr;
+	std::filesystem::path fileName = args.outputFileName;
+	fileName.replace_extension("materialData");
+	printf_s("Saving material data: %s...\n", fileName.u8string().c_str());
+	fopen_s(&fileMaterial, fileName.u8string().c_str(), "w");
+
+	//fopen_s(&fileMaterial, args.outputFileName, "w");
+
+	const uint32_t materialCount = static_cast<uint32_t>(model.materialData.size());
+	fprintf_s(fileMaterial, "MaterialCount: %d\n", materialCount);
+
+	for (uint32_t i = 0; i < materialCount; ++i)
+	{
+		fprintf_s(fileMaterial, "DiffuseMapName %s\n",
+			model.materialData[i].diffuseMapName.empty() ?
+			"<none>" : model.materialData[i].diffuseMapName.c_str());
+		MeshIO::Write(fileMaterial, model.materialData[i].material);
+	}
+	fclose(fileMaterial);
 }
 
 void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& fileName)
@@ -227,7 +246,7 @@ int main(int argc, char* argv[])
 				auto& vertex = vertices.emplace_back(Vertex{});
 				vertex.position = Convert(positions[i]) * args.scale;
 				vertex.normal = Convert(normals[i]);
-				vertex.tangent = Convert(normals[i]);
+				vertex.tangent = Convert(tangents[i]);
 				vertex.texcoord = texCoords ? Vector2(texCoords[i].x, texCoords[i].y) : 0.0f;
 			}
 
@@ -252,7 +271,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Look for material data.
-	/*if (scene->HasMaterials())
+	if (scene->HasMaterials())
 	{
 		printf("Reading materials...\n");
 		const uint32_t numMaterials = scene->mNumMaterials;
@@ -277,8 +296,9 @@ int main(int argc, char* argv[])
 			material.material.specular = Convert(specularColor);
 			material.material.power = specularPower;
 			material.diffuseMapName = FindTexture(*scene, *inputMaterial, aiTextureType_DIFFUSE, args, "_diffuse");
+
 		}
-	}*/
+	}
 
 	SaveModel(args, model);	// ../../Assets/Models/<name>.model
 

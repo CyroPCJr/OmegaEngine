@@ -46,7 +46,6 @@ void GameState::Initialize()
 	mActiveCamera = &mDefaultCamera;
 
 	ObjLoader::Load("../../Assets/Models/Tank/tank.obj", 0.001f, mTankMesh);
-	
 	mTankMeshBuffer.Initialize(mTankMesh);
 
 	mGroundMesh = MeshBuilder::CreatePlane(300.0f);

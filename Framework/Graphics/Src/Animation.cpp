@@ -58,10 +58,7 @@ Quaternion Animation::GetRotation(float time) const
 		Quaternion qEnd = mRotationKeys[currentKey].key;
 		return Slerp(qBegin, qEnd, t);
 	}
-	else
-	{
-		return Quaternion::Zero;
-	}
+	return Quaternion::Identity;
 }
 
 Vector3 Animation::GetScale(float time) const

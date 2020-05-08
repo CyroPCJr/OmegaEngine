@@ -46,10 +46,11 @@ void GameState::Initialize()
 	mActiveCamera = &mDefaultCamera;
 
 	//ObjLoader::Load("../../Assets/Models/Tank/tank.obj", 0.001f, mTankMesh);
+	//ObjLoader::Load("../../Assets/Models/mutant.obj", 2.0f, mTankMesh);
 	//mTankMeshBuffer.Initialize(mTankMesh);
 
-	mModel.Initialize("../../Assets/Models/Tank/tank");
-
+	mModel.Initialize("../../Assets/Models/mutant.model");
+	
 	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
 	mGroundMeshBuffer.Initialize(mGroundMesh);
 
@@ -107,6 +108,16 @@ void GameState::Initialize()
 
 	mPostProcessingVertexShader.Initialize("../../Assets/Shaders/PostProcessing.fx", VertexPX::Format);
 	mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSNoProcessing");
+
+	mAnimation = AnimationBuilder()
+		.SetTime(0.0f)
+		.AddPositionKey(Vector3(0.0f, 1.0f, 0.0f))
+		.AddRotationKey(Quaternion::Identity)
+		.AddScaleKey(Vector3(0.1f, 0.1f, 0.1f))
+		.SetTime(5.0f)
+		.AddPositionKey(Vector3(0.0f, 1.0f, 0.0f))
+		.AddRotationKey(Quaternion::RotationAxis(Vector3(0.0f, 1.0f, 0.0f), 90.0f))
+		.GetAnimation();
 }
 
 void GameState::Terminate()
@@ -191,7 +202,7 @@ void GameState::Update(float deltaTime)
 	{
 		mTankRotation.y -= deltaTime;
 	}
-
+	mAnimationTime += deltaTime;
 	mPostProcessSettings.time += deltaTime;
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
@@ -287,7 +298,6 @@ void GameState::Update(float deltaTime)
 	SimpleDraw::AddLine(v7, v4, Colors::Red);
 
 	SimpleDrawCamera(mLightCamera);
-
 }
 
 void GameState::Render()
@@ -396,17 +406,19 @@ void GameState::DrawDepthMap()
 
 	mDepthMapConstantBuffer.BindVS(0);
 
-	for (auto& position : mTankPositions)
-	{
-		auto matTrans = Matrix4::Translation(position);
-		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
-		auto matWorld = matRot * matTrans;
-		auto wvp = Transpose(matWorld * matViewLight * matProjLight);
-		
-		mDepthMapConstantBuffer.Update(wvp);
-		mModel.Draw();
-		//mTankMeshBuffer.Draw();
-	}
+	//for (auto& position : mTankPositions)
+	//{
+	//	
+	//}
+	/*auto matTrans = Matrix4::Translation(position);
+	auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);*/
+	//auto matWorld = matRot * matTrans;
+	auto matWorld = mAnimation.GetTransform(mAnimationTime);// matRot* matTrans;
+	auto wvp = Transpose(matWorld * matViewLight * matProjLight);
+
+	mDepthMapConstantBuffer.Update(wvp);
+	//mTankMeshBuffer.Draw();
+	mModel.Draw();
 }
 
 void GameState::DrawScene()
@@ -444,11 +456,15 @@ void GameState::DrawScene()
 	mTransformBuffer.BindVS(0);
 	mShadowConstantBuffer.BindVS(4);
 
-	for (auto& position : mTankPositions)
+	/*for (auto& position : mTankPositions)
 	{
-		auto matTrans = Matrix4::Translation(position);
-		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);
-		auto matWorld =  matRot * matTrans;
+
+	}*/
+	{
+		/*auto matTrans = Matrix4::Translation({ 0.0f,-3.5f, 0.0f });
+		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);*/
+		//auto matWorld = matRot * matTrans;
+		auto matWorld = mAnimation.GetTransform(mAnimationTime);//matRot * matTrans;
 
 		TransformData transformData;
 		transformData.world = Transpose(matWorld);
@@ -459,12 +475,12 @@ void GameState::DrawScene()
 		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 		mShadowConstantBuffer.Update(wvpLight);
 
-		//mTankMeshBuffer.Draw();
-		
 		mModel.Draw();
-		
+		//mTankMeshBuffer.Draw();
 	}
-	
+
+	//mModel.Draw();
+
 	auto matWorld = Matrix4::Identity;
 	TransformData transformData;
 	transformData.world = Transpose(matWorld);
