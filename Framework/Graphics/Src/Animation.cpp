@@ -28,10 +28,7 @@ Vector3 Animation::GetPosition(float time) const
 		Vector3 vEnd = mPositionKeys[nextKey].key;
 		return Lerp<Vector3>(vBegin, vEnd, t);
 	}
-	else
-	{
-		return Vector3::Zero;
-	}
+	return Vector3::Zero;
 }
 
 Quaternion Animation::GetRotation(float time) const
@@ -55,7 +52,7 @@ Quaternion Animation::GetRotation(float time) const
 			0.0f;
 
 		Quaternion qBegin = mRotationKeys[currentKey].key;
-		Quaternion qEnd = mRotationKeys[currentKey].key;
+		Quaternion qEnd = mRotationKeys[nextKey].key;
 		return Slerp(qBegin, qEnd, t);
 	}
 	return Quaternion::Identity;
@@ -85,10 +82,7 @@ Vector3 Animation::GetScale(float time) const
 		Vector3 vEnd = mScaleKeys[nextKey].key;
 		return Lerp<Vector3>(vBegin, vEnd, t);
 	}
-	else
-	{
-		return Vector3::Zero;
-	}
+	return Vector3::Zero;
 }
 
 Matrix4 Animation::GetTransform(float time) const

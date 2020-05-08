@@ -45,10 +45,6 @@ void GameState::Initialize()
 
 	mActiveCamera = &mDefaultCamera;
 
-	//ObjLoader::Load("../../Assets/Models/Tank/tank.obj", 0.001f, mTankMesh);
-	//ObjLoader::Load("../../Assets/Models/mutant.obj", 2.0f, mTankMesh);
-	//mTankMeshBuffer.Initialize(mTankMesh);
-
 	mModel.Initialize("../../Assets/Models/mutant.model");
 	
 	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
@@ -82,10 +78,6 @@ void GameState::Initialize()
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
-	/*mDiffuseMap.Initialize("../../Assets/Models/Tank/tank_diffuse.jpg");
-	mSpecularMap.Initialize("../../Assets/Models/Tank/tank_specular.jpg");
-	mNormalMap.Initialize("../../Assets/Models/Tank/tank_normal.jpg");
-	mAOMap.Initialize("../../Assets/Models/Tank/tank_ao.jpg");*/
 
 	mGroundDiffuseMap.Initialize("../../Assets/Images/grass_2048.jpg");
 
@@ -168,17 +160,14 @@ void GameState::Update(float deltaTime)
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
 		mActiveCamera->Walk(-kMoveSpeed * deltaTime);
-		//mTankPosition.z -= kMoveSpeed * deltaTime;
 	}
 	if (inputSystem->IsKeyDown(KeyCode::D))
 	{
 		mActiveCamera->Strafe(kMoveSpeed * deltaTime);
-		mTankRotation.y += kMoveSpeed * deltaTime;
 	}
 	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
 		mActiveCamera->Strafe(-kMoveSpeed * deltaTime);
-		mTankRotation.y -= kMoveSpeed * deltaTime;
 	}
 	if (inputSystem->IsMouseDown(MouseButton::RBUTTON))
 	{
@@ -186,42 +175,10 @@ void GameState::Update(float deltaTime)
 		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 
-	if (inputSystem->IsKeyDown(KeyCode::UP))
-	{
-		mTankRotation.x += deltaTime;
-	}
-	if (inputSystem->IsKeyDown(KeyCode::DOWN))
-	{
-		mTankRotation.x -= deltaTime;
-	}
-	if (inputSystem->IsKeyDown(KeyCode::LEFT))
-	{
-		mTankRotation.y += deltaTime;
-	}
-	if (inputSystem->IsKeyDown(KeyCode::RIGHT))
-	{
-		mTankRotation.y -= deltaTime;
-	}
 	mAnimationTime += deltaTime;
 	mPostProcessSettings.time += deltaTime;
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
-	//mLightCamera.SetPosition(mLightCamera.GetDirection() * -50.0f);
-
-	mTankPositions.clear();
-
-	const int count = 1;
-	const float offsetX = (count - 1) * mTankSpacing * -0.5f;
-	const float offsetZ = (count - 1) * mTankSpacing * -0.5f;
-	for (int z = 0; z < count; ++z)
-	{
-		for (int x = 0; x < count; ++x)
-		{
-			float posX = (x * mTankSpacing) + offsetX;
-			float posZ = (z * mTankSpacing) + offsetZ;
-			mTankPositions.push_back({ posX, 3.5f, posZ });
-		}
-	}
 
 	mViewFrustumVertices =
 	{
@@ -387,12 +344,7 @@ void GameState::DebugUI()
 		ImGui::SliderFloat("Depth Bias", &mSettings.depthBias, 0.0f, 0.01f, "%.4f");
 		ImGui::SliderFloat("Brightness", &mSettings.brightness, 1.0f, 10.0f);
 	}
-	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::DragFloat3("Translation##Transform", &mTankPositions[0].x, 0.01f);
-		ImGui::DragFloat3("Rotation##Transform", &mTankRotation.x, 0.01f);
-		ImGui::DragFloat("Spacing", &mTankSpacing, 0.1f, 0.5f, 100.0f);
-	}
+	
 	ImGui::End();
 }
 
@@ -417,7 +369,7 @@ void GameState::DrawDepthMap()
 	auto wvp = Transpose(matWorld * matViewLight * matProjLight);
 
 	mDepthMapConstantBuffer.Update(wvp);
-	//mTankMeshBuffer.Draw();
+	
 	mModel.Draw();
 }
 
@@ -478,8 +430,6 @@ void GameState::DrawScene()
 		mModel.Draw();
 		//mTankMeshBuffer.Draw();
 	}
-
-	//mModel.Draw();
 
 	auto matWorld = Matrix4::Identity;
 	TransformData transformData;

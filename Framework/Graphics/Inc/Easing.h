@@ -8,7 +8,6 @@ https://gist.github.com/gre/1650294
 */
 namespace Omega::Graphics
 {
-
 	// no easing, no acceleration
 	constexpr float Linear(float time)
 	{

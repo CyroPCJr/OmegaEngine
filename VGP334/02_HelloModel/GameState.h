@@ -88,10 +88,6 @@ private:
 
 	Omega::Graphics::Texture mGroundDiffuseMap;
 
-	std::vector<Omega::Math::Vector3> mTankPositions{};
-	Omega::Math::Vector3 mTankRotation = 0.0f;
-	float mTankSpacing = 20.0f;
-
 	SettingsData mSettings;
 
 	// Shadow
