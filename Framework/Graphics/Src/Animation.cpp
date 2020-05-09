@@ -94,5 +94,5 @@ Matrix4 Animation::GetTransform(float time) const
 	// Scaling
 	Matrix4 matrixScale = Matrix4::Scaling(GetScale(time));
 	// Combining
-	return matrixRot * matrixPos * matrixScale;
+	return matrixScale * matrixRot * matrixPos;
 }

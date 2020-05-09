@@ -3,7 +3,7 @@
 
 using namespace Omega::Graphics;
 
-void MeshIO::Write(FILE* file, const Mesh& mesh, bool binary)
+void MeshIO::Write(FILE* file, const SkinnedMesh& mesh, bool binary)
 {
 	if (binary) //TODO: Testing area
 	{
@@ -46,7 +46,7 @@ void MeshIO::Write(FILE* file, const Mesh& mesh, bool binary)
 	
 }
 
-void MeshIO::Read(FILE* file, Mesh& mesh, bool binary)
+void MeshIO::Read(FILE* file, SkinnedMesh& mesh, bool binary)
 {
 	// to read in binary
 	//fread_s()

@@ -39,6 +39,8 @@
 #include "Animation.h"
 #include "AnimationBuilder.h"
 #include "Easing.h"
+#include "Skeleton.h"
+#include "SkeletonIO.h"
 
 // Model
 #include "MeshIO.h"

@@ -25,4 +25,5 @@ namespace Omega::Graphics
 	using MeshPX = MeshBase<VertexPX>;
 	using MeshPN = MeshBase<VertexPN>;
 	using Mesh = MeshBase<Vertex>;
+	using SkinnedMesh = MeshBase<BoneVertex>;
 }

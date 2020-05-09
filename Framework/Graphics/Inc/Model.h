@@ -2,6 +2,7 @@
 
 #include "Material.h"
 #include "Texture.h"
+#include "Skeleton.h"
 #include "Mesh.h"
 #include "MeshBuffer.h"
 
@@ -14,6 +15,7 @@ namespace Omega::Graphics
 	{
 	public :
 		static void LoadModel(std::filesystem::path fileName, Model& model);
+		static void LoadSkeleton(std::filesystem::path fileName, Skeleton& model);
 	};
 
 	class Model
@@ -26,7 +28,7 @@ namespace Omega::Graphics
 	public:
 		struct MeshData
 		{
-			Mesh mesh; // CPU data
+			SkinnedMesh mesh; // CPU data
 			uint32_t materialIndex = 0;
 			MeshBuffer meshBuffer; //GPU data
 		};
@@ -40,6 +42,7 @@ namespace Omega::Graphics
 
 		std::vector<MeshData> meshData;
 		std::vector<MaterialData> materialData;
+		Skeleton skeleton;
 	};
 
 }

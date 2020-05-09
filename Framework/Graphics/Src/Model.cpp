@@ -2,6 +2,7 @@
 #include "Model.h"
 
 #include "MeshIO.h"
+#include "SkeletonIO.h"
 
 using namespace Omega::Graphics;
 
@@ -62,9 +63,20 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 	}
 }
 
+void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleton)
+{
+	
+	fileName.replace_extension("skeleton");
+	// Homework:
+	// Do loading
+	// Resolve link here
+
+}
+
 void Model::Initialize(const std::filesystem::path& fileName)
 {
 	ModelLoader::LoadModel(fileName, *this);
+	ModelLoader::LoadSkeleton(fileName, skeleton);
 }
 
 void Model::Terminate()

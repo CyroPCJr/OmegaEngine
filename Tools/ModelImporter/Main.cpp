@@ -4,13 +4,15 @@
 #include <Graphics/Inc/Graphics.h>
 #include <Math/Inc/EngineMath.h>
 
-#include <assimp/Importer.hpp> //
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>  // C++ importer interface
+#include <assimp/scene.h>		// Ouput data structure
+#include <assimp/postprocess.h> // Post processing flags
 #include <cstdio>
 
 using namespace Omega::Graphics;
 using namespace Omega::Math;
+
+using BoneIndexLookup = std::map<std::string, int>; // Used to lookup bone by name
 
 struct Arguments
 {
@@ -79,6 +81,122 @@ inline Matrix4 Convert(const aiMatrix4x4& m)
 	return Transpose(mat);
 }
 
+void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& fileName)
+{
+	printf("Extracting embedded texture...\n");
+
+	std::string fullFileName = args.outputFileName;
+	fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
+	fullFileName += fileName;
+
+	FILE* file = nullptr;
+	fopen_s(&file, fullFileName.c_str(), "wb");
+	size_t written = fwrite(texture.pcData, 1, texture.mWidth, file);
+	OMEGAASSERT(written == texture.mWidth, "Error: Failed to extract embedded texture!");
+	fclose(file);
+}
+
+std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
+	aiTextureType textureType, const Arguments& args, const std::string& suffix)
+{
+	std::filesystem::path textureName;
+
+	const uint32_t textureCount = inputMaterial.GetTextureCount(textureType);
+	if (textureCount > 0)
+	{
+		aiString texturePath;
+		if (inputMaterial.GetTexture(textureType, 0, &texturePath) == aiReturn_SUCCESS)
+		{
+			// For FBX files, embedded textures is now accessed using GetEmbeddedTexture
+			// https://github.com/assimp/assimp/issues/1830
+			if (auto embeddedTexture = scene.GetEmbeddedTexture(texturePath.C_Str()); embeddedTexture)
+			{
+				std::filesystem::path embeddedFilePath = texturePath.C_Str();
+				std::string fileName = args.inputFileName;
+				fileName.erase(fileName.length() - 4); // remove ".fbx" extension
+				fileName += suffix;
+				fileName += embeddedFilePath.extension().u8string();
+
+				ExportEmbeddedTexture(*embeddedTexture, args, fileName);
+
+				printf("Exporting embedded texture to %s\n", fileName.c_str());
+				textureName = fileName;
+			}
+			else
+			{
+				std::filesystem::path filePath = texturePath.C_Str();
+				std::string fileName = filePath.filename().u8string();
+				printf("Adding texture %s\n", fileName.c_str());
+				textureName = fileName;
+			}
+		}
+	}
+	return textureName.filename().u8string().c_str();
+}
+
+// Check if inputBone exists in skeleton, if so just return the index.
+// Otherwise, add it to the skeleton. The aiBone must have a name!
+int TryAddBone(const aiBone* inputBone, Skeleton& skeleton, BoneIndexLookup& boneIndexLookup)
+{
+	std::string name = inputBone->mName.C_Str();
+	OMEGAASSERT(!name.empty(), "Error: inputBone has no name!");
+
+	auto iter = boneIndexLookup.find(name);
+	if (iter != boneIndexLookup.end())
+		return iter->second;
+
+	// Add a new bone in the skeleton for this
+	auto& newBone = skeleton.bones.emplace_back(std::make_unique<Bone>());
+	newBone->name = std::move(name);
+	newBone->index = static_cast<int>(skeleton.bones.size()) - 1;
+	newBone->offsetTransform = Convert(inputBone->mOffsetMatrix);
+
+	// Cache the bone index
+	boneIndexLookup.emplace(newBone->name, newBone->index);
+	return newBone->index;
+}
+
+// Recursively walk the aiScene tree and add/link bones to our skeleton as we find them.
+Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, BoneIndexLookup& boneIndexLookup)
+{
+	Bone* bone = nullptr;
+
+	std::string name = sceneNode.mName.C_Str();
+	auto iter = boneIndexLookup.find(name);
+	if (iter != boneIndexLookup.end())
+	{
+		// Bone already exists
+		bone = skeleton.bones[iter->second].get();
+	}
+	else
+	{
+		// Add a new bone in the skeleton for this (possible need to generate a name for it)
+		bone = skeleton.bones.emplace_back(std::make_unique<Bone>()).get();
+		bone->index = static_cast<int>(skeleton.bones.size()) - 1;
+		bone->offsetTransform = Matrix4::Identity;
+		if (name.empty())
+			bone->name = "NoName" + std::to_string(bone->index);
+		else
+			bone->name = std::move(name);
+
+		// Cache the bone index
+		boneIndexLookup.emplace(bone->name, bone->index);
+	}
+
+	// Link to your parent
+	bone->parent = parent;
+	bone->toParentTransform = Convert(sceneNode.mTransformation);
+
+	// Recurse through your children
+	bone->children.reserve(sceneNode.mNumChildren);
+	for (uint32_t i = 0; i < sceneNode.mNumChildren; ++i)
+	{
+		Bone* child = BuildSkeleton(*sceneNode.mChildren[i], bone, skeleton, boneIndexLookup);
+		bone->children.push_back(child);
+	}
+	return bone;
+}
+
 void SaveModel(const Arguments& args, Model& model)
 {
 	printf_s("Saving model: %s...\n", args.outputFileName);
@@ -119,57 +237,19 @@ void SaveModel(const Arguments& args, Model& model)
 	fclose(fileMaterial);
 }
 
-void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& fileName)
+void SaveSkeleton(const Arguments& args, const Skeleton& skeleton)
 {
-	printf("Extracting embedded texture...\n");
+	std::filesystem::path path = args.outputFileName;
+	path.replace_extension("skeleton");
 
-	std::string fullFileName = args.outputFileName;
-	fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
-	fullFileName += fileName;
+	printf("Saving skeleton: %s...\n", path.u8string().c_str());
 
 	FILE* file = nullptr;
-	fopen_s(&file, fullFileName.c_str(), "wb");
-	size_t written = fwrite(texture.pcData, 1, texture.mWidth, file);
-	OMEGAASSERT(written == texture.mWidth, "Error: Failed to extract embedded texture!");
+	fopen_s(&file, path.u8string().c_str(), "w");
+
+	SkeletonIO::Write(file, skeleton);
+
 	fclose(file);
-}
-
-std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
-	aiTextureType textureType, const Arguments& args, const char* suffix)
-{
-	std::filesystem::path textureName;
-
-	const uint32_t textureCount = inputMaterial.GetTextureCount(textureType);
-	if (textureCount > 0)
-	{
-		aiString texturePath;
-		if (inputMaterial.GetTexture(textureType, 0, &texturePath) == aiReturn_SUCCESS)
-		{
-			// For FBX files, embedded textures is now accessed using GetEmbeddedTexture
-			// https://github.com/assimp/assimp/issues/1830
-			if (auto embeddedTexture = scene.GetEmbeddedTexture(texturePath.C_Str()); embeddedTexture)
-			{
-				std::filesystem::path embeddedFilePath = texturePath.C_Str();
-				std::string fileName = args.inputFileName;
-				fileName.erase(fileName.length() - 4); // remove ".fbx" extension
-				fileName += suffix;
-				fileName += embeddedFilePath.extension().u8string();
-
-				ExportEmbeddedTexture(*embeddedTexture, args, fileName);
-
-				printf("Exporting embedded texture to %s\n", fileName.c_str());
-				textureName = fileName;
-			}
-			else
-			{
-				std::filesystem::path filePath = texturePath.C_Str();
-				std::string fileName = filePath.filename().u8string();
-				printf("Adding texture %s\n", fileName.c_str());
-				textureName = fileName;
-			}
-		}
-	}
-	return textureName.filename().u8string().c_str();
 }
 
 int main(int argc, char* argv[])
@@ -212,6 +292,7 @@ int main(int argc, char* argv[])
 	//        +- Node
 
 	Model model;
+	BoneIndexLookup boneIndexLookup;
 
 	if (scene->HasMeshes())
 	{
@@ -233,7 +314,7 @@ int main(int argc, char* argv[])
 
 			printf("Reading vertices...\n");
 
-			std::vector<Vertex> vertices;
+			std::vector<BoneVertex> vertices;
 			vertices.reserve(numVertices);
 
 			const aiVector3D* positions = inputMesh->mVertices;
@@ -243,7 +324,7 @@ int main(int argc, char* argv[])
 
 			for (uint32_t i = 0; i < numVertices; ++i)
 			{
-				auto& vertex = vertices.emplace_back(Vertex{});
+				auto& vertex = vertices.emplace_back(BoneVertex{});
 				vertex.position = Convert(positions[i]) * args.scale;
 				vertex.normal = Convert(normals[i]);
 				vertex.tangent = Convert(tangents[i]);
@@ -263,10 +344,21 @@ int main(int argc, char* argv[])
 				indices.push_back(faces[i].mIndices[2]);
 			}
 
-			Mesh mesh;
+
+			if (inputMesh->HasBones())
+			{
+				for (uint32_t meshBoneIndex = 0; meshBoneIndex < inputMesh->mNumBones; ++meshBoneIndex)
+				{
+					aiBone* inputBone = inputMesh->mBones[meshBoneIndex];
+					int boneIndex = TryAddBone(inputBone, model.skeleton, boneIndexLookup);
+				}
+			}
+
+			SkinnedMesh mesh;
 			mesh.vertices = std::move(vertices);
 			mesh.indices = std::move(indices);
 			model.meshData[meshIndex].mesh = std::move(mesh);
+			
 		}
 	}
 
@@ -295,14 +387,20 @@ int main(int argc, char* argv[])
 			material.material.diffuse = Convert(diffuseColor);
 			material.material.specular = Convert(specularColor);
 			material.material.power = specularPower;
-			material.diffuseMapName = FindTexture(*scene, *inputMaterial, aiTextureType_DIFFUSE, args, "_diffuse");
-
+			material.diffuseMapName = FindTexture(*scene, *inputMaterial, aiTextureType_DIFFUSE, args, "_diffuse" + std::to_string(i));
 		}
 	}
 
+	// Check if we have skeleton information.
+	if (!model.skeleton.bones.empty())
+	{
+		printf_s("Building skeleton...\n");
+		BuildSkeleton(*scene->mRootNode, nullptr, model.skeleton, boneIndexLookup);
+	}
+
 	SaveModel(args, model);	// ../../Assets/Models/<name>.model
+	SaveSkeleton(args, model.skeleton);	// ../../Assets/Models/<name>.model
 
-	printf("All done!\n");
-
+	printf_s("All done!\n");
 	return 0;
 }
