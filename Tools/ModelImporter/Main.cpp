@@ -242,7 +242,7 @@ void SaveSkeleton(const Arguments& args, const Skeleton& skeleton)
 	std::filesystem::path path = args.outputFileName;
 	path.replace_extension("skeleton");
 
-	printf("Saving skeleton: %s...\n", path.u8string().c_str());
+	printf_s("Saving skeleton: %s...\n", path.u8string().c_str());
 
 	FILE* file = nullptr;
 	fopen_s(&file, path.u8string().c_str(), "w");
@@ -398,7 +398,7 @@ int main(int argc, char* argv[])
 		BuildSkeleton(*scene->mRootNode, nullptr, model.skeleton, boneIndexLookup);
 	}
 
-	SaveModel(args, model);	// ../../Assets/Models/<name>.model
+	SaveModel(args, model);				// ../../Assets/Models/<name>.model
 	SaveSkeleton(args, model.skeleton);	// ../../Assets/Models/<name>.model
 
 	printf_s("All done!\n");
