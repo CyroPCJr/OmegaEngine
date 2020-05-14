@@ -70,7 +70,14 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 	// Homework:
 	// Do loading
 	// Resolve link here
+	FILE* file = nullptr;
+	fopen_s(&file, fileName.u8string().c_str(), "r");
 
+	uint32_t numBones = 0;
+	fscanf_s(file, "BonesCount: %d\n", &numBones);
+	skeleton.bones.resize(numBones);
+	SkeletonIO::Read(file, skeleton);
+	fclose(file);
 }
 
 void Model::Initialize(const std::filesystem::path& fileName)
@@ -96,4 +103,9 @@ void Model::Draw() const
 		materialData[data.materialIndex].diffuseMap->BindPS();
 		data.meshBuffer.Draw();
 	}
+
+	//for (size_t i = 0; i < skeleton.bones.size(); ++i)
+	//{
+
+	//}
 }

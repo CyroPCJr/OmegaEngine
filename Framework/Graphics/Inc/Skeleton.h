@@ -10,5 +10,5 @@ namespace Omega::Graphics
 		std::vector<std::unique_ptr<Bone>> bones;
 	};
 
-	void DrawSkeleton(const Skeleton& skeleton, const std::vector<Math::Matrix4>& boneMatrices);
+	void DrawSkeleton(Skeleton& skeleton, std::vector<Math::Matrix4>& boneMatrices);
 }

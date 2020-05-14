@@ -6,7 +6,7 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-void Omega::Graphics::DrawSkeleton(const Skeleton& skeleton, const std::vector<Math::Matrix4>& boneMatrices)
+void Omega::Graphics::DrawSkeleton(Skeleton& skeleton, std::vector<Math::Matrix4>& boneMatrices)
 {
 	// Homework
 	// Use skeleton so you know what the parent child order is
@@ -23,5 +23,11 @@ void Omega::Graphics::DrawSkeleton(const Skeleton& skeleton, const std::vector<M
     TexCoord0 = TexCoord;
     vec4 NormalL = BoneTransform * vec4(Normal, 0.0);
     Normal0 = (gWorld * NormalL).xyz;
-    WorldPos0 = (gWorld * PosL).xyz;*/
+    WorldPos0 = (gWorld * PosL).xyz;
+    */
+    while (!skeleton.root->parent)
+    {
+
+        //SimpleDraw::AddLine();
+    }
 }
