@@ -35,10 +35,10 @@ void SkeletonIO::Write(FILE* file, const Skeleton& skeleton)
 		fprintf_s(file, "Parent Index: %d\n", bone->parentIndex);
 		WriteMatrix(file, bone->toParentTransform);
 		fprintf_s(file, "ChildCount: %d\n", bone->children.size());
-		for (auto& child : bone->children)
+	/*	for (auto& child : bone->children)
 		{
 			fprintf_s(file, "Child index: %d\n", child->index);
-		}
+		}*/
 	}
 }
 

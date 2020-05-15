@@ -25,24 +25,5 @@ void Omega::Graphics::DrawSkeleton(Skeleton& skeleton, std::vector<Math::Matrix4
 	Normal0 = (gWorld * NormalL).xyz;
 	WorldPos0 = (gWorld * PosL).xyz;
 	*/
-	const uint32_t bonesSize = static_cast<uint32_t>(skeleton.bones.size());
-	for (uint32_t i = 0; i < bonesSize; ++i)
-	{
-		Bone* bone = skeleton.bones[i].get();
-		if (bone->parentIndex == -1) // root has no parent
-		{
-			skeleton.root = bone;
-		}
-		else
-		{
-			bone->parent = skeleton.bones[bone->parentIndex].get();
-		}
-		if (!bone->childIndices.empty())
-		{
-			// Link bone->children[]
-			bone->children = bone->children[bone->parentIndex]->children;
-		}
-		
-	}
 
 }

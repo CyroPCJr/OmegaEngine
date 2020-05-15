@@ -99,7 +99,7 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 
 void Model::Initialize(const std::filesystem::path& fileName)
 {
-	//ModelLoader::LoadModel(fileName, *this);
+	ModelLoader::LoadModel(fileName, *this);
 	ModelLoader::LoadSkeleton(fileName, skeleton);
 }
 
