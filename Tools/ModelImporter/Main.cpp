@@ -83,7 +83,7 @@ inline Matrix4 Convert(const aiMatrix4x4& m)
 
 void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& fileName)
 {
-	printf("Extracting embedded texture...\n");
+	printf_s("Extracting embedded texture...\n");
 
 	std::string fullFileName = args.outputFileName;
 	fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
@@ -119,14 +119,14 @@ std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
 
 				ExportEmbeddedTexture(*embeddedTexture, args, fileName);
 
-				printf("Exporting embedded texture to %s\n", fileName.c_str());
+				printf_s("Exporting embedded texture to %s\n", fileName.c_str());
 				textureName = fileName;
 			}
 			else
 			{
 				std::filesystem::path filePath = texturePath.C_Str();
 				std::string fileName = filePath.filename().u8string();
-				printf("Adding texture %s\n", fileName.c_str());
+				printf_s("Adding texture %s\n", fileName.c_str());
 				textureName = fileName;
 			}
 		}
@@ -192,6 +192,7 @@ Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, B
 	for (uint32_t i = 0; i < sceneNode.mNumChildren; ++i)
 	{
 		Bone* child = BuildSkeleton(*sceneNode.mChildren[i], bone, skeleton, boneIndexLookup);
+		child->parentIndex = bone->index; // new line to save Parent Index
 		bone->children.push_back(child);
 	}
 	return bone;
@@ -308,11 +309,11 @@ int main(int argc, char* argv[])
 			const uint32_t numFaces = inputMesh->mNumFaces;
 			const uint32_t numIndices = numFaces * 3;
 
-			printf("Reading material index...\n");
+			printf_s("Reading material index...\n");
 
 			model.meshData[meshIndex].materialIndex = inputMesh->mMaterialIndex;
 
-			printf("Reading vertices...\n");
+			printf_s("Reading vertices...\n");
 
 			std::vector<BoneVertex> vertices;
 			vertices.reserve(numVertices);
@@ -331,7 +332,7 @@ int main(int argc, char* argv[])
 				vertex.texcoord = texCoords ? Vector2(texCoords[i].x, texCoords[i].y) : 0.0f;
 			}
 
-			printf("Reading indices...\n");
+			printf_s("Reading indices...\n");
 
 			std::vector<uint32_t> indices;
 			indices.reserve(numIndices);
@@ -343,7 +344,6 @@ int main(int argc, char* argv[])
 				indices.push_back(faces[i].mIndices[1]);
 				indices.push_back(faces[i].mIndices[2]);
 			}
-
 
 			if (inputMesh->HasBones())
 			{
@@ -365,7 +365,7 @@ int main(int argc, char* argv[])
 	// Look for material data.
 	if (scene->HasMaterials())
 	{
-		printf("Reading materials...\n");
+		printf_s("Reading materials...\n");
 		const uint32_t numMaterials = scene->mNumMaterials;
 		model.materialData.resize(numMaterials);
 

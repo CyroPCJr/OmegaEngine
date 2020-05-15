@@ -215,7 +215,14 @@ void SimpleDraw::AddGroundPlane(float size, const Color& color)
 
 void SimpleDraw::AddBone(const Math::Matrix4& transform)
 {
-	//TODO:
+	auto r = Math::GetRight(transform);
+	auto u = Math::GetUp(transform);
+	auto l = Math::GetLook(transform);
+	auto p = Math::GetTranslation(transform);
+	AddSphere(0.025f, 5, 6, Colors::BlueViolet);
+	sInstance->AddLine(p, p + r * 0.1f, Colors::Red);
+	sInstance->AddLine(p, p + u * 0.1f, Colors::Green);
+	sInstance->AddLine(p, p + l * 0.1f, Colors::Blue);
 }
 
 void SimpleDraw::AddTransform(const Math::Matrix4& transform)

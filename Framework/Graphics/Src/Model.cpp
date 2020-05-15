@@ -65,7 +65,6 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 
 void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleton)
 {
-	
 	fileName.replace_extension("skeleton");
 	// Homework:
 	// Do loading
@@ -78,11 +77,29 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 	skeleton.bones.resize(numBones);
 	SkeletonIO::Read(file, skeleton);
 	fclose(file);
+	for (uint32_t i = 0; i < numBones; ++i)
+	{
+		Bone* bone = skeleton.bones[i].get();
+		if (bone->parentIndex == -1) // root has no parent
+		{
+			skeleton.root = bone;
+		}
+		else
+		{
+			bone->parent = skeleton.bones[bone->parentIndex].get();
+		}
+		if (!bone->childIndices.empty())
+		{
+			// Link bone->children[]
+			bone->children = bone->children[bone->parentIndex]->children;
+		}
+	}
+	
 }
 
 void Model::Initialize(const std::filesystem::path& fileName)
 {
-	ModelLoader::LoadModel(fileName, *this);
+	//ModelLoader::LoadModel(fileName, *this);
 	ModelLoader::LoadSkeleton(fileName, skeleton);
 }
 
@@ -103,9 +120,5 @@ void Model::Draw() const
 		materialData[data.materialIndex].diffuseMap->BindPS();
 		data.meshBuffer.Draw();
 	}
-
-	//for (size_t i = 0; i < skeleton.bones.size(); ++i)
-	//{
-
-	//}
+	
 }

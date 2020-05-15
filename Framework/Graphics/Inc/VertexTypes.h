@@ -59,7 +59,6 @@ namespace Omega::Graphics
 		Math::Vector2 texcoord;
 		int boneIndices[4] = { 0 };
 		float boneWeights[4] = { 0.0f };
-
 	};
 
 }

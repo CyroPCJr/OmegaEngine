@@ -175,6 +175,10 @@ namespace Omega::Math
 		return Vector3(matrix._31, matrix._32, matrix._33);
 	}
 
+	constexpr Vector3 GetLook(const Matrix4& m)
+	{
+		return Vector3{ m._14, m._24, m._34 };
+	}
 
 #pragma region Quaternion Helper Functions
 
