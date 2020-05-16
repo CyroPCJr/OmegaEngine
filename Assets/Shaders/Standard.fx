@@ -39,6 +39,11 @@ cbuffer ShadowBuffer : register(b4)
 	matrix WVPLight;
 }
 
+cbuffer BoneTransformBuffer : register(b5)
+{
+    matrix boneTransforms[128];
+}
+
 Texture2D diffuseMap : register(t0);
 Texture2D specularMap : register(t1);
 Texture2D displacementMap : register(t2);
@@ -48,12 +53,35 @@ Texture2D depthMap : register(t5);
 
 SamplerState textureSampler : register(s0);
 
+static matrix Identity =
+{
+    1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	0, 0, 0, 1
+};
+
+matrix GetBoneTransform(int4 indices, float4 weights)
+{
+    if (length(weights) <= 0.0f)
+        return Identity;
+
+    matrix transform;
+    transform = boneTransforms[indices[0]] * weights[0];
+    transform += boneTransforms[indices[1]] * weights[1];
+    transform += boneTransforms[indices[2]] * weights[2];
+    transform += boneTransforms[indices[3]] * weights[3];
+    return transform;
+}
+
 struct VS_INPUT
 {
 	float3 position : POSITION;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float2 texCoord	: TEXCOORD;
+    int4 blendIndices : BLENDINDICES;
+    float4 blendWeights : BLENDWEIGHT;
 };
 
 struct VS_OUTPUT
@@ -73,11 +101,17 @@ VS_OUTPUT VS(VS_INPUT input)
 
 	float displacement = displacementMap.SampleLevel(textureSampler, input.texCoord, 0).x;
 	float3 localPosition = input.position + (input.normal * displacement * bumpMapWeight);
-	float3 worldPosition = mul(float4(localPosition, 1.0f), World).xyz;
-	float3 worldNormal = mul(input.normal, (float3x3)World);
-	float3 worldTangent = mul(input.tangent, (float3x3)World);
+	
+    matrix toRoot = GetBoneTransform(input.blendIndices, input.blendWeights);
+    matrix toWorld = mul(toRoot, World);
+    matrix toNDC = mul(toRoot, WVP);
+    matrix toNDCLight = mul(toRoot, WVPLight);
+	
+    float3 worldPosition = mul(float4(localPosition, 1.0f), toWorld).xyz;
+    float3 worldNormal = mul(input.normal, (float3x3) toWorld);
+    float3 worldTangent = mul(input.tangent, (float3x3) toWorld);
 
-	output.position = mul(float4(localPosition, 1.0f), WVP);
+    output.position = mul(float4(localPosition, 1.0f), toNDC);
 	output.worldNormal = worldNormal;
 	output.worldTangent = worldTangent;
 	output.dirToLight = -LightDirection;
@@ -85,7 +119,7 @@ VS_OUTPUT VS(VS_INPUT input)
 	output.texCoord = input.texCoord;
 
 	if (useShadow)
-		output.positionNDC = mul(float4(localPosition, 1.0f), WVPLight);
+        output.positionNDC = mul(float4(localPosition, 1.0f), toNDCLight);
 
 	return output;
 }

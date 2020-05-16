@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AnimationSet.h"
 #include "Material.h"
 #include "Texture.h"
 #include "Skeleton.h"
@@ -16,6 +17,7 @@ namespace Omega::Graphics
 	public :
 		static void LoadModel(std::filesystem::path fileName, Model& model);
 		static void LoadSkeleton(std::filesystem::path fileName, Skeleton& model);
+		static void LoadAnimationSet(std::filesystem::path fileName, AnimationSet& animationSet);
 	};
 
 	class Model
@@ -43,6 +45,7 @@ namespace Omega::Graphics
 		std::vector<MeshData> meshData;
 		std::vector<MaterialData> materialData;
 		Skeleton skeleton;
+		AnimationSet animationSet;
 	};
 
 }

@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "Model.h"
 
+
 #include "MeshIO.h"
 #include "SkeletonIO.h"
 
@@ -88,13 +89,27 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 		{
 			bone->parent = skeleton.bones[bone->parentIndex].get();
 		}
+		bone->children.reserve(bone->childIndices.size());
 		if (!bone->childIndices.empty())
 		{
 			// Link bone->children[]
-			bone->children = bone->children[bone->parentIndex]->children;
+			//bone->children = bone->children[bone->parentIndex]->children;
+			//bone->children.push_back(bone->children[bone->childIndices]->childre);
 		}
 	}
 	
+}
+
+void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet& animationSet)
+{
+	fileName.replace_extension("animset");
+
+	FILE* file = nullptr;
+	fopen_s(&file, fileName.u8string().c_str(), "r");
+
+	// Homework
+
+	fclose(file);
 }
 
 void Model::Initialize(const std::filesystem::path& fileName)

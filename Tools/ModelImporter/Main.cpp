@@ -81,13 +81,13 @@ inline Matrix4 Convert(const aiMatrix4x4& m)
 	return Transpose(mat);
 }
 
-void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& fileName)
+void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& filePath)
 {
 	printf_s("Extracting embedded texture...\n");
 
 	std::string fullFileName = args.outputFileName;
 	fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
-	fullFileName += fileName;
+	fullFileName += filePath;
 
 	FILE* file = nullptr;
 	fopen_s(&file, fullFileName.c_str(), "wb");
@@ -253,6 +253,26 @@ void SaveSkeleton(const Arguments& args, const Skeleton& skeleton)
 	fclose(file);
 }
 
+void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet)
+{
+	std::filesystem::path path = args.outputFileName;
+	path.replace_extension("animset");
+
+	printf_s("Saving animations: %s... \n", path.u8string().c_str());
+
+	FILE* file = nullptr;
+	fopen_s(&file, path.u8string().c_str(), "w");
+
+	const uint32_t clipCount = static_cast<uint32_t>(animationSet.clips.size());
+	fprintf_s(file, "ClipCount: %d\n", clipCount);
+	for (auto& animationClip: animationSet.clips)
+	{
+		AnimationIO::Write(file, *animationClip);
+	}
+
+	fclose(file);
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -347,10 +367,30 @@ int main(int argc, char* argv[])
 
 			if (inputMesh->HasBones())
 			{
+				printf_s("Reading bones weights...\n");
+
+				std::vector<int> numWeights(vertices.size(), 0);
+
 				for (uint32_t meshBoneIndex = 0; meshBoneIndex < inputMesh->mNumBones; ++meshBoneIndex)
 				{
 					aiBone* inputBone = inputMesh->mBones[meshBoneIndex];
 					int boneIndex = TryAddBone(inputBone, model.skeleton, boneIndexLookup);
+
+					for (uint32_t weightIndex = 0; weightIndex < inputBone->mNumWeights; ++weightIndex)
+					{
+						const aiVertexWeight& weight = inputBone->mWeights[weightIndex];
+						auto& vertex = vertices[weight.mVertexId];
+						auto& count = numWeights[weight.mVertexId];
+
+						// Our vertices can hold at most up to 4 weights
+						if (count < 4)
+						{
+							vertex.boneIndices[count] = boneIndex;
+							vertex.boneWeights[count] = weight.mWeight;
+							++count;
+						}
+					}
+
 				}
 			}
 
@@ -358,7 +398,7 @@ int main(int argc, char* argv[])
 			mesh.vertices = std::move(vertices);
 			mesh.indices = std::move(indices);
 			model.meshData[meshIndex].mesh = std::move(mesh);
-			
+
 		}
 	}
 
@@ -398,8 +438,68 @@ int main(int argc, char* argv[])
 		BuildSkeleton(*scene->mRootNode, nullptr, model.skeleton, boneIndexLookup);
 	}
 
+	// Look for animation data.
+	if (scene->HasAnimations())
+	{
+		printf_s("Reading animations...\n");
+		for (uint32_t animIndex = 0; animIndex < scene->mNumAnimations; ++animIndex)
+		{
+			const aiAnimation* inputAnim = scene->mAnimations[animIndex];
+			auto animClip = std::make_unique<AnimationClip>();
+
+			if (inputAnim->mName.length > 0)
+			{
+				animClip->name = inputAnim->mName.C_Str();
+			}
+			else
+			{
+				animClip->name = "Anim" + std::to_string(animIndex);
+			}
+			animClip->duration = static_cast<float>(inputAnim->mDuration);
+			animClip->tickPerSecond = static_cast<float>(inputAnim->mTicksPerSecond);
+
+			printf_s("Reading bone animatons for %s ...\n", animClip->name.c_str());
+			
+			// Make sure we have the same number of slots for animationClip as the bones in the
+			// skeleton. This allows us to undex the animationClip using the bone index directly.
+			animClip->boneAnimations.resize(model.skeleton.bones.size());
+
+			for (uint32_t boneAnimIndex = 0; boneAnimIndex < inputAnim->mNumChannels; ++boneAnimIndex)
+			{
+				const aiNodeAnim* inputBoneAnim = inputAnim->mChannels[boneAnimIndex];
+				int slotIndex = boneIndexLookup[inputBoneAnim->mNodeName.C_Str()];
+				auto& boneAnim = animClip->boneAnimations[slotIndex];
+				boneAnim = std::make_unique<Animation>();
+
+				AnimationBuilder builder;
+				for (uint32_t keyIndex = 0; keyIndex < inputBoneAnim->mNumPositionKeys; ++keyIndex)
+				{
+					auto& key = inputBoneAnim->mPositionKeys[keyIndex];
+					builder.AddPositionKey(Convert(key.mValue)* args.scale, static_cast<float>(key.mTime));
+				}
+
+				for (uint32_t keyIndex = 0; keyIndex < inputBoneAnim->mNumRotationKeys; ++keyIndex)
+				{
+					auto& key = inputBoneAnim->mRotationKeys[keyIndex];
+					builder.AddRotationKey(Convert(key.mValue), static_cast<float>(key.mTime));
+				}
+
+				for (uint32_t keyIndex = 0; keyIndex < inputBoneAnim->mNumScalingKeys; ++keyIndex)
+				{
+					auto& key = inputBoneAnim->mScalingKeys[keyIndex];
+					builder.AddScaleKey(Convert(key.mValue), static_cast<float>(key.mTime));
+				}
+
+				*boneAnim = builder.GetAnimation();
+			}
+			// Add the new clip to our animation set
+			model.animationSet.clips.emplace_back(std::move(animClip));
+		}
+	}
+
 	SaveModel(args, model);				// ../../Assets/Models/<name>.model
 	SaveSkeleton(args, model.skeleton);	// ../../Assets/Models/<name>.model
+	SaveAnimationSet(args, model.animationSet);
 
 	printf_s("All done!\n");
 	return 0;
