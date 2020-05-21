@@ -46,7 +46,8 @@ void GameState::Initialize()
 	mActiveCamera = &mDefaultCamera;
 
 	mModel.Initialize("../../Assets/Models/mutant.model");
-	
+	DrawSkeleton(mModel.skeleton, mBoneMatrices);
+
 	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
 	mGroundMeshBuffer.Initialize(mGroundMesh);
 
@@ -74,7 +75,9 @@ void GameState::Initialize()
 	mSettings.useShadow = 1;
 	mSettings.depthBias = 0.0003f;
 
-	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
+	//bck
+	//mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
+	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", BoneVertex::Format);
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
@@ -85,6 +88,7 @@ void GameState::Initialize()
 
 	constexpr uint32_t depthMapSize = 4096;
 	mDepthMapRenderTarget.Initialize(depthMapSize, depthMapSize, RenderTarget::Format::RGBA_U32);
+	
 	mDepthMapVertexShader.Initialize("../../Assets/Shaders/DepthMap.fx", Vertex::Format);
 	mDepthMapPixelShader.Initialize("../../Assets/Shaders/DepthMap.fx");
 	mDepthMapConstantBuffer.Initialize();
@@ -114,7 +118,6 @@ void GameState::Initialize()
 
 void GameState::Terminate()
 {
-
 	mPostProcessingPixelShader.Terminate();
 	mPostProcessingVertexShader.Terminate();
 	mScreenQuadBuffer.Terminate();
@@ -177,6 +180,11 @@ void GameState::Update(float deltaTime)
 
 	mAnimationTime += deltaTime;
 	mPostProcessSettings.time += deltaTime;
+
+	for (auto& bone : mBoneMatrices)
+	{
+		SimpleDraw::AddBone(bone);
+	}
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
@@ -255,6 +263,8 @@ void GameState::Update(float deltaTime)
 	SimpleDraw::AddLine(v7, v4, Colors::Red);
 
 	SimpleDrawCamera(mLightCamera);
+
+	
 }
 
 void GameState::Render()
@@ -427,8 +437,10 @@ void GameState::DrawScene()
 		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 		mShadowConstantBuffer.Update(wvpLight);
 
-		mModel.Draw();
+		//mModel.Draw();
 		//mTankMeshBuffer.Draw();
+		 // trying to draw this shit
+		
 	}
 
 	auto matWorld = Matrix4::Identity;

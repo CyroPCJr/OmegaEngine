@@ -1,7 +1,6 @@
 #include "Precompiled.h"
 #include "Model.h"
 
-
 #include "MeshIO.h"
 #include "SkeletonIO.h"
 
@@ -67,9 +66,6 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleton)
 {
 	fileName.replace_extension("skeleton");
-	// Homework:
-	// Do loading
-	// Resolve link here
 	FILE* file = nullptr;
 	fopen_s(&file, fileName.u8string().c_str(), "r");
 
@@ -78,26 +74,23 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 	skeleton.bones.resize(numBones);
 	SkeletonIO::Read(file, skeleton);
 	fclose(file);
-	for (uint32_t i = 0; i < numBones; ++i)
+	for (auto& bone : skeleton.bones)
 	{
-		Bone* bone = skeleton.bones[i].get();
-		if (bone->parentIndex == -1) // root has no parent
-		{
-			skeleton.root = bone;
-		}
-		else
+		if (bone->parentIndex != -1)
 		{
 			bone->parent = skeleton.bones[bone->parentIndex].get();
 		}
-		bone->children.reserve(bone->childIndices.size());
-		if (!bone->childIndices.empty())
+		else
 		{
-			// Link bone->children[]
-			//bone->children = bone->children[bone->parentIndex]->children;
-			//bone->children.push_back(bone->children[bone->childIndices]->childre);
+			skeleton.root = bone.get();
+		}
+		bone->children.reserve(bone->childIndices.size());
+		for (auto childIndex : bone->childIndices)
+		{
+			bone->children.push_back(skeleton.bones[childIndex].get());
 		}
 	}
-	
+
 }
 
 void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet& animationSet)

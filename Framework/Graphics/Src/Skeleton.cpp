@@ -6,21 +6,52 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-void Omega::Graphics::DrawSkeleton(Skeleton& skeleton, std::vector<Math::Matrix4>& boneMatrices)
+namespace
 {
+	Math::Matrix4 GetTransform(const Bone& bone)
+	{
+		return bone.toParentTransform;
+	}
+}
+
+void Omega::Graphics::DrawSkeleton(const Skeleton& skeleton, std::vector<Math::Matrix4>& boneMatrices)
+{
+	uint32_t size = static_cast<uint32_t>(skeleton.bones.size());
+	boneMatrices.reserve(size);
+	for (uint32_t i = 0; i < size; ++i)
+	{
+		Bone* bone = skeleton.bones[i].get();
+		if (bone->parent)
+		{
+			auto mat = bone->toParentTransform * bone->parent->toParentTransform;
+			boneMatrices.push_back(mat);
+		}
+		else
+		{
+			auto mat = bone->toParentTransform;
+			boneMatrices.push_back(mat);
+		}
+
+		for (auto& child : bone->children)
+		{
+			Math::Matrix4 mat = child->toParentTransform * bone->toParentTransform;
+			boneMatrices.push_back(mat);
+		}
+	}
+
 	// Homework
 	// Use skeleton so you know what the parent child order is
 	//But, use boneMatrices ( whick is the multipled out matrices)
 	// TODO: Testar isso aqui
 	/*
-	
+
 	Tips for getting the bone matrices:
 -----------------------------------
 
-       R
-       |
-       V
-      [U]
+	   R
+	   |
+	   V
+	  [U]
    [U]   [U]
 [U]         [U]
 
@@ -34,7 +65,7 @@ void UpdateBoneRecursive(std::vector<Matrix>& boneMatrices, const Bone* bone)
 		boneMatrices[bone->index] = GetTransform(bone) * boneMatrices[bone->parent->index]
 	else
 		boneMatrices[bone->index] = GetTransform(bone)
-		
+
 	for (auto& child : bone->children)
 		UpdateBoneRecursive(boneMatrices, child)
 }
@@ -43,7 +74,7 @@ void UpdateBoneRecursive(std::vector<Matrix>& boneMatrices, const Bone* bone)
 std::vector<Matrix> boneMatrices;
 UpdateBoneRecursive(boneMatrices, skeleton.root)
 
-	
+
 	*/
 
 	//http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html

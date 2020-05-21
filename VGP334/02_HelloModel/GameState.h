@@ -109,4 +109,5 @@ private:
 	Omega::Graphics::Model mModel;
 	Omega::Graphics::Animation mAnimation;
 	float mAnimationTime = 0.0f;
+	std::vector<Omega::Math::Matrix4> mBoneMatrices;
 };
