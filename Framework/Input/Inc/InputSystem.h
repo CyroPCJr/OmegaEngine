@@ -79,7 +79,7 @@ namespace Omega::Input {
 		float GetRightAnalogY(int player) const;
 
 	private:
-		friend LRESULT CALLBACK InputSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK InputSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 
 		HWND mWindow = nullptr;
 

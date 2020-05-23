@@ -22,15 +22,15 @@ namespace
     //---------------------------------------------------------------------------------
     // .WAV files
     //---------------------------------------------------------------------------------
-    const uint32_t FOURCC_RIFF_TAG = MAKEFOURCC('R', 'I', 'F', 'F');
-    const uint32_t FOURCC_FORMAT_TAG = MAKEFOURCC('f', 'm', 't', ' ');
-    const uint32_t FOURCC_DATA_TAG = MAKEFOURCC('d', 'a', 't', 'a');
-    const uint32_t FOURCC_WAVE_FILE_TAG = MAKEFOURCC('W', 'A', 'V', 'E');
-    const uint32_t FOURCC_XWMA_FILE_TAG = MAKEFOURCC('X', 'W', 'M', 'A');
-    const uint32_t FOURCC_DLS_SAMPLE = MAKEFOURCC('w', 's', 'm', 'p');
-    const uint32_t FOURCC_MIDI_SAMPLE = MAKEFOURCC('s', 'm', 'p', 'l');
-    const uint32_t FOURCC_XWMA_DPDS = MAKEFOURCC('d', 'p', 'd', 's');
-    const uint32_t FOURCC_XMA_SEEK = MAKEFOURCC('s', 'e', 'e', 'k');
+    constexpr uint32_t FOURCC_RIFF_TAG = MAKEFOURCC('R', 'I', 'F', 'F');
+    constexpr uint32_t FOURCC_FORMAT_TAG = MAKEFOURCC('f', 'm', 't', ' ');
+    constexpr uint32_t FOURCC_DATA_TAG = MAKEFOURCC('d', 'a', 't', 'a');
+    constexpr uint32_t FOURCC_WAVE_FILE_TAG = MAKEFOURCC('W', 'A', 'V', 'E');
+    constexpr uint32_t FOURCC_XWMA_FILE_TAG = MAKEFOURCC('X', 'W', 'M', 'A');
+    constexpr uint32_t FOURCC_DLS_SAMPLE = MAKEFOURCC('w', 's', 'm', 'p');
+    constexpr uint32_t FOURCC_MIDI_SAMPLE = MAKEFOURCC('s', 'm', 'p', 'l');
+    constexpr uint32_t FOURCC_XWMA_DPDS = MAKEFOURCC('d', 'p', 'd', 's');
+    constexpr uint32_t FOURCC_XMA_SEEK = MAKEFOURCC('s', 'e', 'e', 'k');
 
 #pragma pack(push,1)
     struct RIFFChunk
@@ -109,7 +109,7 @@ namespace
     const RIFFChunk* FindChunk(
         _In_reads_bytes_(sizeBytes) const uint8_t* data,
         _In_ size_t sizeBytes,
-        _In_ uint32_t tag)
+        _In_ uint32_t tag) noexcept
     {
         if (!data)
             return nullptr;
@@ -139,7 +139,7 @@ namespace
         _Outptr_ const uint8_t** pdata,
         _Out_ uint32_t* dataSize,
         _Out_ bool& dpds,
-        _Out_ bool& seek)
+        _Out_ bool& seek) noexcept
     {
         if (!wavData || !pwfx)
             return E_POINTER;
@@ -306,7 +306,7 @@ namespace
         _In_reads_bytes_(wavDataSize) const uint8_t* wavData,
         _In_ size_t wavDataSize,
         _Out_ uint32_t* pLoopStart,
-        _Out_ uint32_t* pLoopLength)
+        _Out_ uint32_t* pLoopLength) noexcept
     {
         if (!wavData || !pLoopStart || !pLoopLength)
             return E_POINTER;
@@ -418,7 +418,7 @@ namespace
         _In_ size_t wavDataSize,
         _In_ uint32_t tag,
         _Outptr_result_maybenull_ const uint32_t** pData,
-        _Out_ uint32_t* dataCount)
+        _Out_ uint32_t* dataCount) noexcept
     {
         if (!wavData || !pData || !dataCount)
             return E_POINTER;
@@ -479,7 +479,7 @@ namespace
     HRESULT LoadAudioFromFile(
         _In_z_ const wchar_t* szFileName,
         _Inout_ std::unique_ptr<uint8_t[]>& wavData,
-        _Out_ DWORD* bytesRead)
+        _Out_ DWORD* bytesRead) noexcept
     {
         if (!szFileName)
             return E_INVALIDARG;
@@ -554,7 +554,7 @@ HRESULT DirectX::LoadWAVAudioInMemory(
     size_t wavDataSize,
     const WAVEFORMATEX** wfx,
     const uint8_t** startAudio,
-    uint32_t* audioBytes)
+    uint32_t* audioBytes) noexcept
 {
     if (!wavData || !wfx || !startAudio || !audioBytes)
         return E_INVALIDARG;
@@ -585,7 +585,7 @@ HRESULT DirectX::LoadWAVAudioFromFile(
     std::unique_ptr<uint8_t[]>& wavData,
     const WAVEFORMATEX** wfx,
     const uint8_t** startAudio,
-    uint32_t* audioBytes)
+    uint32_t* audioBytes) noexcept
 {
     if (!szFileName || !wfx || !startAudio || !audioBytes)
         return E_INVALIDARG;
@@ -615,7 +615,7 @@ _Use_decl_annotations_
 HRESULT DirectX::LoadWAVAudioInMemoryEx(
     const uint8_t* wavData,
     size_t wavDataSize,
-    DirectX::WAVData& result)
+    DirectX::WAVData& result) noexcept
 {
     if (!wavData)
         return E_INVALIDARG;
@@ -659,7 +659,7 @@ _Use_decl_annotations_
 HRESULT DirectX::LoadWAVAudioFromFileEx(
     const wchar_t* szFileName,
     std::unique_ptr<uint8_t[]>& wavData,
-    DirectX::WAVData& result)
+    DirectX::WAVData& result) noexcept
 {
     if (!szFileName)
         return E_INVALIDARG;

@@ -43,7 +43,7 @@ namespace Omega::Graphics {
 		ID3D11DeviceContext* GetContext() { return mImmediateContext; };
 
 	private:
-		friend LRESULT CALLBACK GraphicsSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK GraphicsSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 
 		friend ID3D11Device* GetDevice();
 		friend ID3D11DeviceContext* GetContext();

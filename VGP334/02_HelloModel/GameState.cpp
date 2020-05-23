@@ -46,7 +46,8 @@ void GameState::Initialize()
 	mActiveCamera = &mDefaultCamera;
 
 	mModel.Initialize("../../Assets/Models/mutant.model");
-	DrawSkeleton(mModel.skeleton, mBoneMatrices);
+	//	CalculateBoneMatrices(*mModel.skeleton.root, mBoneMatrices);
+		//CalculateBoneMatrices(*mModel.skeleton.bones[0], mBoneMatrices);
 
 	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
 	mGroundMeshBuffer.Initialize(mGroundMesh);
@@ -88,7 +89,7 @@ void GameState::Initialize()
 
 	constexpr uint32_t depthMapSize = 4096;
 	mDepthMapRenderTarget.Initialize(depthMapSize, depthMapSize, RenderTarget::Format::RGBA_U32);
-	
+
 	mDepthMapVertexShader.Initialize("../../Assets/Shaders/DepthMap.fx", Vertex::Format);
 	mDepthMapPixelShader.Initialize("../../Assets/Shaders/DepthMap.fx");
 	mDepthMapConstantBuffer.Initialize();
@@ -181,11 +182,6 @@ void GameState::Update(float deltaTime)
 	mAnimationTime += deltaTime;
 	mPostProcessSettings.time += deltaTime;
 
-	for (auto& bone : mBoneMatrices)
-	{
-		SimpleDraw::AddBone(bone);
-	}
-
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
 	mViewFrustumVertices =
@@ -263,8 +259,6 @@ void GameState::Update(float deltaTime)
 	SimpleDraw::AddLine(v7, v4, Colors::Red);
 
 	SimpleDrawCamera(mLightCamera);
-
-	
 }
 
 void GameState::Render()
@@ -354,7 +348,7 @@ void GameState::DebugUI()
 		ImGui::SliderFloat("Depth Bias", &mSettings.depthBias, 0.0f, 0.01f, "%.4f");
 		ImGui::SliderFloat("Brightness", &mSettings.brightness, 1.0f, 10.0f);
 	}
-	
+
 	ImGui::End();
 }
 
@@ -379,7 +373,7 @@ void GameState::DrawDepthMap()
 	auto wvp = Transpose(matWorld * matViewLight * matProjLight);
 
 	mDepthMapConstantBuffer.Update(wvp);
-	
+
 	mModel.Draw();
 }
 
@@ -439,8 +433,14 @@ void GameState::DrawScene()
 
 		//mModel.Draw();
 		//mTankMeshBuffer.Draw();
-		 // trying to draw this shit
-		
+		 // trying to draw this skeleton
+
+		/*for (auto& bone : mBoneMatrices)
+		{
+			SimpleDraw::AddBone(bone);
+		}*/
+		DrawSkeleton(mModel.skeleton.root, mBoneMatrices);
+
 	}
 
 	auto matWorld = Matrix4::Identity;

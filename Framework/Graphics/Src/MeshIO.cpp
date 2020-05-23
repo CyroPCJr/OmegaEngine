@@ -32,7 +32,8 @@ void MeshIO::Write(FILE* file, const SkinnedMesh& mesh, bool binary)
 				vertex.texcoord.x, vertex.texcoord.y);
 			/*,
 				vertex.boneIndices[0], vertex.boneIndices[1], vertex.boneIndices[2], vertex.boneIndices[3],
-				vertex.boneWeights[0], vertex.boneWeights[1], vertex.boneWeights[2], vertex.boneWeights[3]);*/
+				vertex.boneWeights[0], vertex.boneWeights[1], vertex.boneWeights[2], vertex.boneWeights[3]);
+				*/
 		}
 
 		uint32_t indicesSize = static_cast<uint32_t>(mesh.indices.size());
@@ -81,8 +82,8 @@ void MeshIO::Read(FILE* file, SkinnedMesh& mesh, bool binary)
 		mesh.vertices.resize(numVertices);
 		for (auto& v : mesh.vertices)
 		{
-			uint32_t bIndex1, bIndex2, bIndex3, bIndex4;
-			uint32_t wIndex1, wIndex2, wIndex3, wIndex4;
+			/*uint32_t bIndex1, bIndex2, bIndex3, bIndex4;
+			uint32_t wIndex1, wIndex2, wIndex3, wIndex4;*/
 			/*fscanf_s(file, "%f %f %f %f %f %f %f %f %f %f %f %d %d %d %d %f %f %f %f\n",
 				&v.position.x, &v.position.y, &v.position.z,
 				&v.normal.x, &v.normal.y, &v.normal.z,

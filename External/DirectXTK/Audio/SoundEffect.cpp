@@ -38,11 +38,11 @@ public:
         mLoopLength(0),
         mEngine(engine),
         mOneShots(0)
-    #if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+    #ifdef DIRECTX_ENABLE_SEEK_TABLES
         , mSeekCount(0)
         , mSeekTable(nullptr)
     #endif
-    #if defined(_XBOX_ONE) && defined(_TITLE)
+    #ifdef DIRECTX_ENABLE_XMA2
         , mXMAMemory(nullptr)
     #endif
     {
@@ -50,7 +50,13 @@ public:
         mEngine->RegisterNotify(this, false);
     }
 
-    virtual ~Impl() override
+    Impl(Impl&&) = default;
+    Impl& operator= (Impl&&) = default;
+
+    Impl(Impl const&) = delete;
+    Impl& operator= (Impl const&) = delete;
+
+    ~Impl() override
     {
         if (!mInstances.empty())
         {
@@ -76,7 +82,7 @@ public:
             mEngine = nullptr;
         }
 
-    #if defined(_XBOX_ONE) && defined(_TITLE)
+    #ifdef DIRECTX_ENABLE_XMA2
         if (mXMAMemory)
         {
             ApuFree(mXMAMemory);
@@ -87,55 +93,59 @@ public:
 
     HRESULT Initialize(_In_ AudioEngine* engine, _Inout_ std::unique_ptr<uint8_t[]>& wavData,
                        _In_ const WAVEFORMATEX* wfx, _In_reads_bytes_(audioBytes) const uint8_t* startAudio, size_t audioBytes,
-                   #if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+                   #ifdef DIRECTX_ENABLE_SEEK_TABLES
                        _In_reads_opt_(seekCount) const uint32_t* seekTable, size_t seekCount,
                    #endif
-                       uint32_t loopStart, uint32_t loopLength);
+                       uint32_t loopStart, uint32_t loopLength) noexcept;
 
     void Play(float volume, float pitch, float pan);
 
     // IVoiceNotify
-    virtual void __cdecl OnBufferEnd() override
+    void __cdecl OnBufferEnd() override
     {
         InterlockedDecrement(&mOneShots);
     }
 
-    virtual void __cdecl OnCriticalError() override
+    void __cdecl OnCriticalError() override
     {
         mOneShots = 0;
     }
 
-    virtual void __cdecl OnReset() override
+    void __cdecl OnReset() override
     {
         // No action required
     }
 
-    virtual void __cdecl OnUpdate() override
+    void __cdecl OnUpdate() override
     {
         // We do not register for update notification
         assert(false);
     }
 
-    virtual void __cdecl OnDestroyEngine() override
+    void __cdecl OnDestroyEngine() noexcept override
     {
         mEngine = nullptr;
         mOneShots = 0;
     }
 
-    virtual void __cdecl OnTrim() override
+    void __cdecl OnTrim() override
     {
         // No action required
     }
 
-    virtual void __cdecl GatherStatistics(AudioStatistics& stats) const override
+    void __cdecl GatherStatistics(AudioStatistics& stats) const noexcept override
     {
         stats.playingOneShots += mOneShots;
         stats.audioBytes += mAudioBytes;
 
-    #if defined(_XBOX_ONE) && defined(_TITLE)
+    #ifdef DIRECTX_ENABLE_XMA2
         if (mXMAMemory)
             stats.xmaAudioBytes += mAudioBytes;
     #endif
+    }
+
+    void __cdecl OnDestroyParent() noexcept override
+    {
     }
 
     const WAVEFORMATEX*                 mWaveFormat;
@@ -144,10 +154,10 @@ public:
     uint32_t                            mLoopStart;
     uint32_t                            mLoopLength;
     AudioEngine*                        mEngine;
-    std::list<SoundEffectInstance*>     mInstances;
+    std::list<IVoiceNotify*>            mInstances;
     uint32_t                            mOneShots;
 
-#if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+#ifdef DIRECTX_ENABLE_SEEK_TABLES
     uint32_t                            mSeekCount;
     const uint32_t*                     mSeekTable;
 #endif
@@ -155,7 +165,7 @@ public:
 private:
     std::unique_ptr<uint8_t[]>          mWavData;
 
-#if defined(_XBOX_ONE) && defined(_TITLE)
+#ifdef DIRECTX_ENABLE_XMA2
     void*                               mXMAMemory;
 #endif
 };
@@ -164,10 +174,10 @@ private:
 _Use_decl_annotations_
 HRESULT SoundEffect::Impl::Initialize(AudioEngine* engine, std::unique_ptr<uint8_t[]>& wavData,
                                       const WAVEFORMATEX* wfx, const uint8_t* startAudio, size_t audioBytes,
-                                  #if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+                                  #ifdef DIRECTX_ENABLE_SEEK_TABLES
                                       const uint32_t* seekTable, size_t seekCount,
                                   #endif
-                                      uint32_t loopStart, uint32_t loopLength)
+                                      uint32_t loopStart, uint32_t loopLength) noexcept
 {
     if (!engine || !IsValid(wfx) || !startAudio || !audioBytes || !wavData)
         return E_INVALIDARG;
@@ -188,7 +198,7 @@ HRESULT SoundEffect::Impl::Initialize(AudioEngine* engine, std::unique_ptr<uint8
             mStartAudio = startAudio;
             break;
 
-        #if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+        #ifdef DIRECTX_ENABLE_XWMA
 
         case WAVE_FORMAT_WMAUDIO2:
         case WAVE_FORMAT_WMAUDIO3:
@@ -211,9 +221,9 @@ HRESULT SoundEffect::Impl::Initialize(AudioEngine* engine, std::unique_ptr<uint8
             mSeekTable = seekTable;
             break;
 
-        #endif // _XBOX_ONE || _WIN32_WINNT < _WIN32_WINNT_WIN8 || _WIN32_WINNT >= _WIN32_WINNT_WIN10
+        #endif // xWMA
 
-        #if defined(_XBOX_ONE) && defined(_TITLE)
+        #ifdef DIRECTX_ENABLE_XMA2
 
         case WAVE_FORMAT_XMA2:
             if (!seekCount || !seekTable)
@@ -238,7 +248,9 @@ HRESULT SoundEffect::Impl::Initialize(AudioEngine* engine, std::unique_ptr<uint8
             memcpy(mXMAMemory, startAudio, audioBytes);
             mStartAudio = reinterpret_cast<const uint8_t*>(mXMAMemory);
 
-            mWavData.reset(new uint8_t[sizeof(XMA2WAVEFORMATEX) + (seekCount * sizeof(uint32_t))]);
+            mWavData.reset(new (std::nothrow) uint8_t[sizeof(XMA2WAVEFORMATEX) + (seekCount * sizeof(uint32_t))]);
+            if (!mWavData)
+                return E_OUTOFMEMORY;
 
             memcpy(mWavData.get(), wfx, sizeof(XMA2WAVEFORMATEX));
             mWaveFormat = reinterpret_cast<WAVEFORMATEX*>(mWavData.get());
@@ -258,7 +270,7 @@ HRESULT SoundEffect::Impl::Initialize(AudioEngine* engine, std::unique_ptr<uint8
             wavData.reset();
             break;
 
-        #endif // _XBOX_ONE && _TITLE
+        #endif // XMA2
 
         default:
         {
@@ -320,8 +332,7 @@ void SoundEffect::Impl::Play(float volume, float pitch, float pan)
     buffer.Flags = XAUDIO2_END_OF_STREAM;
     buffer.pContext = this;
 
-#if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
-
+    #ifdef DIRECTX_ENABLE_XWMA
     uint32_t tag = GetFormatTag(mWaveFormat);
     if (tag == WAVE_FORMAT_WMAUDIO2 || tag == WAVE_FORMAT_WMAUDIO3)
     {
@@ -332,15 +343,15 @@ void SoundEffect::Impl::Play(float volume, float pitch, float pan)
         hr = voice->SubmitSourceBuffer(&buffer, &wmaBuffer);
     }
     else
-    #endif
+    #endif // xWMA
     {
         hr = voice->SubmitSourceBuffer(&buffer, nullptr);
     }
     if (FAILED(hr))
     {
-        DebugTrace("ERROR: SoundEffect failed (%08X) when submitting buffer:\n", hr);
-        DebugTrace("\tFormat Tag %u, %u channels, %u-bit, %u Hz, %u bytes\n", mWaveFormat->wFormatTag,
-                   mWaveFormat->nChannels, mWaveFormat->wBitsPerSample, mWaveFormat->nSamplesPerSec, mAudioBytes);
+        DebugTrace("ERROR: SoundEffect failed (%08X) when submitting buffer:\n", static_cast<unsigned int>(hr));
+        DebugTrace("\tFormat Tag %u, %u channels, %u-bit, %u Hz, %u bytes\n",
+            mWaveFormat->wFormatTag, mWaveFormat->nChannels, mWaveFormat->wBitsPerSample, mWaveFormat->nSamplesPerSec, mAudioBytes);
         throw std::exception("SubmitSourceBuffer");
     }
 
@@ -362,11 +373,12 @@ SoundEffect::SoundEffect(AudioEngine* engine, const wchar_t* waveFileName)
     HRESULT hr = LoadWAVAudioFromFileEx(waveFileName, wavData, wavInfo);
     if (FAILED(hr))
     {
-        DebugTrace("ERROR: SoundEffect failed (%08X) to load from .wav file \"%ls\"\n", hr, waveFileName);
+        DebugTrace("ERROR: SoundEffect failed (%08X) to load from .wav file \"%ls\"\n",
+            static_cast<unsigned int>(hr), waveFileName);
         throw std::exception("SoundEffect");
     }
 
-#if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+#ifdef DIRECTX_ENABLE_SEEK_TABLES
     hr = pImpl->Initialize(engine, wavData, wavInfo.wfx, wavInfo.startAudio, wavInfo.audioBytes,
                            wavInfo.seek, wavInfo.seekCount,
                            wavInfo.loopStart, wavInfo.loopLength);
@@ -377,7 +389,8 @@ SoundEffect::SoundEffect(AudioEngine* engine, const wchar_t* waveFileName)
 
     if (FAILED(hr))
     {
-        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize from .wav file \"%ls\"\n", hr, waveFileName);
+        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize from .wav file \"%ls\"\n",
+            static_cast<unsigned int>(hr), waveFileName);
         throw std::exception("SoundEffect");
     }
 }
@@ -388,14 +401,14 @@ SoundEffect::SoundEffect(AudioEngine* engine, std::unique_ptr<uint8_t[]>& wavDat
                          const WAVEFORMATEX* wfx, const uint8_t* startAudio, size_t audioBytes)
     : pImpl(std::make_unique<Impl>(engine))
 {
-#if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+#ifdef DIRECTX_ENABLE_SEEK_TABLES
     HRESULT hr = pImpl->Initialize(engine, wavData, wfx, startAudio, audioBytes, nullptr, 0, 0, 0);
 #else
     HRESULT hr = pImpl->Initialize(engine, wavData, wfx, startAudio, audioBytes, 0, 0);
 #endif
     if (FAILED(hr))
     {
-        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize\n", hr);
+        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize\n", static_cast<unsigned int>(hr));
         throw std::exception("SoundEffect");
     }
 }
@@ -407,20 +420,20 @@ SoundEffect::SoundEffect(AudioEngine* engine, std::unique_ptr<uint8_t[]>& wavDat
                          uint32_t loopStart, uint32_t loopLength)
     : pImpl(std::make_unique<Impl>(engine))
 {
-#if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+#ifdef DIRECTX_ENABLE_SEEK_TABLES
     HRESULT hr = pImpl->Initialize(engine, wavData, wfx, startAudio, audioBytes, nullptr, 0, loopStart, loopLength);
 #else
     HRESULT hr = pImpl->Initialize(engine, wavData, wfx, startAudio, audioBytes, loopStart, loopLength);
 #endif
     if (FAILED(hr))
     {
-        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize\n", hr);
+        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize\n", static_cast<unsigned int>(hr));
         throw std::exception("SoundEffect");
     }
 }
 
 
-#if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+#ifdef DIRECTX_ENABLE_SEEK_TABLES
 
 _Use_decl_annotations_
 SoundEffect::SoundEffect(AudioEngine* engine, std::unique_ptr<uint8_t[]>& wavData,
@@ -430,7 +443,7 @@ SoundEffect::SoundEffect(AudioEngine* engine, std::unique_ptr<uint8_t[]>& wavDat
     HRESULT hr = pImpl->Initialize(engine, wavData, wfx, startAudio, audioBytes, seekTable, seekCount, 0, 0);
     if (FAILED(hr))
     {
-        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize\n", hr);
+        DebugTrace("ERROR: SoundEffect failed (%08X) to intialize\n", static_cast<unsigned int>(hr));
         throw std::exception("SoundEffect");
     }
 }
@@ -476,12 +489,12 @@ std::unique_ptr<SoundEffectInstance> SoundEffect::CreateInstance(SOUND_EFFECT_IN
 {
     auto effect = new SoundEffectInstance(pImpl->mEngine, this, flags);
     assert(effect != nullptr);
-    pImpl->mInstances.emplace_back(effect);
+    pImpl->mInstances.emplace_back(effect->GetVoiceNotify());
     return std::unique_ptr<SoundEffectInstance>(effect);
 }
 
 
-void SoundEffect::UnregisterInstance(_In_ SoundEffectInstance* instance)
+void SoundEffect::UnregisterInstance(_In_ IVoiceNotify* instance)
 {
     auto it = std::find(pImpl->mInstances.begin(), pImpl->mInstances.end(), instance);
     if (it == pImpl->mInstances.end())
@@ -492,19 +505,19 @@ void SoundEffect::UnregisterInstance(_In_ SoundEffectInstance* instance)
 
 
 // Public accessors.
-bool SoundEffect::IsInUse() const
+bool SoundEffect::IsInUse() const noexcept
 {
     return (pImpl->mOneShots > 0) || !pImpl->mInstances.empty();
 }
 
 
-size_t SoundEffect::GetSampleSizeInBytes() const
+size_t SoundEffect::GetSampleSizeInBytes() const noexcept
 {
     return pImpl->mAudioBytes;
 }
 
 
-size_t SoundEffect::GetSampleDuration() const
+size_t SoundEffect::GetSampleDuration() const noexcept
 {
     if (!pImpl->mWaveFormat || !pImpl->mWaveFormat->nChannels)
         return 0;
@@ -525,7 +538,7 @@ size_t SoundEffect::GetSampleDuration() const
             return static_cast<size_t>(duration);
         }
 
-    #if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+        #ifdef DIRECTX_ENABLE_XWMA
 
         case WAVE_FORMAT_WMAUDIO2:
         case WAVE_FORMAT_WMAUDIO3:
@@ -537,7 +550,7 @@ size_t SoundEffect::GetSampleDuration() const
 
         #endif
 
-        #if defined(_XBOX_ONE) && defined(_TITLE)
+        #ifdef DIRECTX_ENABLE_XMA2
 
         case WAVE_FORMAT_XMA2:
             return reinterpret_cast<const XMA2WAVEFORMATEX*>(pImpl->mWaveFormat)->SamplesEncoded;
@@ -556,7 +569,7 @@ size_t SoundEffect::GetSampleDuration() const
 }
 
 
-size_t SoundEffect::GetSampleDurationMS() const
+size_t SoundEffect::GetSampleDurationMS() const noexcept
 {
     if (!pImpl->mWaveFormat || !pImpl->mWaveFormat->nSamplesPerSec)
         return 0;
@@ -566,13 +579,13 @@ size_t SoundEffect::GetSampleDurationMS() const
 }
 
 
-const WAVEFORMATEX* SoundEffect::GetFormat() const
+const WAVEFORMATEX* SoundEffect::GetFormat() const noexcept
 {
     return pImpl->mWaveFormat;
 }
 
 
-#if defined(_XBOX_ONE) || (_WIN32_WINNT < _WIN32_WINNT_WIN8) || (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+#ifdef DIRECTX_ENABLE_XWMA
 
 bool SoundEffect::FillSubmitBuffer(_Out_ XAUDIO2_BUFFER& buffer, _Out_ XAUDIO2_BUFFER_WMA& wmaBuffer) const
 {
@@ -595,7 +608,7 @@ bool SoundEffect::FillSubmitBuffer(_Out_ XAUDIO2_BUFFER& buffer, _Out_ XAUDIO2_B
     return false;
 }
 
-#else
+#else // !xWMA
 
 void SoundEffect::FillSubmitBuffer(_Out_ XAUDIO2_BUFFER& buffer) const
 {

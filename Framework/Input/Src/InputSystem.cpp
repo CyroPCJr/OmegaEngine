@@ -35,7 +35,7 @@ namespace
 	}
 }
 
-LRESULT CALLBACK Input::InputSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InputSystem::InputSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (sInputSystem)
 	{
@@ -174,7 +174,7 @@ void InputSystem::Initialize(HWND window)
 	LOG("[InputSystem] Initializing...");
 
 	// Hook application to window's procedure
-	sWindowMessageHandler.Hook(window, InputSystemMessageHandler);
+	sWindowMessageHandler.Hook(window, InputSystem::InputSystemMessageHandler);
 
 	mGamePad = std::make_unique<DirectX::GamePad>();
 	mInitialized = true;

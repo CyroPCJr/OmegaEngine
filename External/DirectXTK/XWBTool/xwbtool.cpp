@@ -61,7 +61,7 @@
 #define WAVE_FORMAT_XMA2 0x166
 
 #pragma pack(push,1)
-typedef struct XMA2WAVEFORMATEX
+struct XMA2WAVEFORMATEX
 {
     WAVEFORMATEX wfx;
     // Meaning of the WAVEFORMATEX fields here:
@@ -85,7 +85,7 @@ typedef struct XMA2WAVEFORMATEX
     BYTE  LoopCount;         // Number of loop repetitions; 255 = infinite
     BYTE  EncoderVersion;    // Version of XMA encoder that generated the file
     WORD  BlockCount;        // XMA blocks in file (and entries in its seek table)
-} XMA2WAVEFORMATEX;
+};
 #pragma pack(pop)
 #endif
 
@@ -99,13 +99,13 @@ namespace
 {
     struct handle_closer { void operator()(HANDLE h) { if (h) CloseHandle(h); } };
 
-    typedef std::unique_ptr<void, handle_closer> ScopedHandle;
+    using ScopedHandle = std::unique_ptr<void, handle_closer>;
 
     inline HANDLE safe_handle(HANDLE h) { return (h == INVALID_HANDLE_VALUE) ? nullptr : h; }
 
     struct find_closer { void operator()(HANDLE h) { assert(h != INVALID_HANDLE_VALUE); if (h) FindClose(h); } };
 
-    typedef std::unique_ptr<void, find_closer> ScopedFindHandle;
+    using ScopedFindHandle = std::unique_ptr<void, find_closer>;
 
 #define BLOCKALIGNPAD(a, b) \
     ((((a) + ((b) - 1)) / (b)) * (b))
@@ -574,7 +574,7 @@ namespace
 
                 if (!xmaFmt->BytesPerBlock || (xmaFmt->BytesPerBlock > 8386560 /*XMA_READBUFFER_MAX_BYTES*/))
                 {
-                    wprintf(L"ERROR: XMA2 BytesPerBlock (%u) is invalid\n", xmaFmt->BytesPerBlock);
+                    wprintf(L"ERROR: XMA2 BytesPerBlock (%lu) is invalid\n", xmaFmt->BytesPerBlock);
                     return false;
                 }
 
@@ -583,7 +583,7 @@ namespace
                     auto channelBits = ChannelsSpecifiedInMask(xmaFmt->ChannelMask);
                     if (channelBits != wfx->nChannels)
                     {
-                        wprintf(L"ERROR: XMA2 nChannels=%u but ChannelMask (%08X) has %u bits set\n",
+                        wprintf(L"ERROR: XMA2 nChannels=%lu but ChannelMask (%08X) has %u bits set\n",
                             xmaFmt->ChannelMask, wfx->nChannels, channelBits);
                         return false;
                     }
@@ -603,13 +603,13 @@ namespace
 
                 if ((xmaFmt->PlayBegin + xmaFmt->PlayLength) > xmaFmt->SamplesEncoded)
                 {
-                    wprintf(L"ERROR: XMA2 play region too large (%u + %u > %u)", xmaFmt->PlayBegin, xmaFmt->PlayLength, xmaFmt->SamplesEncoded);
+                    wprintf(L"ERROR: XMA2 play region too large (%lu + %lu > %lu)", xmaFmt->PlayBegin, xmaFmt->PlayLength, xmaFmt->SamplesEncoded);
                     return false;
                 }
 
                 if ((xmaFmt->LoopBegin + xmaFmt->LoopLength) > xmaFmt->SamplesEncoded)
                 {
-                    wprintf(L"ERROR: XMA2 loop region too large (%u + %u > %u)", xmaFmt->LoopBegin, xmaFmt->LoopLength, xmaFmt->SamplesEncoded);
+                    wprintf(L"ERROR: XMA2 loop region too large (%lu + %lu > %lu)", xmaFmt->LoopBegin, xmaFmt->LoopLength, xmaFmt->SamplesEncoded);
                     return false;
                 }
 
@@ -777,7 +777,8 @@ enum OPTIONS
     OPT_STREAMING,
     OPT_OUTPUTFILE,
     OPT_OUTPUTHEADER,
-    OPT_NOOVERWRITE,
+    OPT_TOLOWER,
+    OPT_OVERWRITE,
     OPT_COMPACT,
     OPT_NOCOMPACT,
     OPT_FRIENDLY_NAMES,
@@ -812,6 +813,9 @@ struct WaveFile
         miniFmt{}
     {}
 
+    WaveFile(WaveFile&) = delete;
+    WaveFile& operator= (WaveFile&) = delete;
+
     WaveFile(WaveFile&&) = default;
     WaveFile& operator= (WaveFile&&) = default;
 };
@@ -840,8 +844,9 @@ const SValue g_pOptions[] =
     { L"r",         OPT_RECURSIVE },
     { L"s",         OPT_STREAMING },
     { L"o",         OPT_OUTPUTFILE },
+    { L"l",         OPT_TOLOWER },
     { L"h",         OPT_OUTPUTHEADER },
-    { L"n",         OPT_NOOVERWRITE },
+    { L"y",         OPT_OVERWRITE },
     { L"c",         OPT_COMPACT },
     { L"nc",        OPT_NOCOMPACT },
     { L"f",         OPT_FRIENDLY_NAMES },
@@ -968,7 +973,8 @@ namespace
         wprintf(L"                       otherwise an in-memory bank is created\n");
         wprintf(L"   -o <filename>       output filename\n");
         wprintf(L"   -h <h-filename>     output C/C++ header\n");
-        wprintf(L"   -n                  do not overwrite output\n");
+        wprintf(L"   -l                  force output filename to lower case\n");
+        wprintf(L"   -y                  overwrite existing output file (if any)\n");
         wprintf(L"   -c                  force creation of compact wavebank\n");
         wprintf(L"   -nc                 force creation of non-compact wavebank\n");
         wprintf(L"   -f                  include entry friendly names\n");
@@ -1020,26 +1026,12 @@ namespace
         {
             auto wext = reinterpret_cast<const WAVEFORMATEXTENSIBLE*>(&wave.data.wfx);
 
-            wprintf(L" (%hs %u channels, %u-bit, %u Hz, CMask:%hs)", GetFormatTagName(wave.data.wfx->wFormatTag), wave.data.wfx->nChannels, wave.data.wfx->wBitsPerSample, wave.data.wfx->nSamplesPerSec, ChannelDesc(wext->dwChannelMask));
+            wprintf(L" (%hs %u channels, %u-bit, %lu Hz, CMask:%hs)", GetFormatTagName(wave.data.wfx->wFormatTag), wave.data.wfx->nChannels, wave.data.wfx->wBitsPerSample, wave.data.wfx->nSamplesPerSec, ChannelDesc(wext->dwChannelMask));
         }
         else
         {
-            wprintf(L" (%hs %u channels, %u-bit, %u Hz)", GetFormatTagName(wave.data.wfx->wFormatTag), wave.data.wfx->nChannels, wave.data.wfx->wBitsPerSample, wave.data.wfx->nSamplesPerSec);
+            wprintf(L" (%hs %u channels, %u-bit, %lu Hz)", GetFormatTagName(wave.data.wfx->wFormatTag), wave.data.wfx->nChannels, wave.data.wfx->wBitsPerSample, wave.data.wfx->nSamplesPerSec);
         }
-    }
-
-    bool FileExists(const wchar_t* pszFilename)
-    {
-        FILE *f = nullptr;
-        if (!_wfopen_s(&f, pszFilename, L"rb"))
-        {
-            if (f)
-                fclose(f);
-
-            return true;
-        }
-
-        return false;
     }
 }
 
@@ -1208,6 +1200,52 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
     if (~dwOptions & (1 << OPT_NOLOGO))
         PrintLogo();
 
+    // Determine output file name
+    if (!*szOutputFile)
+    {
+        auto pConv = conversion.begin();
+
+        wchar_t ext[_MAX_EXT];
+        wchar_t fname[_MAX_FNAME];
+        _wsplitpath_s(pConv->szSrc, nullptr, 0, nullptr, 0, fname, _MAX_FNAME, ext, _MAX_EXT);
+
+        if (_wcsicmp(ext, L".xwb") == 0)
+        {
+            wprintf(L"ERROR: Need to specify output file via -o\n");
+            return 1;
+        }
+
+        _wmakepath_s(szOutputFile, nullptr, nullptr, fname, L".xwb");
+    }
+
+    if (dwOptions & (1 << OPT_TOLOWER))
+    {
+        (void)_wcslwr_s(szOutputFile);
+
+        if (*szHeaderFile)
+        {
+            (void)_wcslwr_s(szHeaderFile);
+        }
+    }
+
+    if (~dwOptions & (1 << OPT_OVERWRITE))
+    {
+        if (GetFileAttributesW(szOutputFile) != INVALID_FILE_ATTRIBUTES)
+        {
+            wprintf(L"ERROR: Output file %ls already exists, use -y to overwrite!\n", szOutputFile);
+            return 1;
+        }
+
+        if (*szHeaderFile)
+        {
+            if (GetFileAttributesW(szHeaderFile) != INVALID_FILE_ATTRIBUTES)
+            {
+                wprintf(L"ERROR: Output header file %ls already exists!\n", szHeaderFile);
+                return 1;
+            }
+        }
+    }
+
     // Gather wave files
     std::unique_ptr<uint8_t[]> entries;
     std::unique_ptr<char[]> entryNames;
@@ -1226,16 +1264,6 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
         // Load source image
         if (pConv != conversion.begin())
             wprintf(L"\n");
-        else if (!*szOutputFile)
-        {
-            if (_wcsicmp(ext, L".xwb") == 0)
-            {
-                wprintf(L"ERROR: Need to specify output file via -o\n");
-                return 1;
-            }
-
-            _wmakepath_s(szOutputFile, nullptr, nullptr, fname, L".xwb");
-        }
 
         wprintf(L"reading %ls", pConv->szSrc);
         fflush(stdout);
@@ -1329,7 +1357,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
         }
         if (reason & 0x4)
         {
-            wprintf(L"- Audio wave data is too large to encode in compact wavebank (%llu > %llu).\n", waveOffset, (MAX_COMPACT_DATA_SEGMENT_SIZE * uint64_t(dwAlignment)));
+            wprintf(L"- Audio wave data is too large to encode in compact wavebank (%llu > %llu).\n", waveOffset, (uint64_t(MAX_COMPACT_DATA_SEGMENT_SIZE) * uint64_t(dwAlignment)));
         }
         return 1;
     }
@@ -1359,7 +1387,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
         {
         case MINIWAVEFORMAT::TAG_XMA:
             if (it->data.seekCount > 0)
-                seekEntries += it->data.seekCount + 1;
+                seekEntries += size_t(it->data.seekCount) + 1u;
 
             duration = reinterpret_cast<const XMA2WAVEFORMATEX*>(wfx)->SamplesEncoded;
             break;
@@ -1380,7 +1408,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
         case MINIWAVEFORMAT::TAG_WMA:
             if (it->data.seekCount > 0)
             {
-                seekEntries += it->data.seekCount + 1;
+                seekEntries += size_t(it->data.seekCount) + 1u;
                 duration = it->data.seek[it->data.seekCount - 1] / uint32_t(2 * wfx->nChannels);
             }
             break;
@@ -1450,28 +1478,10 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
     wprintf(L"writing %ls%ls wavebank %ls w/ %zu entries\n", (compact) ? L"compact " : L"", (dwOptions & (1 << OPT_STREAMING)) ? L"streaming" : L"in-memory", szOutputFile, waves.size());
     fflush(stdout);
 
-    if (dwOptions & (1 << OPT_NOOVERWRITE))
-    {
-        if (FileExists(szOutputFile))
-        {
-            wprintf(L"ERROR: Output file %ls already exists!\n", szOutputFile);
-            return 1;
-        }
-
-        if (*szHeaderFile)
-        {
-            if (FileExists(szHeaderFile))
-            {
-                wprintf(L"ERROR: Output header file %ls already exists!\n", szHeaderFile);
-                return 1;
-            }
-        }
-    }
-
     hFile.reset(safe_handle(CreateFileW(szOutputFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr)));
     if (!hFile)
     {
-        wprintf(L"ERROR: Failed opening output file %ls, %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed opening output file %ls, %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
@@ -1495,7 +1505,10 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
 
     data.dwFlags = (dwOptions & (1 << OPT_STREAMING)) ? BANKDATA::TYPE_STREAMING : BANKDATA::TYPE_BUFFER;
 
-    data.dwFlags |= BANKDATA::FLAGS_SEEKTABLES;
+    if (seekEntries > 0)
+    {
+        data.dwFlags |= BANKDATA::FLAGS_SEEKTABLES;
+    }
 
     if (dwOptions & (1 << OPT_FRIENDLY_NAMES))
     {
@@ -1527,7 +1540,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
 
     if (SetFilePointer(hFile.get(), LONG(segmentOffset), nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
     {
-        wprintf(L"ERROR: Failed writing bank data to %ls, SFP %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed writing bank data to %ls, SFP %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
@@ -1535,7 +1548,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
     if (!WriteFile(hFile.get(), &data, sizeof(data), &bytesWritten, nullptr)
         || bytesWritten != sizeof(data))
     {
-        wprintf(L"ERROR: Failed writing bank data to %ls, %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed writing bank data to %ls, %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
@@ -1548,7 +1561,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
 
     if (SetFilePointer(hFile.get(), LONG(segmentOffset), nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
     {
-        wprintf(L"ERROR: Failed writing entry metadata to %ls, SFP %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed writing entry metadata to %ls, SFP %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
@@ -1556,7 +1569,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
     if (!WriteFile(hFile.get(), entries.get(), entryBytes, &bytesWritten, nullptr)
         || bytesWritten != entryBytes)
     {
-        wprintf(L"ERROR: Failed writing entry metadata to %ls, %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed writing entry metadata to %ls, %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
@@ -1573,11 +1586,11 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
     {
         seekEntries += waves.size(); // Room for an offset per entry
 
-        std::unique_ptr<uint32_t[]> seekTables(new uint32_t[seekEntries]);
+        auto seekTables = std::make_unique<uint32_t[]>(seekEntries);
 
         if (SetFilePointer(hFile.get(), LONG(segmentOffset), nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
         {
-            wprintf(L"ERROR: Failed writing seek tables to %ls, SFP %u\n", szOutputFile, GetLastError());
+            wprintf(L"ERROR: Failed writing seek tables to %ls, SFP %lu\n", szOutputFile, GetLastError());
             return 1;
         }
 
@@ -1594,10 +1607,10 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
 
                 for (uint32_t j = 0; j < it->data.seekCount; ++j)
                 {
-                    seekTables[baseoffset + j + 1] = it->data.seek[j];
+                    seekTables[size_t(baseoffset) + size_t(j) + 1u] = it->data.seek[j];
                 }
 
-                seekoffset += it->data.seekCount + 1;
+                seekoffset += size_t(it->data.seekCount) + 1u;
             }
             else if (it->miniFmt.wFormatTag == MINIWAVEFORMAT::TAG_XMA)
             {
@@ -1608,7 +1621,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
 
                 for (uint32_t j = 0; j < it->data.seekCount; ++j)
                 {
-                    seekTables[baseoffset + j + 1] = _byteswap_ulong(it->data.seek[j]);
+                    seekTables[size_t(baseoffset) + size_t(j) + 1u] = _byteswap_ulong(it->data.seek[j]);
                 }
 
                 seekoffset += it->data.seekCount + 1;
@@ -1624,7 +1637,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
         if (!WriteFile(hFile.get(), seekTables.get(), seekLen, &bytesWritten, nullptr)
             || bytesWritten != seekLen)
         {
-            wprintf(L"ERROR: Failed writing seek tables to %ls, %u\n", szOutputFile, GetLastError());
+            wprintf(L"ERROR: Failed writing seek tables to %ls, %lu\n", szOutputFile, GetLastError());
             return 1;
         }
 
@@ -1644,7 +1657,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
 
         if (SetFilePointer(hFile.get(), LONG(segmentOffset), nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
         {
-            wprintf(L"ERROR: Failed writing friendly entry names to %ls, SFP %u\n", szOutputFile, GetLastError());
+            wprintf(L"ERROR: Failed writing friendly entry names to %ls, SFP %lu\n", szOutputFile, GetLastError());
             return 1;
         }
 
@@ -1652,7 +1665,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
         if (!WriteFile(hFile.get(), entryNames.get(), entryNamesBytes, &bytesWritten, nullptr)
             || bytesWritten != entryNamesBytes)
         {
-            wprintf(L"ERROR: Failed writing friendly entry names to %ls, %u\n", szOutputFile, GetLastError());
+            wprintf(L"ERROR: Failed writing friendly entry names to %ls, %lu\n", szOutputFile, GetLastError());
             return 1;
         }
 
@@ -1671,14 +1684,14 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
     {
         if (SetFilePointer(hFile.get(), LONG(segmentOffset), nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
         {
-            wprintf(L"ERROR: Failed writing audio data to %ls, SFP %u\n", szOutputFile, GetLastError());
+            wprintf(L"ERROR: Failed writing audio data to %ls, SFP %lu\n", szOutputFile, GetLastError());
             return 1;
         }
 
         if (!WriteFile(hFile.get(), it->data.startAudio, it->data.audioBytes, &bytesWritten, nullptr)
             || bytesWritten != it->data.audioBytes)
         {
-            wprintf(L"ERROR: Failed writing audio data to %ls, %u\n", szOutputFile, GetLastError());
+            wprintf(L"ERROR: Failed writing audio data to %ls, %lu\n", szOutputFile, GetLastError());
             return 1;
         }
 
@@ -1698,26 +1711,26 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
     // Commit wave bank
     if (SetFilePointer(hFile.get(), LONG(segmentOffset), nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
     {
-        wprintf(L"ERROR: Failed committing output file %ls, EOF %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed committing output file %ls, EOF %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
     if (!SetEndOfFile(hFile.get()))
     {
-        wprintf(L"ERROR: Failed committing output file %ls, EOF %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed committing output file %ls, EOF %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
     if (SetFilePointer(hFile.get(), 0, nullptr, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
     {
-        wprintf(L"ERROR: Failed committing output file %ls, HDR %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed committing output file %ls, HDR %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
     if (!WriteFile(hFile.get(), &header, sizeof(header), &bytesWritten, nullptr)
         || bytesWritten != sizeof(header))
     {
-        wprintf(L"ERROR: Failed committing output file %ls, HDR %u\n", szOutputFile, GetLastError());
+        wprintf(L"ERROR: Failed committing output file %ls, HDR %lu\n", szOutputFile, GetLastError());
         return 1;
     }
 
@@ -1735,7 +1748,7 @@ int __cdecl wmain(_In_ int argc, _In_z_count_(argc) wchar_t* argv[])
 
             FileNameToIdentifier(wBankName, _MAX_FNAME);
 
-            fprintf_s(file, "#pragma once\n\nenum XACT_WAVEBANK_%ls\n{\n", wBankName);
+            fprintf_s(file, "#pragma once\n\nenum XACT_WAVEBANK_%ls : unsigned int\n{\n", wBankName);
 
             size_t windex = 0;
             for (auto it = waves.begin(); it != waves.end(); ++it, ++windex)

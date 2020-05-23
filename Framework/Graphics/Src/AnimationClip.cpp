@@ -9,7 +9,6 @@ bool AnimationClip::GetTransform(float time, uint32_t boneIndex, Math::Matrix4& 
 	auto& boneAnim = boneAnimations[boneIndex];
 	if (boneAnim)
 	{
-
 		transform = boneAnim->GetTransform(time);
 		return true;
 	}

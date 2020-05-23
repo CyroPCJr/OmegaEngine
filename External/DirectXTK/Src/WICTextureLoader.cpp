@@ -184,25 +184,28 @@ namespace
 //--------------------------------------------------------------------------------------
 namespace DirectX
 {
-    bool _IsWIC2();
-    IWICImagingFactory* _GetWIC();
+    bool _IsWIC2() noexcept;
+    IWICImagingFactory* _GetWIC() noexcept;
         // Also used by ScreenGrab
 
-    bool _IsWIC2()
+    bool _IsWIC2() noexcept
     {
         return g_WIC2;
     }
 
-    IWICImagingFactory* _GetWIC()
+    IWICImagingFactory* _GetWIC() noexcept
     {
         static INIT_ONCE s_initOnce = INIT_ONCE_STATIC_INIT;
 
         IWICImagingFactory* factory = nullptr;
-        (void)InitOnceExecuteOnce(
+        if (!InitOnceExecuteOnce(
             &s_initOnce,
             InitializeWICFactory,
             nullptr,
-            reinterpret_cast<LPVOID*>(&factory));
+            reinterpret_cast<LPVOID*>(&factory)))
+        {
+            return nullptr;
+        }
 
         return factory;
     }
@@ -213,7 +216,7 @@ namespace DirectX
 namespace
 {
     //---------------------------------------------------------------------------------
-    DXGI_FORMAT _WICToDXGI(const GUID& guid)
+    DXGI_FORMAT _WICToDXGI(const GUID& guid) noexcept
     {
         for (size_t i = 0; i < _countof(g_WICFormats); ++i)
         {
@@ -233,7 +236,7 @@ namespace
     }
 
     //---------------------------------------------------------------------------------
-    size_t _WICBitsPerPixel(REFGUID targetGuid)
+    size_t _WICBitsPerPixel(REFGUID targetGuid) noexcept
     {
         auto pWIC = _GetWIC();
         if (!pWIC)
@@ -277,7 +280,7 @@ namespace
         _In_ unsigned int miscFlags,
         _In_ unsigned int loadFlags,
         _Outptr_opt_ ID3D11Resource** texture,
-        _Outptr_opt_ ID3D11ShaderResourceView** textureView)
+        _Outptr_opt_ ID3D11ShaderResourceView** textureView) noexcept
     {
         UINT width, height;
         HRESULT hr = frame->GetSize(&width, &height);
@@ -299,28 +302,33 @@ namespace
             {
             case D3D_FEATURE_LEVEL_9_1:
             case D3D_FEATURE_LEVEL_9_2:
-                maxsize = 2048 /*D3D_FL9_1_REQ_TEXTURE2D_U_OR_V_DIMENSION*/;
+                maxsize = 2048u /*D3D_FL9_1_REQ_TEXTURE2D_U_OR_V_DIMENSION*/;
                 break;
 
             case D3D_FEATURE_LEVEL_9_3:
-                maxsize = 4096 /*D3D_FL9_3_REQ_TEXTURE2D_U_OR_V_DIMENSION*/;
+                maxsize = 4096u /*D3D_FL9_3_REQ_TEXTURE2D_U_OR_V_DIMENSION*/;
                 break;
 
             case D3D_FEATURE_LEVEL_10_0:
             case D3D_FEATURE_LEVEL_10_1:
-                maxsize = 8192 /*D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION*/;
+                maxsize = 8192u /*D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION*/;
                 break;
 
             default:
-                maxsize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
+                maxsize = size_t(D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION);
                 break;
             }
         }
 
         assert(maxsize > 0);
 
-        UINT twidth, theight;
-        if (width > maxsize || height > maxsize)
+        UINT twidth = width;
+        UINT theight = height;
+        if (loadFlags & WIC_LOADER_FIT_POW2)
+        {
+            LoaderHelpers::FitPowerOf2(width, height, twidth, theight, maxsize);
+        }
+        else if (width > maxsize || height > maxsize)
         {
             float ar = static_cast<float>(height) / static_cast<float>(width);
             if (width > height)
@@ -335,10 +343,11 @@ namespace
             }
             assert(twidth <= maxsize && theight <= maxsize);
         }
-        else
+
+        if (loadFlags & WIC_LOADER_MAKE_SQUARE)
         {
-            twidth = width;
-            theight = height;
+            twidth = std::max<UINT>(twidth, theight);
+            theight = twidth;
         }
 
         // Determine format
@@ -417,6 +426,13 @@ namespace
             }
         }
 #endif
+
+        if (loadFlags & WIC_LOADER_FORCE_RGBA32)
+        {
+            memcpy_s(&convertGUID, sizeof(WICPixelFormatGUID), &GUID_WICPixelFormat32bppRGBA, sizeof(GUID));
+            format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            bpp = 32;
+        }
 
         if (!bpp)
             return E_FAIL;
@@ -610,7 +626,7 @@ namespace
         }
 
         // Create texture
-        D3D11_TEXTURE2D_DESC desc;
+        D3D11_TEXTURE2D_DESC desc = {};
         desc.Width = twidth;
         desc.Height = theight;
         desc.MipLevels = (autogen) ? 0u : 1u;
@@ -701,7 +717,7 @@ namespace
     void SetDebugTextureInfo(
         _In_z_ const wchar_t* fileName,
         _In_opt_ ID3D11Resource** texture,
-        _In_opt_ ID3D11ShaderResourceView** textureView)
+        _In_opt_ ID3D11ShaderResourceView** textureView) noexcept
     {
 #if !defined(NO_D3D11_DEBUG_NAME) && ( defined(_DEBUG) || defined(PROFILE) )
         if (texture || textureView)
@@ -781,7 +797,7 @@ HRESULT DirectX::CreateWICTextureFromMemory(
     size_t wicDataSize,
     ID3D11Resource** texture,
     ID3D11ShaderResourceView** textureView,
-    size_t maxsize)
+    size_t maxsize) noexcept
 {
     return CreateWICTextureFromMemoryEx(d3dDevice,
         wicData, wicDataSize,
@@ -805,7 +821,7 @@ _Use_decl_annotations_
         size_t wicDataSize,
         ID3D11Resource** texture,
         ID3D11ShaderResourceView** textureView,
-        size_t maxsize)
+        size_t maxsize) noexcept
 {
     return CreateWICTextureFromMemoryEx(d3dDevice, d3dContext,
         wicData, wicDataSize,
@@ -827,7 +843,7 @@ HRESULT DirectX::CreateWICTextureFromMemoryEx(
     unsigned int miscFlags,
     unsigned int loadFlags,
     ID3D11Resource** texture,
-    ID3D11ShaderResourceView** textureView)
+    ID3D11ShaderResourceView** textureView) noexcept
 {
     if (texture)
     {
@@ -922,7 +938,7 @@ _Use_decl_annotations_
         unsigned int miscFlags,
         unsigned int loadFlags,
         ID3D11Resource** texture,
-        ID3D11ShaderResourceView** textureView)
+        ID3D11ShaderResourceView** textureView) noexcept
 {
     if (texture)
     {
@@ -1006,7 +1022,7 @@ HRESULT DirectX::CreateWICTextureFromFile(
     const wchar_t* fileName,
     ID3D11Resource** texture,
     ID3D11ShaderResourceView** textureView,
-    size_t maxsize)
+    size_t maxsize) noexcept
 {
     return CreateWICTextureFromFileEx(d3dDevice,
         fileName,
@@ -1029,7 +1045,7 @@ _Use_decl_annotations_
         const wchar_t* fileName,
         ID3D11Resource** texture,
         ID3D11ShaderResourceView** textureView,
-        size_t maxsize)
+        size_t maxsize) noexcept
 {
     return CreateWICTextureFromFileEx(d3dDevice, d3dContext,
         fileName,
@@ -1050,7 +1066,7 @@ HRESULT DirectX::CreateWICTextureFromFileEx(
     unsigned int miscFlags,
     unsigned int loadFlags,
     ID3D11Resource** texture,
-    ID3D11ShaderResourceView** textureView)
+    ID3D11ShaderResourceView** textureView) noexcept
 {
     if (texture)
     {
@@ -1126,7 +1142,7 @@ _Use_decl_annotations_
         unsigned int miscFlags,
         unsigned int loadFlags,
         ID3D11Resource** texture,
-        ID3D11ShaderResourceView** textureView)
+        ID3D11ShaderResourceView** textureView) noexcept
 {
     if (texture)
     {

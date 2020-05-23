@@ -4,13 +4,14 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
+
 namespace
 {
 	std::unique_ptr<GraphicsSystem> sGraphicsSystem;
 	Core::WindowMessageHandler sWindowMessageHandler;
 }
 
-LRESULT CALLBACK Graphics::GraphicsSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK GraphicsSystem::GraphicsSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (sGraphicsSystem)
 	{

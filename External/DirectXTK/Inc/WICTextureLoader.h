@@ -29,7 +29,9 @@
 #include <d3d11_1.h>
 #endif
 
-#include <stdint.h>
+#include <cstdint>
+
+#pragma comment(lib,"uuid.lib")
 
 
 namespace DirectX
@@ -39,6 +41,9 @@ namespace DirectX
         WIC_LOADER_DEFAULT      = 0,
         WIC_LOADER_FORCE_SRGB   = 0x1,
         WIC_LOADER_IGNORE_SRGB  = 0x2,
+        WIC_LOADER_FORCE_RGBA32 = 0x10,
+        WIC_LOADER_FIT_POW2     = 0x20,
+        WIC_LOADER_MAKE_SQUARE  = 0x40,
     };
 
     // Standard version
@@ -48,14 +53,14 @@ namespace DirectX
         _In_ size_t wicDataSize,
         _Outptr_opt_ ID3D11Resource** texture,
         _Outptr_opt_ ID3D11ShaderResourceView** textureView,
-        _In_ size_t maxsize = 0);
+        _In_ size_t maxsize = 0) noexcept;
 
     HRESULT __cdecl CreateWICTextureFromFile(
         _In_ ID3D11Device* d3dDevice,
         _In_z_ const wchar_t* szFileName,
         _Outptr_opt_ ID3D11Resource** texture,
         _Outptr_opt_ ID3D11ShaderResourceView** textureView,
-        _In_ size_t maxsize = 0);
+        _In_ size_t maxsize = 0) noexcept;
 
     // Standard version with optional auto-gen mipmap support
     HRESULT __cdecl CreateWICTextureFromMemory(
@@ -70,7 +75,7 @@ namespace DirectX
         _In_ size_t wicDataSize,
         _Outptr_opt_ ID3D11Resource** texture,
         _Outptr_opt_ ID3D11ShaderResourceView** textureView,
-        _In_ size_t maxsize = 0);
+        _In_ size_t maxsize = 0) noexcept;
 
     HRESULT __cdecl CreateWICTextureFromFile(
     #if defined(_XBOX_ONE) && defined(_TITLE)
@@ -83,7 +88,7 @@ namespace DirectX
         _In_z_ const wchar_t* szFileName,
         _Outptr_opt_ ID3D11Resource** texture,
         _Outptr_opt_ ID3D11ShaderResourceView** textureView,
-        _In_ size_t maxsize = 0);
+        _In_ size_t maxsize = 0) noexcept;
 
     // Extended version
     HRESULT __cdecl CreateWICTextureFromMemoryEx(
@@ -97,7 +102,7 @@ namespace DirectX
         _In_ unsigned int miscFlags,
         _In_ unsigned int loadFlags,
         _Outptr_opt_ ID3D11Resource** texture,
-        _Outptr_opt_ ID3D11ShaderResourceView** textureView);
+        _Outptr_opt_ ID3D11ShaderResourceView** textureView) noexcept;
 
     HRESULT __cdecl CreateWICTextureFromFileEx(
         _In_ ID3D11Device* d3dDevice,
@@ -109,7 +114,7 @@ namespace DirectX
         _In_ unsigned int miscFlags,
         _In_ unsigned int loadFlags,
         _Outptr_opt_ ID3D11Resource** texture,
-        _Outptr_opt_ ID3D11ShaderResourceView** textureView);
+        _Outptr_opt_ ID3D11ShaderResourceView** textureView) noexcept;
 
     // Extended version with optional auto-gen mipmap support
     HRESULT __cdecl CreateWICTextureFromMemoryEx(
@@ -129,7 +134,7 @@ namespace DirectX
         _In_ unsigned int miscFlags,
         _In_ unsigned int loadFlags,
         _Outptr_opt_ ID3D11Resource** texture,
-        _Outptr_opt_ ID3D11ShaderResourceView** textureView);
+        _Outptr_opt_ ID3D11ShaderResourceView** textureView) noexcept;
 
     HRESULT __cdecl CreateWICTextureFromFileEx(
     #if defined(_XBOX_ONE) && defined(_TITLE)
@@ -147,5 +152,5 @@ namespace DirectX
         _In_ unsigned int miscFlags,
         _In_ unsigned int loadFlags,
         _Outptr_opt_ ID3D11Resource** texture,
-        _Outptr_opt_ ID3D11ShaderResourceView** textureView);
+        _Outptr_opt_ ID3D11ShaderResourceView** textureView) noexcept;
 }

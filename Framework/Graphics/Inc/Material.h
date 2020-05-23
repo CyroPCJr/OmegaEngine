@@ -9,7 +9,7 @@ namespace Omega::Graphics
 		Color ambient;
 		Color diffuse;
 		Color specular;
-		float power;
-		float padding[3];
+		float power = 0.0f;
+		float padding[3]{0.0f};
 	};
 }
