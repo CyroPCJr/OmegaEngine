@@ -46,8 +46,8 @@ void GameState::Initialize()
 	mActiveCamera = &mDefaultCamera;
 
 	mModel.Initialize("../../Assets/Models/mutant.model");
-	//	CalculateBoneMatrices(*mModel.skeleton.root, mBoneMatrices);
-		//CalculateBoneMatrices(*mModel.skeleton.bones[0], mBoneMatrices);
+	mBoneMatrices.resize(mModel.skeleton.bones.size());
+	UpdatePose(mModel.skeleton.root, mBoneMatrices);
 
 	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
 	mGroundMeshBuffer.Initialize(mGroundMesh);
@@ -435,11 +435,11 @@ void GameState::DrawScene()
 		//mTankMeshBuffer.Draw();
 		 // trying to draw this skeleton
 
-		/*for (auto& bone : mBoneMatrices)
+		for (auto& bones : mModel.skeleton.bones)
 		{
-			SimpleDraw::AddBone(bone);
-		}*/
-		DrawSkeleton(mModel.skeleton.root, mBoneMatrices);
+			DrawSkeleton(bones.get(), mBoneMatrices);
+		}
+		//DrawSkeleton(mModel.skeleton.root, mBoneMatrices);
 
 	}
 

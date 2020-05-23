@@ -11,5 +11,5 @@ namespace Omega::Graphics
 	};
 
 	void DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>& boneMatrices);
-	void UpdatePose(Bone& bone, std::vector<Math::Matrix4>& boneMatrices);
+	void UpdatePose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices);
 }

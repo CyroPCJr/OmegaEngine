@@ -16,50 +16,23 @@ namespace
 
 void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>& boneMatrices)
 {
-	//uint32_t size = static_cast<uint32_t>(skeleton.bones.size());
-	//boneMatrices.reserve(size);
-	//for (uint32_t i = 0; i < size; ++i)
-	//{
-	//	Bone* bone = skeleton.bones[i].get();
-	//	if (bone->parent)
-	//	{
-	//		auto mat = bone->toParentTransform * bone->parent->toParentTransform;
-	//		boneMatrices.push_back(mat);
-	//	}
-	//	else
-	//	{
-	//		auto mat = bone->toParentTransform;
-	//		//boneMatrices.push_back(mat);
-	//	}
-
-	//	for (auto& child : bone->children)
-	//	{
-	//		Math::Matrix4 mat = child->toParentTransform * bone->toParentTransform;
-	//		boneMatrices.push_back(mat);
-	//	}
-	//}
 	if (!bone)
 	{
 		return;
 	}
 
-	if (!bone->parent)
+	if (bone->parent)
 	{
 		Math::Matrix4 mat = boneMatrices[bone->index];
 		Math::Matrix4 matParent = boneMatrices[bone->parent->index];
 		auto currentPosition = GetTranslation(mat);
 		auto parentPosition = GetTranslation(matParent);
 		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Black);
-
 		for (auto& child : bone->children)
 		{
 			DrawSkeleton(child, boneMatrices);
 		}
 	}
-
-
-
-
 
 	// Homework
 	// Use skeleton so you know what the parent child order is
@@ -115,32 +88,19 @@ UpdateBoneRecursive(boneMatrices, skeleton.root)
 
 }
 
-void Omega::Graphics::UpdatePose(Bone& bone, std::vector<Math::Matrix4>& boneMatrices)
+void Omega::Graphics::UpdatePose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices)
 {
-	if (bone.parent)
+	if (bone->parent)
 	{
-		boneMatrices[bone.index] = GetTransform(bone) * boneMatrices[bone.parent->index];
+		boneMatrices[bone->index] = GetTransform(*bone) * boneMatrices[bone->parent->index];
 	}
 	else
 	{
-		//boneMatrices[bone.index] = GetTransform(bone);
-		boneMatrices[bone.index] = Math::Matrix4::Identity;
+		boneMatrices[bone->index] = Math::Matrix4::Identity;
 	}
-
-	for (auto& child : bone.children)
-	{
-		UpdatePose(*child, boneMatrices);
-	}
-
-	/*if (bone == nullptr)
-		return;
-
-	if (bone->parent != nullptr)
-		boneWorldMatrices[bone->index] = Math::Matrix4::Identity;
-	else
-		boneWorldMatrices[bone->index] = bone->toParentTransform * boneWorldMatrices[bone->parent->index];
 
 	for (auto& child : bone->children)
-		UpdatePose(child, boneWorldMatrices);*/
-
+	{
+		UpdatePose(child, boneMatrices);
+	}
 }
