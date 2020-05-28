@@ -15,7 +15,6 @@ public:
 private:
 	void DrawDepthMap();
 	void DrawScene();
-	void PostProcess();
 
 private:
 	Omega::Graphics::Camera mDefaultCamera;
@@ -27,19 +26,14 @@ private:
 
 	std::vector<Omega::Math::Vector3> mViewFrustumVertices;
 
-	Omega::Graphics::Mesh mTankMesh;
-	Omega::Graphics::MeshBuffer mTankMeshBuffer;
-
-	Omega::Graphics::Mesh mGroundMesh;
-	Omega::Graphics::MeshBuffer mGroundMeshBuffer;
-
 	struct TransformData
 	{
-		Omega::Math::Matrix4 world;
-		Omega::Math::Matrix4 wvp;
-		Omega::Math::Vector3 viewPosition;
-		float padding;
+		Omega::Math::Matrix4 world = Omega::Math::Matrix4::Identity;
+		Omega::Math::Matrix4 wvp = Omega::Math::Matrix4::Identity;
+		Omega::Math::Vector3 viewPosition = Omega::Math::Vector3::Zero;
+		float padding = 0.0f;
 	};
+
 	struct SettingsData
 	{
 		float specularMapWeight = 1.0f;
@@ -86,8 +80,6 @@ private:
 	Omega::Graphics::Texture mNormalMap;
 	Omega::Graphics::Texture mAOMap;
 
-	Omega::Graphics::Texture mGroundDiffuseMap;
-
 	SettingsData mSettings;
 
 	// Shadow
@@ -99,15 +91,12 @@ private:
 
 	// Post processing
 	Omega::Graphics::RenderTarget mRenderTarget;
-	Omega::Graphics::MeshPX mScreenQuad;
-	Omega::Graphics::MeshBuffer mScreenQuadBuffer;
-	Omega::Graphics::VertexShader mPostProcessingVertexShader;
-	Omega::Graphics::PixelShader mPostProcessingPixelShader;
-	PostProcessSettingsData mPostProcessSettings;
 	
 	//Model
 	Omega::Graphics::Model mModel;
 	Omega::Graphics::Animation mAnimation;
 	float mAnimationTime = 0.0f;
 	std::vector<Omega::Math::Matrix4> mBoneMatrices;
+	bool mIsModel = false;
+	
 };

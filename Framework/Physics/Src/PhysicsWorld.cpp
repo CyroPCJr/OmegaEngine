@@ -27,7 +27,7 @@ void PhysicsWorld::DebugDraw() const
 {
 	for (auto p : mParticles)
 	{
-		Graphics::SimpleDraw::AddSphere(p->radius, 4, 5, Graphics::Colors::BlueViolet);
+		Graphics::SimpleDraw::AddSphere({}, p->radius, 4, 5, Graphics::Colors::BlueViolet);
 	}
 }
 

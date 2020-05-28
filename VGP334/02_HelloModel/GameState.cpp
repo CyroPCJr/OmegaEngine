@@ -28,9 +28,9 @@ void GameState::Initialize()
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
 
 	mDefaultCamera.SetNearPlane(0.1f);
-	mDefaultCamera.SetFarPlane(200.0f);
-	mDefaultCamera.SetPosition({ 0.0f, 10.0f, -30.0f });
-	mDefaultCamera.SetLookAt({ 0.0f, 0.0f, 0.0f });
+	mDefaultCamera.SetFarPlane(300.0f);
+	mDefaultCamera.SetPosition({ 0.0f, 130.0f, -150.0f });
+	mDefaultCamera.SetLookAt({ 0.0f, 100.0f, 0.0f });
 
 	mDebugCamera.SetNearPlane(0.001f);
 	mDebugCamera.SetFarPlane(10000.0f);
@@ -44,13 +44,6 @@ void GameState::Initialize()
 	mLightCamera.SetAspectRatio(1.0f);
 
 	mActiveCamera = &mDefaultCamera;
-
-	mModel.Initialize("../../Assets/Models/mutant.model");
-	mBoneMatrices.resize(mModel.skeleton.bones.size());
-	UpdatePose(mModel.skeleton.root, mBoneMatrices);
-
-	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
-	mGroundMeshBuffer.Initialize(mGroundMesh);
 
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
@@ -76,14 +69,10 @@ void GameState::Initialize()
 	mSettings.useShadow = 1;
 	mSettings.depthBias = 0.0003f;
 
-	//bck
-	//mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
 	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", BoneVertex::Format);
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
-
-	mGroundDiffuseMap.Initialize("../../Assets/Images/grass_2048.jpg");
 
 	auto graphicsSystem = GraphicsSystem::Get();
 
@@ -100,35 +89,35 @@ void GameState::Initialize()
 		graphicsSystem->GetBackBufferHeight(),
 		RenderTarget::Format::RGBA_U8);
 
-	mScreenQuad = MeshBuilder::CreateNDCQuad();
-	mScreenQuadBuffer.Initialize(mScreenQuad);
-
-	mPostProcessingVertexShader.Initialize("../../Assets/Shaders/PostProcessing.fx", VertexPX::Format);
-	mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSNoProcessing");
-
 	mAnimation = AnimationBuilder()
 		.SetTime(0.0f)
 		.AddPositionKey(Vector3(0.0f, 1.0f, 0.0f))
 		.AddRotationKey(Quaternion::Identity)
-		.AddScaleKey(Vector3(0.1f, 0.1f, 0.1f))
+		.AddScaleKey(Vector3(1.0f, 1.0f, 1.0f))
 		.SetTime(5.0f)
 		.AddPositionKey(Vector3(0.0f, 1.0f, 0.0f))
-		.AddRotationKey(Quaternion::RotationAxis(Vector3(0.0f, 1.0f, 0.0f), 90.0f))
+		//.AddRotationKey(Quaternion::RotationAxis(Vector3(0.0f, 1.0f, 0.0f), 90.0f))
 		.GetAnimation();
+
+
+	// Initialize and load model from assimp
+	mModel.Initialize("../../Assets/Models/mutant.model");
+	mBoneMatrices.resize(mModel.skeleton.bones.size());
+	// calcualte the bone matrices
+	UpdatePose(mModel.skeleton.root, mBoneMatrices);
+
 }
 
 void GameState::Terminate()
 {
-	mPostProcessingPixelShader.Terminate();
-	mPostProcessingVertexShader.Terminate();
-	mScreenQuadBuffer.Terminate();
+	mModel.Terminate();
 	mRenderTarget.Terminate();
 	mShadowConstantBuffer.Terminate();
 	mDepthMapConstantBuffer.Terminate();
 	mDepthMapPixelShader.Terminate();
 	mDepthMapVertexShader.Terminate();
 	mDepthMapRenderTarget.Terminate();
-	mGroundDiffuseMap.Terminate();
+	
 	mAOMap.Terminate();
 	mNormalMap.Terminate();
 	mDisplacementMap.Terminate();
@@ -137,14 +126,10 @@ void GameState::Terminate()
 	mSampler.Terminate();
 	mPixelShader.Terminate();
 	mVertexShader.Terminate();
-	mPostProcessingSettingsBuffer.Terminate();
 	mSettingsBuffer.Terminate();
 	mMaterialBuffer.Terminate();
 	mLightBuffer.Terminate();
 	mTransformBuffer.Terminate();
-	mGroundMeshBuffer.Terminate();
-	mTankMeshBuffer.Terminate();
-	mModel.Terminate();
 }
 
 void GameState::Update(float deltaTime)
@@ -180,7 +165,6 @@ void GameState::Update(float deltaTime)
 	}
 
 	mAnimationTime += deltaTime;
-	mPostProcessSettings.time += deltaTime;
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
@@ -267,12 +251,8 @@ void GameState::Render()
 	DrawDepthMap();
 	mDepthMapRenderTarget.EndRender();
 
-	mRenderTarget.BeginRender();
-	DrawScene();
-	mRenderTarget.EndRender();
-
 	mRenderTarget.BindPS(0);
-	PostProcess();
+	DrawScene();
 	mRenderTarget.UnBindPS(0);
 }
 
@@ -301,54 +281,8 @@ void GameState::DebugUI()
 			{ 1.0f, 1.0f, 1.0f, 1.0f }
 		);
 	}
-	if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		bool directionChanged = false;
-		directionChanged |= ImGui::DragFloat("Direction X##Light", &mDirectionalLight.direction.x, 0.01f, -1.0f, 1.0f);
-		directionChanged |= ImGui::DragFloat("Direction Y##Light", &mDirectionalLight.direction.y, 0.01f, -1.0f, 1.0f);
-		directionChanged |= ImGui::DragFloat("Direction Z##Light", &mDirectionalLight.direction.z, 0.01f, -1.0f, 1.0f);
-		if (directionChanged)
-		{
-			mDirectionalLight.direction = Normalize(mDirectionalLight.direction);
-		}
-		ImGui::ColorEdit4("Ambient##Light", &mDirectionalLight.ambient.x);
-		ImGui::ColorEdit4("Diffuse##Light", &mDirectionalLight.diffuse.x);
-		ImGui::ColorEdit4("Specular##Light", &mDirectionalLight.specular.x);
-	}
-	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::ColorEdit4("Ambient##Material", &mMaterial.ambient.x);
-		ImGui::ColorEdit4("Diffuse##Material", &mMaterial.diffuse.x);
-		ImGui::ColorEdit4("Specular##Material", &mMaterial.specular.x);
-		ImGui::DragFloat("Power##Material", &mMaterial.power, 1.0f, 1.0f, 100.0f);
-	}
-	if (ImGui::CollapsingHeader("Settings", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		static bool specularMap = mSettings.specularMapWeight > 0.0f;
-		static bool normalMap = mSettings.normalMapWeight > 0.0f;
-		static bool aoMap = mSettings.aoMapWeight > 0.0f;
-		static bool useShadow = mSettings.useShadow == 1;
-		ImGui::SliderFloat("Displacement", &mSettings.bumpMapWeight, 0.0f, 1.0f);
-		if (ImGui::Checkbox("Specular Map", &specularMap))
-		{
-			mSettings.specularMapWeight = specularMap ? 1.0f : 0.0f;
-		}
-		if (ImGui::Checkbox("Normal Map", &normalMap))
-		{
-			mSettings.normalMapWeight = normalMap ? 1.0f : 0.0f;
-		}
-		if (ImGui::Checkbox("Ambient Occlusion Map", &aoMap))
-		{
-			mSettings.aoMapWeight = aoMap ? 1.0f : 0.0f;
-		}
-		if (ImGui::Checkbox("Use Shadow", &useShadow))
-		{
-			mSettings.useShadow = useShadow ? 1 : 0;
-		}
-		ImGui::SliderFloat("Depth Bias", &mSettings.depthBias, 0.0f, 0.01f, "%.4f");
-		ImGui::SliderFloat("Brightness", &mSettings.brightness, 1.0f, 10.0f);
-	}
 
+	ImGui::Checkbox("SHow Model", &mIsModel);
 	ImGui::End();
 }
 
@@ -374,7 +308,19 @@ void GameState::DrawDepthMap()
 
 	mDepthMapConstantBuffer.Update(wvp);
 
-	mModel.Draw();
+	if (mIsModel)
+	{
+		mModel.Draw();
+	}
+	else
+	{
+		for (auto& bones : mModel.skeleton.bones)
+		{
+			DrawSkeleton(bones.get(), mBoneMatrices);
+		}
+	}
+
+
 }
 
 void GameState::DrawScene()
@@ -431,28 +377,30 @@ void GameState::DrawScene()
 		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 		mShadowConstantBuffer.Update(wvpLight);
 
-		//mModel.Draw();
-		//mTankMeshBuffer.Draw();
-		 // trying to draw this skeleton
 
-		for (auto& bones : mModel.skeleton.bones)
+		if (mIsModel)
 		{
-			DrawSkeleton(bones.get(), mBoneMatrices);
+			mModel.Draw();
 		}
-		//DrawSkeleton(mModel.skeleton.root, mBoneMatrices);
+		else
+		{
+			for (auto& bones : mModel.skeleton.bones)
+			{
+				DrawSkeleton(bones.get(), mBoneMatrices);
+			}
+		}
 
 	}
 
-	auto matWorld = Matrix4::Identity;
+	/*auto matWorld = Matrix4::Identity;
 	TransformData transformData;
 	transformData.world = Transpose(matWorld);
 	transformData.wvp = Transpose(matWorld * matView * matProj);
 	mTransformBuffer.Update(transformData);
 
 	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
-	mShadowConstantBuffer.Update(wvpLight);
+	mShadowConstantBuffer.Update(wvpLight);*/
 
-	mGroundDiffuseMap.BindPS(0);
 
 	SettingsData settings;
 	settings.specularMapWeight = 0.0f;
@@ -462,10 +410,6 @@ void GameState::DrawScene()
 	settings.useShadow = 1;
 	mSettingsBuffer.Update(settings);
 
-	mGroundMeshBuffer.Draw();
-
-	//mTerrain.SetDirectionalLight(mDirectionalLight);
-	//mTerrain.Render(*mActiveCamera);
 
 	SimpleDraw::AddLine(mViewFrustumVertices[0], mViewFrustumVertices[1], Colors::White);
 	SimpleDraw::AddLine(mViewFrustumVertices[1], mViewFrustumVertices[2], Colors::White);
@@ -487,19 +431,3 @@ void GameState::DrawScene()
 	SimpleDraw::Render(*mActiveCamera);
 }
 
-void GameState::PostProcess()
-{
-	mPostProcessingVertexShader.Bind();
-	mPostProcessingPixelShader.Bind();
-
-	mSampler.BindPS();
-
-	auto graphicsSystem = GraphicsSystem::Get();
-	mPostProcessSettings.screenWidth = (float)graphicsSystem->GetBackBufferWidth();
-	mPostProcessSettings.screenHeight = (float)graphicsSystem->GetBackBufferHeight();
-	mPostProcessingSettingsBuffer.Update(mPostProcessSettings);
-	mPostProcessingSettingsBuffer.BindVS(0);
-	mPostProcessingSettingsBuffer.BindPS(0);
-
-	mScreenQuadBuffer.Draw();
-}

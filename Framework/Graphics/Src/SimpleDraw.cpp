@@ -82,21 +82,58 @@ namespace
 			AddLine(Math::Vector3{ -length, -length , length }, Math::Vector3{ -length, length , length }, color);
 		}
 
-		void AddSphere(float radius, int rings, int slices, const Color& color)
+		void AddSphere(const Math::Vector3& position, float radius, int rings, int slices, const Color& color)
 		{
-			const float StepsRings = (Math::Constants::Pi / rings);
-			const float StepsSlices = (Math::Constants::TwoPi / slices);
-			for (float phi = 0; phi < Math::Constants::Pi; phi += StepsRings)
+			const float x = position.x;
+			const float y = position.y;
+			const float z = position.z;
+
+			const uint32_t kSlices = Math::Max<uint32_t>(3u, slices);
+			const uint32_t kRings = Math::Max<uint32_t>(2u, rings);
+			const uint32_t kLines = (4 * kSlices * kRings) - (2 * kSlices);
+
+			// Check if we have enough space
+			if (mVertexCount + kLines <= mMaxVertexCount)
 			{
-				for (float theta = 0; theta < Math::Constants::TwoPi; theta += StepsSlices)
+				// Add lines
+				const float kTheta = Math::Constants::Pi / (float)kRings;
+				const float kPhi = Math::Constants::TwoPi / (float)kSlices;
+				for (uint32_t j = 0; j < kSlices; ++j)
 				{
-					auto vec = Math::Vector3
+					for (uint32_t i = 0; i < kRings; ++i)
 					{
-						sinf(phi) * cosf(theta) * radius,
-						cosf(phi) * radius,
-						sinf(theta) * sinf(phi) * radius
-					};
-					mLineVertices[mVertexCount++] = VertexPC{ vec, color };
+						const float a = i * kTheta;
+						const float b = a + kTheta;
+						const float ay = radius * cosf(a);
+						const float by = radius * cosf(b);
+
+						const float theta = j * kPhi;
+						const float phi = theta + kPhi;
+
+						const float ar = sqrt(radius * radius - ay * ay);
+						const float br = sqrt(radius * radius - by * by);
+
+						const float x0 = x + (ar * sinf(theta));
+						const float y0 = y + (ay);
+						const float z0 = z + (ar * cosf(theta));
+
+						const float x1 = x + (br * sinf(theta));
+						const float y1 = y + (by);
+						const float z1 = z + (br * cosf(theta));
+
+						const float x2 = x + (br * sinf(phi));
+						const float y2 = y + (by);
+						const float z2 = z + (br * cosf(phi));
+
+						mLineVertices[mVertexCount++] = { Math::Vector3(x0, y0, z0), color };
+						mLineVertices[mVertexCount++] = { Math::Vector3(x1, y1, z1), color };
+
+						if (i < kRings - 1)
+						{
+							mLineVertices[mVertexCount++] = { Math::Vector3(x1, y1, z1), color };
+							mLineVertices[mVertexCount++] = { Math::Vector3(x2, y2, z2), color };
+						}
+					}
 				}
 			}
 		}
@@ -159,7 +196,7 @@ namespace
 		uint32_t mVertexCount = 0;
 		uint32_t mMaxVertexCount = 0;
 		uint32_t mFillVertexCount = 0;
-		
+
 		Math::Matrix4 mTransform;
 	};
 
@@ -198,9 +235,9 @@ void SimpleDraw::AddBox(float length, const Color& color)
 	sInstance->AddBox(length, color);
 }
 
-void SimpleDraw::AddSphere(float radius, int rings, int slices, const Color& color)
+void SimpleDraw::AddSphere(const Math::Vector3& position, float radius, int rings, int slices, const Color& color)
 {
-	sInstance->AddSphere(radius, rings, slices, color);
+	sInstance->AddSphere(position, radius, rings, slices, color);
 }
 
 void SimpleDraw::AddGroundPlane(float size, const Color& color)
@@ -213,13 +250,13 @@ void SimpleDraw::AddGroundPlane(float size, const Color& color)
 	}
 }
 
-void SimpleDraw::AddBone(const Math::Matrix4& transform)
+void SimpleDraw::AddBone(const Math::Vector3& position, const Math::Matrix4& transform)
 {
 	auto r = Math::GetRight(transform);
 	auto u = Math::GetUp(transform);
 	auto l = Math::GetLook(transform);
 	auto p = Math::GetTranslation(transform);
-	AddSphere(0.025f, 5, 6, Colors::BlueViolet);
+	AddSphere(position, 0.025f, 5, 6, Colors::BlueViolet);
 	sInstance->AddLine(p, p + r * 0.1f, Colors::Red);
 	sInstance->AddLine(p, p + u * 0.1f, Colors::Green);
 	sInstance->AddLine(p, p + l * 0.1f, Colors::Blue);

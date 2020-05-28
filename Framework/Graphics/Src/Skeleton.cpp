@@ -27,7 +27,7 @@ void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>&
 		Math::Matrix4 matParent = boneMatrices[bone->parent->index];
 		auto currentPosition = GetTranslation(mat);
 		auto parentPosition = GetTranslation(matParent);
-		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Black);
+		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Red);
 		for (auto& child : bone->children)
 		{
 			DrawSkeleton(child, boneMatrices);
