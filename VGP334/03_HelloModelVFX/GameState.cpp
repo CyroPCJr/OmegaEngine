@@ -101,15 +101,18 @@ void GameState::Initialize()
 
 
 	// Initialize and load model from assimp
+	//mModel.Initialize("../../Assets/Models/Arissa.model");
 	mModel.Initialize("../../Assets/Models/mutant.model");
 	mBoneMatrices.resize(mModel.skeleton.bones.size());
 	// calcualte the bone matrices
 	UpdatePose(mModel.skeleton.root, mBoneMatrices);
-
+	mBoneTransform.boneTransforms = std::move(mBoneMatrices);
+	mBoneTransformBuffer.Initialize();
 }
 
 void GameState::Terminate()
 {
+	mBoneTransformBuffer.Terminate();
 	mModel.Terminate();
 	mRenderTarget.Terminate();
 	mShadowConstantBuffer.Terminate();
@@ -346,6 +349,8 @@ void GameState::DrawScene()
 	mTransformBuffer.BindVS(0);
 	mShadowConstantBuffer.BindVS(4);
 
+	mBoneTransformBuffer.BindVS(5);
+
 	/*for (auto& position : mTankPositions)
 	{
 
@@ -364,7 +369,8 @@ void GameState::DrawScene()
 
 		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 		mShadowConstantBuffer.Update(wvpLight);
-
+		
+		mBoneTransformBuffer.Update(mBoneTransform);
 
 		if (!mIsSkeleton)
 		{
@@ -374,7 +380,8 @@ void GameState::DrawScene()
 		{
 			for (auto& bones : mModel.skeleton.bones)
 			{
-				DrawSkeleton(bones.get(), mBoneMatrices);
+				DrawSkeleton(bones.get(), mBoneTransform.boneTransforms);
+				
 			}
 		}
 

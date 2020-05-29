@@ -3,6 +3,7 @@
 
 #include "MeshIO.h"
 #include "SkeletonIO.h"
+#include "AnimationIO.h"
 
 using namespace Omega::Graphics;
 
@@ -38,7 +39,7 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 	{
 		// Reference:
 		// https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/c4473?view=vs-2019
-		char name[20];
+		char name[128];
 		fscanf_s(file, "DiffuseMapName %s\n", &name, sizeof(name));
 		model.materialData[i].diffuseMapName = name;
 		MeshIO::Read(file, model.materialData[i].material);
@@ -95,12 +96,27 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 
 void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet& animationSet)
 {
+	// Homework
 	fileName.replace_extension("animset");
 
 	FILE* file = nullptr;
 	fopen_s(&file, fileName.u8string().c_str(), "r");
 
-	// Homework
+	uint32_t numClipCount = 0;
+	fscanf_s(file, "ClipCount: %d\n", &numClipCount);
+	animationSet.clips.resize(numClipCount);
+
+	for (uint32_t i = 0; i < numClipCount; ++i)
+	{
+		auto clip = std::make_unique<AnimationClip>();
+		char name[20];
+		fscanf_s(file, "Name: %s\n", &name, sizeof(name));
+		clip->name = name;
+		fscanf_s(file, "Duration: %f\n", &clip->duration);
+		fscanf_s(file, "TickPerSecond: %f\n", &clip->tickPerSecond);
+		animationSet.clips[i] = std::move(clip);
+		AnimationIO::Read(file, *animationSet.clips[i]);
+	}
 
 	fclose(file);
 }
@@ -109,6 +125,7 @@ void Model::Initialize(const std::filesystem::path& fileName)
 {
 	ModelLoader::LoadModel(fileName, *this);
 	ModelLoader::LoadSkeleton(fileName, skeleton);
+	ModelLoader::LoadAnimationSet(fileName, animationSet);
 }
 
 void Model::Terminate()
@@ -128,5 +145,5 @@ void Model::Draw() const
 		materialData[data.materialIndex].diffuseMap->BindPS();
 		data.meshBuffer.Draw();
 	}
-	
+
 }

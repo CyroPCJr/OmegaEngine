@@ -265,9 +265,13 @@ void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet)
 
 	const uint32_t clipCount = static_cast<uint32_t>(animationSet.clips.size());
 	fprintf_s(file, "ClipCount: %d\n", clipCount);
-	for (auto& animationClip: animationSet.clips)
+	for (uint32_t i = 0; i < clipCount; ++i)
 	{
-		AnimationIO::Write(file, *animationClip);
+		fprintf_s(file, "Name: %s\n", animationSet.clips[i]->name.c_str());
+		fprintf_s(file, "Duration: %f\n", animationSet.clips[i]->duration);
+		fprintf_s(file, "TickPerSecond: %f\n", animationSet.clips[i]->tickPerSecond);
+		fprintf_s(file, "BoneAnimationCount: %d\n", animationSet.clips[i]->boneAnimations.size());
+		AnimationIO::Write(file, *animationSet.clips[i]);
 	}
 
 	fclose(file);
@@ -459,7 +463,7 @@ int main(int argc, char* argv[])
 			animClip->tickPerSecond = static_cast<float>(inputAnim->mTicksPerSecond);
 
 			printf_s("Reading bone animatons for %s ...\n", animClip->name.c_str());
-			
+
 			// Make sure we have the same number of slots for animationClip as the bones in the
 			// skeleton. This allows us to undex the animationClip using the bone index directly.
 			animClip->boneAnimations.resize(model.skeleton.bones.size());
@@ -475,7 +479,7 @@ int main(int argc, char* argv[])
 				for (uint32_t keyIndex = 0; keyIndex < inputBoneAnim->mNumPositionKeys; ++keyIndex)
 				{
 					auto& key = inputBoneAnim->mPositionKeys[keyIndex];
-					builder.AddPositionKey(Convert(key.mValue)* args.scale, static_cast<float>(key.mTime));
+					builder.AddPositionKey(Convert(key.mValue) * args.scale, static_cast<float>(key.mTime));
 				}
 
 				for (uint32_t keyIndex = 0; keyIndex < inputBoneAnim->mNumRotationKeys; ++keyIndex)

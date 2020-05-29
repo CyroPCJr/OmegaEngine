@@ -31,6 +31,8 @@ private:
 		Omega::Math::Matrix4 world = Omega::Math::Matrix4::Identity;
 		Omega::Math::Matrix4 wvp = Omega::Math::Matrix4::Identity;
 		Omega::Math::Vector3 viewPosition = Omega::Math::Vector3::Zero;
+		int blendIndices[4] = { 0 };
+		float blendWeights[4] = { 0.0f };
 		float padding = 0.0f;
 	};
 
@@ -43,8 +45,9 @@ private:
 		float brightness = 1.0f;
 		int useShadow = 1;
 		float depthBias = 0.0f;
-		float padding;
+		float padding = 0.0f;
 	};
+
 	struct PostProcessSettingsData
 	{
 		float screenWidth = 0.0f;
@@ -98,4 +101,15 @@ private:
 	float mAnimationTime = 0.0f;
 	std::vector<Omega::Math::Matrix4> mBoneMatrices;
 	bool mIsSkeleton = false;
+
+	// Skeleton Buffer
+	struct BoneTransform
+	{
+		std::vector<Omega::Math::Matrix4> boneTransforms;
+	};
+
+	BoneTransform mBoneTransform;
+
+	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransform>;
+	BoneTransformBuffer mBoneTransformBuffer;
 };
