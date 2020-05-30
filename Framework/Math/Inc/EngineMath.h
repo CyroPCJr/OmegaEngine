@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Common.h"
+
+// Linear Algebra
 #include "Constants.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -8,6 +10,9 @@
 #include "Matrix4.h"
 #include "Quaternion.h"
 #include "PerlinNoise.h"
+
+// Geometry
+#include "Plane.h"
 
 namespace Omega::Math
 {

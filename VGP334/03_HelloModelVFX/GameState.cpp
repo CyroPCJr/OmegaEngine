@@ -102,7 +102,7 @@ void GameState::Initialize()
 
 	// Initialize and load model from assimp
 	//mModel.Initialize("../../Assets/Models/Arissa.model");
-	mModel.Initialize("../../Assets/Models/Arissa.model");
+	mModel.Initialize("../../Assets/Models/mutant.model");
 	mBoneMatrices.resize(mModel.skeleton.bones.size());
 	// calcualte the bone matrices
 	UpdatePose(mModel.skeleton.root, mBoneMatrices);
@@ -112,9 +112,7 @@ void GameState::Initialize()
 	{
 		finalTransform = bone->offsetTransform * finalTransform[bone->index];
 	}*/
-
-
-	//mBoneTransform.boneTransforms = std::move(mBoneMatrices);
+	
 	mBoneTransformBuffer.Initialize();
 }
 
@@ -378,7 +376,10 @@ void GameState::DrawScene()
 		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
 		mShadowConstantBuffer.Update(wvpLight);
 		
-		mBoneTransformBuffer.Update(mBoneTransform);
+		BoneTransformData boneTransformData{};
+		for (size_t i = 0; i < mBoneMatrices.size(); ++i)
+			boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mBoneMatrices[i]);
+		mBoneTransformBuffer.Update(boneTransformData);
 
 		if (!mIsSkeleton)
 		{
@@ -388,11 +389,10 @@ void GameState::DrawScene()
 		{
 			for (auto& bones : mModel.skeleton.bones)
 			{
-				DrawSkeleton(bones.get(), mBoneTransform.boneTransforms);
+				DrawSkeleton(bones.get(), mBoneMatrices);
 				
 			}
 		}
-
 	}
 
 	/*auto matWorld = Matrix4::Identity;

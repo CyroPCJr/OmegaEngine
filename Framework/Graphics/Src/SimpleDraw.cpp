@@ -247,6 +247,7 @@ void SimpleDraw::AddGroundPlane(float size, const Color& color)
 	{
 		sInstance->AddLine({ i, 0.0f, -halfSize }, { i, 0.0f, halfSize }, color);
 		sInstance->AddLine({ halfSize, 0.0f,  i }, { halfSize, 0.0f, i }, color);
+		sInstance->AddLine({ -halfSize, 0.0f,  i }, { halfSize, 0.0f, i }, color);
 	}
 }
 

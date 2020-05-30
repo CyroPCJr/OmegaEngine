@@ -88,7 +88,6 @@ UpdateBoneRecursive(boneMatrices, skeleton.root)
 
 }
 
-//TODO:: ver o offSetTransform
 void Omega::Graphics::UpdatePose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices)
 {
 	if (bone->parent)

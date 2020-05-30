@@ -10,6 +10,12 @@
     <Filter Include="Inc\LinearAlgebra">
       <UniqueIdentifier>{56f3eb29-fe7f-4b5c-b3a8-7306b4a2ece6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Utils">
+      <UniqueIdentifier>{95cad1aa-7e7d-457d-8751-7fbffd63e4fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Geometry">
+      <UniqueIdentifier>{df192297-e73c-4cba-9527-c8b6399ff26e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -42,6 +48,12 @@
     <ClInclude Include="Inc\Vector4.h">
       <Filter>Inc\LinearAlgebra</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Random.h">
+      <Filter>Inc\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Plane.h">
+      <Filter>Inc\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -51,6 +63,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\PerlinNoise.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Random.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

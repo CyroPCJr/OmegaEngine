@@ -103,13 +103,11 @@ private:
 	bool mIsSkeleton = false;
 
 	// Skeleton Buffer
-	struct BoneTransform
+	struct BoneTransformData
 	{
-		std::vector<Omega::Math::Matrix4> boneTransforms;
+		Omega::Math::Matrix4 boneTransforms[128];
 	};
 
-	BoneTransform mBoneTransform;
-
-	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransform>;
+	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransformData>;
 	BoneTransformBuffer mBoneTransformBuffer;
 };

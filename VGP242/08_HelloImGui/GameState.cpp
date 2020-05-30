@@ -44,7 +44,6 @@ void GameState::Update(float deltaTime)
 		mCamera.Strafe(kMoveSpeed * deltaTime);
 	}
 	
-	SimpleDraw::AddSphere(10.f, 100, 100, Colors::Black);
 	//mRotation += deltaTime;	
 }
 
