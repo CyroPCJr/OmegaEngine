@@ -102,11 +102,19 @@ void GameState::Initialize()
 
 	// Initialize and load model from assimp
 	//mModel.Initialize("../../Assets/Models/Arissa.model");
-	mModel.Initialize("../../Assets/Models/mutant.model");
+	mModel.Initialize("../../Assets/Models/Arissa.model");
 	mBoneMatrices.resize(mModel.skeleton.bones.size());
 	// calcualte the bone matrices
 	UpdatePose(mModel.skeleton.root, mBoneMatrices);
-	mBoneTransform.boneTransforms = std::move(mBoneMatrices);
+
+	/*mBoneTransform.boneTransforms.resize(mBoneMatrices.size());
+	for (auto& finalTransform : mBoneTransform.boneTransforms)
+	{
+		finalTransform = bone->offsetTransform * finalTransform[bone->index];
+	}*/
+
+
+	//mBoneTransform.boneTransforms = std::move(mBoneMatrices);
 	mBoneTransformBuffer.Initialize();
 }
 
