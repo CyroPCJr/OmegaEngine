@@ -28,52 +28,14 @@ void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>&
 		auto currentPosition = GetTranslation(mat);
 		auto parentPosition = GetTranslation(matParent);
 		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Red);
-		//SimpleDraw::AddSphere(currentPosition, 1.f, 5, 6, Colors::Cyan);
 		for (auto& child : bone->children)
 		{
 			DrawSkeleton(child, boneMatrices);
 		}
 	}
-
-	// Homework
-	// Use skeleton so you know what the parent child order is
-	//But, use boneMatrices ( whick is the multipled out matrices)
-	// TODO: Testar isso aqui
-	/*
-
-	Tips for getting the bone matrices:
------------------------------------
-
-	   R
-	   |
-	   V
-	  [U]
-   [U]   [U]
-[U]         [U]
-
-GetTransform returns
-	bone->toParentTransform if we are using the bind pose (default from the skeleton)
-	clip.boneAnim[bone->index] if we are using a animation pose (at time t)
-
-void UpdateBoneRecursive(std::vector<Matrix>& boneMatrices, const Bone* bone)
-{
-	if (bone->parent)
-		boneMatrices[bone->index] = GetTransform(bone) * boneMatrices[bone->parent->index]
-	else
-		boneMatrices[bone->index] = GetTransform(bone)
-
-	for (auto& child : bone->children)
-		UpdateBoneRecursive(boneMatrices, child)
 }
 
-
-std::vector<Matrix> boneMatrices;
-UpdateBoneRecursive(boneMatrices, skeleton.root)
-*/
-
-}
-
-void Omega::Graphics::UpdatePose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices)
+void Omega::Graphics::UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices)
 {
 	if (bone->parent)
 	{
@@ -86,6 +48,11 @@ void Omega::Graphics::UpdatePose(Bone* bone, std::vector<Math::Matrix4>& boneMat
 
 	for (auto& child : bone->children)
 	{
-		UpdatePose(child, boneMatrices);
+		UpdateBindPose(child, boneMatrices);
 	}
+}
+
+void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices)
+{
+
 }

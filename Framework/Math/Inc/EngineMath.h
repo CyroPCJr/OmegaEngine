@@ -10,6 +10,7 @@
 #include "Matrix4.h"
 #include "Quaternion.h"
 #include "PerlinNoise.h"
+#include "Random.h"
 
 // Geometry
 #include "Plane.h"
