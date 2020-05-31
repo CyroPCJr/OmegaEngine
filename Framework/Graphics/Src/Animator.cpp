@@ -24,7 +24,7 @@ void Animator::ComputeBindPose()
 void Animator::PlayAnimation(int index)
 {
 	OMEGAASSERT(index < static_cast<int>(mModel->animationSet.clips.size()), "[Animator] Invalid index.");
-	mClipIndex = 0;
+	mClipIndex = index;
 }
 
 void Animator::Update(float deltaTime)
