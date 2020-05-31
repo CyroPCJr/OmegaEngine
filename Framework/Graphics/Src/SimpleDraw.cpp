@@ -243,10 +243,15 @@ void SimpleDraw::AddSphere(const Math::Vector3& position, float radius, int ring
 void SimpleDraw::AddGroundPlane(float size, const Color& color)
 {
 	const float halfSize = size * 0.5f;
-	for (float i = 0; i < halfSize; i += 1.0f)
+	for (float i = 0; i <= halfSize; i += 1.0f)
 	{
+		// center to rigth in x
 		sInstance->AddLine({ i, 0.0f, -halfSize }, { i, 0.0f, halfSize }, color);
-		sInstance->AddLine({ halfSize, 0.0f,  i }, { halfSize, 0.0f, i }, color);
+		// center to left in x
+		sInstance->AddLine({ -i, 0.0f,  halfSize }, { -i, 0.0f, -halfSize }, color);
+		// center to down  in z
+		sInstance->AddLine({ halfSize, 0.0f,  -i }, { -halfSize, 0.0f, -i }, color);
+		// center to top  in z
 		sInstance->AddLine({ -halfSize, 0.0f,  i }, { halfSize, 0.0f, i }, color);
 	}
 }
@@ -257,7 +262,7 @@ void SimpleDraw::AddBone(const Math::Vector3& position, const Math::Matrix4& tra
 	auto u = Math::GetUp(transform);
 	auto l = Math::GetLook(transform);
 	auto p = Math::GetTranslation(transform);
-	AddSphere(position, 0.025f, 5, 6, Colors::BlueViolet);
+	AddSphere(position, 0.5, 5, 6, Colors::BlueViolet);
 	sInstance->AddLine(p, p + r * 0.1f, Colors::Red);
 	sInstance->AddLine(p, p + u * 0.1f, Colors::Green);
 	sInstance->AddLine(p, p + l * 0.1f, Colors::Blue);

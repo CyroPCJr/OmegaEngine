@@ -28,6 +28,7 @@ void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>&
 		auto currentPosition = GetTranslation(mat);
 		auto parentPosition = GetTranslation(matParent);
 		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Red);
+		//SimpleDraw::AddSphere(currentPosition, 1.f, 5, 6, Colors::Cyan);
 		for (auto& child : bone->children)
 		{
 			DrawSkeleton(child, boneMatrices);
@@ -68,23 +69,7 @@ void UpdateBoneRecursive(std::vector<Matrix>& boneMatrices, const Bone* bone)
 
 std::vector<Matrix> boneMatrices;
 UpdateBoneRecursive(boneMatrices, skeleton.root)
-
-
-	*/
-
-	//http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html
-   /* mat4 BoneTransform = gBones[BoneIDs[0]] * Weights[0];
-	BoneTransform += gBones[BoneIDs[1]] * Weights[1];
-	BoneTransform += gBones[BoneIDs[2]] * Weights[2];
-	BoneTransform += gBones[BoneIDs[3]] * Weights[3];
-
-	vec4 PosL = BoneTransform * vec4(Position, 1.0);
-	gl_Position = gWVP * PosL;
-	TexCoord0 = TexCoord;
-	vec4 NormalL = BoneTransform * vec4(Normal, 0.0);
-	Normal0 = (gWorld * NormalL).xyz;
-	WorldPos0 = (gWorld * PosL).xyz;
-	*/
+*/
 
 }
 

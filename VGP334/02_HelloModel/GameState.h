@@ -31,6 +31,8 @@ private:
 		Omega::Math::Matrix4 world = Omega::Math::Matrix4::Identity;
 		Omega::Math::Matrix4 wvp = Omega::Math::Matrix4::Identity;
 		Omega::Math::Vector3 viewPosition = Omega::Math::Vector3::Zero;
+		int blendIndices[4] = { 0 };
+		float blendWeights[4] = { 0.0f };
 		float padding = 0.0f;
 	};
 
@@ -91,11 +93,22 @@ private:
 
 	// Post processing
 	Omega::Graphics::RenderTarget mRenderTarget;
-	
+
 	//Model
 	Omega::Graphics::Model mModel;
 	Omega::Graphics::Animation mAnimation;
 	float mAnimationTime = 0.0f;
 	std::vector<Omega::Math::Matrix4> mBoneMatrices;
 	bool mIsSkeleton = false;
+
+	// Skeleton bind pose Buffer
+	struct BoneTransformData
+	{
+		Omega::Math::Matrix4 boneTransforms[128];
+	};
+	
+	BoneTransformData boneTransformData;
+
+	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransformData>;
+	BoneTransformBuffer mBoneTransformBuffer;
 };

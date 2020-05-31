@@ -106,10 +106,18 @@ void GameState::Initialize()
 	// calcualte the bone matrices
 	UpdatePose(mModel.skeleton.root, mBoneMatrices);
 
+	// Final transformation matrix
+	for (size_t i = 0; i < mBoneMatrices.size(); ++i)
+	{
+		boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mBoneMatrices[i]);
+	}
+
+	mBoneTransformBuffer.Initialize();
 }
 
 void GameState::Terminate()
 {
+	mBoneTransformBuffer.Terminate();
 	mModel.Terminate();
 	mRenderTarget.Terminate();
 	mShadowConstantBuffer.Terminate();
@@ -346,48 +354,33 @@ void GameState::DrawScene()
 	mTransformBuffer.BindVS(0);
 	mShadowConstantBuffer.BindVS(4);
 
-	/*for (auto& position : mTankPositions)
-	{
+	mBoneTransformBuffer.BindVS(5);
 
-	}*/
-	{
-		/*auto matTrans = Matrix4::Translation({ 0.0f,-3.5f, 0.0f });
-		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);*/
-		//auto matWorld = matRot * matTrans;
-		auto matWorld = mAnimation.GetTransform(mAnimationTime);//matRot * matTrans;
+	auto matWorld = mAnimation.GetTransform(mAnimationTime);
 
-		TransformData transformData;
-		transformData.world = Transpose(matWorld);
-		transformData.wvp = Transpose(matWorld * matView * matProj);
-		transformData.viewPosition = mActiveCamera->GetPosition();
-		mTransformBuffer.Update(transformData);
-
-		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
-		mShadowConstantBuffer.Update(wvpLight);
-
-
-		if (!mIsSkeleton)
-		{
-			mModel.Draw();
-		}
-		else
-		{
-			for (auto& bones : mModel.skeleton.bones)
-			{
-				DrawSkeleton(bones.get(), mBoneMatrices);
-			}
-		}
-
-	}
-
-	/*auto matWorld = Matrix4::Identity;
 	TransformData transformData;
 	transformData.world = Transpose(matWorld);
 	transformData.wvp = Transpose(matWorld * matView * matProj);
+	transformData.viewPosition = mActiveCamera->GetPosition();
 	mTransformBuffer.Update(transformData);
 
 	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
-	mShadowConstantBuffer.Update(wvpLight);*/
+	mShadowConstantBuffer.Update(wvpLight);
+
+	mBoneTransformBuffer.Update(boneTransformData);
+
+	if (!mIsSkeleton)
+	{
+		mModel.Draw();
+	}
+	else
+	{
+		for (auto& bones : mModel.skeleton.bones)
+		{
+			DrawSkeleton(bones.get(), mBoneMatrices);
+		}
+	}
+
 
 
 	SettingsData settings;

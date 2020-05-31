@@ -99,20 +99,12 @@ void GameState::Initialize()
 		//.AddRotationKey(Quaternion::RotationAxis(Vector3(0.0f, 1.0f, 0.0f), 90.0f))
 		.GetAnimation();
 
-
 	// Initialize and load model from assimp
 	//mModel.Initialize("../../Assets/Models/Arissa.model");
 	mModel.Initialize("../../Assets/Models/mutant.model");
 	mBoneMatrices.resize(mModel.skeleton.bones.size());
 	// calcualte the bone matrices
 	UpdatePose(mModel.skeleton.root, mBoneMatrices);
-
-	/*mBoneTransform.boneTransforms.resize(mBoneMatrices.size());
-	for (auto& finalTransform : mBoneTransform.boneTransforms)
-	{
-		finalTransform = bone->offsetTransform * finalTransform[bone->index];
-	}*/
-	
 	mBoneTransformBuffer.Initialize();
 }
 
@@ -378,7 +370,9 @@ void GameState::DrawScene()
 		
 		BoneTransformData boneTransformData{};
 		for (size_t i = 0; i < mBoneMatrices.size(); ++i)
+		{
 			boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mBoneMatrices[i]);
+		}
 		mBoneTransformBuffer.Update(boneTransformData);
 
 		if (!mIsSkeleton)
