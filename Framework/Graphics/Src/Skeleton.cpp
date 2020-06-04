@@ -1,5 +1,6 @@
 #include "Precompiled.h"
 #include "Skeleton.h"
+#include "AnimationClip.h"
 
 #include "SimpleDraw.h"
 
@@ -52,7 +53,23 @@ void Omega::Graphics::UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& bon
 	}
 }
 
-void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices)
+void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices,
+	float time, Math::Matrix4& transform, const AnimationClip& anim)
 {
+	if (bone->parent)
+	{
+		if (anim.GetTransform(time, bone->index, transform))
+		{
+			boneMatrices[bone->index] = transform * boneMatrices[bone->parent->index];
+		}
+	}
+	else
+	{
+		boneMatrices[bone->index] = Math::Matrix4::Identity;
+	}
 
+	for (auto& child : bone->children)
+	{
+		UpdateAnimationPose(child, boneMatrices, time, transform, anim);
+	}
 }

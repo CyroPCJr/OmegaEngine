@@ -12,6 +12,9 @@ namespace Omega::Graphics
 
 		void ComputeBindPose();
 		void PlayAnimation(int index);
+		
+		void StopAnimation(bool stop);
+		void SetTime(float time);
 
 		void Update(float deltaTime);
 
@@ -19,6 +22,7 @@ namespace Omega::Graphics
 	private:
 		const Model* mModel;
 		float mTimer = 0.0f;
+		float mCurrentTimer = 0.0f;
 		int mClipIndex = 0;
 
 		std::vector<Omega::Math::Matrix4> mBoneMatrices;

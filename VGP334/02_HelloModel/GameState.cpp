@@ -104,7 +104,7 @@ void GameState::Initialize()
 	mModel.Initialize("../../Assets/Models/mutant.model");
 	mBoneMatrices.resize(mModel.skeleton.bones.size());
 	// calcualte the bone matrices
-	UpdatePose(mModel.skeleton.root, mBoneMatrices);
+	UpdateBindPose(mModel.skeleton.root, mBoneMatrices);
 
 	// Final transformation matrix
 	for (size_t i = 0; i < mBoneMatrices.size(); ++i)

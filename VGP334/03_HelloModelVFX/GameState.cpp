@@ -28,9 +28,9 @@ void GameState::Initialize()
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
 
 	mDefaultCamera.SetNearPlane(0.1f);
-	mDefaultCamera.SetFarPlane(300.0f);
-	mDefaultCamera.SetPosition({ 0.0f, 130.0f, -150.0f });
-	mDefaultCamera.SetLookAt({ 0.0f, 100.0f, 0.0f });
+	mDefaultCamera.SetFarPlane(30000.0f);
+	mDefaultCamera.SetPosition({ 600.0f, 150.0f, 50.0f });
+	mDefaultCamera.SetLookAt({ 0.0f, 100.0f, 1000.0f });
 
 	mDebugCamera.SetNearPlane(0.001f);
 	mDebugCamera.SetFarPlane(10000.0f);
@@ -89,27 +89,26 @@ void GameState::Initialize()
 		graphicsSystem->GetBackBufferHeight(),
 		RenderTarget::Format::RGBA_U8);
 
-	mAnimation = AnimationBuilder()
-		.SetTime(0.0f)
-		.AddPositionKey(Vector3(0.0f, 1.0f, 0.0f))
-		.AddRotationKey(Quaternion::Identity)
-		.AddScaleKey(Vector3(1.0f, 1.0f, 1.0f))
-		.SetTime(5.0f)
-		.AddPositionKey(Vector3(0.0f, 1.0f, 0.0f))
-		//.AddRotationKey(Quaternion::RotationAxis(Vector3(0.0f, 1.0f, 0.0f), 90.0f))
-		.GetAnimation();
-
+	mModelStartPosition = { 600.0f, 6.0f, 600.0f };
 	// Initialize and load model from assimp
-	//mModel.Initialize("../../Assets/Models/Arissa.model");
-	mModel.Initialize("../../Assets/Models/mutant.model");
-	mBoneMatrices.resize(mModel.skeleton.bones.size());
+	mModel.Initialize("../../Assets/Models/Arissa.model");
+	//mModel.Initialize("../../Assets/Models/mutant.model");
+	mAnimator.Initialize(mModel);
+	mAnimator.ComputeBindPose();
+	mAnimator.PlayAnimation(0);
 	// calcualte the bone matrices
-	UpdateBindPose(mModel.skeleton.root, mBoneMatrices);
 	mBoneTransformBuffer.Initialize();
+
+	// Load terrain 
+	mTerrain.Initialize(1200, 1200, 1.0f);
+	mTerrain.SetHeightScale(30.0f);
+	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
+
 }
 
 void GameState::Terminate()
 {
+	mTerrain.Terminate();
 	mBoneTransformBuffer.Terminate();
 	mModel.Terminate();
 	mRenderTarget.Terminate();
@@ -144,7 +143,6 @@ void GameState::Update(float deltaTime)
 	{
 		mDefaultCamera.Walk(kMoveSpeed * deltaTime);
 		mLightCamera.Walk(kMoveSpeed * deltaTime);
-		//mTankPosition.z += kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::S))
@@ -165,7 +163,7 @@ void GameState::Update(float deltaTime)
 		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 
-	mAnimationTime += deltaTime;
+	mAnimator.Update(deltaTime);
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
@@ -297,14 +295,7 @@ void GameState::DrawDepthMap()
 
 	mDepthMapConstantBuffer.BindVS(0);
 
-	//for (auto& position : mTankPositions)
-	//{
-	//	
-	//}
-	/*auto matTrans = Matrix4::Translation(position);
-	auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);*/
-	//auto matWorld = matRot * matTrans;
-	auto matWorld = mAnimation.GetTransform(mAnimationTime);// matRot* matTrans;
+	auto matWorld = Matrix4::Translation(mModelStartPosition);
 	auto wvp = Transpose(matWorld * matViewLight * matProjLight);
 
 	mDepthMapConstantBuffer.Update(wvp);
@@ -349,55 +340,39 @@ void GameState::DrawScene()
 
 	mBoneTransformBuffer.BindVS(5);
 
-	/*for (auto& position : mTankPositions)
-	{
+	auto matWorld = Matrix4::Translation(mModelStartPosition);
 
-	}*/
-	{
-		/*auto matTrans = Matrix4::Translation({ 0.0f,-3.5f, 0.0f });
-		auto matRot = Matrix4::RotationX(mTankRotation.x) * Matrix4::RotationY(mTankRotation.y);*/
-		//auto matWorld = matRot * matTrans;
-		auto matWorld = mAnimation.GetTransform(mAnimationTime);//matRot * matTrans;
-
-		TransformData transformData;
-		transformData.world = Transpose(matWorld);
-		transformData.wvp = Transpose(matWorld * matView * matProj);
-		transformData.viewPosition = mActiveCamera->GetPosition();
-		mTransformBuffer.Update(transformData);
-
-		auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
-		mShadowConstantBuffer.Update(wvpLight);
-		
-		BoneTransformData boneTransformData{};
-		for (size_t i = 0; i < mBoneMatrices.size(); ++i)
-		{
-			boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mBoneMatrices[i]);
-		}
-		mBoneTransformBuffer.Update(boneTransformData);
-
-		if (!mIsSkeleton)
-		{
-			mModel.Draw();
-		}
-		else
-		{
-			for (auto& bones : mModel.skeleton.bones)
-			{
-				DrawSkeleton(bones.get(), mBoneMatrices);
-				
-			}
-		}
-	}
-
-	/*auto matWorld = Matrix4::Identity;
 	TransformData transformData;
 	transformData.world = Transpose(matWorld);
 	transformData.wvp = Transpose(matWorld * matView * matProj);
+	transformData.viewPosition = mActiveCamera->GetPosition();
 	mTransformBuffer.Update(transformData);
 
 	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
-	mShadowConstantBuffer.Update(wvpLight);*/
+	mShadowConstantBuffer.Update(wvpLight);
 
+	if (!mIsSkeleton)
+	{
+		// Send final transform to Shader
+		BoneTransformData boneTransformData{};
+		for (size_t i = 0; i < mAnimator.GetBoneMatrices().size(); ++i)
+		{
+			boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mAnimator.GetBoneMatrices()[i]);
+		}
+
+		mBoneTransformBuffer.Update(boneTransformData);
+		mModel.Draw();
+	}
+	else
+	{
+		for (auto& bones : mModel.skeleton.bones)
+		{
+			DrawSkeleton(bones.get(), mAnimator.GetBoneMatrices());
+		}
+	}
+
+	mTerrain.SetDirectionalLight(mDirectionalLight);
+	mTerrain.Render(mDefaultCamera);
 
 	SettingsData settings;
 	settings.specularMapWeight = 0.0f;
@@ -406,7 +381,6 @@ void GameState::DrawScene()
 	settings.aoMapWeight = 0.0f;
 	settings.useShadow = 1;
 	mSettingsBuffer.Update(settings);
-
 
 	SimpleDraw::AddLine(mViewFrustumVertices[0], mViewFrustumVertices[1], Colors::White);
 	SimpleDraw::AddLine(mViewFrustumVertices[1], mViewFrustumVertices[2], Colors::White);

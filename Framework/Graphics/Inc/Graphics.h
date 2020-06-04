@@ -44,6 +44,7 @@
 #include "Easing.h"
 #include "Skeleton.h"
 #include "SkeletonIO.h"
+#include "Animator.h"
 
 // Model
 #include "MeshIO.h"

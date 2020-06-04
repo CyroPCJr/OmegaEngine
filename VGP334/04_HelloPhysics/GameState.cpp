@@ -7,18 +7,6 @@ using namespace Omega::Input;
 using namespace Omega::Math;
 using namespace Omega::Physics;
 
-namespace
-{
-	//Criar novo header Random.h em Utils
-	std::random_device sRandomDevice{};
-	std::mt19937 sRandomEngine{ sRandomDevice() };
-
-	float Randf(float min, float max)
-	{
-		return std::uniform_real_distribution<float>{ min, max }(sRandomEngine);
-	}
-}
-
 void GameState::Initialize()
 {
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
@@ -93,7 +81,8 @@ void GameState::DebugUI()
 		{
 			auto p = new Particle();
 			p->SetPosition({ 0.0f, 5.0f, 0.0f });
-			p->SetVelocity({ Randf(-0.05f, 0.05f), Randf(0.1f, 0.4f) , Randf(-0.05f, 0.05f) });
+
+			p->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f) , RandomFloat(-0.05f, 0.05f) });
 			p->radius = 0.1f;
 			p->bounce = 0.3f;
 			mPhysicsWorld.AddParticle(p);
@@ -107,11 +96,11 @@ void GameState::DebugUI()
 			auto p1 = new Particle();
 			auto p2 = new Particle();
 			p1->SetPosition({ 0.5f, 5.0f, 0.0f });
-			p1->SetVelocity({ Randf(-0.05f, 0.05f), Randf(0.1f, 0.4f), Randf(-0.05f, 0.05f) });
+			p1->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
 			p1->radius = 0.1f;
 			p1->bounce = 0.3f;
 			p2->SetPosition({ -0.5f, 5.0f, 0.0f });
-			p2->SetVelocity({ Randf(-0.05f, 0.05f), Randf(0.1f, 0.4f), Randf(-0.05f, 0.05f) });
+			p2->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
 			p2->radius = 0.1f;
 			p2->bounce = 0.3f;
 			mPhysicsWorld.AddParticle(p1);

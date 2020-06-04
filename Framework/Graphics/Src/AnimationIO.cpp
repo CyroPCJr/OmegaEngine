@@ -103,11 +103,12 @@ void AnimationIO::Read(FILE* file, AnimationClip& animationClip)
 	animationClip.boneAnimations.resize(boneAnimationCout);
 	for (uint32_t i = 0; i < boneAnimationCout; ++i)
 	{
+		//TODO: continuar debugando daqui, desse ponto
 		/*char empty[20];
-		fscanf_s(file, "[%s]", &empty, sizeof(empty));
-		if (empty == "Empty]")
+		fscanf_s(file, "%s\n", &empty, sizeof(empty));
+		std::string emptyblock = empty;
+		if (emptyblock != "[Empty]")
 		{
-			break;
 		}*/
 		auto boneAnimation = std::make_unique<Animation>();
 		animationClip.boneAnimations[i] = std::move(boneAnimation);

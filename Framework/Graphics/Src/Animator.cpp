@@ -9,6 +9,7 @@ using namespace Omega::Graphics;
 void Animator::Initialize(const Model& model)
 {
 	mModel = std::move(&model);
+	mBoneMatrices.resize(mModel->skeleton.bones.size());
 }
 
 void Animator::Terminate()
@@ -27,7 +28,29 @@ void Animator::PlayAnimation(int index)
 	mClipIndex = index;
 }
 
+void Animator::StopAnimation(bool stop)
+{
+	if (stop)
+	{
+		mCurrentTimer = mTimer;
+	}
+}
+
+void Animator::SetTime(float time)
+{
+	mTimer = time;
+}
+
 void Animator::Update(float deltaTime)
 {
-	//TODO: continuar daqui --- Animation Clip 
+	//TODO: continuar daqui --- Animation Clip
+	auto& animationClip = mModel->animationSet.clips[mClipIndex];
+	mTimer += deltaTime * animationClip->tickPerSecond;
+	if (mTimer > animationClip->duration)
+	{
+		mTimer -= animationClip->duration;
+	}
+	
+	Math::Matrix4 matTransform{};
+	UpdateAnimationPose(mModel->skeleton.root, mBoneMatrices, mTimer, matTransform, *animationClip);
 }

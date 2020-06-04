@@ -92,15 +92,15 @@ private:
 	DepthMapConstantBuffer mDepthMapConstantBuffer;
 	ShadowConstantBuffer mShadowConstantBuffer;
 
-	// Post processing
+	// Render Target
 	Omega::Graphics::RenderTarget mRenderTarget;
 	
 	//Model
 	Omega::Graphics::Model mModel;
-	Omega::Graphics::Animation mAnimation;
-	float mAnimationTime = 0.0f;
 	std::vector<Omega::Math::Matrix4> mBoneMatrices;
 	bool mIsSkeleton = false;
+	bool mStopAnimation = false;
+	Omega::Math::Vector3 mModelStartPosition;
 
 	// Skeleton Buffer
 	struct BoneTransformData
@@ -110,4 +110,9 @@ private:
 
 	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransformData>;
 	BoneTransformBuffer mBoneTransformBuffer;
+
+	Omega::Graphics::Animator mAnimator;
+
+	// Terrain
+	Omega::Terrain mTerrain;
 };

@@ -24,8 +24,6 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 		MeshIO::Read(file, model.meshData[i].mesh);
 	}
 
-	// For homework, save out model.materialData as well ...
-	// if diffuseMapName is empty  string, write <none>
 	fclose(file);
 
 	fileName.replace_extension("materialData");
@@ -96,7 +94,6 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 
 void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet& animationSet)
 {
-	// Homework
 	fileName.replace_extension("animset");
 
 	FILE* file = nullptr;
@@ -125,6 +122,7 @@ void Model::Initialize(const std::filesystem::path& fileName)
 {
 	ModelLoader::LoadModel(fileName, *this);
 	ModelLoader::LoadSkeleton(fileName, skeleton);
+	//TODO:: comecar daqui a debugar. ver o pq animationSet esta zuada
 	ModelLoader::LoadAnimationSet(fileName, animationSet);
 }
 
