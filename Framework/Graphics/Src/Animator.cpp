@@ -38,7 +38,7 @@ void Animator::StopAnimation(bool stop)
 
 void Animator::SetTime(float time)
 {
-	mTimer = 21.f;//time;
+	mTimer = time;
 }
 
 void Animator::Update(float deltaTime)

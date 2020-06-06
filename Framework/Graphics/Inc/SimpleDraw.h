@@ -17,6 +17,8 @@ namespace Omega::Graphics::SimpleDraw
 	void AddGroundPlane(float size, const Color& color = Colors::DarkGray);
 	void AddBone(const Math::Vector3& position, const Math::Matrix4& transform);
 	void AddTransform(const Math::Matrix4& transform);
+	void AddOBB(const Math::OBB& obb, const Color& color);
+
 
 	// TODO: need to be implemented
 	void AddAABB(const Math::Vector3& center, const Math::Vector3& extend, const Color& color);

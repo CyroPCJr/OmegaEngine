@@ -22,9 +22,13 @@ namespace Omega::Physics
 		void Update(float deltaTime);
 		void DebugDraw() const;
 
+		// For simulation
 		void AddParticle(Particle* p);
 		void AddConstraint(Constraint* c);
-		void AddPlane(const Math::Plane& plane);
+
+		// For enviroment
+		void AddStaticPlane(const Math::Plane& plane);
+		void AddStaticOBB(const Math::OBB& obb);
 
 		void Clear(bool onlyDynamic = false);
 	private:
@@ -38,6 +42,7 @@ namespace Omega::Physics
 		std::vector<Particle*> mParticles;
 		std::vector<Constraint*> mConstraints;
 		std::vector<Math::Plane> mPlanes;
+		std::vector<Math::OBB> mOBBs;
 
 		Settings mSettings;
 		float mTimer = 0.0f;

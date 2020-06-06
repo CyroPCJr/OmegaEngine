@@ -105,7 +105,7 @@ private:
 	// Skeleton Buffer
 	struct BoneTransformData
 	{
-		Omega::Math::Matrix4 boneTransforms[128];
+		Omega::Math::Matrix4 boneTransforms[211];
 	};
 
 	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransformData>;

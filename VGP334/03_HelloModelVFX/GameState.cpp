@@ -91,7 +91,8 @@ void GameState::Initialize()
 
 	mModelStartPosition = { 600.0f, 6.0f, 600.0f };
 	// Initialize and load model from assimp
-	mModel.Initialize("../../Assets/Models/Arissa.model");
+	//mModel.Initialize("../../Assets/Models/Arissa.model");
+	mModel.Initialize("../../Assets/Models/MeiaLuaFrente/MeiaLuaFrente.model");
 	//mModel.Initialize("../../Assets/Models/mutant.model");
 	mAnimator.Initialize(mModel);
 	mAnimator.ComputeBindPose();
@@ -162,7 +163,8 @@ void GameState::Update(float deltaTime)
 		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 
-	mAnimator.Update(deltaTime);
+	//TODO: Testing
+	//mAnimator.Update(deltaTime);
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
@@ -279,9 +281,9 @@ void GameState::DebugUI()
 			{ 1.0f, 1.0f, 1.0f, 1.0f }
 		);
 	}
-	ImGui::DragFloat("Set time", &mSetTime, 1.0f, 0.0f, 144.0f);
+	/*ImGui::DragFloat("Set time", &mSetTime, 1.0f, 0.0f, 144.0f);
 
-	mAnimator.SetTime(mSetTime);
+	mAnimator.SetTime(mSetTime);*/
 
 	ImGui::Checkbox("Show Skeleton", &mIsSkeleton);
 	ImGui::End();

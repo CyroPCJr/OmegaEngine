@@ -124,7 +124,6 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& m)
 	}
 }
 
-
 Quaternion Quaternion::RotationLook(const Vector3& direction, const Vector3& up)
 {
 	Vector3 forward = Normalize(direction);
@@ -176,4 +175,114 @@ Quaternion Quaternion::RotationFromTo(Vector3 from, Vector3 to)
 			rotationAxis.y * invs,
 			rotationAxis.z * invs,
 			s * 0.5f };
+}
+
+bool Omega::Math::Intersect(const Ray& ray, const Plane& plane, float& distance)
+{
+	const float orgDotN = Dot(ray.origin, plane.n);
+	const float dirDotN = Dot(ray.direction, plane.n);
+
+	// Check if ray is parallel to the plane
+	if (Abs(dirDotN) < 0.0001f)
+	{
+		if (Abs(orgDotN - plane.d) < 0.0001f)
+		{
+			distance = 0.0f;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	// Compute distance
+	distance = (plane.d - orgDotN) / dirDotN;
+	return true;
+
+}
+
+bool Omega::Math::IsContained(const Vector3& point, const AABB& aabb)
+{
+	auto min = aabb.Min();
+	auto max = aabb.Max();
+	if ((point.x < min.x) || (point.x > max.x) ||
+		(point.y < min.y) || (point.y > max.y) ||
+		(point.z < min.z) || (point.y > max.z))
+	{
+		return false;
+	}
+	return true;
+}
+
+bool Omega::Math::IsContained(const Vector3& point, const OBB& obb)
+{
+	// Compute the world-to-local matrices
+	Math::Matrix4 matTrans = Math::Matrix4::Translation(obb.center);
+	Math::Matrix4 matRot = Math::Matrix4::RotationQuaternion(obb.rot);
+	Math::Matrix4 matScale = Math::Matrix4::Scaling(obb.extend);
+	Math::Matrix4 toWorld = matScale * matRot * matTrans;
+	Math::Matrix4 toLocal = Inverse(toWorld);
+
+	// Transform the point into the OBB's local space
+	Vector3 localPoint = TransformCoord(point, toLocal);
+	
+	// Test against local AABB
+	return IsContained(localPoint, AABB{ Vector3::Zero, Vector3::One });
+}
+
+bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal)
+{
+	// Compute the local-to-world/world-to-local matrices
+	Matrix4 matTrans = Matrix4::Translation(obb.center);
+	Matrix4 matRot = Matrix4::RotationQuaternion(obb.rot);
+	Matrix4 matWorld = matRot * matTrans;
+	Matrix4 matWorldInv = Inverse(matWorld);
+
+	// Transform the ray into the OBB's local space
+	Vector3 org = TransformCoord(ray.origin, matWorldInv);
+	Vector3 dir = TransformNormal(ray.direction, matWorldInv);
+	Ray localRay{ org, dir };
+
+	Plane planes[] =
+	{
+		{ {  0.0f,  0.0f, -1.0f }, obb.extend.z },
+		{ {  0.0f,  0.0f,  1.0f }, obb.extend.z },
+		{ {  0.0f, -1.0f,  0.0f }, obb.extend.y },
+		{ {  0.0f,  1.0f,  0.0f }, obb.extend.y },
+		{ { -1.0f,  0.0f,  0.0f }, obb.extend.x },
+		{ {  1.0f,  0.0f,  0.0f }, obb.extend.x }
+	};
+
+	uint32_t numIntersections = 0;
+	for (uint32_t i = 0; i < 6; ++i)
+	{
+		const float d = Dot(org, planes[i].n);
+		if (d > planes[i].d)
+		{
+			float distance = 0.0f;
+			if (Intersect(localRay, planes[i], distance) && distance >= 0.0f)
+			{
+				Vector3 pt = org + (dir * distance);
+				if (abs(pt.x) <= obb.extend.x + 0.01f &&
+					abs(pt.y) <= obb.extend.y + 0.01f &&
+					abs(pt.z) <= obb.extend.z + 0.01f)
+				{
+					point = pt;
+					normal = planes[i].n;
+					++numIntersections;
+				}
+			}
+		}
+	}
+
+	if (numIntersections == 0)
+	{
+		return false;
+	}
+
+	point = TransformCoord(point, matWorld);
+	normal = TransformNormal(normal, matWorld);
+	return true;
+
 }

@@ -14,6 +14,10 @@
 
 // Geometry
 #include "Plane.h"
+#include "Ray.h"
+#include "OBB.h"
+#include "AABB.h"
+#include "Sphere.h"
 
 namespace Omega::Math
 {
@@ -239,22 +243,22 @@ namespace Omega::Math
 		 the shorter path. Note that v1 and -v1 are equivalent when
 		 the negation is applied to all four components. Fix by
 		 reversing one quaternion.*/
-		if (angle < 0.0f)
-		{
-			to = -to;
-			angle = -angle;
-		}
-		else if (angle > 0.9995f)
-		{
-			return Normalize(Lerp(from, to, time));
-		}
+		//if (angle < 0.0f)
+		//{
+		//	to = -to;
+		//	angle = -angle;
+		//}
+		//else if (angle > 0.9995f)
+		//{
+		//	return Normalize(Lerp(from, to, time));
+		//}
 
-		// Since dot is in range [0, angleThreshold], acos is safe
-		const float theta = acosf(angle);        // theta_0 = angle between input vectors
-		const float inverseSinTheta = 1.0f / sinf(theta);
-		const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
-		const float inverseScale = sinf(theta * time) * inverseSinTheta;
-		return (from * scale) + (to * inverseScale);
+		//// Since dot is in range [0, angleThreshold], acos is safe
+		//const float theta = acosf(angle);        // theta_0 = angle between input vectors
+		//const float inverseSinTheta = 1.0f / sinf(theta);
+		//const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
+		//const float inverseScale = sinf(theta * time) * inverseSinTheta;
+		//return (from * scale) + (to * inverseScale);
 
 
 		//------------------------------------------
@@ -278,40 +282,46 @@ namespace Omega::Math
 		//------------------------------------------------------------------------------
 		// Peter X engine code
 		 //Find the dot product
-		//Quaternion q0 = from;
-		//Quaternion q1 = from;
-		//float t = time;
+		Quaternion q0 = from;
+		Quaternion q1 = to;
+		float t = time;
 
-		//float dot = (q0.x * q1.x) + (q0.y * q1.y) + (q0.z * q1.z) + (q0.w * q1.w);
+		float dot = (q0.x * q1.x) + (q0.y * q1.y) + (q0.z * q1.z) + (q0.w * q1.w);
 
-		//// Determine the direction of the rotation.
-		//if (dot < 0.0f)
-		//{
-		//	dot = -dot;
-		//	q1.x = -q1.x;
-		//	q1.y = -q1.y;
-		//	q1.z = -q1.z;
-		//	q1.w = -q1.w;
-		//}
-		//else if (dot > 0.999f)
-		//{
-		//	return Normalize(Lerp(q0, q1, t));
-		//}
+		// Determine the direction of the rotation.
+		if (dot < 0.0f)
+		{
+			dot = -dot;
+			q1.x = -q1.x;
+			q1.y = -q1.y;
+			q1.z = -q1.z;
+			q1.w = -q1.w;
+		}
+		else if (dot > 0.999f)
+		{
+			return Normalize(Lerp(q0, q1, t));
+		}
 
-		//float theta = acosf(dot);
-		//float sintheta = sinf(theta);
-		//float scale0 = sinf(theta * (1.0f - t)) / sintheta;
-		//float scale1 = sinf(theta * t) / sintheta;
+		float theta = acosf(dot);
+		float sintheta = sinf(theta);
+		float scale0 = sinf(theta * (1.0f - t)) / sintheta;
+		float scale1 = sinf(theta * t) / sintheta;
 
-		//// Perform the slerp
-		//return Quaternion
-		//(
-		//	(q0.x * scale0) + (q1.x * scale1),
-		//	(q0.y * scale0) + (q1.y * scale1),
-		//	(q0.z * scale0) + (q1.z * scale1),
-		//	(q0.w * scale0) + (q1.w * scale1)
-		//);
+		// Perform the slerp
+		return Quaternion
+		(
+			(q0.x * scale0) + (q1.x * scale1),
+			(q0.y * scale0) + (q1.y * scale1),
+			(q0.z * scale0) + (q1.z * scale1),
+			(q0.w * scale0) + (q1.w * scale1)
+		);
 	}
+
+	bool Intersect(const Ray& ray, const Plane& plane, float& distance);
+	bool IsContained(const Vector3& point, const AABB& aabb);
+	bool IsContained(const Vector3& point, const OBB& obb);
+	bool GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal);
+	
 
 #pragma endregion
 }

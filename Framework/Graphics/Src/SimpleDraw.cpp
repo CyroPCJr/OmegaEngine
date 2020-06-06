@@ -149,6 +149,48 @@ namespace
 			AddLine(position, position + forward, Colors::Blue);
 		}
 
+		void AddOBB(const Math::OBB& obb, const Color& color)
+		{
+			Math::Matrix4 matTrans = Math::Matrix4::Translation(obb.center);
+			Math::Matrix4 matRot = Math::Matrix4::RotationQuaternion(obb.rot);
+			Math::Matrix4 matScale = Math::Matrix4::Scaling(obb.extend);
+			Math::Matrix4 toWorld = matScale * matRot * matTrans;
+
+			Math::Vector3 points[] =
+			{
+				// Front quad
+				Math::Vector3(-1.0f, -1.0f, -1.0f),
+				Math::Vector3(-1.0f, +1.0f, -1.0f),
+				Math::Vector3(+1.0f, +1.0f, -1.0f),
+				Math::Vector3(+1.0f, -1.0f, -1.0f),
+				//Back quad
+				Math::Vector3(-1.0f, -1.0f, +1.0f),
+				Math::Vector3(-1.0f, +1.0f, +1.0f),
+				Math::Vector3(+1.0f, +1.0f, +1.0f),
+				Math::Vector3(+1.0f, -1.0f, +1.0f),
+			};
+
+			for (auto& p : points)
+			{
+				p = Math::TransformCoord(p, toWorld);
+			}
+
+			AddLine(points[0], points[1], color);
+			AddLine(points[1], points[2], color);
+			AddLine(points[2], points[3], color);
+			AddLine(points[3], points[0], color);
+
+			AddLine(points[0], points[4], color);
+			AddLine(points[1], points[5], color);
+			AddLine(points[2], points[6], color);
+			AddLine(points[3], points[7], color);
+
+			AddLine(points[4], points[5], color);
+			AddLine(points[5], points[6], color);
+			AddLine(points[6], points[7], color);
+			AddLine(points[7], points[4], color);
+		}
+
 		void Render(const Camera& camera)
 		{
 			auto matView = camera.GetViewMatrix();
@@ -243,16 +285,10 @@ void SimpleDraw::AddSphere(const Math::Vector3& position, float radius, int ring
 void SimpleDraw::AddGroundPlane(float size, const Color& color)
 {
 	const float halfSize = size * 0.5f;
-	for (float i = 0; i <= halfSize; i += 1.0f)
+	for (float i = -halfSize; i <= halfSize; i += 1.0f)
 	{
-		// center to rigth in x
 		sInstance->AddLine({ i, 0.0f, -halfSize }, { i, 0.0f, halfSize }, color);
-		// center to left in x
-		sInstance->AddLine({ -i, 0.0f,  halfSize }, { -i, 0.0f, -halfSize }, color);
-		// center to down  in z
 		sInstance->AddLine({ halfSize, 0.0f,  -i }, { -halfSize, 0.0f, -i }, color);
-		// center to top  in z
-		sInstance->AddLine({ -halfSize, 0.0f,  i }, { halfSize, 0.0f, i }, color);
 	}
 }
 
@@ -271,6 +307,11 @@ void SimpleDraw::AddBone(const Math::Vector3& position, const Math::Matrix4& tra
 void SimpleDraw::AddTransform(const Math::Matrix4& transform)
 {
 	sInstance->AddTransform(transform);
+}
+
+void SimpleDraw::AddOBB(const Math::OBB& obb, const Color& color)
+{
+	sInstance->AddOBB(obb, color);
 }
 
 void SimpleDraw::Render(const Camera& camera)
