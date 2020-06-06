@@ -39,9 +39,9 @@ namespace Omega::Math
 	}
 
 	template<class T>
-	constexpr T Lerp(T a, T b, float t)
+	constexpr T Lerp(const T& a, const T& b, float t)
 	{
-		return a + (b - a) * t;
+		return a + ((b - a) * t);
 	}
 
 	constexpr float Abs(float value)
@@ -216,13 +216,13 @@ namespace Omega::Math
 	}
 
 	//Linear Interpolations
-	constexpr Quaternion Lerp(const Quaternion& from, const Quaternion& to, float time)
+	constexpr Quaternion Lerp(Quaternion& from, Quaternion& to, float time)
 	{
 		return (from * (1.0f - time) + (to * time));
 	}
 
 	//Spherical Linear Interpolations
-	inline Quaternion Slerp(const Quaternion& from, const Quaternion& to, float time)
+	inline Quaternion Slerp(Quaternion& from, Quaternion& to, float time)
 	{
 		/*
 		Reference:
@@ -232,22 +232,21 @@ namespace Omega::Math
 		// Normalize to avoid undefined behavior.
 		/*from = Normalize(from);
 		to = Normalize(to);*/
-		Quaternion quaternionAux = to;
 		// Compute the cosine of the angle between the two vectors.
-		float angle = Dot(from, quaternionAux);
+		float angle = Dot(from, to);
 
-		// If the dot product is negative, slerp won't take
-		// the shorter path. Note that v1 and -v1 are equivalent when
-		// the negation is applied to all four components. Fix by 
-		// reversing one quaternion.
+		/* If the dot product is negative, slerp won't take
+		 the shorter path. Note that v1 and -v1 are equivalent when
+		 the negation is applied to all four components. Fix by
+		 reversing one quaternion.*/
 		if (angle < 0.0f)
 		{
-			quaternionAux = -quaternionAux;
+			to = -to;
 			angle = -angle;
 		}
 		else if (angle > 0.9995f)
 		{
-			return Normalize(Lerp(from, quaternionAux, time));
+			return Normalize(Lerp(from, to, time));
 		}
 
 		// Since dot is in range [0, angleThreshold], acos is safe
@@ -255,7 +254,63 @@ namespace Omega::Math
 		const float inverseSinTheta = 1.0f / sinf(theta);
 		const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
 		const float inverseScale = sinf(theta * time) * inverseSinTheta;
-		return (from * scale) + (quaternionAux * inverseScale);
+		return (from * scale) + (to * inverseScale);
+
+
+		//------------------------------------------
+		// Other code
+		//const float DOT_THRESHOLD = 0.9995f;
+		//if (angle > DOT_THRESHOLD) {
+		//	// If the inputs are too close for comfort, linearly interpolate
+		//	// and normalize the result.
+		//	return Normalize(Lerp(from, to, time));
+		//}
+
+		//angle = Clamp<float>(angle, -1, 1);           // Robustness: Stay within domain of acos()
+		//float theta_0 = acosf(angle);  // theta_0 = angle between input vectors
+		//float theta = theta_0 * time;    // theta = angle between v0 and result 
+
+		//Quaternion v2 = Normalize(to - from * angle);
+
+		//return from * cosf(theta) + v2 * sinf(theta);
+
+
+		//------------------------------------------------------------------------------
+		// Peter X engine code
+		 //Find the dot product
+		//Quaternion q0 = from;
+		//Quaternion q1 = from;
+		//float t = time;
+
+		//float dot = (q0.x * q1.x) + (q0.y * q1.y) + (q0.z * q1.z) + (q0.w * q1.w);
+
+		//// Determine the direction of the rotation.
+		//if (dot < 0.0f)
+		//{
+		//	dot = -dot;
+		//	q1.x = -q1.x;
+		//	q1.y = -q1.y;
+		//	q1.z = -q1.z;
+		//	q1.w = -q1.w;
+		//}
+		//else if (dot > 0.999f)
+		//{
+		//	return Normalize(Lerp(q0, q1, t));
+		//}
+
+		//float theta = acosf(dot);
+		//float sintheta = sinf(theta);
+		//float scale0 = sinf(theta * (1.0f - t)) / sintheta;
+		//float scale1 = sinf(theta * t) / sintheta;
+
+		//// Perform the slerp
+		//return Quaternion
+		//(
+		//	(q0.x * scale0) + (q1.x * scale1),
+		//	(q0.y * scale0) + (q1.y * scale1),
+		//	(q0.z * scale0) + (q1.z * scale1),
+		//	(q0.w * scale0) + (q1.w * scale1)
+		//);
 	}
 
 #pragma endregion

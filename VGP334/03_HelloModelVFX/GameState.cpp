@@ -103,7 +103,6 @@ void GameState::Initialize()
 	mTerrain.Initialize(1200, 1200, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
 	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
-
 }
 
 void GameState::Terminate()
@@ -280,6 +279,9 @@ void GameState::DebugUI()
 			{ 1.0f, 1.0f, 1.0f, 1.0f }
 		);
 	}
+	ImGui::DragFloat("Set time", &mSetTime, 1.0f, 0.0f, 144.0f);
+
+	mAnimator.SetTime(mSetTime);
 
 	ImGui::Checkbox("Show Skeleton", &mIsSkeleton);
 	ImGui::End();

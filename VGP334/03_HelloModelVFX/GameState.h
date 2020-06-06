@@ -115,4 +115,5 @@ private:
 
 	// Terrain
 	Omega::Terrain mTerrain;
+	float mSetTime = 0.0f;
 };

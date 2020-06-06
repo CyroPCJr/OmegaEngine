@@ -12,7 +12,6 @@ void Terrain::Initialize(uint32_t numRows, uint32_t numCols, float cellSize)
 	mNumCell = mNumCellsInCol * mNumCellsInRow;
 	mCellSize = cellSize;
 
-
 	mConstantBuffer.Initialize();
 	mTerrainVertexShader.Initialize(L"../../Assets/Shaders/Terrain.fx", Graphics::Vertex::Format);
 	mTerrainPixelShader.Initialize(L"../../Assets/Shaders/Terrain.fx");
