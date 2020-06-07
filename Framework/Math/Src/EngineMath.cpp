@@ -177,6 +177,36 @@ Quaternion Quaternion::RotationFromTo(Vector3 from, Vector3 to)
 			s * 0.5f };
 }
 
+Quaternion Omega::Math::Slerp(Quaternion& from, Quaternion& to, float time)
+{
+	/*
+	//	Reference:
+	//	https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
+	//	*/
+	float angle = Dot(from, to);
+
+	/* If the dot product is negative, slerp won't take
+	 the shorter path. Note that v1 and -v1 are equivalent when
+	 the negation is applied to all four components. Fix by
+	 reversing one quaternion.*/
+	if (angle < 0.0f)
+	{
+		to = -to;
+		angle = -angle;
+	}
+	else if (angle > 0.9995f)
+	{
+		return Normalize(Lerp(from, to, time));
+	}
+
+	// Since dot is in range [0, angleThreshold], acos is safe
+	const float theta = acosf(angle);        // theta_0 = angle between input vectors
+	const float inverseSinTheta = 1.0f / sinf(theta);
+	const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
+	const float inverseScale = sinf(theta * time) * inverseSinTheta;
+	return (from * scale) + (to * inverseScale);
+}
+
 bool Omega::Math::Intersect(const Ray& ray, const Plane& plane, float& distance)
 {
 	const float orgDotN = Dot(ray.origin, plane.n);

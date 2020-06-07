@@ -91,9 +91,9 @@ void GameState::Initialize()
 
 	mModelStartPosition = { 600.0f, 6.0f, 600.0f };
 	// Initialize and load model from assimp
-	//mModel.Initialize("../../Assets/Models/Arissa.model");
-	mModel.Initialize("../../Assets/Models/MeiaLuaFrente/MeiaLuaFrente.model");
-	//mModel.Initialize("../../Assets/Models/mutant.model");
+	mModel.Initialize("../../Assets/Models/JumpAttack.model");
+	// Capoeira is OK
+	//mModel.Initialize("../../Assets/Models/Capoeira/Capoeira.model");
 	mAnimator.Initialize(mModel);
 	mAnimator.ComputeBindPose();
 	mAnimator.PlayAnimation(0);
@@ -163,8 +163,7 @@ void GameState::Update(float deltaTime)
 		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 
-	//TODO: Testing
-	//mAnimator.Update(deltaTime);
+	mAnimator.Update(deltaTime);
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
@@ -281,9 +280,9 @@ void GameState::DebugUI()
 			{ 1.0f, 1.0f, 1.0f, 1.0f }
 		);
 	}
-	/*ImGui::DragFloat("Set time", &mSetTime, 1.0f, 0.0f, 144.0f);
+	ImGui::DragFloat("Set time", &mSetTime, 1.0f, 0.0f, 144.0f);
 
-	mAnimator.SetTime(mSetTime);*/
+	mAnimator.SetTime(mSetTime);
 
 	ImGui::Checkbox("Show Skeleton", &mIsSkeleton);
 	ImGui::End();

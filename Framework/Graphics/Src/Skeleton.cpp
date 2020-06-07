@@ -54,13 +54,14 @@ void Omega::Graphics::UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& bon
 }
 
 void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices,
-	float time, Math::Matrix4& transform, const AnimationClip& anim)
+	float time, const AnimationClip& anim)
 {
 	if (bone->parent)
 	{
-		if (anim.GetTransform(time, bone->index, transform))
+		Math::Matrix4 matTransform{};
+		if (anim.GetTransform(time, bone->index, matTransform))
 		{
-			boneMatrices[bone->index] = transform * boneMatrices[bone->parent->index];
+			boneMatrices[bone->index] = matTransform * boneMatrices[bone->parent->index];
 		}
 	}
 	else
@@ -70,6 +71,6 @@ void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>
 
 	for (auto& child : bone->children)
 	{
-		UpdateAnimationPose(child, boneMatrices, time, transform, anim);
+		UpdateAnimationPose(child, boneMatrices, time, anim);
 	}
 }

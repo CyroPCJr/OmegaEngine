@@ -43,14 +43,12 @@ void Animator::SetTime(float time)
 
 void Animator::Update(float deltaTime)
 {
-	//TODO: continuar daqui --- Animation Clip
 	auto& animationClip = mModel->animationSet.clips[mClipIndex];
 	mTimer += deltaTime * animationClip->tickPerSecond;
 	if (mTimer > animationClip->duration)
 	{
 		mTimer -= animationClip->duration;
 	}
-	
-	Math::Matrix4 matTransform{};
-	UpdateAnimationPose(mModel->skeleton.root, mBoneMatrices, mTimer, matTransform, *animationClip);
+
+	UpdateAnimationPose(mModel->skeleton.root, mBoneMatrices, mTimer, *animationClip);
 }

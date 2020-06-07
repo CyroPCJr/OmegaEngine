@@ -41,8 +41,7 @@ cbuffer ShadowBuffer : register(b4)
 
 cbuffer BoneTransformBuffer : register(b5)
 {
-    //matrix boneTransforms[128];
-    matrix boneTransforms[211];
+    matrix boneTransforms[128];
 }
 
 Texture2D diffuseMap : register(t0);

@@ -18,7 +18,7 @@ Vector3 Animation::GetPosition(float time) const
 				break;
 			}
 		}
-		const int currentKey = std::max(0, nextKey - 1);
+		const int currentKey = Max(0, nextKey - 1);
 		const float total_t = (mPositionKeys[nextKey].time - mPositionKeys[currentKey].time);
 		const float t = (total_t != 0.0f) ?
 			(time - mPositionKeys[currentKey].time) / total_t :
@@ -45,7 +45,7 @@ Quaternion Animation::GetRotation(float time) const
 				break;
 			}
 		}
-		const int currentKey = std::max(0, nextKey - 1);
+		const int currentKey = Max(0, nextKey - 1);
 		const float total_t = mRotationKeys[nextKey].time - mRotationKeys[currentKey].time;
 		const float t = (total_t != 0.0f) ?
 			(time - mRotationKeys[currentKey].time) / total_t :
@@ -72,7 +72,7 @@ Vector3 Animation::GetScale(float time) const
 				break;
 			}
 		}
-		const int currentKey = std::max(0, nextKey - 1);
+		const int currentKey = Max(0, nextKey - 1);
 		const float total_t = mScaleKeys[nextKey].time - mScaleKeys[currentKey].time;
 		const float t = (total_t != 0.0f) ?
 			(time - mScaleKeys[currentKey].time) / total_t :
