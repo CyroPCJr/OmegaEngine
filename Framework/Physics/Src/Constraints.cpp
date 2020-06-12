@@ -4,6 +4,8 @@
 using namespace Omega;
 using namespace Omega::Physics;
 
+#pragma region Fixed Constraint
+
 Fixed::Fixed(Particle* p)
 	: Fixed(p, p->position)
 {}
@@ -20,14 +22,17 @@ void Fixed::Apply() const
 
 void Fixed::DebugDraw() const
 {
-	//TODO: Implementar AABB
-	//Graphics::SimpleDraw::AddAABB(mPosition, mParticle->radius, Graphics::Colors::Cyan);
+	Graphics::SimpleDraw::AddAABB({ mPosition, mParticle->radius }, Graphics::Colors::Cyan);
 }
 
 void Fixed::SetPosition(const Math::Vector3& position)
 {
 	mPosition = position;
 }
+
+#pragma endregion
+
+#pragma region Spring Contraint
 
 Spring::Spring(Particle* a, Particle* b, float restLength)
 	:mParticleA(a)
@@ -53,6 +58,8 @@ void Spring::DebugDraw() const
 {
 	Graphics::SimpleDraw::AddLine(mParticleA->position, mParticleB->position, Graphics::Colors::Green);
 }
+
+#pragma endregion
 
 // For Homework:
 // Add the following:

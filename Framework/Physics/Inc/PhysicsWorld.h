@@ -31,6 +31,8 @@ namespace Omega::Physics
 		void AddStaticOBB(const Math::OBB& obb);
 
 		void Clear(bool onlyDynamic = false);
+
+		inline auto& GetParticles() const { return mParticles; }
 	private:
 
 		void AccumulatedForces();

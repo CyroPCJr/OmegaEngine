@@ -12,6 +12,8 @@ public:
 	void Render() override;
 	void DebugUI() override;
 private:
+	
 	Omega::Graphics::Camera mCamera;
 	Omega::Physics::PhysicsWorld mPhysicsWorld;
+	float mClothSize = 0.0f;
 };

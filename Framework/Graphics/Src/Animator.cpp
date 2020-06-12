@@ -20,6 +20,11 @@ void Animator::Terminate()
 void Animator::ComputeBindPose()
 {
 	UpdateBindPose(mModel->skeleton.root, mBoneMatrices);
+	const size_t size = mBoneMatrices.size();
+	for (size_t i = 0; i < size; ++i)
+	{
+		mBoneMatricesFinal[i] = Transpose(mModel->skeleton.bones[i]->offsetTransform * mBoneMatrices[i]);
+	}
 }
 
 void Animator::PlayAnimation(int index)
@@ -44,10 +49,12 @@ void Animator::SetTime(float time)
 void Animator::Update(float deltaTime)
 {
 	auto& animationClip = mModel->animationSet.clips[mClipIndex];
+	mMaxDuration = animationClip->duration;
+
 	mTimer += deltaTime * animationClip->tickPerSecond;
-	if (mTimer > animationClip->duration)
+	if (mTimer > mMaxDuration)
 	{
-		mTimer -= animationClip->duration;
+		mTimer -= mMaxDuration;
 	}
 
 	UpdateAnimationPose(mModel->skeleton.root, mBoneMatrices, mTimer, *animationClip);

@@ -18,14 +18,12 @@ namespace Omega::Graphics::SimpleDraw
 	void AddBone(const Math::Vector3& position, const Math::Matrix4& transform);
 	void AddTransform(const Math::Matrix4& transform);
 	void AddOBB(const Math::OBB& obb, const Color& color);
-
+	//TODO: adicionar amanha
+	void AddAABB(const Math::AABB& aabb, const Color& color);
 
 	// TODO: need to be implemented
-	void AddAABB(const Math::Vector3& center, const Math::Vector3& extend, const Color& color);
 	void AddCone(const Math::Vector3& base, const Math::Vector3& direction, float radius, const Color& color);
 	void AddCylinder(const Math::Vector3& base, const Math::Vector3& direction, float radius, const Color& color);
-
-
 
 	void Render(const Camera& camera);
 }

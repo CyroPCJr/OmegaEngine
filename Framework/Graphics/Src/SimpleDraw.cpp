@@ -191,6 +191,37 @@ namespace
 			AddLine(points[7], points[4], color);
 		}
 
+		void AddAABB(const Math::AABB& aabb, const Color& color)
+		{
+			// Check if we have enough space
+			
+			if (mVertexCount + 24 <= mMaxVertexCount)
+			{
+				float minX = aabb.center.x - aabb.extend.x;
+				float minY = aabb.center.y - aabb.extend.y;
+				float minZ = aabb.center.z - aabb.extend.z;
+				float maxX = aabb.center.x + aabb.extend.x;
+				float maxY = aabb.center.y + aabb.extend.y;
+				float maxZ = aabb.center.z + aabb.extend.z;
+
+
+				AddLine(Math::Vector3(minX, minY, minZ), Math::Vector3(minX, minY, maxZ), color);
+				AddLine(Math::Vector3(minX, minY, maxZ), Math::Vector3(maxX, minY, maxZ), color);
+				AddLine(Math::Vector3(maxX, minY, maxZ), Math::Vector3(maxX, minY, minZ), color);
+				AddLine(Math::Vector3(maxX, minY, minZ), Math::Vector3(minX, minY, minZ), color);
+				AddLine(Math::Vector3(minX, minY, minZ), Math::Vector3(minX, maxY, minZ), color);
+				AddLine(Math::Vector3(minX, minY, maxZ), Math::Vector3(minX, maxY, maxZ), color);
+				AddLine(Math::Vector3(maxX, minY, maxZ), Math::Vector3(maxX, maxY, maxZ), color);
+				AddLine(Math::Vector3(maxX, minY, minZ), Math::Vector3(maxX, maxY, minZ), color);
+				AddLine(Math::Vector3(minX, maxY, minZ), Math::Vector3(minX, maxY, maxZ), color);
+				AddLine(Math::Vector3(minX, maxY, maxZ), Math::Vector3(maxX, maxY, maxZ), color);
+				AddLine(Math::Vector3(maxX, maxY, maxZ), Math::Vector3(maxX, maxY, minZ), color);
+				AddLine(Math::Vector3(maxX, maxY, minZ), Math::Vector3(minX, maxY, minZ), color);
+			}
+
+			OMEGAASSERT(mVertexCount < mMaxVertexCount, "[SimpleDraw] Too many vertices!");
+		}
+
 		void Render(const Camera& camera)
 		{
 			auto matView = camera.GetViewMatrix();
@@ -307,6 +338,11 @@ void SimpleDraw::AddBone(const Math::Vector3& position, const Math::Matrix4& tra
 void SimpleDraw::AddTransform(const Math::Matrix4& transform)
 {
 	sInstance->AddTransform(transform);
+}
+
+void SimpleDraw::AddAABB(const Math::AABB& aabb, const Color& color)
+{
+	sInstance->AddAABB(aabb, color);
 }
 
 void SimpleDraw::AddOBB(const Math::OBB& obb, const Color& color)

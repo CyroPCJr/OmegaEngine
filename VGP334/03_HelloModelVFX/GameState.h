@@ -105,7 +105,7 @@ private:
 	// Skeleton Buffer
 	struct BoneTransformData
 	{
-		Omega::Math::Matrix4 boneTransforms[211];
+		Omega::Math::Matrix4 boneTransforms[128];
 	};
 
 	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransformData>;
@@ -116,4 +116,5 @@ private:
 	// Terrain
 	Omega::Terrain mTerrain;
 	float mSetTime = 0.0f;
+	bool mSetTimeCheck = false;
 };

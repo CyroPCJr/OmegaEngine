@@ -48,6 +48,12 @@ namespace Omega::Math
 		return a + ((b - a) * t);
 	}
 
+	template<class T>
+	constexpr T Saturate(const T& val, const T& min, const T& max)
+	{
+		return Min(Max(val, min), max);
+	}
+
 	constexpr float Abs(float value)
 	{
 		return value >= 0.0f ? value : -value;
@@ -219,20 +225,48 @@ namespace Omega::Math
 		return { q * invNorm };
 	}
 
-	//Linear Interpolations
-	constexpr Quaternion Lerp(Quaternion& from, Quaternion& to, float time)
+	inline Quaternion LerpUnclamped(const Quaternion& from, const Quaternion& to, float time)
 	{
-		return (from * (1.0f - time) + (to * time));
+		Quaternion quaternion;
+		if (Dot(from, to) >= 0.0f)
+		{
+			quaternion = from * (1.0f - time) + to * time;
+		}
+		else
+		{
+			quaternion = from * (1.0f - time) - to * time;
+		}
+		return Normalize(quaternion);
 	}
 
+	//Linear Interpolations
+	inline Quaternion Lerp(const Quaternion& from, const Quaternion& to, float time)
+	{
+		// bck
+		// return (from * (1.0f - time) + (to * time));
+		if (time < 0.f) return Normalize(from);
+		else if (time > 1.f) return Normalize(to);
+		return LerpUnclamped(from, to, time);
+	}
+
+	/// <summary>
+	/// Spherical Linear Interpolation 
+	/// </summary>
+	/// <param name="from"></param>
+	/// <param name="to"></param>
+	/// <param name="time"></param>
+	/// <returns></returns>
+	Quaternion SlerpUnclamped(const Quaternion& from, const Quaternion& to, float time);
+
 	//Spherical Linear Interpolations
-	Quaternion Slerp(Quaternion& from, Quaternion& to, float time);
+	Quaternion Slerp(const Quaternion& from, const Quaternion& to, float time);
+
 
 	bool Intersect(const Ray& ray, const Plane& plane, float& distance);
 	bool IsContained(const Vector3& point, const AABB& aabb);
 	bool IsContained(const Vector3& point, const OBB& obb);
 	bool GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal);
-	
+
 
 #pragma endregion
 }

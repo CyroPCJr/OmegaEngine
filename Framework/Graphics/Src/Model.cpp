@@ -122,7 +122,6 @@ void Model::Initialize(const std::filesystem::path& fileName)
 {
 	ModelLoader::LoadModel(fileName, *this);
 	ModelLoader::LoadSkeleton(fileName, skeleton);
-	//TODO:: comecar daqui a debugar. ver o pq animationSet esta zuada
 	ModelLoader::LoadAnimationSet(fileName, animationSet);
 }
 

@@ -177,34 +177,70 @@ Quaternion Quaternion::RotationFromTo(Vector3 from, Vector3 to)
 			s * 0.5f };
 }
 
-Quaternion Omega::Math::Slerp(Quaternion& from, Quaternion& to, float time)
+Quaternion Omega::Math::SlerpUnclamped(const Quaternion& from, const Quaternion& to, float time)
 {
-	/*
-	//	Reference:
-	//	https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
-	//	*/
-	float angle = Dot(from, to);
+	float n1;
+	float n2;
+	float n3 = Dot(from, to);
+	bool flag = false;
 
-	/* If the dot product is negative, slerp won't take
-	 the shorter path. Note that v1 and -v1 are equivalent when
-	 the negation is applied to all four components. Fix by
-	 reversing one quaternion.*/
-	if (angle < 0.0f)
+	if (n3 < 0.f)
 	{
-		to = -to;
-		angle = -angle;
-	}
-	else if (angle > 0.9995f)
-	{
-		return Normalize(Lerp(from, to, time));
+		flag = true;
+		n3 = -n3;
 	}
 
-	// Since dot is in range [0, angleThreshold], acos is safe
-	const float theta = acosf(angle);        // theta_0 = angle between input vectors
-	const float inverseSinTheta = 1.0f / sinf(theta);
-	const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
-	const float inverseScale = sinf(theta * time) * inverseSinTheta;
-	return (from * scale) + (to * inverseScale);
+	if (n3 > 0.999999f)
+	{
+		n2 = 1.f - time;
+		n1 = flag ? -time : time;
+	}
+	else
+	{
+		float n4 = acosf(n3);
+		float n5 = 1.f / sinf(n4);
+		n2 = sinf((1.f - time) * n4) * n5;
+		n1 = flag ? -sinf(time * n4) * n5 : sinf(time * n4) * n5;
+	}
+	Quaternion q = (from * n2) + (to * n1);
+	return Normalize(q);
+}
+
+
+Quaternion Omega::Math::Slerp(const Quaternion& from, const Quaternion& to, float time)
+{
+	///*
+	////	Reference:
+	////	https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
+	////	*/
+	//float angle = Dot(from, to);
+
+	///* If the dot product is negative, slerp won't take
+	// the shorter path. Note that v1 and -v1 are equivalent when
+	// the negation is applied to all four components. Fix by
+	// reversing one quaternion.*/
+	//if (angle < 0.0f)
+	//{
+	//	to = -to;
+	//	angle = -angle;
+	//}
+	//else if (angle > 0.9995f)
+	//{
+	//	// bck
+	//	//return Normalize(Lerp(from, to, time));
+	//	return Lerp(from, to, time);
+	//}
+
+	//// Since dot is in range [0, angleThreshold], acos is safe
+	//const float theta = acosf(angle);        // theta_0 = angle between input vectors
+	//const float inverseSinTheta = 1.0f / sinf(theta);
+	//const float scale = sinf(theta * (1.0f - time)) * inverseSinTheta;
+	//const float inverseScale = sinf(theta * time) * inverseSinTheta;
+	//return (from * scale) + (to * inverseScale);
+
+	if (time < 0.f) return Normalize(from);
+	else if (time > 1.f) return Normalize(to);
+	return SlerpUnclamped(from, to, time);
 }
 
 bool Omega::Math::Intersect(const Ray& ray, const Plane& plane, float& distance)
@@ -256,7 +292,7 @@ bool Omega::Math::IsContained(const Vector3& point, const OBB& obb)
 
 	// Transform the point into the OBB's local space
 	Vector3 localPoint = TransformCoord(point, toLocal);
-	
+
 	// Test against local AABB
 	return IsContained(localPoint, AABB{ Vector3::Zero, Vector3::One });
 }
