@@ -58,7 +58,7 @@ void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>
 {
 	if (bone->parent)
 	{
-		Math::Matrix4 matTransform{};// = Math::Matrix4::Identity;
+		Math::Matrix4 matTransform = Math::Matrix4::Identity;
 		if (anim.GetTransform(time, bone->index, matTransform))
 		{
 			boneMatrices[bone->index] = matTransform * boneMatrices[bone->parent->index];

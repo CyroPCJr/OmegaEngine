@@ -323,13 +323,13 @@ void SimpleDraw::AddGroundPlane(float size, const Color& color)
 	}
 }
 
-void SimpleDraw::AddBone(const Math::Vector3& position, const Math::Matrix4& transform)
+void SimpleDraw::AddBone(const Math::Matrix4& transform)
 {
 	auto r = Math::GetRight(transform);
 	auto u = Math::GetUp(transform);
 	auto l = Math::GetLook(transform);
 	auto p = Math::GetTranslation(transform);
-	AddSphere(position, 0.5, 5, 6, Colors::BlueViolet);
+	AddSphere(p, 0.5f, 5, 6, Colors::BlueViolet);
 	sInstance->AddLine(p, p + r * 0.1f, Colors::Red);
 	sInstance->AddLine(p, p + u * 0.1f, Colors::Green);
 	sInstance->AddLine(p, p + l * 0.1f, Colors::Blue);

@@ -138,6 +138,9 @@
     <ClInclude Include="Inc\Animator.h">
       <Filter>Inc\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\AnimationUtil.h">
+      <Filter>Inc\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -213,6 +216,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\Animator.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AnimationUtil.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

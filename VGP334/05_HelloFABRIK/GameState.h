@@ -14,5 +14,7 @@ public:
 private:
 	
 	Omega::Graphics::Camera mCamera;
-	Omega::Physics::PhysicsWorld mPhysicsWorld;
+	Omega::Math::Vector3 mTarget;
+	std::vector<Omega::Math::Vector3> mPoints;
+	std::vector<float> mLengths;
 };

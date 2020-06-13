@@ -45,6 +45,7 @@
 #include "Skeleton.h"
 #include "SkeletonIO.h"
 #include "Animator.h"
+#include "AnimationUtil.h"
 
 // Model
 #include "MeshIO.h"

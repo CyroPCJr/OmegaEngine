@@ -15,10 +15,9 @@ namespace Omega::Graphics::SimpleDraw
 	void AddBox(float length, const Color& color);
 	void AddSphere(const Math::Vector3& position, float radius, int rings, int slices, const Color& color);
 	void AddGroundPlane(float size, const Color& color = Colors::DarkGray);
-	void AddBone(const Math::Vector3& position, const Math::Matrix4& transform);
+	void AddBone(const Math::Matrix4& transform);
 	void AddTransform(const Math::Matrix4& transform);
 	void AddOBB(const Math::OBB& obb, const Color& color);
-	//TODO: adicionar amanha
 	void AddAABB(const Math::AABB& aabb, const Color& color);
 
 	// TODO: need to be implemented
