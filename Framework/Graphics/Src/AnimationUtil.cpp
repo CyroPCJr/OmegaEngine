@@ -4,7 +4,7 @@
 using namespace Omega::Math;
 using namespace Omega::Graphics;
 
-void AnimationUtil::RunFABRIK(std::vector<Vector3>& points, const Vector3& target, std::vector<float> lengths, int maxIteration, float errorThreshold)
+void AnimationUtil::RunFABRIK(std::vector<Vector3>& points, const Vector3& target, std::vector<float>& lengths, int maxIteration, float errorThreshold)
 {
 	OMEGAASSERT(points.size() >= 2, "Not enought points to run FABRIK!");
 	const int pointSize = static_cast<int>(points.size());

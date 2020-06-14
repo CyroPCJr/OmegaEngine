@@ -24,7 +24,7 @@ void GameState::Initialize()
 	mPhysicsWorld.Initilize(settings);
 	mPhysicsWorld.AddStaticPlane({ Vector3::YAxis, 0.0f });
 	mPhysicsWorld.AddStaticOBB({ {0.0f, 2.0f, 0.0f}, { 4.0f, 0.5f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, 10.0f * Constants::DegToRad) });
-	mPhysicsWorld.AddStaticOBB({ { -3.0f, 4.5f, 0.0f}, { 4.0f, 0.2f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, -10.0f * Constants::DegToRad) });
+	mPhysicsWorld.AddStaticOBB({ { -5.0f, 7.f, 0.0f}, { 4.0f, 0.2f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, -10.0f * Constants::DegToRad) });
 }
 
 void GameState::Terminate()
@@ -169,7 +169,8 @@ void GameState::DebugUI()
 	if (ImGui::Button("Cube!"))
 	{
 		mPhysicsWorld.Clear(true);
-		for (int i = 0; i < 1; ++i)
+		const float pos = 0.5f;
+		for (int i = 0; i < 20; ++i)
 		{
 			auto p1 = new Particle();
 			auto p2 = new Particle();
@@ -180,45 +181,45 @@ void GameState::DebugUI()
 			auto p7 = new Particle();
 			auto p8 = new Particle();
 
-			p1->SetPosition({ -0.5f, -0.5f, 0.0f });
+			p1->SetPosition({ -pos + i, pos + 10.0f, pos + i });
 			p1->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
 			p1->radius = 0.1f;
 			p1->bounce = 0.3f;
 
-			p2->SetPosition({ -0.5f, 0.5f, 0.0f });
+			p2->SetPosition({ pos + i, pos + 10.0f, pos + i });
 			p2->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
 			p2->radius = 0.1f;
 			p2->bounce = 0.3f;
 
-			p3->SetPosition({ 0.5f, 0.0f, -0.5f });
+			p3->SetPosition({ -pos + i,pos + 10.0f , -pos + i });
 			p3->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
 			p3->radius = 0.1f;
 			p3->bounce = 0.3f;
 
-			p4->SetPosition({ -0.5f, 0.5f, 0.0f });
+			p4->SetPosition({ pos + i, pos + 10.0f, -pos + i });
 			p4->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
 			p4->radius = 0.1f;
 			p4->bounce = 0.3f;
 
-			/*	p5->SetPosition({ -0.5f, 5.0f, 0.5f });
-				p5->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
-				p5->radius = 0.1f;
-				p5->bounce = 0.3f;
+			p5->SetPosition({ pos + i, -pos + 10.0f,-pos + i });
+			p5->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p5->radius = 0.1f;
+			p5->bounce = 0.3f;
 
-				p6->SetPosition({ 0.5f, 5.0f, -0.5f });
-				p6->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
-				p6->radius = 0.1f;
-				p6->bounce = 0.3f;
+			p6->SetPosition({ -pos + i, -pos + 10.0f, -pos + i });
+			p6->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p6->radius = 0.1f;
+			p6->bounce = 0.3f;
 
-				p7->SetPosition({ 0.5f, 6.0f, 0.5f });
-				p7->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
-				p7->radius = 0.1f;
-				p7->bounce = 0.3f;
+			p7->SetPosition({ pos + i, -pos + 10.0f, pos + i });
+			p7->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p7->radius = 0.1f;
+			p7->bounce = 0.3f;
 
-				p8->SetPosition({ 0.5f, 5.0f, 1.0f });
-				p8->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
-				p8->radius = 0.1f;
-				p8->bounce = 0.3f;*/
+			p8->SetPosition({ -pos + i,-pos + 10.0f, pos + i });
+			p8->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p8->radius = 0.1f;
+			p8->bounce = 0.3f;
 
 			mPhysicsWorld.AddParticle(p1);
 			mPhysicsWorld.AddParticle(p2);
@@ -230,26 +231,25 @@ void GameState::DebugUI()
 			mPhysicsWorld.AddParticle(p7);
 			mPhysicsWorld.AddParticle(p8);
 
-			//TODO: continuar a debugando essa joca aqui
 			mPhysicsWorld.AddConstraint(new Spring(p1, p2));
-			mPhysicsWorld.AddConstraint(new Spring(p2, p3));
+			mPhysicsWorld.AddConstraint(new Spring(p2, p4));
 			mPhysicsWorld.AddConstraint(new Spring(p3, p4));
-			mPhysicsWorld.AddConstraint(new Spring(p4, p1));
+			mPhysicsWorld.AddConstraint(new Spring(p3, p1));
 
-			/*mPhysicsWorld.AddConstraint(new Spring(p5, p6));
-			mPhysicsWorld.AddConstraint(new Spring(p6, p7));
+			mPhysicsWorld.AddConstraint(new Spring(p5, p6));
+			mPhysicsWorld.AddConstraint(new Spring(p6, p8));
 			mPhysicsWorld.AddConstraint(new Spring(p7, p8));
-			mPhysicsWorld.AddConstraint(new Spring(p8, p5));
+			mPhysicsWorld.AddConstraint(new Spring(p7, p5));
+
+			mPhysicsWorld.AddConstraint(new Spring(p1, p8));
+			mPhysicsWorld.AddConstraint(new Spring(p2, p7));
+			mPhysicsWorld.AddConstraint(new Spring(p3, p6));
+			mPhysicsWorld.AddConstraint(new Spring(p4, p5));
 
 			mPhysicsWorld.AddConstraint(new Spring(p1, p5));
-			mPhysicsWorld.AddConstraint(new Spring(p2, p6));
 			mPhysicsWorld.AddConstraint(new Spring(p3, p7));
+			mPhysicsWorld.AddConstraint(new Spring(p2, p6));
 			mPhysicsWorld.AddConstraint(new Spring(p4, p8));
-
-			mPhysicsWorld.AddConstraint(new Spring(p1, p7));
-			mPhysicsWorld.AddConstraint(new Spring(p3, p5));
-			mPhysicsWorld.AddConstraint(new Spring(p2, p8));
-			mPhysicsWorld.AddConstraint(new Spring(p4, p6));*/
 		}
 	}
 

@@ -32,7 +32,6 @@ void MeshIO::Write(FILE* file, const SkinnedMesh& mesh, bool binary)
 				vertex.texcoord.x, vertex.texcoord.y,
 				vertex.boneIndices[0], vertex.boneIndices[1], vertex.boneIndices[2], vertex.boneIndices[3],
 				vertex.boneWeights[0], vertex.boneWeights[1], vertex.boneWeights[2], vertex.boneWeights[3]);
-
 		}
 
 		uint32_t indicesSize = static_cast<uint32_t>(mesh.indices.size());
