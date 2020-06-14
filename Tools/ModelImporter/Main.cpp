@@ -200,6 +200,8 @@ Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, B
 
 void SaveModel(const Arguments& args, Model& model)
 {
+	// Reference
+	//https://www.programiz.com/c-programming/c-file-input-output
 	printf_s("Saving model: %s...\n", args.outputFileName);
 
 	FILE* file = nullptr;
