@@ -60,12 +60,3 @@ void Spring::DebugDraw() const
 }
 
 #pragma endregion
-
-// For Homework:
-// Add the following:
-// - Tetrahedrons!
-// - Cubes! (how many constraints do you need?)
-// - Balls and chains
-// - Cloth
-// - And if you are up for the challenge, build a figure (may more constraints)
-// - Build whatever you want

@@ -16,5 +16,4 @@ private:
 	Omega::Graphics::Camera mCamera;
 	Omega::Math::Vector3 mTarget;
 	std::vector<Omega::Math::Vector3> mPoints;
-	std::vector<float> mLengths;
 };

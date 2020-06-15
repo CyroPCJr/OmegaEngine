@@ -1,3 +1,4 @@
+
 #include "Precompiled.h"
 #include "Skeleton.h"
 #include "AnimationClip.h"
@@ -46,7 +47,7 @@ void Omega::Graphics::UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& bon
 	}
 	else
 	{
-		boneMatrices[bone->index] = Math::Matrix4::Identity;
+		boneMatrices[bone->index] = bone->toParentTransform;
 	}
 
 	for (auto& child : bone->children)
@@ -65,10 +66,14 @@ void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>
 		{
 			boneMatrices[bone->index] = matTransform * boneMatrices[bone->parent->index];
 		}
+		else
+		{
+			boneMatrices[bone->index] = bone->toParentTransform * boneMatrices[bone->parent->index];
+		}
 	}
 	else
 	{
-		boneMatrices[bone->index] = Math::Matrix4::Identity;
+		boneMatrices[bone->index] = bone->toParentTransform;
 	}
 
 	for (auto& child : bone->children)

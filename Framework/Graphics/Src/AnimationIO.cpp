@@ -64,24 +64,6 @@ void AnimationIO::Read(FILE* file, Animation& animation)
 
 void AnimationIO::Write(FILE* file, const AnimationClip& animationClip)
 {
-	// Homework
-	// Note that animationClip has the same number of animation as 
-	// there are bones. This is so that we can use the bone index
-	// to index for an animation directly. If animationClip.boneAnimations[i]
-	// is null, you will still need to write out something like [Empty],
-	// so when you load the animation clip, you know to skip those slots
-
-	// boneAnimations:
-	// [--->][null][--->][--->][--->][null]
-	//
-	// output:
-	// Animation: ...
-	// [Empty]
-	// Animation: ...
-	// Animation: ...
-	// Animation: ...
-	// [Empty]
-
 	for (auto& clips : animationClip.boneAnimations)
 	{
 		if (clips)
@@ -103,13 +85,13 @@ void AnimationIO::Read(FILE* file, AnimationClip& animationClip)
 	animationClip.boneAnimations.resize(boneAnimationCout);
 	for (uint32_t i = 0; i < boneAnimationCout; ++i)
 	{
-		//TODO: continuar debugando daqui, desse ponto
 		/*char empty[20];
 		fscanf_s(file, "%s\n", &empty, sizeof(empty));
 		std::string emptyblock = empty;
 		if (emptyblock != "[Empty]")
 		{
 		}*/
+
 		auto boneAnimation = std::make_unique<Animation>();
 		animationClip.boneAnimations[i] = std::move(boneAnimation);
 		Read(file, *animationClip.boneAnimations[i]);

@@ -80,7 +80,7 @@ void GameState::Update(float deltaTime)
 		mTarget.x -= kMoveSpeed * deltaTime;
 	}
 
-	AnimationUtil::RunFABRIK(mPoints, mTarget, mLengths, 5, 0.01f);
+	AnimationUtil::RunFABRIK(mPoints, mTarget);
 }
 
 void GameState::Render()

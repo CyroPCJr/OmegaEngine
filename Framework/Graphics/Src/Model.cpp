@@ -131,6 +131,11 @@ void Model::Terminate()
 	{
 		data.meshBuffer.Terminate();
 	}
+
+	for (auto& material : materialData)
+	{
+		material.diffuseMap->Terminate();
+	}
 }
 
 void Model::Draw() const
