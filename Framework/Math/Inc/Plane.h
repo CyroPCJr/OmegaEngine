@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace Omega::Math
 {
 	struct Plane

@@ -9,8 +9,8 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 #include "Quaternion.h"
-#include "PerlinNoise.h"
 #include "Random.h"
+#include "PerlinNoise.h"
 
 // Geometry
 #include "Plane.h"
@@ -261,12 +261,15 @@ namespace Omega::Math
 	//Spherical Linear Interpolations
 	Quaternion Slerp(const Quaternion& from, const Quaternion& to, float time);
 
+#pragma endregion
+
+#pragma region Geometric Helpers
 
 	bool Intersect(const Ray& ray, const Plane& plane, float& distance);
 	bool IsContained(const Vector3& point, const AABB& aabb);
 	bool IsContained(const Vector3& point, const OBB& obb);
 	bool GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal);
 
-
 #pragma endregion
+
 }

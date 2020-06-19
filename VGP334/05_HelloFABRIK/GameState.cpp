@@ -93,7 +93,7 @@ void GameState::Render()
 			SimpleDraw::AddSphere(mPoints[i + 1], 0.1f, 4, 8, Colors::Cyan);
 		}
 	}
-	SimpleDraw::AddAABB({ mTarget, { 0.2, 0.2f, 0.2f } }, Colors::Red);
+	SimpleDraw::AddAABB({ mTarget, { 0.2f, 0.2f, 0.2f } }, Colors::Red);
 
 	SimpleDraw::AddGroundPlane(30.0f);
 	SimpleDraw::AddTransform(Matrix4::Identity);

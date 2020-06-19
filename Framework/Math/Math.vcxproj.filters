@@ -74,10 +74,10 @@
     <ClCompile Include="Src\EngineMath.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="Src\PerlinNoise.cpp">
+    <ClCompile Include="Src\Random.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Random.cpp">
+    <ClCompile Include="Src\PerlinNoise.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

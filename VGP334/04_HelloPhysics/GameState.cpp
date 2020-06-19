@@ -96,7 +96,7 @@ void GameState::DebugUI()
 			auto p = new Particle();
 			p->SetPosition({ 0.0f, 5.0f, 0.0f });
 
-			p->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f) , RandomFloat(-0.05f, 0.05f) });
+			p->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f) , Random::RandomFloat(-0.05f, 0.05f) });
 			p->radius = 0.1f;
 			p->bounce = 0.3f;
 			mPhysicsWorld.AddParticle(p);
@@ -110,11 +110,11 @@ void GameState::DebugUI()
 			auto p1 = new Particle();
 			auto p2 = new Particle();
 			p1->SetPosition({ 0.5f, 5.0f, 0.0f });
-			p1->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p1->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p1->radius = 0.1f;
 			p1->bounce = 0.3f;
 			p2->SetPosition({ -0.5f, 5.0f, 0.0f });
-			p2->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p2->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p2->radius = 0.1f;
 			p2->bounce = 0.3f;
 			mPhysicsWorld.AddParticle(p1);
@@ -132,22 +132,22 @@ void GameState::DebugUI()
 			auto p3 = new Particle();
 			auto p4 = new Particle();
 			p1->SetPosition({ -0.5f, 5.0f, 0.0f });
-			p1->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p1->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p1->radius = 0.1f;
 			p1->bounce = 0.3f;
 
 			p2->SetPosition({ 0.0f, 5.0f, 1.0f });
-			p2->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p2->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p2->radius = 0.1f;
 			p2->bounce = 0.3f;
 
 			p3->SetPosition({ 0.5f, 5.0f, 0.0f });
-			p3->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p3->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f),Random::RandomFloat(-0.05f, 0.05f) });
 			p3->radius = 0.1f;
 			p3->bounce = 0.3f;
 
 			p4->SetPosition({ 0.0f, 6.0f, 0.0f });
-			p4->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p4->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p4->radius = 0.1f;
 			p4->bounce = 0.3f;
 
@@ -182,42 +182,42 @@ void GameState::DebugUI()
 			auto p8 = new Particle();
 
 			p1->SetPosition({ -pos + i, pos + 10.0f, pos + i });
-			p1->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p1->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p1->radius = 0.1f;
 			p1->bounce = 0.3f;
 
 			p2->SetPosition({ pos + i, pos + 10.0f, pos + i });
-			p2->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p2->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p2->radius = 0.1f;
 			p2->bounce = 0.3f;
 
 			p3->SetPosition({ -pos + i,pos + 10.0f , -pos + i });
-			p3->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p3->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p3->radius = 0.1f;
 			p3->bounce = 0.3f;
 
 			p4->SetPosition({ pos + i, pos + 10.0f, -pos + i });
-			p4->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p4->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p4->radius = 0.1f;
 			p4->bounce = 0.3f;
 
 			p5->SetPosition({ pos + i, -pos + 10.0f,-pos + i });
-			p5->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p5->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p5->radius = 0.1f;
 			p5->bounce = 0.3f;
 
 			p6->SetPosition({ -pos + i, -pos + 10.0f, -pos + i });
-			p6->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p6->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p6->radius = 0.1f;
 			p6->bounce = 0.3f;
 
 			p7->SetPosition({ pos + i, -pos + 10.0f, pos + i });
-			p7->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p7->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p7->radius = 0.1f;
 			p7->bounce = 0.3f;
 
 			p8->SetPosition({ -pos + i,-pos + 10.0f, pos + i });
-			p8->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p8->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p8->radius = 0.1f;
 			p8->bounce = 0.3f;
 
@@ -266,27 +266,27 @@ void GameState::DebugUI()
 			auto p5 = new Particle();
 
 			p1->SetPosition({ -0.5f, 5.0f, 0.0f });
-			p1->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p1->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p1->radius = 0.1f;
 			p1->bounce = 0.3f;
 
 			p2->SetPosition({ 0.5f, 5.0f, 0.0f });
-			p2->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p2->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p2->radius = 0.1f;
 			p2->bounce = 0.3f;
 
 			p3->SetPosition({ 1.0f, 5.0f, 0.0f });
-			p3->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p3->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p3->radius = 0.1f;
 			p3->bounce = 0.3f;
 
 			p4->SetPosition({ 0.5f, 5.0f, 1.0f });
-			p4->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p4->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p4->radius = 0.1f;
 			p4->bounce = 0.3f;
 
 			p5->SetPosition({ 0.0f, 6.0f, 0.0f });
-			p5->SetVelocity({ RandomFloat(-0.05f, 0.05f), RandomFloat(0.1f, 0.4f), RandomFloat(-0.05f, 0.05f) });
+			p5->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p5->radius = 1.0f;
 			p5->bounce = 0.3f;
 
@@ -308,7 +308,7 @@ void GameState::DebugUI()
 		std::vector<Omega::Physics::Particle*> aux;
 		aux.clear();
 		mPhysicsWorld.Clear(true);
-		float size = 7.0f;
+		const float size = 7.0f;
 		const float offsetX = size * 0.5f;
 		const float offsetY = size * 0.5f + 10.f;
 		for (float y = 0.f; y < size; y += 1.0f)
@@ -318,7 +318,7 @@ void GameState::DebugUI()
 				auto p1 = new Particle();
 				p1->SetPosition({ -offsetX + x, offsetY - y , 0.0f });
 				p1->radius = 0.1f;
-				p1->SetVelocity(RandomFloat(0.01f, 0.1f));
+				p1->SetVelocity(Random::RandomFloat(0.01f, 0.1f));
 				mPhysicsWorld.AddParticle(p1);
 				aux.push_back(p1);
 			}

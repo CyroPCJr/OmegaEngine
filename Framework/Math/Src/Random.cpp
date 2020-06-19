@@ -1,4 +1,5 @@
 #include "Precompiled.h"
+#include "Random.h"
 #include "EngineMath.h"
 
 using namespace std;
@@ -10,17 +11,17 @@ namespace
 	mt19937 randomEngine{ randomDevice() };
 }
 
-int Omega::Math::RandomInt(int min, int max)
+int Random::RandomInt(int min, int max)
 {
 	return uniform_int_distribution<int>{ min, max }(randomEngine);
 }
 
-float Omega::Math::RandomFloat(float min, float max)
+float Random::RandomFloat(float min, float max)
 {
 	return uniform_real_distribution<float>{ min, max }(randomEngine);
 }
 
-Vector2 Omega::Math::RandomVector2(const Vector2& min, const Vector2& max)
+Vector2 Random::RandomVector2(const Vector2& min, const Vector2& max)
 {
 	return { RandomFloat(min.x, min.y), RandomFloat(max.x, max.y) };
 }
