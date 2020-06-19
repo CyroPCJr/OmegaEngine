@@ -21,6 +21,10 @@ namespace Omega::Math
 		/// <param name="seed"></param>
 		/// <returns></returns>
 		PerlinNoise(const uint32_t seed = 256);
+
+		PerlinNoise(const PerlinNoise&) = delete;
+		PerlinNoise& operator=(const PerlinNoise&) = delete;
+
 		/// <summary>
 		/// Get a noise value, for 2D images z can have any value 
 		/// </summary>
