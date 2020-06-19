@@ -3,6 +3,7 @@
 //https://solarianprogrammer.com/2012/07/18/perlin-noise-cpp-11/
 //https://www.scratchapixel.com/code.php?id=57&origin=/lessons/procedural-generation-virtual-worlds/perlin-noise-part-2
 //https://youtu.be/6-0UaeJBumA
+//https://www.redblobgames.com/maps/terrain-from-noise/
 
 namespace Omega::Math
 {
