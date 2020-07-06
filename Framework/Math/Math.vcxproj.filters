@@ -66,6 +66,18 @@
     <ClInclude Include="Inc\AABB.h">
       <Filter>Inc\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Circle.h">
+      <Filter>Inc\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Rect.h">
+      <Filter>Inc\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Matrix3.h">
+      <Filter>Inc\LinearAlgebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\LineSegment.h">
+      <Filter>Inc\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">

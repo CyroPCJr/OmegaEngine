@@ -91,11 +91,11 @@ void GameState::Initialize()
 
 	mModelStartPosition = { 600.0f, 6.0f, 600.0f };
 	// Initialize and load model from assimp
-	mModel.Initialize("../../Assets/Models/JumpAttack.model");
+	//mModel.Initialize("../../Assets/Models/JumpAttack.model");
 	// Capoeira is OK
 	//mModel.Initialize("../../Assets/Models/Capoeira/Capoeira.model");
 	//mModel.Initialize("../../Assets/Models/RoundHouse/RoundhouseKick.model");
-	//mModel.Initialize("../../Assets/Models/Samba/SambaDancing.model");
+	mModel.Initialize("../../Assets/Models/Samba/SambaDancing.model");
 	mAnimator.Initialize(mModel);
 	mAnimator.ComputeBindPose();
 	mAnimator.PlayAnimation(0);
@@ -368,8 +368,7 @@ void GameState::DrawScene()
 		{
 			boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mAnimator.GetBoneMatrices()[i]);
 		}
-
-		//boneTransformData.boneTransforms = mAnimator.GetBoneMatricesFinalTransform();
+		
 		mBoneTransformBuffer.Update(boneTransformData);
 		mModel.Draw();
 	}

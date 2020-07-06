@@ -40,6 +40,8 @@ void App::Run(AppConfig appConfig)
 	mCurrentState = mAppState.begin()->second.get();
 	mCurrentState->Initialize();
 
+	mTime.Initialize();
+
 	mRunning = true;
 	while (mRunning)
 	{
@@ -60,6 +62,7 @@ void App::Run(AppConfig appConfig)
 		auto inputSystem = InputSystem::Get();
 		inputSystem->Update();
 
+		mTime.Update();
 		if (inputSystem->IsKeyPressed(KeyCode::ESCAPE))
 		{
 			Quit();
@@ -67,6 +70,8 @@ void App::Run(AppConfig appConfig)
 		}
 
 		float deltaTime = 1.0f / 60.0f;
+		//float deltaTime = mTime.GetElapsedTime();
+
 		mCurrentState->Update(deltaTime);
 
 		auto graphicsSystem = GraphicsSystem::Get();

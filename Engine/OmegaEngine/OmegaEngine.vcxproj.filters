@@ -42,6 +42,9 @@
     <ClInclude Include="Inc\Terrain.h">
       <Filter>Inc\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Timer.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">
@@ -55,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="Src\Terrain.cpp">
       <Filter>Src\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Timer.cpp">
+      <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

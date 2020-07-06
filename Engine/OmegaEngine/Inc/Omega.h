@@ -12,6 +12,9 @@
 // Terrain headers
 #include "Terrain.h"
 
+// Timer headers
+#include "Timer.h"
+
 namespace Omega {
 	App& MainApp();
 }

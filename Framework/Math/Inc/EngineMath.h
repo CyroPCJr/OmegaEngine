@@ -8,6 +8,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4.h"
+#include "Matrix3.h"
 #include "Quaternion.h"
 #include "Random.h"
 #include "PerlinNoise.h"
@@ -18,6 +19,9 @@
 #include "OBB.h"
 #include "AABB.h"
 #include "Sphere.h"
+#include "Circle.h"
+#include "Rect.h"
+#include "LineSegment.h"
 
 namespace Omega::Math
 {
@@ -64,6 +68,59 @@ namespace Omega::Math
 		return value * value;
 	}
 
+#pragma region Vector 2
+
+	constexpr Vector2 PerpendicularLH(const Vector2& v)
+	{
+		return { -v.y, v.x };
+	}
+
+	constexpr Vector2 PerpendicularRH(const Vector2& v)
+	{
+		return { v.y, -v.x };
+	}
+
+	constexpr float Dot(const Vector2& a, const Vector2& b)
+	{
+		return (a.x * b.x) + (a.y * b.y);
+	}
+
+	constexpr float MagnitudeSqr(const Vector2& v)
+	{
+		return (v.x * v.x) + (v.y * v.y);
+	}
+
+	inline float Magnitude(const Vector2& v)
+	{
+		return sqrt(MagnitudeSqr(v));
+	}
+
+	inline float Distance(const Vector2& v1, const Vector2& v2)
+	{
+		return Magnitude(v1 - v2);
+	}
+
+	constexpr float DistanceSqr(const Vector2& v1, const Vector2& v2)
+	{
+		return MagnitudeSqr(v1 - v2);
+	}
+
+	inline Vector2 Normalize(const Vector2& v)
+	{
+		const float lenght = Magnitude(v);
+		OMEGAASSERT(lenght != 0, "Length cannot be zero.");
+		const float invNorm = 1.0f / lenght;
+		return { v * invNorm };
+	}
+
+	inline Vector2 Lerp(const Vector2& v1, const Vector2& v2, float t)
+	{
+		return v1 + ((v2 - v1) * t);
+	}
+#pragma endregion
+
+#pragma region Vector 3
+
 	constexpr float Dot(const Vector3& a, const Vector3& b)
 	{
 		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
@@ -86,6 +143,16 @@ namespace Omega::Math
 		return sqrtf(MagnitudeSqr(v));
 	}
 
+	inline float Distance(const Vector3& v1, const Vector3& v2)
+	{
+		return Magnitude(v1 - v2);
+	}
+
+	constexpr float DistanceSqr(const Vector3& v1, const Vector3& v2)
+	{
+		return MagnitudeSqr(v1 - v2);
+	}
+
 	inline Vector3 Normalize(const Vector3& v)
 	{
 		const float lenght = Magnitude(v);
@@ -93,6 +160,8 @@ namespace Omega::Math
 		const float invNorm = 1.0f / lenght;
 		return { v * invNorm };
 	}
+
+#pragma endregion
 
 
 	/*
@@ -150,6 +219,12 @@ namespace Omega::Math
 		const float inverseDet = 1.0f / det;
 		Matrix4 matrix;
 		return matrix.Adjoint(m) * inverseDet;
+	}
+
+	constexpr Vector2 TransformCoord(const Vector2& v, const Matrix3& m)
+	{
+		return { v.x * m._11 + v.y * m._21 + m._31,
+				 v.x * m._12 + v.y * m._22 + m._32 };
 	}
 
 	constexpr Vector3 TransformCoord(const Vector3& v, const Matrix4& m)
@@ -269,6 +344,19 @@ namespace Omega::Math
 	bool IsContained(const Vector3& point, const AABB& aabb);
 	bool IsContained(const Vector3& point, const OBB& obb);
 	bool GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal);
+
+	bool PointInRect(const Vector2& point, const Rect& rect);
+	bool PointInCircle(const Vector2& point, const Circle& circle);
+
+	bool Intersect(const LineSegment& a, const LineSegment& b);
+	bool Intersect(const Circle& c0, const Circle& c1);
+	bool Intersect(const Rect& r0, const Rect& r1);
+
+	bool Intersect(const Circle& c, const LineSegment& l, Vector2* closestPoint = nullptr);
+	bool Intersect(const LineSegment& l, const Circle& c);
+
+	bool Intersect(const Circle& c, const Rect& r);
+	bool Intersect(const Rect& r, const Circle& c);
 
 #pragma endregion
 

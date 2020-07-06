@@ -2,7 +2,6 @@
 
 namespace Omega::Core
 {
-
 	class Window
 	{
 	public:

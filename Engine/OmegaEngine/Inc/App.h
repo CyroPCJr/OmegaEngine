@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AppState.h"
+#include "Timer.h"
 
 namespace Omega
 {
@@ -28,6 +29,8 @@ namespace Omega
 
 		void Run(AppConfig appConfig);
 		void Quit() { mRunning = false; }
+
+		float GetTime() const { return mTime.GetTotalTime(); }
 	private:
 		AppConfig mAppConfig;
 		Core::Window mWindow;
@@ -36,6 +39,8 @@ namespace Omega
 		std::map<std::string, std::unique_ptr<AppState>> mAppState;
 		AppState* mCurrentState = nullptr;
 		AppState* mNextState = nullptr;
+
+		Timer mTime;
 	};	
 
 }

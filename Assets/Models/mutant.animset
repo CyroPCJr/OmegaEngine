@@ -1,0 +1,134 @@
+ClipCount: 1
+Name: mixamo.com
+Duration: 1.000000
+TickPerSecond: 30.000000
+BoneAnimationCount: 39
+[Empty]
+PositionCount: 1
+Position/Time: -0.000000 -34.307396 2.646744 0.00
+RotationCount: 1
+Rotation/Time: 0.016589 -0.000000 0.000000 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -0.000027 -35.919125 -1.481440 0.00
+RotationCount: 1
+Rotation/Time: -0.016014 -0.000000 0.000000 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -13.655973 -7.135242 -0.129696 0.00
+RotationCount: 1
+Rotation/Time: -0.000575 -0.000000 0.000000 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+[Empty]
+PositionCount: 1
+Position/Time: 0.000000 -34.307396 2.646744 0.00
+RotationCount: 1
+Rotation/Time: 0.016588 0.000000 0.000000 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: 0.000027 -35.919125 -1.481440 0.00
+RotationCount: 1
+Rotation/Time: -0.016013 0.000000 -0.000000 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: 13.655973 -7.135242 -0.129696 0.00
+RotationCount: 1
+Rotation/Time: -0.000575 -0.000000 0.000000 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+[Empty]
+[Empty]
+PositionCount: 1
+Position/Time: -17.507765 -0.477745 10.003080 0.00
+RotationCount: 1
+Rotation/Time: -0.000000 -0.217129 -0.037130 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -7.489388 0.000000 -0.000000 0.00
+RotationCount: 1
+Rotation/Time: -0.000000 0.015247 -0.045290 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+[Empty]
+PositionCount: 1
+Position/Time: -18.447754 1.479890 -8.654249 0.00
+RotationCount: 1
+Rotation/Time: -0.000000 -0.217129 -0.037130 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+[Empty]
+PositionCount: 1
+Position/Time: -6.784767 -2.966900 -4.170527 0.00
+RotationCount: 1
+Rotation/Time: -0.004600 -0.065570 0.054130 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -6.602643 -4.314004 -6.890449 0.00
+RotationCount: 1
+Rotation/Time: 0.013876 -0.108754 0.054793 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -2.492348 -4.446348 -6.163476 0.00
+RotationCount: 1
+Rotation/Time: 0.043971 -0.073378 0.003806 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -26.753433 0.000357 -0.000016 0.00
+RotationCount: 1
+Rotation/Time: -0.046727 0.218659 0.026678 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -26.374767 -0.000102 1.459064 0.00
+RotationCount: 1
+Rotation/Time: 0.000000 0.027629 0.000009 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: -17.811876 2.066080 0.922929 0.00
+RotationCount: 1
+Rotation/Time: -0.000000 -0.027629 -0.000003 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+[Empty]
+PositionCount: 1
+Position/Time: 26.374767 -0.000102 1.459064 0.00
+RotationCount: 1
+Rotation/Time: 0.000000 -0.027629 -0.000009 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+PositionCount: 1
+Position/Time: 17.892990 2.066080 0.922929 0.00
+RotationCount: 1
+Rotation/Time: -0.000000 0.027629 0.000002 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+[Empty]
+[Empty]
+[Empty]
+[Empty]
+[Empty]
+[Empty]
+PositionCount: 1
+Position/Time: 0.000000 92.449944 0.329740 0.00
+RotationCount: 1
+Rotation/Time: -0.000000 -0.000000 -0.000000 0.00
+ScaleCount: 1
+Scale/Time: 1.000000 1.000000 1.000000 0.00
+[Empty]
+[Empty]
+[Empty]
+[Empty]
+[Empty]
+[Empty]
+[Empty]
+[Empty]
