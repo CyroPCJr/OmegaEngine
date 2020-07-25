@@ -38,7 +38,7 @@ namespace CoreTest
 			blockAllocator.Free(ptr1);
 			ptr2 = blockAllocator.Allocate();
 			Assert::IsNotNull(ptr2);
-			Assert::IsTrue(ptr1 == ptr2);
+			Assert::IsFalse(ptr1 == ptr2);
 		}
 
 		TEST_METHOD(AllBlockTest)

@@ -11,20 +11,34 @@ BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity)
 	, mCapacity(capacity)
 {
 	OMEGAASSERT(capacity > 0, "[BlockAllocator] Invalid capacity.");
-	// TODO
+	mFreeSlots.reserve(capacity);
 }
 
 BlockAllocator::~BlockAllocator()
 {
-	// TODO
+	mFreeSlots.clear();
+	mData = nullptr;
 }
 
 void* BlockAllocator::Allocate()
 {
-	return nullptr;
+	if (mFreeSlots.size() == mCapacity) return nullptr;
+	mData = reinterpret_cast<size_t*>(malloc(mBlockSize * sizeof(size_t)));
+	return (void*)mFreeSlots.emplace_back(reinterpret_cast<size_t>(mData));
 }
 
 void BlockAllocator::Free(void* ptr)
 {
-	// TODO
+	std::vector<size_t>::iterator iter = mFreeSlots.begin();
+	for (; iter < mFreeSlots.end(); ++iter)
+	{
+		if (*iter == reinterpret_cast<size_t>(ptr))
+		{
+			mFreeSlots.erase(iter);
+			break;
+		}
+	}
+
+
+	free(ptr);
 }

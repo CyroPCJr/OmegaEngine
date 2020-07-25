@@ -14,10 +14,12 @@ namespace Omega::Core
 
 		DataType* New()
 		{
-			// TODO
 			// Get a new block from BlockAllocator
 			// User placement new on the returned block
-			return nullptr;
+			DataType* dataAlloc = (DataType*)Allocate();
+			if (!dataAlloc) return nullptr;
+			DataType* result = new (dataAlloc) DataType;
+			return result;
 		}
 
 		//// Part 2!
@@ -30,13 +32,12 @@ namespace Omega::Core
 
 		void Delete(DataType* ptr)
 		{
-			if (ptr == nullptr)
-			{
-				return;
-			}
-
-			// TODO
+			if (ptr == nullptr) return;
 			// Call destructor on ptr
+			delete ptr;
+		/*	ptr = nullptr;
+			Free(ptr);*/
+
 			// Return ptr to BlockAllocator
 		}
 	};

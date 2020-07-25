@@ -40,7 +40,7 @@ namespace CoreTest
 			Foo* ptr = typedAllocator.New();
 			Assert::IsNotNull(ptr);
 			Assert::IsTrue(ptr->a == 42);
-			Assert::IsTrue(ptr->a == 7);
+			Assert::IsTrue(ptr->b == 7);
 
 			Foo* ptr2 = typedAllocator.New();
 			Assert::IsNull(ptr2);
