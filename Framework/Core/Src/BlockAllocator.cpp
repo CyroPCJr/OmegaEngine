@@ -32,9 +32,9 @@ void* BlockAllocator::Allocate()
 
 	// novo teste
 	if (mFreeSlots.empty()) return nullptr;
-	size_t  key = mFreeSlots.front();
+	size_t key = mFreeSlots.front();
 	mFreeSlots.pop_back();
-	mData = (size_t*)((size_t*)mData + key * mBlockSize);
+	mData = reinterpret_cast<size_t*>(malloc(sizeof(size_t) + key * mBlockSize));
 	return mData;
 }
 
