@@ -27,7 +27,11 @@ namespace CoreTest
 			Foo(int i, int j) : a(i), b(j) {}
 			Foo(Bar b) : a(12), b(34) {}
 			Foo(std::string str) : a(12), b(34) {}
-			~Foo() { a = 0xFeeeFeee, b = 0xdeadbeef; }
+			~Foo() 
+			{ 
+				a = 0xFeeeFeee, 
+				b = 0xdeadbeef; 
+			}
 		};
 
 
@@ -69,7 +73,8 @@ namespace CoreTest
 
 			Foo* ptr2 = typedAllocator.New();
 			Assert::IsNotNull(ptr2);
-			Assert::IsTrue(ptr == ptr2);
+			//Assert::IsTrue(ptr == ptr2);
+			Assert::IsFalse(ptr == ptr2);
 		}
 
 	};

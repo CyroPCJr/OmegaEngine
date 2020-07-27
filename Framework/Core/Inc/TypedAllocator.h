@@ -18,8 +18,8 @@ namespace Omega::Core
 			// User placement new on the returned block
 			DataType* dataAlloc = (DataType*)Allocate();
 			if (!dataAlloc) return nullptr;
-			DataType* result = new (dataAlloc) DataType;
-			return result;
+			dataAlloc = new DataType;
+			return dataAlloc;
 		}
 
 		//// Part 2!
@@ -30,15 +30,14 @@ namespace Omega::Core
 		//	// Modify New() so its is using variadic template and perfect forwarding
 		//}
 
+		//TODO: corrigir 
 		void Delete(DataType* ptr)
 		{
 			if (ptr == nullptr) return;
 			// Call destructor on ptr
 			delete ptr;
-		/*	ptr = nullptr;
-			Free(ptr);*/
-
 			// Return ptr to BlockAllocator
+			Free(ptr);
 		}
 	};
 }
