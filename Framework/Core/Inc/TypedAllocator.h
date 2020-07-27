@@ -12,12 +12,13 @@ namespace Omega::Core
 			: BlockAllocator(sizeof(DataType), capacity)
 		{}
 
+		//TODO: Fazer mais testes
 		DataType* New()
 		{
 			// Get a new block from BlockAllocator
-			// User placement new on the returned block
 			DataType* dataAlloc = (DataType*)Allocate();
 			if (!dataAlloc) return nullptr;
+			// User placement new on the returned block
 			dataAlloc = new DataType;
 			return dataAlloc;
 		}
@@ -30,12 +31,11 @@ namespace Omega::Core
 		//	// Modify New() so its is using variadic template and perfect forwarding
 		//}
 
-		//TODO: corrigir 
 		void Delete(DataType* ptr)
 		{
 			if (ptr == nullptr) return;
 			// Call destructor on ptr
-			delete ptr;
+			ptr->~DataType();
 			// Return ptr to BlockAllocator
 			Free(ptr);
 		}
