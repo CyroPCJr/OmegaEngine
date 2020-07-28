@@ -50,10 +50,8 @@ void BlockAllocator::Free(void* ptr)
 		}
 	}
 
-
 	free(ptr);*/
-
 	// novo codigo
-	auto giveBackSlot = (&ptr - &mData) / sizeof(mBlockSize);
+	auto giveBackSlot = (&ptr - &mData) / mBlockSize;
 	mFreeSlots.push_back(sizeof(giveBackSlot));
 }
