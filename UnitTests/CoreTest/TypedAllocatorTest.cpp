@@ -69,8 +69,7 @@ namespace CoreTest
 
 			Foo* ptr2 = typedAllocator.New();
 			Assert::IsNotNull(ptr2);
-			//Assert::IsTrue(ptr == ptr2);
-			Assert::IsFalse(ptr == ptr2);
+			Assert::IsTrue(ptr == ptr2);
 		}
 
 	};

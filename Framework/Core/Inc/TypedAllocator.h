@@ -16,11 +16,13 @@ namespace Omega::Core
 		DataType* New()
 		{
 			// Get a new block from BlockAllocator
+			// this return the block of memory from Allocator
 			DataType* dataAlloc = (DataType*)Allocate();
 			if (!dataAlloc) return nullptr;
 			// User placement new on the returned block
-			dataAlloc = new DataType;
-			return dataAlloc;
+			// use the block from allocator and call the construtor from DataType(new)
+			DataType* datatypePtr = new (dataAlloc) DataType;
+			return datatypePtr;
 		}
 
 		//// Part 2!
