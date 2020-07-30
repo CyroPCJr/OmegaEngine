@@ -33,11 +33,9 @@ namespace Omega::Core
 
 		void Delete(DataType* ptr)
 		{
-			if (ptr == nullptr) return;
-			// Call destructor on ptr
-			ptr->~DataType();
-			// Return ptr to BlockAllocator
-			Free(ptr);
+			if (!ptr) return; // ptr == nullptr
+			ptr->~DataType(); // Call destructor on ptr
+			Free(ptr); // Return ptr to BlockAllocator
 		}
 	};
 }
