@@ -22,6 +22,7 @@ BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity)
 BlockAllocator::~BlockAllocator()
 {
 	mFreeSlots.clear();
+	delete mData;
 	mData = nullptr;
 }
 
