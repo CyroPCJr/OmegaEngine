@@ -7,45 +7,87 @@
     <Filter Include="Src">
       <UniqueIdentifier>{01c7cb39-90cf-4b14-b604-925abe978afa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Memory">
+      <UniqueIdentifier>{22cf1850-159c-4fe0-88df-c9c4fee33daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Util">
+      <UniqueIdentifier>{d849f06f-eb7b-4240-9866-9e0f5b6cce81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Platform">
+      <UniqueIdentifier>{57f48aca-0f4c-4724-b00c-2ac9ebbb8fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Memory">
+      <UniqueIdentifier>{1c5847f9-1e29-48ef-97c4-eb0ff0308fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Pch">
+      <UniqueIdentifier>{34ef5dfa-4c64-4818-9bc2-e8c51f405b7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Platform">
+      <UniqueIdentifier>{8675a4c2-d4c3-48fe-bf85-60c179ef2430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Util">
+      <UniqueIdentifier>{c633c4df-c4cb-4359-aa92-eb28549c277a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Event">
+      <UniqueIdentifier>{960c0ff8-c668-4a54-9fc2-8ce73b47fbdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\BlockAllocator.cpp">
+      <Filter>Src\Memory</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Precompiled.cpp">
-      <Filter>Src</Filter>
+      <Filter>Src\Pch</Filter>
     </ClCompile>
     <ClCompile Include="Src\Window.cpp">
-      <Filter>Src</Filter>
+      <Filter>Src\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Src\WindowMessageHandler.cpp">
-      <Filter>Src</Filter>
+      <Filter>Src\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="Src\BlockAllocator.cpp">
-      <Filter>Src</Filter>
+    <ClCompile Include="Src\TimeUtil.cpp">
+      <Filter>Src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DebugUtil.cpp">
+      <Filter>Src\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Precompiled.h">
-      <Filter>Src</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\Common.h">
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\Core.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\Debug.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Window.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\WindowMessageHandler.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\BlockAllocator.h">
-      <Filter>Inc</Filter>
+      <Filter>Inc\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Inc\TypedAllocator.h">
-      <Filter>Inc</Filter>
+      <Filter>Inc\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Handle.h">
+      <Filter>Inc\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\HandlePool.h">
+      <Filter>Inc\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Window.h">
+      <Filter>Inc\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\WindowMessageHandler.h">
+      <Filter>Inc\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Precompiled.h">
+      <Filter>Src\Pch</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\DebugUtil.h">
+      <Filter>Inc\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\TimeUtil.h">
+      <Filter>Inc\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\EventHandler.h">
+      <Filter>Inc\Event</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

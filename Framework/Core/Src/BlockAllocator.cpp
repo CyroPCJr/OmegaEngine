@@ -1,6 +1,6 @@
 #include "Precompiled.h"
 #include "BlockAllocator.h"
-#include "Debug.h"
+#include "DebugUtil.h"
 
 using namespace Omega;
 using namespace Omega::Core;
@@ -22,7 +22,7 @@ BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity)
 BlockAllocator::~BlockAllocator()
 {
 	mFreeSlots.clear();
-	delete mData;
+	free(mData);
 	mData = nullptr;
 }
 

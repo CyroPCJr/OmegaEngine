@@ -2,6 +2,7 @@
 #include "App.h"
 
 using namespace Omega;
+using namespace Omega::Core;
 using namespace Omega::Graphics;
 using namespace Omega::Input;
 
@@ -16,6 +17,9 @@ void App::ChangeState(const std::string& name)
 void App::Run(AppConfig appConfig)
 {
 	mAppConfig = std::move(appConfig);
+
+	// Initialize timer
+	TimeUtil::GetTime();
 
 	// Setup our application window
 	mWindow.Initialize(
@@ -69,9 +73,7 @@ void App::Run(AppConfig appConfig)
 			continue;
 		}
 
-		float deltaTime = 1.0f / 60.0f;
-		//float deltaTime = mTime.GetElapsedTime();
-
+		float deltaTime = TimeUtil::GetDeltaTime();
 		mCurrentState->Update(deltaTime);
 
 		auto graphicsSystem = GraphicsSystem::Get();

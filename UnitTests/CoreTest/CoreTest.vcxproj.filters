@@ -27,6 +27,9 @@
     <ClCompile Include="BlockAllocatorTest.cpp">
       <Filter>TestFiles</Filter>
     </ClCompile>
+    <ClCompile Include="HandleTest.cpp">
+      <Filter>TestFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

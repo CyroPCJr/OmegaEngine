@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "WindowMessageHandler.h"
 
-#include "Debug.h"
+#include "DebugUtil.h"
 
 using namespace Omega::Core;
 

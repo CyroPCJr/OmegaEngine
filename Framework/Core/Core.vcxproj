@@ -146,20 +146,26 @@
     <ClInclude Include="Inc\BlockAllocator.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Core.h" />
-    <ClInclude Include="Inc\Debug.h" />
+    <ClInclude Include="Inc\DebugUtil.h" />
+    <ClInclude Include="Inc\Handle.h" />
+    <ClInclude Include="Inc\HandlePool.h" />
+    <ClInclude Include="Inc\TimeUtil.h" />
     <ClInclude Include="Inc\TypedAllocator.h" />
     <ClInclude Include="Inc\WindowMessageHandler.h" />
+    <ClInclude Include="Inc\EventHandler.h" />
     <ClInclude Include="Src\Precompiled.h" />
     <ClInclude Include="Inc\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BlockAllocator.cpp" />
+    <ClCompile Include="Src\DebugUtil.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Src\TimeUtil.cpp" />
     <ClCompile Include="Src\Window.cpp" />
     <ClCompile Include="Src\WindowMessageHandler.cpp" />
   </ItemGroup>
