@@ -23,7 +23,6 @@ BlockAllocator::~BlockAllocator()
 {
 	mFreeSlots.clear();
 	free(mData);
-	mData = nullptr;
 }
 
 void* BlockAllocator::Allocate()

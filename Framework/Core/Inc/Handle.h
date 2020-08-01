@@ -24,7 +24,7 @@ namespace Omega::Core
 
 		void Invalidate()
 		{
-			*this == Handle();
+			*this = Handle();
 		}
 
 		DataType* Get() const
