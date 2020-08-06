@@ -330,7 +330,7 @@ void GameState::DebugUI()
 			{
 				if ((y == 0.f) && (x == size - 1.f || x == 0.f))
 				{
-					mPhysicsWorld.AddConstraint(new Fixed(aux[y * size + x]));
+					mPhysicsWorld.AddConstraint(new Fixed(aux[static_cast<size_t>(y * size + x)]));
 				}
 				if (x + 1.f < size)
 				{

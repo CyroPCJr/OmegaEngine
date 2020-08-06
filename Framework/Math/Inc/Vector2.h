@@ -28,45 +28,40 @@ namespace Omega::Math
 
 		inline Vector2 operator/(const float v) const
 		{
-			OMEGAASSERT(v != 0.0f, "value cannot be zero");
-			return { x / v, y / v};
+			return { x / v, y / v };
 		}
 
 		inline Vector2 operator/(const Vector2& v) const
 		{
-			OMEGAASSERT(v.x != 0.0f && v.y != 0.0f, "Vector values cannot be zero");
 			return { x / v.x, y / v.y };
 		}
 
-		// homework: add -=, /=
 		constexpr Vector2& operator+=(const Vector2& v)
 		{
 			x += v.x; y += v.y;
 			return *this;
 		}
-		
+
 		constexpr Vector2& operator-=(const Vector2& v)
 		{
 			x -= v.x;  y -= v.y;
 			return *this;
 		}
-		
+
 		constexpr Vector2& operator*=(const Vector2& v)
 		{
 			x *= v.x;  y *= v.y;
 			return *this;
 		}
-		
+
 		inline Vector2& operator/=(const float v)
 		{
-			OMEGAASSERT(v != 0.0f, "value cannot be zero");
 			x /= v; y /= v;
 			return *this;
 		}
 
 		inline Vector2& operator/=(const Vector2& v)
 		{
-			OMEGAASSERT(v.x != 0.0f && v.y != 0.0f, "Vector values cannot be zero");
 			x /= v.x; y /= v.y;
 			return *this;
 		}

@@ -25,15 +25,10 @@ namespace Omega::Math
 		// multiplity vector by value scalar
 		constexpr Vector3 operator*(const float v) const { return { x * v, y * v, z * v }; }
 
-		inline Vector3 operator/(const float v) const
-		{
-			OMEGAASSERT(v != 0.0f, "value cannot be zero");
-			return { x / v, y / v, z / v };
-		}
+		constexpr Vector3 operator/(const float v) const { return { x / v, y / v, z / v }; }
 
-		inline Vector3 operator/(const Vector3& v) const
+		constexpr Vector3 operator/(const Vector3& v) const
 		{
-			OMEGAASSERT(v.x != 0.0f && v.y != 0.0f && v.z != 0.0f, "Vector values cannot be zero");
 			return { x / v.x, y / v.y, z / v.z };
 		}
 
@@ -55,16 +50,14 @@ namespace Omega::Math
 			return *this;
 		}
 
-		inline Vector3& operator/=(const float v)
+		constexpr Vector3& operator/=(const float v)
 		{
-			OMEGAASSERT(v != 0.0f, "value cannot be zero");
 			x /= v; y /= v; z /= v;
 			return *this;
 		}
 
-		inline Vector3& operator/=(const Vector3& v)
+		constexpr Vector3& operator/=(const Vector3& v)
 		{
-			OMEGAASSERT(v.x != 0.0f && v.y != 0.0f && v.z != 0.0f, "Vector values cannot be zero");
 			x /= v.x; y /= v.y; z /= v.z;
 			return *this;
 		}

@@ -11,6 +11,7 @@ namespace Omega::Core
 
 #define BEGIN_MACRO do {
 #define END_MACRO } while (false)
+// TODO : Ask to Peter why doesnt work in test
 
 #if defined(_DEBUG)
 #define LOG(format, ...)\

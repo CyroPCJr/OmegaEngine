@@ -44,8 +44,6 @@ void App::Run(AppConfig appConfig)
 	mCurrentState = mAppState.begin()->second.get();
 	mCurrentState->Initialize();
 
-	mTime.Initialize();
-
 	mRunning = true;
 	while (mRunning)
 	{
@@ -66,7 +64,6 @@ void App::Run(AppConfig appConfig)
 		auto inputSystem = InputSystem::Get();
 		inputSystem->Update();
 
-		mTime.Update();
 		if (inputSystem->IsKeyPressed(KeyCode::ESCAPE))
 		{
 			Quit();

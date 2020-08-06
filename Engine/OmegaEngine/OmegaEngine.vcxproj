@@ -156,7 +156,6 @@
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Omega.h" />
     <ClInclude Include="Inc\Terrain.h" />
-    <ClInclude Include="Inc\Timer.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +163,6 @@
     <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Precompiled.cpp" />
     <ClCompile Include="Src\Terrain.cpp" />
-    <ClCompile Include="Src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Core\Core.vcxproj">
