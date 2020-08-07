@@ -12,26 +12,17 @@ namespace Omega::Core
 			: BlockAllocator(sizeof(DataType), capacity)
 		{}
 
-		//TODO: Fazer mais testes
-		DataType* New()
+		template<class... Args>
+		DataType* New(Args&&... args)
 		{
-			// Get a new block from BlockAllocator
-			// this return the block of memory from Allocator
-			DataType* dataAlloc = (DataType*)Allocate();
-			if (!dataAlloc) return nullptr;
-			// User placement new on the returned block
-			// use the block from allocator and call the construtor from DataType(new)
-			DataType* datatypePtr = new (dataAlloc) DataType;
-			return datatypePtr;
+			// Modify New() so its is using variadic template and perfect forwarding
+			DataType* dataAlloc = static_cast<DataType*>(Allocate());
+			if (dataAlloc)
+			{
+				new (dataAlloc) DataType(std::forward<Args>(args)...);
+			}
+			return dataAlloc;
 		}
-
-		//// Part 2!
-		//template<class... Args>
-		//DataType* New()
-		//{
-		//	// TODO
-		//	// Modify New() so its is using variadic template and perfect forwarding
-		//}
 
 		void Delete(DataType* ptr)
 		{

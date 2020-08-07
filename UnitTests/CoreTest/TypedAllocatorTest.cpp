@@ -30,7 +30,6 @@ namespace CoreTest
 			~Foo() { a = 0xFeeeFeee, b = 0xdeadbeef; }
 		};
 
-
 	public:
 
 		TEST_METHOD(TestNew)
@@ -46,6 +45,25 @@ namespace CoreTest
 			Assert::IsNull(ptr2);
 		}
 
+		TEST_METHOD(TestOverloadedNew)
+		{
+			TypedAllocator<Foo> typedAllocator(1);
+			Foo* ptr = typedAllocator.New(36, 48);
+			Assert::IsNotNull(ptr);
+			Assert::AreEqual(ptr->a, 36);
+			Assert::AreEqual(ptr->b, 48);
+
+			Foo* ptr2 = typedAllocator.New();
+			Assert::IsNull(ptr2);
+		}
+
+		TEST_METHOD(TestForwardingNew)
+		{
+			TypedAllocator<Foo> typedAllocator(1);
+			Foo* ptr = typedAllocator.New(Bar());
+			Assert::IsNotNull(ptr);
+			Assert::AreEqual(Bar::counter, 2);
+		}
 
 		TEST_METHOD(TestDelete)
 		{
@@ -73,4 +91,6 @@ namespace CoreTest
 		}
 
 	};
+
+	int TypedAllocatorTest::Bar::counter = 0;
 }

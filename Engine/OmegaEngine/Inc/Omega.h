@@ -3,6 +3,7 @@
 // Creator: Cyro Paulino da Costa Jr.
 // Omega Engine
 // =========================================================================================
+
 #include "Common.h"
 
 // App headers
@@ -12,6 +13,13 @@
 // Terrain headers
 #include "Terrain.h"
 
-namespace Omega {
+// World headers
+#include "Component.h"
+#include "GameObject.h"
+#include "GameObjectFactory.h"
+#include "GameWorld.h"
+
+namespace Omega 
+{
 	App& MainApp();
 }

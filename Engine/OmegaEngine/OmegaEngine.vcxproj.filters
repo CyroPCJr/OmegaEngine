@@ -22,6 +22,18 @@
     <Filter Include="Src\Terrain">
       <UniqueIdentifier>{552b4e4a-930f-40e4-b51d-547d5e37d7a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\World">
+      <UniqueIdentifier>{5d8d7a18-aa7e-439f-a5f0-0eea40a53b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\World">
+      <UniqueIdentifier>{6f5b1223-3e1a-4489-a120-63fcd3927db5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Component">
+      <UniqueIdentifier>{f8ce3437-8740-4cff-a41e-2fc974875ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Component">
+      <UniqueIdentifier>{2f906539-4274-4a8d-8cbd-613ad0683f40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Omega.h">
@@ -42,6 +54,18 @@
     <ClInclude Include="Inc\Terrain.h">
       <Filter>Inc\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\GameObject.h">
+      <Filter>Inc\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Component.h">
+      <Filter>Inc\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\GameWorld.h">
+      <Filter>Inc\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\GameObjectFactory.h">
+      <Filter>Inc\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">
@@ -55,6 +79,18 @@
     </ClCompile>
     <ClCompile Include="Src\Terrain.cpp">
       <Filter>Src\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameObject.cpp">
+      <Filter>Src\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Component.cpp">
+      <Filter>Src\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameWorld.cpp">
+      <Filter>Src\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameObjectFactory.cpp">
+      <Filter>Src\World</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
