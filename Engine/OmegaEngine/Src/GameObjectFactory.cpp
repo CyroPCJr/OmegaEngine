@@ -2,6 +2,8 @@
 #include "GameObjectFactory.h"
 
 #include "Component.h"
+#include "TransformComponent.h"
+#include "ColliderComponent.h"
 
 using namespace Omega;
 
@@ -15,11 +17,11 @@ GameObject* GameObjectFactory::Create(GameObjectAllocator& allocator, std::files
 		// TODO
 		// Add TransformComponent class, add setters/getters, and a function to return a Matrix 4
 		// Add ColliderComponent class, add setters/getters for an AABB, add Render to draw the aabb
-		/*auto transform = newObject->AddComponent<TransformComponent>();
-		transform->SetPosition({1.0f, 2.0f,3.0f});
+		auto transform = newObject->AddComponent<TransformComponent>();
+		transform->SetPosition(Math::Vector3{ 1.0f, 2.0f,3.0f });
 
 		auto collider = newObject->AddComponent<ColliderComponent>();
-		collider->SetAABB({ Math::Vector3::Zero, Math::Vector3::One });*/
+		collider->SetAABB({ Math::Vector3::Zero, Math::Vector3::One });
 	}
 	return newObject;
 }

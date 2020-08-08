@@ -156,7 +156,7 @@ namespace Omega::Math
 	inline Vector3 Normalize(const Vector3& v)
 	{
 		const float lenght = Magnitude(v);
-		//OMEGAASSERT(lenght != 0, "Length cannot be zero.");
+		OMEGAASSERT(lenght != 0, "Length cannot be zero.");
 		const float invNorm = 1.0f / lenght;
 		return { v * invNorm };
 	}
@@ -291,7 +291,7 @@ namespace Omega::Math
 	inline Quaternion Normalize(const Quaternion& q)
 	{
 		const float length = Magnitude(q);
-		//OMEGAASSERT(length != 0, "[Quaternion] Length cannot be zero.");
+		OMEGAASSERT(length != 0, "[Quaternion] Length cannot be zero.");
 		if (length == 1.0f)
 		{
 			return q;
