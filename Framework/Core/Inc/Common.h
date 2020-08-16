@@ -23,3 +23,8 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
+
+// External headers
+#include <RapidJSON\Inc\document.h>
+#include <RapidJSON\Inc\filereadstream.h>
+#include <RapidJSON\Inc\filewritestream.h>

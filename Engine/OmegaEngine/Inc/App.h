@@ -16,9 +16,11 @@ namespace Omega
 	{
 	public:
 
-		template<class StateType, class = std::void_t<std::is_base_of<AppState, StateType>>>
+		template<class StateType>
 		void AddState(std::string name) 
 		{
+			static_assert(std::is_base_of_v<AppState, StateType>,
+				"[App] -- Cannot add type AppState which is not derived from StateType.");
 			// move semantic = ownership transfer, i.e pass the temporarily values to new owner. 
 			// could be represent as swallow copy
 			mAppState.emplace(std::move(name), std::make_unique<StateType>());

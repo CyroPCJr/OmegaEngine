@@ -74,6 +74,19 @@ Matrix4 Matrix4::RotationQuaternion(const Quaternion& q)
 	};
 }
 
+Matrix4 Matrix4::Transform(const Vector3& translation, const Quaternion& rotation, const Vector3& scale)
+{
+	Math::Matrix4 transform = Math::Matrix4::RotationQuaternion(rotation);
+	transform._11 *= scale.x;
+	transform._22 *= scale.y;
+	transform._33 *= scale.z;
+	transform._41 = translation.x;
+	transform._42 = translation.y;
+	transform._43 = translation.z;
+	return transform;
+
+}
+
 Quaternion Quaternion::RotationAxis(const Vector3& axis, float rad)
 {
 	const float halfAngle = rad * 0.5f;

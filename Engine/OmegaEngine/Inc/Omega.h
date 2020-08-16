@@ -10,6 +10,10 @@
 #include "App.h"
 #include "AppState.h"
 
+// Component heardes
+#include "ColliderComponent.h"
+#include "TransformComponent.h"
+
 // Terrain headers
 #include "Terrain.h"
 

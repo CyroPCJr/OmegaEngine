@@ -45,7 +45,7 @@ namespace Omega::Core
 			// Get the next free slots
 			// Set entry instance pointer
 			// Return a handle to this entry (set index and generation)
-			uint32_t key = mFreeSlots.front();
+			uint32_t key = mFreeSlots.back();
 			mFreeSlots.pop_back();
 
 			mEntries[key].instance = std::move(instance);
@@ -78,13 +78,8 @@ namespace Omega::Core
 			for (size_t i = 0; i < size; ++i)
 			{
 				mEntries[i].generation++;
+				mFreeSlots.push_back(i + 1);
 			}
-
-			for (size_t i = 1; i < size; ++i)
-			{
-				mFreeSlots.push_back(i);
-			}
-
 		}
 
 		bool IsValid(HandleType handle) const

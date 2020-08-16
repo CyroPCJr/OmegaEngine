@@ -4,6 +4,7 @@
 #include <ImGui\Inc\imgui.h>
 
 using namespace Omega;
+using namespace Omega::Graphics;
 
 void TransformComponent::Initialize()
 {
@@ -23,28 +24,19 @@ void TransformComponent::Render()
 
 void TransformComponent::DebugUI()
 {
-	if (mIsDebugActivated)
+	/*if (mIsDebugActivated)
 	{
 		ImGui::Begin("Transform", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 		ImGui::Text("Position"); 
 		ImGui::Text("Rotation");
 		ImGui::Text("Scale");
 		ImGui::End();
-	}
+	}*/
+	auto transform = GetTransform();
+	SimpleDraw::AddTransform(transform);
 }
 
-void TransformComponent::SetPosition(const Math::Matrix4& transform)
+Math::Matrix4 TransformComponent::GetTransform() const
 {
-	mPosition = GetTranslation(transform);
-
-}
-
-Math::Vector3 Omega::TransformComponent::Up(const Math::Matrix4& transform)
-{
-	return GetUp(transform);
-}
-
-Math::Vector3 Omega::TransformComponent::Right(const Math::Matrix4& transform)
-{
-	return GetRight(transform);
+	return Math::Matrix4::Transform(position, rotation, scale);
 }

@@ -4,7 +4,9 @@
 
 namespace Omega
 {
-	class ColliderComponent final: public Component
+	class TransformComponent;
+
+	class ColliderComponent final : public Component
 	{
 	public:
 		void Initialize() override;
@@ -17,10 +19,17 @@ namespace Omega
 		void EnableDebugUI(bool isActivated) { mIsDebugActivated = isActivated; }
 
 		void SetAABB(const Math::AABB& aabb) { mAABB = aabb; }
-		const Math::AABB& GetAABB() const { return mAABB; }
 
-	private:
+		Math::AABB GetAABB() const;
+		Math::OBB GetOBB() const;
+		Math::Sphere GetSphere() const;
+
+
+		Math::Vector3 extend = Math::Vector3::One;
+		Math::Vector3 center = Math::Vector3::Zero;
 		Math::AABB mAABB;
+	private:
+		const TransformComponent* mTransformComponent = nullptr;
 		bool mIsDebugActivated = false;
 	};
 }

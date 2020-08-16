@@ -26,6 +26,7 @@ namespace Omega::Math
 
 		static Matrix4 RotationAxis(const Vector3& axis, float rad);
 		static Matrix4 RotationQuaternion(const Quaternion& q);
+		static Matrix4 Transform(const Vector3& translation, const Quaternion& rotation, const Vector3& scale);
 
 #pragma region operator overload
 
@@ -285,5 +286,7 @@ namespace Omega::Math
 			m._33 *= v.z;
 			return m;
 		}
+
+		
 	};
 }

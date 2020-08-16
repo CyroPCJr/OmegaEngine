@@ -1,3 +1,4 @@
+
 #pragma once
 
 namespace Omega
@@ -14,7 +15,6 @@ namespace Omega
 	{
 	public:
 		GameObject() = default;
-
 		GameObject(const GameObject&) = delete;
 		GameObject& operator=(const GameObject&) = delete;
 
@@ -25,12 +25,23 @@ namespace Omega
 		void Render();
 		void DebugUI();
 
-		template <class T, class = std::void_t<std::is_base_of<Component, T>>>
-		T* AddComponent()
+		template <class ComponentType>
+		ComponentType* AddComponent()
 		{
-			auto& newComponent = mComponents.emplace_back(std::make_unique<T>());
+			static_assert(std::is_base_of_v<Component, ComponentType>,
+				"[GameObject] -- Cannot add type ComponentType which is not derived from Component.");
+			OMEGAASSERT(!mInitialized, "[GameObject] -- Cannot add new components once the game object is already initialized.");
+			auto& newComponent = mComponents.emplace_back(std::make_unique<ComponentType>());
 			newComponent->mOwner = this;
-			return static_cast<T*>(newComponent.get());
+			return static_cast<ComponentType*>(newComponent.get());
+		}
+
+		template <class ComponentType>
+		ComponentType* GetComponent()
+		{
+			// HACK - assume the first component is the component we want
+			auto iter = mComponents.begin();
+			return static_cast<ComponentType*>(iter->get());
 		}
 
 		GameWorld& GetWorld() { return *mWorld; }
@@ -49,5 +60,6 @@ namespace Omega
 		std::string mName = "NoName";
 		GameObjectHandle mHandle;
 		Components mComponents;
+		bool mInitialized = false;
 	};
 }

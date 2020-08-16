@@ -143,13 +143,22 @@ namespace Omega::Graphics
 
 		void AddTransform(const Math::Matrix4& transform)
 		{
-			Math::Vector3 position = Math::GetTranslation(transform);
 			Math::Vector3 right = Math::GetRight(transform);
 			Math::Vector3 up = Math::GetUp(transform);
 			Math::Vector3 forward = Math::GetForward(transform);
+			Math::Vector3 position = Math::GetTranslation(transform);
 			AddLine(position, position + right, Colors::Red);
 			AddLine(position, position + up, Colors::Green);
 			AddLine(position, position + forward, Colors::Blue);
+
+			/*auto r = Math::GetRight(transform);
+			auto u = Math::GetUp(transform);
+			auto l = Math::GetLook(transform);
+			auto p = Math::GetTranslation(transform);
+
+			AddLine(p, p + r, Colors::Red);
+			AddLine(p, p + u, Colors::Green);
+			AddLine(p, p + l, Colors::Blue);*/
 		}
 
 		void AddOBB(const Math::OBB& obb, const Color& color)
