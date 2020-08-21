@@ -30,6 +30,9 @@
     <ClCompile Include="HandleTest.cpp">
       <Filter>TestFiles</Filter>
     </ClCompile>
+    <ClCompile Include="MetaTest.cpp">
+      <Filter>TestFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
