@@ -22,6 +22,7 @@
 #include "GameObject.h"
 #include "GameObjectFactory.h"
 #include "GameWorld.h"
+#include "Service.h"
 
 namespace Omega 
 {

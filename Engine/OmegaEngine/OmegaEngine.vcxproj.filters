@@ -72,6 +72,9 @@
     <ClInclude Include="Inc\ColliderComponent.h">
       <Filter>Inc\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Service.h">
+      <Filter>Inc\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="Src\ColliderComponent.cpp">
       <Filter>Src\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Service.cpp">
+      <Filter>Src\World</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
