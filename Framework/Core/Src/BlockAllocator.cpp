@@ -30,7 +30,7 @@ void* BlockAllocator::Allocate()
 	if (mFreeSlots.empty()) return nullptr;
 	const size_t key = mFreeSlots.back();
 	mFreeSlots.pop_back();
-	return reinterpret_cast<uint8_t*>(mData) + key * mBlockSize;
+	return static_cast<uint8_t*>(mData) + key * mBlockSize;
 }
 
 void BlockAllocator::Free(void* ptr)
