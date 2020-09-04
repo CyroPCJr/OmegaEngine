@@ -1,7 +1,9 @@
 #pragma once
 
+#include "MetaArray.h"
 #include "MetaClass.h"
 #include "MetaField.h"
+#include "MetaPointer.h"
 #include "MetaType.h"
 #include "MetaUtil.h"
 
@@ -23,7 +25,15 @@
 	META_CLASS_BEGIN_INTERNAL(ClassType)\
 		const Omega::Core::Meta::MetaClass* parentMetaClass = nullptr;
 
+#define META_DERIVED_BEGIN(ClassType, ParentType)\
+	META_CLASS_BEGIN_INTERNAL(ClassType)\
+		const Omega::Core::Meta::MetaClass* parentMetaClass = ParentType::StaticGetMetaClass();
+
 #define META_CLASS_BEGIN_INTERNAL(ClassType)\
+	template <> const Omega::Core::Meta::MetaType* Omega::Core::Meta::GetMetaType<ClassType>()\
+	{\
+		return ClassType::StaticGetMetaClass();\
+	}\
 	const Omega::Core::Meta::MetaClass* ClassType::StaticGetMetaClass()\
 	{\
 		using Class = ClassType;\
@@ -37,6 +47,9 @@
 
 #define META_FIELD_END\
 		};
+
+#define META_NO_FIELD\
+		static const std::initializer_list<Omega::Core::Meta::MetaField> fields;
 
 #define META_CLASS_END\
 		static const Omega::Core::Meta::MetaClass sMetaClass(\

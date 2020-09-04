@@ -37,11 +37,23 @@ namespace Omega
 		}
 
 		template <class ComponentType>
+		const ComponentType* GetComponent() const
+		{
+			for (auto& component : mComponents)
+			{
+				if (component->GetMetaClass() == ComponentType::StaticGetMetaClass())
+				{
+					return static_cast<const ComponentType*>(component.get());
+				}
+			}
+			return nullptr;
+		}
+
+		template <class ComponentType>
 		ComponentType* GetComponent()
 		{
-			// HACK - assume the first component is the component we want
-			auto iter = mComponents.begin();
-			return static_cast<ComponentType*>(iter->get());
+			auto constMe = static_cast<const GameObject*>(this);
+			return const_cast<ComponentType*>(constMe->GetComponent<ComponentType>());
 		}
 
 		GameWorld& GetWorld() { return *mWorld; }

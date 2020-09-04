@@ -69,6 +69,12 @@
     <ClCompile Include="Src\MetaField.cpp">
       <Filter>Src\Meta</Filter>
     </ClCompile>
+    <ClCompile Include="Src\MetaArray.cpp">
+      <Filter>Src\Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MetaPointer.cpp">
+      <Filter>Src\Meta</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -123,6 +129,12 @@
       <Filter>Inc\Meta</Filter>
     </ClInclude>
     <ClInclude Include="Inc\MetaField.h">
+      <Filter>Inc\Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\MetaArray.h">
+      <Filter>Inc\Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\MetaPointer.h">
       <Filter>Inc\Meta</Filter>
     </ClInclude>
   </ItemGroup>

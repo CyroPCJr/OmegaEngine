@@ -2,6 +2,10 @@
 
 namespace Omega::Core::Meta
 {
+	class MetaClass;
+	class MetaArray;
+	class MetaPointer;
+
 	class MetaType
 	{
 	public:
@@ -12,6 +16,10 @@ namespace Omega::Core::Meta
 			Array,
 			Pointer
 		};
+
+		const MetaClass* AsMetaClass() const;
+		const MetaArray* AsMetaArray() const;
+		const MetaPointer* AsMetaPointer() const;
 
 		MetaType(Category category, const char* name, size_t size);
 

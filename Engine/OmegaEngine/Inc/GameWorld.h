@@ -24,6 +24,27 @@ namespace Omega
 		}
 
 		template <class ServiceType>
+		const ServiceType* GetService() const
+		{
+			for (auto& service : mServices)
+			{
+				if (service->GetMetaClass() == ServiceType::StaticGetMetaClass())
+				{
+					return static_cast<const ServiceType*>(service.get());
+				}
+			}
+			return nullptr;
+		}
+
+		template <class ServiceType>
+		ServiceType* GetService()
+		{
+			auto constMe = static_cast<const GameWorld*>(this);
+			return const_cast<ServiceType*>(constMe->GetComponent<ServiceType>());
+		}
+
+
+		template <class ServiceType>
 		ServiceType* GetComponent()
 		{
 			// HACK - assume the first service is the service we want
