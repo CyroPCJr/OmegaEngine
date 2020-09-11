@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\EngineMath.cpp" />
+    <ClCompile Include="Src\MetaRegistration.cpp" />
     <ClCompile Include="Src\PerlinNoise.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -161,6 +162,7 @@
     <ClInclude Include="Inc\EngineMath.h" />
     <ClInclude Include="Inc\LineSegment.h" />
     <ClInclude Include="Inc\Matrix3.h" />
+    <ClInclude Include="Inc\MetaRegistration.h" />
     <ClInclude Include="Inc\OBB.h" />
     <ClInclude Include="Inc\PerlinNoise.h" />
     <ClInclude Include="Inc\Plane.h" />

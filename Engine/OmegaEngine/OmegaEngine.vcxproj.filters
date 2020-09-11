@@ -34,6 +34,9 @@
     <Filter Include="Src\Component">
       <UniqueIdentifier>{2f906539-4274-4a8d-8cbd-613ad0683f40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Meta">
+      <UniqueIdentifier>{579972d0-3b7b-429a-8155-8ceb59541a54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Omega.h">
@@ -75,6 +78,9 @@
     <ClInclude Include="Inc\Service.h">
       <Filter>Inc\World</Filter>
     </ClInclude>
+    <ClInclude Include="Src\MetaRegistration.h">
+      <Filter>Src\Meta</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">
@@ -109,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="Src\Service.cpp">
       <Filter>Src\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MetaRegistration.cpp">
+      <Filter>Src\Meta</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

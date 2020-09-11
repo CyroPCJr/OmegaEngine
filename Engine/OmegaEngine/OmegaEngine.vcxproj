@@ -163,6 +163,7 @@
     <ClInclude Include="Inc\Service.h" />
     <ClInclude Include="Inc\Terrain.h" />
     <ClInclude Include="Inc\TransformComponent.h" />
+    <ClInclude Include="Src\MetaRegistration.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +172,7 @@
     <ClCompile Include="Src\GameObject.cpp" />
     <ClCompile Include="Src\GameObjectFactory.cpp" />
     <ClCompile Include="Src\GameWorld.cpp" />
+    <ClCompile Include="Src\MetaRegistration.cpp" />
     <ClCompile Include="Src\Omega.cpp" />
     <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Precompiled.cpp" />

@@ -155,6 +155,7 @@
     <ClInclude Include="Inc\MetaField.h" />
     <ClInclude Include="Inc\MetaPointer.h" />
     <ClInclude Include="Inc\MetaRegistration.h" />
+    <ClInclude Include="Inc\MetaRegistry.h" />
     <ClInclude Include="Inc\MetaType.h" />
     <ClInclude Include="Inc\MetaUtil.h" />
     <ClInclude Include="Inc\TimeUtil.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Src\MetaField.cpp" />
     <ClCompile Include="Src\MetaPointer.cpp" />
     <ClCompile Include="Src\MetaRegistration.cpp" />
+    <ClCompile Include="Src\MetaRegistry.cpp" />
     <ClCompile Include="Src\MetaType.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -75,6 +75,9 @@
     <ClCompile Include="Src\MetaPointer.cpp">
       <Filter>Src\Meta</Filter>
     </ClCompile>
+    <ClCompile Include="Src\MetaRegistry.cpp">
+      <Filter>Src\Meta</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -135,6 +138,9 @@
       <Filter>Inc\Meta</Filter>
     </ClInclude>
     <ClInclude Include="Inc\MetaPointer.h">
+      <Filter>Inc\Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\MetaRegistry.h">
       <Filter>Inc\Meta</Filter>
     </ClInclude>
   </ItemGroup>

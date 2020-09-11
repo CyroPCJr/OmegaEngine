@@ -16,6 +16,12 @@
     <Filter Include="Inc\Geometry">
       <UniqueIdentifier>{df192297-e73c-4cba-9527-c8b6399ff26e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Meta">
+      <UniqueIdentifier>{bc3903fa-61b5-458a-a46a-db7a072e969e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Meta">
+      <UniqueIdentifier>{75b77f00-cefe-4f45-b128-74309f694cc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -78,6 +84,9 @@
     <ClInclude Include="Inc\LineSegment.h">
       <Filter>Inc\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\MetaRegistration.h">
+      <Filter>Inc\Meta</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -91,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="Src\PerlinNoise.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MetaRegistration.cpp">
+      <Filter>Src\Meta</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

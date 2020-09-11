@@ -8,6 +8,12 @@ namespace Omega::Core::Meta
 	template<class DataType>
 	const MetaType* GetMetaType();
 
+	template<class DataType>
+	void Deserialize(void* instance, const rapidjson::Value& value)
+	{
+		static_assert(sizeof(DataType) == -1,"No specialization for deserializing this type.");
+	}
+
 	namespace Detail
 	{
 		template<class DataType>

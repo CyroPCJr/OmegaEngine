@@ -9,10 +9,12 @@ using namespace Omega::Core::Meta;
 MetaClass::MetaClass(const char* name,
 	size_t size,
 	const MetaClass* parent,
-	std::vector<MetaField> fields)
+	std::vector<MetaField> fields,
+	CreateFunc create)
 	: MetaType(MetaType::Category::Class, name, size)
 	, mParent(parent)
 	, mFields(std::move(fields))
+	, mCreate(std::move(create))
 {
 }
 
@@ -53,6 +55,22 @@ const MetaField* MetaClass::GetField(size_t index) const
 size_t MetaClass::GetFieldCount() const
 {
 	return mFields.size() + GetParentFieldCount();
+}
+
+void* MetaClass::Create() const
+{
+	OMEGAASSERT(mCreate, "[MetaClass] -- No creation callable registered for '%s'.", GetName());
+	return mCreate();
+}
+
+void MetaClass::Deserialize(void* classInstance, const rapidjson::Value& jsonValue) const
+{
+	for (auto& member : jsonValue.GetObjectW())
+	{
+		auto metaField = FindField(member.name.GetString());
+		auto metaType = metaField->GetMetaType();
+		metaType->Deserialize(metaField->GetFieldInstance(classInstance), member.value);
+	}
 }
 
 size_t MetaClass::GetParentFieldCount() const

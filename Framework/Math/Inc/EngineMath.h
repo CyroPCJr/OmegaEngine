@@ -23,6 +23,8 @@
 #include "Rect.h"
 #include "LineSegment.h"
 
+#include "MetaRegistration.h"
+
 namespace Omega::Math
 {
 	template<class T>

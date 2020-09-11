@@ -7,6 +7,8 @@ namespace Omega
 	class TransformComponent final : public Component
 	{
 	public:
+		META_CLASS_DECLARE
+
 		void Initialize() override;
 		void Terminate() override;
 

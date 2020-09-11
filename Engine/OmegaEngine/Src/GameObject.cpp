@@ -5,6 +5,10 @@
 
 using namespace Omega;
 
+META_CLASS_BEGIN(GameObject)
+	META_NO_FIELD
+META_CLASS_END
+
 void GameObject::Initialize()
 {
 	OMEGAASSERT(!mInitialized, "[GameObject] -- Game object already initialized!");
@@ -45,4 +49,12 @@ void GameObject::DebugUI()
 	{
 		component->DebugUI();
 	}
+}
+
+Component* GameObject::AddComponent(const Core::Meta::MetaClass* metaClass)
+{
+	Component* newComponent = static_cast<Component*>(metaClass->Create());
+	newComponent->mOwner = this;
+	mComponents.emplace_back(std::unique_ptr<Component>(newComponent));
+	return newComponent;
 }

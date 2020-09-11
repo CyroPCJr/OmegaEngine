@@ -30,6 +30,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_HelloTriangle", "VGP242\03_HelloTriangle\03_HelloTriangle.vcxproj", "{F92497A4-0332-4F9A-A194-2653B46F5570}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{38D4B487-BD46-4940-ACBE-375938789AA7}"
+	ProjectSection(SolutionItems) = preProject
+		Assets\Templates\test.json = Assets\Templates\test.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{7B09742D-A0BD-4B0C-9E89-DDD9C2905B66}"
 	ProjectSection(SolutionItems) = preProject

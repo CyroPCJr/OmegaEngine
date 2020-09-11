@@ -1,6 +1,8 @@
 #include "Precompiled.h"
 #include "App.h"
 
+#include "MetaRegistration.h"
+
 using namespace Omega;
 using namespace Omega::Core;
 using namespace Omega::Graphics;
@@ -16,8 +18,14 @@ void App::ChangeState(const std::string& name)
 
 void App::Run(AppConfig appConfig)
 {
+	LOG("App -- Running ...");
 	mAppConfig = std::move(appConfig);
 
+	LOG("App -- Registering meta types ...");
+	Core::StaticMetaRegister();
+	Math::StaticMetaRegister();
+	Omega::StaticMetaRegister();
+	
 	// Initialize timer
 	TimeUtil::GetTime();
 

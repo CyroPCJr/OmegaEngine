@@ -14,6 +14,8 @@ namespace Omega
 	class GameObject final
 	{
 	public:
+		META_CLASS_DECLARE
+
 		GameObject() = default;
 		GameObject(const GameObject&) = delete;
 		GameObject& operator=(const GameObject&) = delete;
@@ -24,6 +26,8 @@ namespace Omega
 		void Update(float deltaTime);
 		void Render();
 		void DebugUI();
+
+		Component* AddComponent(const Core::Meta::MetaClass* metaClass);
 
 		template <class ComponentType>
 		ComponentType* AddComponent()
