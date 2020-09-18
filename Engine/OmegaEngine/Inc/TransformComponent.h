@@ -21,8 +21,8 @@ namespace Omega
 		Math::Matrix4 GetTransform() const;
 
 		Math::Vector3 position = Math::Vector3::Zero;
-		Math::Vector3 scale = Math::Vector3::Zero;
 		Math::Quaternion rotation = Math::Quaternion::Zero;
+		Math::Vector3 scale = Math::Vector3::Zero;
 
 		bool mIsDebugActivated = false;
 	};

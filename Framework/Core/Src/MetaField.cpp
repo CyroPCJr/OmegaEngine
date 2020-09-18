@@ -12,6 +12,6 @@ MetaField::MetaField(const MetaType* type,
 
 void* MetaField::GetFieldInstance(void* classInstance) const
 {
-	return static_cast<uint8_t*>(classInstance);
+	return static_cast<uint8_t*>(classInstance) + mOffset;
 }
 

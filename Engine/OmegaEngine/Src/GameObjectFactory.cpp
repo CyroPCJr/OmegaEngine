@@ -19,7 +19,7 @@ GameObject* GameObjectFactory::Create(GameObjectAllocator& allocator, std::files
 
 		char readBuffer[65536];
 		FileReadStream is(file, readBuffer, sizeof(readBuffer));
-
+		
 		Document document;
 		document.ParseStream(is);
 

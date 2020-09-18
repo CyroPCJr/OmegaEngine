@@ -31,12 +31,11 @@ const MetaField* MetaClass::FindField(const char* name) const
 		{
 			return &field;
 		}
-
-		// If The field is not found, try the parent
-		if (mParent != nullptr)
-		{
-			return mParent->FindField(name);
-		}
+	}
+	// If The field is not found, try the parent
+	if (mParent != nullptr)
+	{
+		return mParent->FindField(name);
 	}
 	return nullptr;
 }
