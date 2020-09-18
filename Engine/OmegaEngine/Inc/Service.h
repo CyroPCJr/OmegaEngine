@@ -7,6 +7,8 @@ namespace Omega
 	class Service
 	{
 	public:
+		META_CLASS_DECLARE;
+
 		Service() = default;
 		virtual ~Service() = default;
 

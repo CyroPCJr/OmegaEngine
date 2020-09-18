@@ -12,7 +12,6 @@ public:
 	void Render() override;
 	void DebugUI() override;
 private:
-	
-	Omega::Graphics::Camera mCamera;
 	Omega::GameWorld mWorld;
+	Omega::CameraService* mCameraService;
 };

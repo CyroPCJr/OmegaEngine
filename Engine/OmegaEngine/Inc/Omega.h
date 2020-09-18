@@ -14,6 +14,9 @@
 #include "ColliderComponent.h"
 #include "TransformComponent.h"
 
+// Service headers
+#include "CameraService.h"
+
 // Terrain headers
 #include "Terrain.h"
 

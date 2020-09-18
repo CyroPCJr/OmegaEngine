@@ -19,7 +19,7 @@ namespace Omega
 				"[GameWorld] -- 'Service Type' must be derived from type 'service'.");
 			OMEGAASSERT(!mInitialized, "[GameWorld] -- Cannot add service after world has already initialized.");
 			auto& newService = mServices.emplace_back(std::make_unique<ServiceType>());
-			newService->mOwner = this;
+			newService->mWorld = this;
 			return static_cast<ServiceType*>(newService.get());
 		}
 

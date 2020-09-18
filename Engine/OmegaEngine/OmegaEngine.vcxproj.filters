@@ -37,6 +37,12 @@
     <Filter Include="Src\Meta">
       <UniqueIdentifier>{579972d0-3b7b-429a-8155-8ceb59541a54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Services">
+      <UniqueIdentifier>{74676277-b3f9-445c-88cb-49555ffa11d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Services">
+      <UniqueIdentifier>{2a444074-49bf-4f9e-b3d1-58b15c96d745}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Omega.h">
@@ -81,6 +87,9 @@
     <ClInclude Include="Src\MetaRegistration.h">
       <Filter>Src\Meta</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\CameraService.h">
+      <Filter>Inc\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">
@@ -118,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="Src\MetaRegistration.cpp">
       <Filter>Src\Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CameraService.cpp">
+      <Filter>Src\Services</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

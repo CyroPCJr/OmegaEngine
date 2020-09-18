@@ -2,6 +2,7 @@
 
 #include <ImGui/Inc/imgui.h>
 
+using namespace Omega;
 using namespace Omega::Graphics;
 using namespace Omega::Input;
 using namespace Omega::Math;
@@ -11,11 +12,15 @@ void GameState::Initialize()
 {
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
 
-	mCamera.SetNearPlane(0.1f);
-	mCamera.SetFarPlane(300.0f);
-	mCamera.SetPosition({ 0.0f, 10.0f, -30.0f });
-	mCamera.SetLookAt({ 0.0f, 0.0f, 0.0f });
+	mCameraService = mWorld.AddService<CameraService>();
 	mWorld.Initialize(100);
+
+	auto& camera = mCameraService->GetActiveCamera();
+	camera.SetNearPlane(0.1f);
+	camera.SetFarPlane(300.0f);
+	camera.SetPosition({ 0.0f, 10.0f, -30.0f });
+	camera.SetLookAt({ 0.0f, 0.0f, 0.0f });
+	
 	/*mWorld.Create("../../Assets/Templates/tallBox.json", "Cyro");
 	mWorld.Create("../../Assets/Templates/longBox.json", "Cyro");
 	mWorld.Create("../../Assets/Templates/fatBox.json", "Cyro");*/
@@ -34,27 +39,29 @@ void GameState::Update(float deltaTime)
 	const float kMoveSpeed = inputSystem->IsKeyDown(KeyCode::LSHIFT) ? 100.0f : 10.0f;
 	const float kTurnSpeed = 1.0f;
 
+	auto& camera = mCameraService->GetActiveCamera();
+
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
-		mCamera.Walk(kMoveSpeed * deltaTime);
+		camera.Walk(kMoveSpeed * deltaTime);
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
-		mCamera.Walk(-kMoveSpeed * deltaTime);
+		camera.Walk(-kMoveSpeed * deltaTime);
 	}
 	if (inputSystem->IsKeyDown(KeyCode::D))
 	{
-		mCamera.Strafe(kMoveSpeed * deltaTime);
+		camera.Strafe(kMoveSpeed * deltaTime);
 	}
 	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
-		mCamera.Strafe(-kMoveSpeed * deltaTime);
+		camera.Strafe(-kMoveSpeed * deltaTime);
 	}
 	if (inputSystem->IsMouseDown(MouseButton::RBUTTON))
 	{
-		mCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
-		mCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+		camera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
+		camera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 
 	mWorld.Update(deltaTime);
@@ -65,7 +72,7 @@ void GameState::Render()
 	mWorld.Render();
 
 	SimpleDraw::AddGroundPlane(30.0f);
-	SimpleDraw::Render(mCamera);
+	SimpleDraw::Render(mCameraService->GetActiveCamera());
 }
 
 void GameState::DebugUI()
