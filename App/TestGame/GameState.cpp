@@ -21,10 +21,10 @@ void GameState::Initialize()
 	camera.SetPosition({ 0.0f, 10.0f, -30.0f });
 	camera.SetLookAt({ 0.0f, 0.0f, 0.0f });
 	
-	/*mWorld.Create("../../Assets/Templates/tallBox.json", "Cyro");
+	mWorld.Create("../../Assets/Templates/tallBox.json", "Cyro");
 	mWorld.Create("../../Assets/Templates/longBox.json", "Cyro");
-	mWorld.Create("../../Assets/Templates/fatBox.json", "Cyro");*/
-	mWorld.Create("../../Assets/Templates/test.json", "Test");
+	mWorld.Create("../../Assets/Templates/fatBox.json", "Cyro");
+	/*mWorld.Create("../../Assets/Templates/test.json", "Test");*/
 }
 
 void GameState::Terminate()

@@ -73,7 +73,8 @@ void GameState::Initialize()
 
 	const std::filesystem::path filePathShaders = "../../Assets/Shaders/";
 
-	mVertexShader.Initialize(filePathShaders / "Standard.fx", Vertex::Format);
+	//mVertexShader.Initialize(filePathShaders / "Standard.fx", Vertex::Format); // error in this line
+	mVertexShader.Initialize(filePathShaders / "Standard.fx", BoneVertex::Format); // OK
 	mPixelShader.Initialize(filePathShaders / "Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
@@ -198,7 +199,7 @@ void GameState::Update(float deltaTime)
 		vertex = TransformCoord(vertex, invViewProj);
 	}
 
-	auto lightLook = mLightCamera.GetDirection();
+	const auto& lightLook = mLightCamera.GetDirection();
 	auto lightSide = Normalize(Cross(Vector3::YAxis, lightLook));
 	auto lightUp = Normalize(Cross(lightLook, lightSide));
 	float minX = FLT_MAX, maxX = -FLT_MAX;

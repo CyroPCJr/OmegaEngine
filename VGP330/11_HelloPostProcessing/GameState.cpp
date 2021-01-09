@@ -63,7 +63,8 @@ void GameState::Initialize()
 	
 	std::filesystem::path postProcessingShader = "../../Assets/Shaders/PostProcessing.fx";
 	mPostProcessingVertexShader.Initialize(postProcessingShader, VertexPX::Format);
-	mPostProcessingPixelShader.Initialize(postProcessingShader, "PSSepiaTone");
+	//mPostProcessingPixelShader.Initialize(postProcessingShader, "PSSepiaTone");
+	mPostProcessingPixelShader.Initialize(postProcessingShader, "PSNoProcessing");
 }
 
 void GameState::Terminate()
@@ -179,6 +180,59 @@ void GameState::DebugUI()
 	{
 		ImGui::DragFloat("Rotation X##Transform", &mRotation.y, 0.01f);
 		ImGui::DragFloat("Rotation Y##Transform", &mRotation.x, 0.01f);
+	}
+
+	if (ImGui::CollapsingHeader("Post Processing", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		static bool PosProcessingSepiaTone = false;
+		static bool GreyScale = false;
+		static bool InverseColor = false;
+		static bool DistortionColor = false;
+		static bool Default = true;
+		if (ImGui::Checkbox("Sepia Tone", &PosProcessingSepiaTone))
+		{
+			DistortionColor = false;
+			InverseColor = false;
+			GreyScale = false;
+			Default = false;
+			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSSepiaTone");
+		}
+
+		if (ImGui::Checkbox("No Post Processing", &Default))
+		{
+			DistortionColor = false;
+			InverseColor = false;
+			GreyScale = false;
+			PosProcessingSepiaTone = false;
+			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSNoProcessing");
+		}
+
+		if (ImGui::Checkbox("GreyScale", &GreyScale))
+		{
+			DistortionColor = false;
+			InverseColor = false;
+			Default = false;
+			PosProcessingSepiaTone = false;
+			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSGreyScale");
+		}
+
+		if (ImGui::Checkbox("Inverse Color", &InverseColor))
+		{
+			DistortionColor = false;
+			Default = false;
+			GreyScale = false;
+			PosProcessingSepiaTone = false;
+			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSInverseColor");
+		}
+
+		/*if (ImGui::Checkbox("Distortion Color", &DistortionColor))
+		{
+			Default = false;
+			GreyScale = false;
+			InverseColor = false;
+			PosProcessingSepiaTone = false;
+			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSDistortionColor");
+		}*/
 	}
 
 	ImGui::End();

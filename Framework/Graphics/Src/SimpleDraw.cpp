@@ -430,7 +430,7 @@ namespace Omega::Graphics
 		{
 			auto matView = camera.GetViewMatrix();
 			auto matProj = camera.GetPerspectiveMatrix();
-			auto transform = Math::Transpose(matView * matProj);
+			const auto& transform = Math::Transpose(matView * matProj);
 			mConstantBuffer.Update(&transform);
 			mConstantBuffer.BindVS(0);
 
@@ -458,7 +458,8 @@ namespace Omega::Graphics
 				0.0f, 0.0f, 1.0f,0.0f,
 				-1.0f, 1.0f, 0.0f,1.0f
 			};
-			mConstantBuffer.Update(&Math::Transpose(screenToNDC));
+			auto transposeNDC = Math::Transpose(screenToNDC); // moved to local variable
+			mConstantBuffer.Update(&transposeNDC);
 			mConstantBuffer.BindVS();
 
 			/*mMeshBuffer.Update(mFillVertices.get(), mVertexCount);

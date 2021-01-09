@@ -11,9 +11,17 @@ public:
 	void Update(float deltaTime) override;
 	void Render() override;
 	void DebugUI() override;
+
+	void DrawCounterFramesUI(bool active);
+
 private:
 	
 	Omega::Graphics::Camera mCamera;
 	Omega::Math::Vector3 mTarget;
 	std::vector<Omega::Math::Vector3> mPoints;
+
+
+	// ImGui
+	std::vector<float> mVecFrames;
+	int max_fps = 30;
 };

@@ -111,4 +111,31 @@ void GameState::DebugUI()
 	}
 	ImGui::PlotLines("FPS", lines, IM_ARRAYSIZE(lines));
 	ImGui::End();
+
+	DrawCounterFramesUI(true);
+}
+
+void GameState::DrawCounterFramesUI(bool active)
+{
+	if (!active) return;
+
+	float fps = 1000.0f / ImGui::GetIO().Framerate; //Get frames
+	const size_t frameSize = mVecFrames.size();	
+	if (frameSize > 100) //Max seconds to show
+	{
+		for (size_t i = 1; i < frameSize; ++i)
+		{
+			mVecFrames[i - 1] = mVecFrames[i];
+		}
+		mVecFrames[frameSize - 1] = fps;
+	}
+	else
+	{
+		mVecFrames.push_back(fps);
+	}
+
+	ImGui::Begin("FPS Graph", &active, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Text("Frames: %.1f", ImGui::GetIO().Framerate);
+	ImGui::PlotHistogram("Framerate", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 100.0f, ImVec2(300, 100));
+	ImGui::End();
 }

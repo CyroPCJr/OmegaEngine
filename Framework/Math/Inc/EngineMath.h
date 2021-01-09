@@ -219,7 +219,7 @@ namespace Omega::Math
 	{
 		const float det = Determinant(m);
 		const float inverseDet = 1.0f / det;
-		Matrix4 matrix;
+		Matrix4 matrix{};
 		return matrix.Adjoint(m) * inverseDet;
 	}
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <OmegaEngine/Inc/Omega.h>
+
 class TileMap
 {
 public:
@@ -59,8 +61,8 @@ private:
 	
 	std::vector<AI::Graph::Node> mNodes;
 
-	std::array<X::TextureId, 6> mTextureIds;
-	X::TextureId mCircle;
+	std::array<std::size_t, 6> mTextureIds;
+	std::size_t mCircle;
 	std::vector<int> mTiles;
 	int mColumns = 0;
 	int mRows = 0;

@@ -100,7 +100,8 @@ void GameState::Update(float deltaTime)
 		mCamera.Strafe(kMoveSpeed * deltaTime);
 	}
 
-	mCloudRotation += 0.0001f;
+	mCloudRotation += 0.0005f;
+	mRotation.y += 0.0001f;
 }
 
 void GameState::Render()
@@ -171,6 +172,9 @@ void GameState::Render()
 	mBlendState.Bind();
 
 	mMeshBuffer.Draw();
+
+	
+
 	BlendState::ClearState();
 
 	SimpleDraw::Render(mCamera);
@@ -222,8 +226,8 @@ void GameState::DebugUI()
 
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::DragFloat("Rotation X##Transform", &mRotation.y, 0.01f);
-		ImGui::DragFloat("Rotation Y##Transform", &mRotation.x, 0.01f);
+		ImGui::DragFloat("Rotation X##Transform", &mRotation.x, 0.01f);
+		ImGui::DragFloat("Rotation Y##Transform", &mRotation.y, 0.01f);
 	}
 
 	ImGui::End();
