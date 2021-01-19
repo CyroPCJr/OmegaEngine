@@ -1,4 +1,3 @@
-
 #include "Precompiled.h"
 #include "Skeleton.h"
 #include "AnimationClip.h"
@@ -29,8 +28,8 @@ void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>&
 		Math::Matrix4 matParent = boneMatrices[bone->parent->index];
 		auto currentPosition = GetTranslation(mat);
 		auto parentPosition = GetTranslation(matParent);
-		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Red);
 		SimpleDraw::AddBone(mat);
+		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Red);
 		
 		for (auto& child : bone->children)
 		{

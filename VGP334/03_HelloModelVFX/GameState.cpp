@@ -90,6 +90,7 @@ void GameState::Initialize()
 		RenderTarget::Format::RGBA_U8);
 
 	mModelStartPosition = { 600.0f, 6.0f, 600.0f };
+	mModelSkeletonStartPosition = { 600.0f, 6.0f, 600.0f };
 	// Initialize and load model from assimp
 	//mModel.Initialize("../../Assets/Models/JumpAttack.model");
 	// Capoeira is OK
@@ -103,9 +104,9 @@ void GameState::Initialize()
 	mBoneTransformBuffer.Initialize();
 
 	// Load terrain 
+
 	mTerrain.Initialize(1200, 1200, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
-	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
 }
 
 void GameState::Terminate()
@@ -192,7 +193,7 @@ void GameState::Update(float deltaTime)
 		vertex = TransformCoord(vertex, invViewProj);
 	}
 
-	auto lightLook = mLightCamera.GetDirection();
+	const auto& lightLook = mLightCamera.GetDirection();
 	auto lightSide = Normalize(Cross(Vector3::YAxis, lightLook));
 	auto lightUp = Normalize(Cross(lightLook, lightSide));
 	float minX = FLT_MAX, maxX = -FLT_MAX;
@@ -368,12 +369,12 @@ void GameState::DrawScene()
 		{
 			boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mAnimator.GetBoneMatrices()[i]);
 		}
-		
 		mBoneTransformBuffer.Update(boneTransformData);
 		mModel.Draw();
 	}
 	else
 	{
+		//fix the skeletal position
 		for (auto& bones : mModel.skeleton.bones)
 		{
 			DrawSkeleton(bones.get(), mAnimator.GetBoneMatrices());

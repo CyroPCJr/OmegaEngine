@@ -47,7 +47,7 @@ void GameState::Initialize()
 	ObjLoader::Load("../../Assets/Models/Tank/tank.obj", 0.001f, mTankMesh);
 	mTankMeshBuffer.Initialize(mTankMesh);
 
-	mGroundMesh = MeshBuilder::CreatePlane(300.0f);
+	mGroundMesh = MeshBuilder::CreatePlane(200.0f);
 	mGroundMeshBuffer.Initialize(mGroundMesh);
 
 	mTransformBuffer.Initialize();
@@ -74,7 +74,8 @@ void GameState::Initialize()
 	mSettings.useShadow = 1;
 	mSettings.depthBias = 0.0003f;
 
-	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
+	//mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
+	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", BoneVertex::Format);
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
@@ -235,7 +236,7 @@ void GameState::Update(float deltaTime)
 		vertex = TransformCoord(vertex, invViewProj);
 	}
 
-	auto lightLook = mLightCamera.GetDirection();
+	const auto& lightLook = mLightCamera.GetDirection();
 	auto lightSide = Normalize(Cross(Vector3::YAxis, lightLook));
 	auto lightUp = Normalize(Cross(lightLook, lightSide));
 	float minX = FLT_MAX, maxX = -FLT_MAX;

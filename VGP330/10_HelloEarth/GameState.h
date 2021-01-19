@@ -16,7 +16,13 @@ private:
 	Omega::Graphics::Camera mCamera;
 
 	Omega::Graphics::Mesh mMesh;
-	
+
+	Omega::Graphics::MeshPX mMeshSkyBox;
+	Omega::Graphics::MeshBuffer mMeshBufferSkyBox;
+	Omega::Graphics::Texture mSkybox;
+
+	Omega::Graphics::ConstantBuffer mSkyBoxConstantBuffer;
+
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::MeshBuffer mMeshClouds;
 	Omega::Graphics::Sampler mSamplers;
@@ -26,6 +32,7 @@ private:
 	Omega::Graphics::Texture mNormalMap;
 	Omega::Graphics::Texture mClouds;
 	Omega::Graphics::Texture mNightLights;
+	
 
 	struct TransformData
 	{
@@ -46,7 +53,7 @@ private:
 	using TransformBuffer = Omega::Graphics::TypedConstantBuffer<TransformData>;
 	using LightBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::DirectionalLight>;
 	using MaterialBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::Material>;
-	
+
 	using SettingsDataBuffer = Omega::Graphics::TypedConstantBuffer<SettingsData>;
 
 	SettingsDataBuffer mSettingsDataBuffer;
@@ -60,12 +67,14 @@ private:
 
 	Omega::Graphics::VertexShader mEarthVertexShader;
 	Omega::Graphics::PixelShader mEarthPixelShader;
-	
+
 	Omega::Graphics::VertexShader mCloudVertexShader;
 	Omega::Graphics::PixelShader mCloudPixelShader;
-	
 
-	Omega::Graphics::BlendState mBlendState;	
+	Omega::Graphics::VertexShader mSkyBoxVS;
+	Omega::Graphics::PixelShader mSkyBoxPS;
+
+	Omega::Graphics::BlendState mBlendState;
 
 	Omega::Math::Vector3 mRotation = 0.0f;
 	float mCloudRotation = 0.0f;

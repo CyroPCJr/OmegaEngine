@@ -101,6 +101,7 @@ private:
 	bool mIsSkeleton = false;
 	bool mStopAnimation = false;
 	Omega::Math::Vector3 mModelStartPosition;
+	Omega::Math::Vector3 mModelSkeletonStartPosition;
 
 	// Skeleton Buffer
 	struct BoneTransformData

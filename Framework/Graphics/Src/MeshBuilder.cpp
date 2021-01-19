@@ -202,17 +202,37 @@ MeshPX MeshBuilder::CreateSpherePX(float radius, int rings, int slices, bool isS
 		}
 	}
 
-	for (int i = 0; i < rings; ++i)
-	{
-		for (int j = 0; j < slices; ++j)
-		{
-			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
-			mesh.indices.push_back((j + 0) + ((i + 1) * (slices + 1)));
-			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
+	uint32_t a, b, c, d;
 
-			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
-			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
-			mesh.indices.push_back((j + 1) + ((i + 0) * (slices + 1)));
+	for (int x = 0; x < rings; ++x)
+	{
+		for (int y = 0; y <= slices; ++y)
+		{
+			a = (x % (slices + 1));
+			b = ((x + 1) % (slices + 1));
+			c = (y * (slices + 1));
+			d = ((y + 1) * (slices + 1));
+
+			if (!isSpace)
+			{
+				mesh.indices.push_back(a + c);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + d);
+
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(a + d);
+			}
+			else
+			{
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + c);
+				mesh.indices.push_back(a + c);
+
+				mesh.indices.push_back(a + d);
+				mesh.indices.push_back(b + d);
+				mesh.indices.push_back(b + c);
+			}
 		}
 	}
 	return mesh;
@@ -392,13 +412,13 @@ Mesh MeshBuilder::CreatePlane(float size, uint32_t row, uint32_t column)
 	return mesh;
 }
 
-void MeshBuilder::ComputeNormals(Mesh & mesh)
+void MeshBuilder::ComputeNormals(Mesh& mesh)
 {
 	std::vector<Math::Vector3> vecNormals{};
 	const int indiceSize = static_cast<int>(mesh.indices.size());
 	const int vertexSize = static_cast<int>(mesh.vertices.size());
 	vecNormals.resize(vertexSize);
-	for (int i = 0; i < indiceSize; i+=3)
+	for (int i = 0; i < indiceSize; i += 3)
 	{
 		uint32_t idx_0 = mesh.GetIndices(i + 0);
 		uint32_t idx_1 = mesh.GetIndices(i + 1);
@@ -407,7 +427,7 @@ void MeshBuilder::ComputeNormals(Mesh & mesh)
 		auto v_0 = static_cast<Vertex>(mesh.GetVertex(idx_0));
 		auto v_1 = static_cast<Vertex>(mesh.GetVertex(idx_1));
 		auto v_2 = static_cast<Vertex>(mesh.GetVertex(idx_2));
-		
+
 		Math::Vector3 crossNormalized = Math::Normalize(Cross(v_1.position - v_0.position, v_2.position - v_0.position));
 
 		vecNormals[idx_0] += crossNormalized;

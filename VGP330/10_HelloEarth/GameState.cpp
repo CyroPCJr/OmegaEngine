@@ -16,6 +16,9 @@ void GameState::Initialize()
 	mMesh = MeshBuilder::CreateSphere(10, 64, 64);
 	mMeshBuffer.Initialize(mMesh);
 
+	mMeshSkyBox = MeshBuilder::CreateSpherePX(1000, 12, 360, true);
+	mMeshBufferSkyBox.Initialize(mMeshSkyBox);
+
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
 	mMaterialBuffer.Initialize();
@@ -39,6 +42,9 @@ void GameState::Initialize()
 	mCloudVertexShader.Initialize(assetsEarth, "VSCloud", Vertex::Format);
 	mCloudPixelShader.Initialize(assetsEarth, "PSCloud");
 
+	mSkyBoxVS.Initialize("../../Assets/Shaders/DoTexturing.fx", Vertex::Format);
+	mSkyBoxPS.Initialize("../../Assets/Shaders/DoTexturing.fx");
+
 	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
 	std::filesystem::path root = "../../Assets/Textures";
 	mDifuseTexture.Initialize(root / "earth.jpg");
@@ -47,6 +53,13 @@ void GameState::Initialize()
 	mNormalMap.Initialize(root/ "earth_normal.tif");
 	mClouds.Initialize(root / "earth_clouds.jpg");
 	mNightLights.Initialize(root / "earth_lights.jpg");
+
+	//mSkybox.Initialize(root / "Space_Skybox.jpg");
+	mSkybox.Initialize(root / "Space.jpg");
+
+	//SkyBox ConstantBuffer
+	mSkyBoxConstantBuffer.Initialize(sizeof(Omega::Math::Matrix4));
+
 
 	mBlendState.Initialize(BlendState::Mode::AlphaBlending);
 
@@ -71,6 +84,10 @@ void GameState::Terminate()
 	mMaterialBuffer.Terminate();
 	mLightBuffer.Terminate();
 	mTransformBuffer.Terminate();
+
+	mSkyBoxConstantBuffer.Terminate();
+	mMeshBufferSkyBox.Terminate();
+
 	mMeshBuffer.Terminate();
 }
 
@@ -101,7 +118,6 @@ void GameState::Update(float deltaTime)
 	}
 
 	mCloudRotation += 0.0005f;
-	mRotation.y += 0.0001f;
 }
 
 void GameState::Render()
@@ -113,10 +129,23 @@ void GameState::Render()
 	auto matView = mCamera.GetViewMatrix();
 	auto matProj = mCamera.GetPerspectiveMatrix();
 
+	auto matWVP = Transpose(matWorld * matView * matProj);
+
+	//// Skybox try to fixed the skybox
+	//mSkybox.BindVS();
+	//mSkybox.BindPS();
+	//mSkyBoxConstantBuffer.Update(&matWVP);
+	//mSkyBoxConstantBuffer.BindVS(0);
+	//mSkyBoxConstantBuffer.BindPS(0);
+	//mMeshBufferSkyBox.Draw();
+
+	// Earth
 	TransformData transformData;
+	matWorld = Matrix4::Translation({ 0.0f,0.0f,0.0f });
 	transformData.viewPosition = mCamera.GetPosition();
 	transformData.world = Transpose(matWorld);
 	transformData.wvp = Transpose(matWorld * matView * matProj);
+	
 
 	mTransformBuffer.Update(transformData);
 	mTransformBuffer.BindVS();
@@ -172,8 +201,6 @@ void GameState::Render()
 	mBlendState.Bind();
 
 	mMeshBuffer.Draw();
-
-	
 
 	BlendState::ClearState();
 
