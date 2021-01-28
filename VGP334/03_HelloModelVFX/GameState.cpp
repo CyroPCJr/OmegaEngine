@@ -30,7 +30,8 @@ void GameState::Initialize()
 	mDefaultCamera.SetNearPlane(0.1f);
 	mDefaultCamera.SetFarPlane(30000.0f);
 	mDefaultCamera.SetPosition({ 600.0f, 150.0f, 50.0f });
-	mDefaultCamera.SetLookAt({ 0.0f, 100.0f, 1000.0f });
+	//mDefaultCamera.SetLookAt({ 0.0f, 100.0f, 1000.0f });
+	mDefaultCamera.SetLookAt({ 600.0f, 100.0f, 1000.0f });
 
 	mDebugCamera.SetNearPlane(0.001f);
 	mDebugCamera.SetFarPlane(10000.0f);
@@ -90,21 +91,35 @@ void GameState::Initialize()
 		RenderTarget::Format::RGBA_U8);
 
 	mModelStartPosition = { 600.0f, 6.0f, 600.0f };
-	mModelSkeletonStartPosition = { 600.0f, 6.0f, 600.0f };
+	mModel2_StartPosition = { 800.0f, 6.0f, 600.0f };
+	mModel3_StartPosition = { 400.0f, 6.0f, 600.0f };
 	// Initialize and load model from assimp
-	//mModel.Initialize("../../Assets/Models/JumpAttack.model");
+	// Breakdance is OK
+	//mModel.Initialize("../../Assets/Models/Breaking_Dance/Breakdance.model");
+	// Taunt is OK
+	//mModel.Initialize("../../Assets/Models/Taunt/Taunt.model");
 	// Capoeira is OK
 	//mModel.Initialize("../../Assets/Models/Capoeira/Capoeira.model");
 	//mModel.Initialize("../../Assets/Models/RoundHouse/RoundhouseKick.model");
+	// SambaDancing is OK
 	mModel.Initialize("../../Assets/Models/Samba/SambaDancing.model");
 	mAnimator.Initialize(mModel);
-	mAnimator.ComputeBindPose();
 	mAnimator.PlayAnimation(0);
+
+	// Taunt is OK
+	mModel2.Initialize("../../Assets/Models/Taunt/Taunt.model");
+	mAnimatorModel2.Initialize(mModel2);
+	mAnimatorModel2.PlayAnimation(0);
+
+	// Breakdance is OK
+	mModel3.Initialize("../../Assets/Models/Breaking_Dance/Breakdance.model");
+	mAnimatorModel3.Initialize(mModel3);
+	mAnimatorModel3.PlayAnimation(0);
+
 	// calcualte the bone matrices
 	mBoneTransformBuffer.Initialize();
 
 	// Load terrain 
-
 	mTerrain.Initialize(1200, 1200, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
 }
@@ -112,8 +127,18 @@ void GameState::Initialize()
 void GameState::Terminate()
 {
 	mTerrain.Terminate();
+
+	// Bone ConstatBuffer
 	mBoneTransformBuffer.Terminate();
+
+	// Model
+	mAnimatorModel3.Terminate();
+	mModel3.Terminate();
+	mAnimatorModel2.Terminate();
+	mModel2.Terminate();
+	mAnimator.Terminate();
 	mModel.Terminate();
+
 	mRenderTarget.Terminate();
 	mShadowConstantBuffer.Terminate();
 	mDepthMapConstantBuffer.Terminate();
@@ -165,8 +190,14 @@ void GameState::Update(float deltaTime)
 		mActiveCamera->Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
 		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
-
+	mAnimator.ShowSkeleton(mIsSkeleton);
 	mAnimator.Update(deltaTime);
+
+	mAnimatorModel2.ShowSkeleton(mIsSkeleton);
+	mAnimatorModel2.Update(deltaTime);
+
+	mAnimatorModel3.ShowSkeleton(mIsSkeleton);
+	mAnimatorModel3.Update(deltaTime);
 
 	mLightCamera.SetDirection(mDirectionalLight.direction);
 
@@ -263,7 +294,7 @@ void GameState::DebugUI()
 	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		bool lightCamera = mActiveCamera == &mLightCamera;
+		/*bool lightCamera = mActiveCamera == &mLightCamera;
 		if (ImGui::Checkbox("Use Light Camera", &lightCamera))
 		{
 			mActiveCamera = lightCamera ? &mLightCamera : &mDefaultCamera;
@@ -272,16 +303,17 @@ void GameState::DebugUI()
 		if (ImGui::Checkbox("Use Debug Camera", &debugCamera))
 		{
 			mActiveCamera = debugCamera ? &mDebugCamera : &mDefaultCamera;
-		}
+		}*/
 
-		ImGui::Image(
+		// comment because is not using
+		/*ImGui::Image(
 			mDepthMapRenderTarget.GetShaderResourceView(),
 			{ 150.0f, 150.0f },
 			{ 0.0f, 0.0f },
 			{ 1.0f, 1.0f },
 			{ 1.0f, 1.0f, 1.0f, 1.0f },
 			{ 1.0f, 1.0f, 1.0f, 1.0f }
-		);
+		);*/
 	}
 
 	ImGui::Checkbox("Set time", &mSetTimeCheck);
@@ -289,6 +321,8 @@ void GameState::DebugUI()
 	{
 		ImGui::SliderFloat("Set Time", &mSetTime, 0.0f, mAnimator.GetMaxDuration());
 		mAnimator.SetTime(mSetTime);
+		mAnimatorModel2.SetTime(mSetTime);
+		mAnimatorModel3.SetTime(mSetTime);
 	}
 
 	ImGui::Checkbox("Show Skeleton", &mIsSkeleton);
@@ -350,35 +384,89 @@ void GameState::DrawScene()
 
 	mBoneTransformBuffer.BindVS(5);
 
-	auto matWorld = Matrix4::Translation(mModelStartPosition);
+	// Model 1
+	auto matWorld1 = Matrix4::Translation(mModelStartPosition);
 
-	TransformData transformData;
-	transformData.world = Transpose(matWorld);
-	transformData.wvp = Transpose(matWorld * matView * matProj);
-	transformData.viewPosition = mActiveCamera->GetPosition();
-	mTransformBuffer.Update(transformData);
+	TransformData transformData1;
+	transformData1.world = Transpose(matWorld1);
+	transformData1.wvp = Transpose(matWorld1 * matView * matProj);
+	transformData1.viewPosition = mActiveCamera->GetPosition();
+	mTransformBuffer.Update(transformData1);
 
-	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
-	mShadowConstantBuffer.Update(wvpLight);
+	auto wvpLight1 = Transpose(matWorld1 * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight1);
+
+	BoneTransformData boneTransformData{};
+	for (size_t i = 0; i < mAnimator.GetBoneMatrices().size(); ++i)
+	{
+		boneTransformData.boneTransforms[i] = mAnimator.GetBoneMatrices()[i];
+	}
+	// Send final transform to Shader
+	mBoneTransformBuffer.Update(boneTransformData);
 
 	if (!mIsSkeleton)
 	{
-		// Send final transform to Shader
-		BoneTransformData boneTransformData{};
-		for (size_t i = 0; i < mAnimator.GetBoneMatrices().size(); ++i)
-		{
-			boneTransformData.boneTransforms[i] = Transpose(mModel.skeleton.bones[i]->offsetTransform * mAnimator.GetBoneMatrices()[i]);
-		}
-		mBoneTransformBuffer.Update(boneTransformData);
 		mModel.Draw();
 	}
 	else
 	{
-		//fix the skeletal position
-		for (auto& bones : mModel.skeleton.bones)
-		{
-			DrawSkeleton(bones.get(), mAnimator.GetBoneMatrices());
-		}
+		DrawSkeleton(mModel.skeleton, mAnimator.GetBoneMatrices(), mModelStartPosition);
+	}
+
+	// Model 2
+	auto matWorld2 = Matrix4::Translation(mModel2_StartPosition);
+	TransformData transformData2;
+	transformData2.world = Transpose(matWorld2);
+	transformData2.wvp = Transpose(matWorld2 * matView * matProj);
+	transformData2.viewPosition = mActiveCamera->GetPosition();
+	mTransformBuffer.Update(transformData2);
+
+	auto wvpLight2 = Transpose(matWorld2 * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight2);
+
+	boneTransformData.boneTransforms;
+	for (size_t i = 0; i < mAnimatorModel2.GetBoneMatrices().size(); ++i)
+	{
+		boneTransformData.boneTransforms[i] = mAnimatorModel2.GetBoneMatrices()[i];
+	}
+	// Send final transform to Shader
+	mBoneTransformBuffer.Update(boneTransformData);
+
+	if (!mIsSkeleton)
+	{
+		mModel2.Draw();
+	}
+	else
+	{
+		DrawSkeleton(mModel2.skeleton, mAnimatorModel2.GetBoneMatrices(), mModel2_StartPosition);
+	}
+
+	// Model 3
+	auto matWorld3 = Matrix4::Translation(mModel3_StartPosition);
+	TransformData transformData3;
+	transformData3.world = Transpose(matWorld3);
+	transformData3.wvp = Transpose(matWorld3 * matView * matProj);
+	transformData3.viewPosition = mActiveCamera->GetPosition();
+	mTransformBuffer.Update(transformData3);
+
+	auto wvpLight3 = Transpose(matWorld3 * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight3);
+
+	boneTransformData.boneTransforms;
+	for (size_t i = 0; i < mAnimatorModel3.GetBoneMatrices().size(); ++i)
+	{
+		boneTransformData.boneTransforms[i] = mAnimatorModel3.GetBoneMatrices()[i];
+	}
+	// Send final transform to Shader
+	mBoneTransformBuffer.Update(boneTransformData);
+
+	if (!mIsSkeleton)
+	{
+		mModel3.Draw();
+	}
+	else
+	{
+		DrawSkeleton(mModel3.skeleton, mAnimatorModel3.GetBoneMatrices(), mModel3_StartPosition);
 	}
 
 	mTerrain.SetDirectionalLight(mDirectionalLight);

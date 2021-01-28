@@ -104,7 +104,7 @@ private:
 	// Skeleton bind pose Buffer
 	struct BoneTransformData
 	{
-		Omega::Math::Matrix4 boneTransforms[128];
+		Omega::Math::Matrix4 boneTransforms[256];
 	};
 	
 	BoneTransformData boneTransformData;

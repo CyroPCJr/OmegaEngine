@@ -21,24 +21,44 @@ void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>&
 	{
 		return;
 	}
-
 	if (bone->parent)
 	{
-		Math::Matrix4 mat = boneMatrices[bone->index];
-		Math::Matrix4 matParent = boneMatrices[bone->parent->index];
-		auto currentPosition = GetTranslation(mat);
-		auto parentPosition = GetTranslation(matParent);
-		SimpleDraw::AddBone(mat);
-		SimpleDraw::AddLine(currentPosition, parentPosition, Colors::Red);
-		
+		auto currentPosition = GetTranslation(boneMatrices[bone->index]);
 		for (auto& child : bone->children)
 		{
+			auto childPos = GetTranslation(boneMatrices[child->index]);
+			SimpleDraw::AddLine(currentPosition, childPos, Colors::Red);
 			DrawSkeleton(child, boneMatrices);
 		}
 	}
+
 }
 
-void Omega::Graphics::UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices)
+void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>& boneMatrices, const Math::Vector3& modelPosition)
+{
+
+	/*if (!bone)
+	{
+		return;
+	}*/
+
+	auto currentPosition = GetTranslation(boneMatrices[bone->index]);
+	for (auto& child : bone->children)
+	{
+		auto childPos = GetTranslation(boneMatrices[child->index]);
+		SimpleDraw::AddSphere(currentPosition + modelPosition, 1.0f, 2, 2, Colors::DarkCyan);
+		SimpleDraw::AddLine(currentPosition + modelPosition, childPos + modelPosition, Colors::Red);
+		DrawSkeleton(child, boneMatrices, modelPosition);
+	}
+
+}
+
+void Omega::Graphics::DrawSkeleton(const Skeleton& skeleton, const std::vector<Math::Matrix4>& boneMatrices, const Math::Vector3& modelPosition)
+{
+	DrawSkeleton(skeleton.root, boneMatrices, modelPosition);
+}
+
+void Omega::Graphics::UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices, bool showSkeletonOffSet)
 {
 	if (bone->parent)
 	{
@@ -51,16 +71,23 @@ void Omega::Graphics::UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& bon
 
 	for (auto& child : bone->children)
 	{
-		UpdateBindPose(child, boneMatrices);
+		UpdateBindPose(child, boneMatrices, showSkeletonOffSet);
+	}
+
+	if (showSkeletonOffSet)
+	{
+		boneMatrices[bone->index] = Math::Transpose(bone->offsetTransform * boneMatrices[bone->index]);
 	}
 }
 
 void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices,
-	float time, const AnimationClip& anim)
+	float time, bool showSkeletonOffSet, const AnimationClip& anim)
 {
+	Math::Matrix4 matTransform = bone->toParentTransform;
 	if (bone->parent)
 	{
-		Math::Matrix4 matTransform = Math::Matrix4::Identity;
+		//Math::Matrix4 matTransform = Math::Matrix4::Identity; //original
+
 		if (anim.GetTransform(time, bone->index, matTransform))
 		{
 			boneMatrices[bone->index] = matTransform * boneMatrices[bone->parent->index];
@@ -72,11 +99,18 @@ void Omega::Graphics::UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>
 	}
 	else
 	{
-		boneMatrices[bone->index] = bone->toParentTransform;
+		//boneMatrices[bone->index] = bone->toParentTransform; //original
+		boneMatrices[bone->index] = matTransform;
 	}
 
 	for (auto& child : bone->children)
 	{
-		UpdateAnimationPose(child, boneMatrices, time, anim);
+		UpdateAnimationPose(child, boneMatrices, time, showSkeletonOffSet, anim);
 	}
+
+	if (showSkeletonOffSet)
+	{
+		boneMatrices[bone->index] = Math::Transpose(bone->offsetTransform * boneMatrices[bone->index]);
+	}
+
 }

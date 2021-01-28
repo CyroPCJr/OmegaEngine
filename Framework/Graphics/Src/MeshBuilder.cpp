@@ -424,9 +424,9 @@ void MeshBuilder::ComputeNormals(Mesh& mesh)
 		uint32_t idx_1 = mesh.GetIndices(i + 1);
 		uint32_t idx_2 = mesh.GetIndices(i + 2);
 
-		auto v_0 = static_cast<Vertex>(mesh.GetVertex(idx_0));
-		auto v_1 = static_cast<Vertex>(mesh.GetVertex(idx_1));
-		auto v_2 = static_cast<Vertex>(mesh.GetVertex(idx_2));
+		const auto& v_0 = static_cast<Vertex>(mesh.GetVertex(idx_0));
+		const auto& v_1 = static_cast<Vertex>(mesh.GetVertex(idx_1));
+		const auto& v_2 = static_cast<Vertex>(mesh.GetVertex(idx_2));
 
 		Math::Vector3 crossNormalized = Math::Normalize(Cross(v_1.position - v_0.position, v_2.position - v_0.position));
 

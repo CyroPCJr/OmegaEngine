@@ -3,6 +3,7 @@ Name: mixamo.com
 Duration: 64.000000
 TickPerSecond: 30.000000
 BoneAnimationCount: 82
+[AnimationPos]
 PositionCount: 1
 Position/Time: -0.183310 -12.193086 -8.282264 0.00
 RotationCount: 65
@@ -137,6 +138,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.012607 -39.562065 1.738506 0.00
 RotationCount: 65
@@ -271,6 +273,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 -41.357368 0.839146 0.00
 RotationCount: 65
@@ -405,6 +408,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -9.633789 -3.273254 0.000001 0.00
 RotationCount: 65
@@ -539,6 +543,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -0.183287 -12.193086 -8.282264 0.00
 RotationCount: 65
@@ -673,6 +678,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.012605 -39.562065 1.738506 0.00
 RotationCount: 65
@@ -807,6 +813,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 -41.357368 0.839146 0.00
 RotationCount: 65
@@ -941,6 +948,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 9.633789 -3.273254 0.000001 0.00
 RotationCount: 65
@@ -1075,96 +1083,112 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -2.722488 -0.064054 -0.023157 0.00
 RotationCount: 1
 Rotation/Time: -0.010803 0.025204 0.419630 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -3.093815 -0.076212 -0.016794 0.00
 RotationCount: 1
 Rotation/Time: -0.005194 0.015623 0.690554 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -9.678000 -0.119138 2.552526 0.00
 RotationCount: 1
 Rotation/Time: -0.033496 -0.018824 0.654314 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -2.911999 -0.134851 0.028407 0.00
 RotationCount: 1
 Rotation/Time: -0.002520 0.023026 0.420521 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -3.864509 -0.198951 0.014745 0.00
 RotationCount: 1
 Rotation/Time: 0.004043 0.013253 0.692013 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -9.930226 0.591953 0.958618 0.00
 RotationCount: 1
 Rotation/Time: -0.029801 -0.022366 0.644284 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -2.860014 -0.226118 -0.005515 0.00
 RotationCount: 1
 Rotation/Time: -0.000600 0.007060 0.415198 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -3.960144 -0.047075 -0.064152 0.00
 RotationCount: 1
 Rotation/Time: -0.006461 0.009244 0.665528 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -10.194805 0.718167 -0.978162 0.00
 RotationCount: 1
 Rotation/Time: -0.037291 -0.014671 0.658914 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -2.873717 -0.136415 -0.000000 0.00
 RotationCount: 1
 Rotation/Time: -0.003535 0.015475 0.420097 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -3.734089 0.000000 -0.051252 0.00
 RotationCount: 1
 Rotation/Time: -0.004838 0.009001 0.672822 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -10.072411 0.489587 -2.761094 0.00
 RotationCount: 1
 Rotation/Time: -0.036838 -0.015622 0.663405 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -2.827938 -0.457375 -1.702996 0.00
 RotationCount: 1
 Rotation/Time: 0.006412 0.245713 0.087002 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -3.308852 -1.149230 -2.925313 0.00
 RotationCount: 1
 Rotation/Time: -0.000802 0.403897 0.086422 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -2.517769 -0.936661 -2.513669 0.00
 RotationCount: 1
 Rotation/Time: -0.029154 0.000361 0.088738 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -27.873779 0.000000 -0.000000 0.00
 RotationCount: 65
@@ -1299,6 +1323,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -27.687012 0.000000 -0.000000 0.00
 RotationCount: 65
@@ -1433,6 +1458,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -9.023084 -1.113005 1.793469 0.00
 RotationCount: 65
@@ -1567,6 +1593,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: -6.140198 10.187012 3.793244 0.00
 RotationCount: 65
@@ -1701,96 +1728,112 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 2.722488 -0.064054 -0.023157 0.00
 RotationCount: 1
 Rotation/Time: -0.000437 -0.000012 -0.408922 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 3.093815 -0.076212 -0.016794 0.00
 RotationCount: 1
 Rotation/Time: -0.027629 0.013310 -0.655786 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 9.678000 -0.119138 2.552526 0.00
 RotationCount: 1
 Rotation/Time: -0.054393 -0.005709 -0.615768 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 2.911999 -0.134851 0.028407 0.00
 RotationCount: 1
 Rotation/Time: 0.003668 -0.007522 -0.385297 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 3.864509 -0.198951 0.014745 0.00
 RotationCount: 1
 Rotation/Time: 0.003887 -0.011614 -0.657216 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 9.930226 0.591953 0.958618 0.00
 RotationCount: 1
 Rotation/Time: -0.028143 0.025392 -0.607579 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 2.873717 -0.136415 -0.000000 0.00
 RotationCount: 1
 Rotation/Time: -0.000396 -0.008247 -0.424974 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 3.734089 0.000000 -0.051252 0.00
 RotationCount: 1
 Rotation/Time: -0.004553 -0.007310 -0.637197 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 10.072411 0.489587 -2.761094 0.00
 RotationCount: 1
 Rotation/Time: -0.034970 0.018391 -0.627482 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 2.860014 -0.226118 -0.005515 0.00
 RotationCount: 1
 Rotation/Time: -0.000018 -0.005283 -0.414108 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 3.960144 -0.047075 -0.064152 0.00
 RotationCount: 1
 Rotation/Time: -0.006058 -0.007527 -0.629713 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 10.194805 0.718167 -0.978162 0.00
 RotationCount: 1
 Rotation/Time: -0.035345 0.017410 -0.622705 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 2.827938 -0.457375 -1.702996 0.00
 RotationCount: 1
 Rotation/Time: 0.021175 -0.126427 -0.040783 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 3.308852 -1.149230 -2.925313 0.00
 RotationCount: 1
 Rotation/Time: -0.006571 -0.304087 -0.078972 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 2.517769 -0.936661 -2.513669 0.00
 RotationCount: 1
 Rotation/Time: -0.037143 -0.054212 -0.104871 0.00
 ScaleCount: 1
 Scale/Time: 1.000000 1.000000 1.000000 0.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 27.873779 0.000000 -0.000000 0.00
 RotationCount: 65
@@ -1925,6 +1968,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 27.687012 0.000000 -0.000000 0.00
 RotationCount: 65
@@ -2059,6 +2103,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 9.019056 -1.113005 1.793469 0.00
 RotationCount: 65
@@ -2193,6 +2238,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 6.144226 10.187012 3.793244 0.00
 RotationCount: 65
@@ -2327,6 +2373,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 4.026611 -0.858520 0.00
 RotationCount: 65
@@ -2461,6 +2508,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 4.340027 -0.926895 0.00
 RotationCount: 65
@@ -2595,6 +2643,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 13.877442 4.354187 0.00
 RotationCount: 65
@@ -2729,6 +2778,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 13.639648 1.292305 0.00
 RotationCount: 65
@@ -2863,6 +2913,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 16.254028 0.165605 0.00
 RotationCount: 65
@@ -2997,6 +3048,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 1
 Position/Time: 0.000000 9.226319 -1.577133 0.00
 RotationCount: 65
@@ -3131,6 +3183,7 @@ Scale/Time: 1.000000 1.000000 1.000000 61.00
 Scale/Time: 1.000000 1.000000 1.000000 62.00
 Scale/Time: 1.000000 1.000000 1.000000 63.00
 Scale/Time: 1.000000 1.000000 1.000000 64.00
+[AnimationPos]
 PositionCount: 65
 Position/Time: -2.451031 93.250641 0.182040 0.00
 Position/Time: -2.307965 93.167480 0.130776 1.00

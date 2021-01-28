@@ -101,10 +101,12 @@ void GameState::Initialize()
 
 
 	// Initialize and load model from assimp
-	mModel.Initialize("../../Assets/Models/mutant.model");
+	//mModel.Initialize("../../Assets/Models/mutant.model");
+	//mModel.Initialize("../../Assets/Models/Breaking_Dance/Breakdance.model");
+	mModel.Initialize("../../Assets/Models/HipHopDancing/HipHopDancing.model");
 	mBoneMatrices.resize(mModel.skeleton.bones.size());
 	// calcualte the bone matrices
-	UpdateBindPose(mModel.skeleton.root, mBoneMatrices);
+	UpdateBindPose(mModel.skeleton.root, mBoneMatrices, false);
 
 	// Final transformation matrix
 	for (size_t i = 0; i < mBoneMatrices.size(); ++i)
@@ -199,7 +201,7 @@ void GameState::Update(float deltaTime)
 		vertex = TransformCoord(vertex, invViewProj);
 	}
 
-	auto lightLook = mLightCamera.GetDirection();
+	const auto& lightLook = mLightCamera.GetDirection();
 	auto lightSide = Normalize(Cross(Vector3::YAxis, lightLook));
 	auto lightUp = Normalize(Cross(lightLook, lightSide));
 	float minX = FLT_MAX, maxX = -FLT_MAX;

@@ -67,7 +67,6 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 	fileName.replace_extension("skeleton");
 	FILE* file = nullptr;
 	fopen_s(&file, fileName.u8string().c_str(), "r");
-
 	uint32_t numBones = 0;
 	fscanf_s(file, "BonesCount: %d\n", &numBones);
 	skeleton.bones.resize(numBones);
@@ -84,7 +83,7 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 			skeleton.root = bone.get();
 		}
 		bone->children.reserve(bone->childIndices.size());
-		for (auto childIndex : bone->childIndices)
+		for (int childIndex : bone->childIndices)
 		{
 			bone->children.push_back(skeleton.bones[childIndex].get());
 		}

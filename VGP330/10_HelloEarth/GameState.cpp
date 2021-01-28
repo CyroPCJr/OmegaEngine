@@ -41,7 +41,7 @@ void GameState::Initialize()
 
 	mCloudVertexShader.Initialize(assetsEarth, "VSCloud", Vertex::Format);
 	mCloudPixelShader.Initialize(assetsEarth, "PSCloud");
-
+	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
 	mSkyBoxVS.Initialize("../../Assets/Shaders/DoTexturing.fx", Vertex::Format);
 	mSkyBoxPS.Initialize("../../Assets/Shaders/DoTexturing.fx");
 
@@ -59,7 +59,6 @@ void GameState::Initialize()
 
 	//SkyBox ConstantBuffer
 	mSkyBoxConstantBuffer.Initialize(sizeof(Omega::Math::Matrix4));
-
 
 	mBlendState.Initialize(BlendState::Mode::AlphaBlending);
 

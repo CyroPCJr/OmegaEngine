@@ -68,6 +68,7 @@ void AnimationIO::Write(FILE* file, const AnimationClip& animationClip)
 	{
 		if (clips)
 		{
+			fprintf_s(file, "[AnimationPos]\n");
 			Write(file, *clips);
 		}
 		else
@@ -83,17 +84,16 @@ void AnimationIO::Read(FILE* file, AnimationClip& animationClip)
 	uint32_t boneAnimationCout = 0;
 	fscanf_s(file, "BoneAnimationCount: %d\n", &boneAnimationCout);
 	animationClip.boneAnimations.resize(boneAnimationCout);
+	char empty[20];
 	for (uint32_t i = 0; i < boneAnimationCout; ++i)
 	{
-		/*char empty[20];
-		fscanf_s(file, "%s\n", &empty, sizeof(empty));
-		std::string emptyblock = empty;
-		if (emptyblock != "[Empty]")
+		//std::string emptyblock = empty;
+		fscanf_s(file, "%s\n", &empty, (uint32_t)std::size(empty));
+		if (std::string(empty) != "[Empty]")
 		{
-		}*/
-
-		auto boneAnimation = std::make_unique<Animation>();
-		animationClip.boneAnimations[i] = std::move(boneAnimation);
-		Read(file, *animationClip.boneAnimations[i]);
+			auto boneAnimation = std::make_unique<Animation>();
+			animationClip.boneAnimations[i] = std::move(boneAnimation);
+			Read(file, *animationClip.boneAnimations[i]);
+		}
 	}
 }

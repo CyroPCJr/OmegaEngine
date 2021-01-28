@@ -9,17 +9,20 @@ using namespace Omega::Graphics;
 void Animator::Initialize(const Model& model)
 {
 	mModel = std::move(&model);
+	mBoneMatrices.clear();
 	mBoneMatrices.resize(mModel->skeleton.bones.size());
+	ComputeBindPose();
 }
 
 void Animator::Terminate()
 {
-	delete mModel;
+	mBoneMatrices.clear();
+	mModel = nullptr;
 }
 
 void Animator::ComputeBindPose()
 {
-	UpdateBindPose(mModel->skeleton.root, mBoneMatrices);
+	UpdateBindPose(mModel->skeleton.root, mBoneMatrices, false);
 }
 
 void Animator::PlayAnimation(int index)
@@ -52,11 +55,11 @@ void Animator::Update(float deltaTime)
 		mTimer -= mMaxDuration;
 	}
 
-	UpdateAnimationPose(mModel->skeleton.root, mBoneMatrices, mTimer, *animationClip);
+	UpdateAnimationPose(mModel->skeleton.root, mBoneMatrices, mTimer, !mShowSkeleton, *animationClip);
 
-	//const size_t size = mBoneMatrices.size();
-	//for (size_t i = 0; i < size; ++i)
-	//{
-	//	mBoneMatricesFinal[i] = Transpose(mModel->skeleton.bones[i]->offsetTransform * mBoneMatrices[i]);
-	//}
+	/*const size_t size = mBoneMatrices.size();
+	for (size_t i = 0; i < size; ++i)
+	{
+		mBoneMatricesFinal[i] = Transpose(mModel->skeleton.bones[i]->offsetTransform * mBoneMatrices[i]);
+	}*/
 }

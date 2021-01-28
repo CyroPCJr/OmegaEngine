@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Bone.h"
+#include "AnimationClip.h"
 
 namespace Omega::Graphics
 {
-	class AnimationClip;
 
 	struct Skeleton
 	{
@@ -13,7 +13,9 @@ namespace Omega::Graphics
 	};
 
 	void DrawSkeleton(Bone* skeleton, const std::vector<Math::Matrix4>& boneMatrices);
-	void UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices);
+	void DrawSkeleton(Bone* skeleton, const std::vector<Math::Matrix4>& boneMatrices, const Math::Vector3& modelPosition);
+	void DrawSkeleton(const Skeleton& skeleton, const std::vector<Math::Matrix4>& boneMatrices, const Math::Vector3& modelPosition);
+	void UpdateBindPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices, bool showSkeletonOffSet);
 	void UpdateAnimationPose(Bone* bone, std::vector<Math::Matrix4>& boneMatrices,
-		float time, const AnimationClip& anim);
+		float time, bool showSkeletonOffSet = false, const AnimationClip& anim = AnimationClip());
 }

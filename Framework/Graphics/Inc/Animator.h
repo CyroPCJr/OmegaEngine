@@ -23,12 +23,14 @@ namespace Omega::Graphics
 
 		inline float GetMaxDuration() const { return mMaxDuration; }
 
+		inline void ShowSkeleton(bool show) { mShowSkeleton = show; }
 	private:
 		const Model* mModel;
 		float mMaxDuration = 0.0f;
 		float mTimer = 0.0f;
 		float mCurrentTimer = 0.0f;
 		int mClipIndex = 0;
+		bool mShowSkeleton = false;
 
 		std::vector<Omega::Math::Matrix4> mBoneMatrices;
 		Omega::Math::Matrix4 mBoneMatricesFinal[128];

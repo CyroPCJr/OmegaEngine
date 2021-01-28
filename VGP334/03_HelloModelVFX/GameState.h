@@ -97,22 +97,28 @@ private:
 	
 	//Model
 	Omega::Graphics::Model mModel;
+	Omega::Graphics::Model mModel2;
+	Omega::Graphics::Model mModel3;
 	std::vector<Omega::Math::Matrix4> mBoneMatrices;
 	bool mIsSkeleton = false;
 	bool mStopAnimation = false;
 	Omega::Math::Vector3 mModelStartPosition;
-	Omega::Math::Vector3 mModelSkeletonStartPosition;
+	Omega::Math::Vector3 mModel2_StartPosition;
+	Omega::Math::Vector3 mModel3_StartPosition;
+
 
 	// Skeleton Buffer
 	struct BoneTransformData
 	{
-		Omega::Math::Matrix4 boneTransforms[128];
+		Omega::Math::Matrix4 boneTransforms[256];
 	};
 
 	using BoneTransformBuffer = Omega::Graphics::TypedConstantBuffer<BoneTransformData>;
 	BoneTransformBuffer mBoneTransformBuffer;
 
 	Omega::Graphics::Animator mAnimator;
+	Omega::Graphics::Animator mAnimatorModel2;
+	Omega::Graphics::Animator mAnimatorModel3;
 
 	// Terrain
 	Omega::Terrain mTerrain;

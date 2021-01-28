@@ -158,9 +158,17 @@ namespace Omega::Math
 	inline Vector3 Normalize(const Vector3& v)
 	{
 		const float lenght = Magnitude(v);
-		OMEGAASSERT(lenght != 0, "Length cannot be zero.");
-		const float invNorm = 1.0f / lenght;
-		return { v * invNorm };
+		if (lenght > 0.0f)
+		{
+			const float invNorm = 1.0f / lenght;
+			return { v * invNorm };
+		}
+		else
+		{
+			return { v };
+		}
+		///OMEGAASSERT(lenght != 0, "Length cannot be zero.");
+		
 	}
 
 #pragma endregion
@@ -250,7 +258,7 @@ namespace Omega::Math
 
 	constexpr Vector3 GetTranslation(const Matrix4& matrix)
 	{
-		return Vector3(matrix._41, matrix._42, matrix._43);
+		return { matrix._41, matrix._42, matrix._43 };
 	}
 
 	constexpr Vector3 GetRight(const Matrix4& matrix)

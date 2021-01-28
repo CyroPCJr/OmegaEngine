@@ -541,16 +541,39 @@ void SimpleDraw::AddGroundPlane(float size, const Color& color)
 	}
 }
 
-void SimpleDraw::AddBone(const Math::Matrix4& transform)
+void SimpleDraw::AddBone(const Math::Matrix4& transform, const Color& color, bool fill)
 {
-	auto r = Math::GetRight(transform);
+	/*auto r = Math::GetRight(transform);
 	auto u = Math::GetUp(transform);
 	auto l = Math::GetLook(transform);
 	auto p = Math::GetTranslation(transform);
 	AddSphere(p, 0.5f, 5, 6, Colors::BlueViolet);
 	sInstance->AddLine(p, p + r * 0.1f, Colors::Red);
 	sInstance->AddLine(p, p + u * 0.1f, Colors::Green);
-	sInstance->AddLine(p, p + l * 0.1f, Colors::Blue);
+	sInstance->AddLine(p, p + l * 0.1f, Colors::Blue);*/
+
+	Math::Vector3 r = Math::GetRight(transform);
+	Math::Vector3 u = Math::GetUp(transform);
+	Math::Vector3 l = Math::GetLook(transform);
+	Math::Vector3 p = Math::GetTranslation(transform);
+
+	auto base = p;
+	auto direction = r - p;
+	constexpr int sectors = 4;
+	auto side = Math::Normalize(Math::Cross(p, direction)) * 1.0f;
+	auto angle = 0.0f;
+	auto angleStep = Math::Constants::TwoPi / sectors;
+
+	for (int i = 0; i < sectors; ++i)
+	{
+		auto matRot0 = Math::Matrix4::RotationAxis(direction, angle);
+		auto matRot1 = Math::Matrix4::RotationAxis(direction, angle + angleStep);
+		auto v0 = Math::TransformNormal(side, matRot0);
+		auto v1 = Math::TransformNormal(side, matRot1);
+		AddLine(base + v0, base + direction, color);
+		AddLine(base + v0, base + v1, color);
+		angle += angleStep;
+	}
 }
 
 void SimpleDraw::AddTransform(const Math::Matrix4& transform)
