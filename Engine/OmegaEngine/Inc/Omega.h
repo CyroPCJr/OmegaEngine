@@ -20,6 +20,9 @@
 // Terrain headers
 #include "Terrain.h"
 
+// Cloth headers
+#include "Cloth.h"
+
 // World headers
 #include "Component.h"
 #include "GameObject.h"

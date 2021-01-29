@@ -43,6 +43,12 @@
     <Filter Include="Src\Services">
       <UniqueIdentifier>{2a444074-49bf-4f9e-b3d1-58b15c96d745}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Cloth">
+      <UniqueIdentifier>{2410fa84-b21f-4445-9a62-40e82a497320}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Cloth">
+      <UniqueIdentifier>{08c17f8a-c06b-4f0a-b0d0-c3f97b87217e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Omega.h">
@@ -90,6 +96,9 @@
     <ClInclude Include="Inc\CameraService.h">
       <Filter>Inc\Services</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Cloth.h">
+      <Filter>Inc\Cloth</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">
@@ -130,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="Src\CameraService.cpp">
       <Filter>Src\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cloth.cpp">
+      <Filter>Src\Cloth</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

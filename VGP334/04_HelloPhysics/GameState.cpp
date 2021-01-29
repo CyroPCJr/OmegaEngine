@@ -25,11 +25,16 @@ void GameState::Initialize()
 	mPhysicsWorld.AddStaticPlane({ Vector3::YAxis, 0.0f });
 	mPhysicsWorld.AddStaticOBB({ {0.0f, 2.0f, 0.0f}, { 4.0f, 0.5f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, 10.0f * Constants::DegToRad) });
 	mPhysicsWorld.AddStaticOBB({ { -5.0f, 7.f, 0.0f}, { 4.0f, 0.2f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, -10.0f * Constants::DegToRad) });
+
+	
+	mCloth.Initialize(L"../../Assets/Textures/BandeiraImperial.jpg");
 }
 
 void GameState::Terminate()
 {
+	mCloth.Terminate();
 	mPhysicsWorld.Clear();
+	
 }
 
 void GameState::Update(float deltaTime)
@@ -61,7 +66,7 @@ void GameState::Update(float deltaTime)
 		mCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
 		mCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
-
+	mCloth.Update();
 	mPhysicsWorld.Update(deltaTime);
 }
 
@@ -71,17 +76,15 @@ void GameState::Render()
 
 	SimpleDraw::AddGroundPlane(30.0f);
 
-
-
+	mCloth.Render(mCamera);
 	SimpleDraw::Render(mCamera);
 }
 
 void GameState::DebugUI()
 {
-
 	ImGui::Begin("Physics", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	float lines[120];
+	float lines[120]{};
 	for (int n = 0; n < 120; ++n)
 	{
 		lines[n] = 1000.0f / ImGui::GetIO().Framerate;
@@ -303,12 +306,12 @@ void GameState::DebugUI()
 			mPhysicsWorld.AddConstraint(new Spring(p4, p5, restLength));
 		}
 	}
-	if (ImGui::Button("Cloth!"))
+	if (ImGui::Button("Cloth Particles!"))
 	{
 		std::vector<Omega::Physics::Particle*> aux;
 		aux.clear();
 		mPhysicsWorld.Clear(true);
-		const float size = 7.0f;
+		const float size = 20.0f;
 		const float offsetX = size * 0.5f;
 		const float offsetY = size * 0.5f + 10.f;
 		for (float y = 0.f; y < size; y += 1.0f)
@@ -324,9 +327,9 @@ void GameState::DebugUI()
 			}
 		}
 
-		for (float y = 0.f; y < size; y += 1.0f)
+		for (float y = 0.f; y < size; ++y)
 		{
-			for (float x = 0.f; x < size; x += 1.0f)
+			for (float x = 0.f; x < size; ++x)
 			{
 				if ((y == 0.f) && (x == size - 1.f || x == 0.f))
 				{
@@ -344,6 +347,11 @@ void GameState::DebugUI()
 			}
 		}
 
+	}
+
+	if (ImGui::Button("Cloth"))
+	{
+		mCloth.ShowParticles();
 	}
 
 	ImGui::End();

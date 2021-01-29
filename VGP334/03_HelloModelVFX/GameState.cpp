@@ -292,29 +292,29 @@ void GameState::Render()
 void GameState::DebugUI()
 {
 	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		/*bool lightCamera = mActiveCamera == &mLightCamera;
-		if (ImGui::Checkbox("Use Light Camera", &lightCamera))
-		{
-			mActiveCamera = lightCamera ? &mLightCamera : &mDefaultCamera;
-		}
-		bool debugCamera = mActiveCamera == &mDebugCamera;
-		if (ImGui::Checkbox("Use Debug Camera", &debugCamera))
-		{
-			mActiveCamera = debugCamera ? &mDebugCamera : &mDefaultCamera;
-		}*/
+	//if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+	//{
+	//	/*bool lightCamera = mActiveCamera == &mLightCamera;
+	//	if (ImGui::Checkbox("Use Light Camera", &lightCamera))
+	//	{
+	//		mActiveCamera = lightCamera ? &mLightCamera : &mDefaultCamera;
+	//	}
+	//	bool debugCamera = mActiveCamera == &mDebugCamera;
+	//	if (ImGui::Checkbox("Use Debug Camera", &debugCamera))
+	//	{
+	//		mActiveCamera = debugCamera ? &mDebugCamera : &mDefaultCamera;
+	//	}*/
 
-		// comment because is not using
-		/*ImGui::Image(
-			mDepthMapRenderTarget.GetShaderResourceView(),
-			{ 150.0f, 150.0f },
-			{ 0.0f, 0.0f },
-			{ 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 1.0f, 1.0f, 1.0f }
-		);*/
-	}
+	//	// comment because is not using
+	//	/*ImGui::Image(
+	//		mDepthMapRenderTarget.GetShaderResourceView(),
+	//		{ 150.0f, 150.0f },
+	//		{ 0.0f, 0.0f },
+	//		{ 1.0f, 1.0f },
+	//		{ 1.0f, 1.0f, 1.0f, 1.0f },
+	//		{ 1.0f, 1.0f, 1.0f, 1.0f }
+	//	);*/
+	//}
 
 	ImGui::Checkbox("Set time", &mSetTimeCheck);
 	if (mSetTimeCheck)

@@ -104,7 +104,7 @@ void GameState::DebugUI()
 {
 	ImGui::Begin("Physics", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	float lines[120];
+	float lines[120]{};
 	for (int n = 0; n < 120; ++n)
 	{
 		lines[n] = 1000.0f / ImGui::GetIO().Framerate;
@@ -136,6 +136,6 @@ void GameState::DrawCounterFramesUI(bool active)
 
 	ImGui::Begin("FPS Graph", &active, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Text("Frames: %.1f", ImGui::GetIO().Framerate);
-	ImGui::PlotHistogram("Framerate", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 100.0f, ImVec2(300, 100));
+	ImGui::PlotHistogram("Framerate", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 100.0f, ImVec2(100, 50));
 	ImGui::End();
 }

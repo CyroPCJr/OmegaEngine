@@ -12,7 +12,19 @@ public:
 	void Render() override;
 	void DebugUI() override;
 private:
-	
+
 	Omega::Graphics::Camera mCamera;
 	Omega::Physics::PhysicsWorld mPhysicsWorld;
+
+	std::vector<Omega::Physics::Particle*> mParticles;
+
+	Omega::Graphics::MeshPX mMeshPlane;
+	Omega::Graphics::MeshBuffer mMeshBuffer;
+	Omega::Graphics::VertexShader mVertexShader;
+	Omega::Graphics::PixelShader mPixelShader;
+	Omega::Graphics::Texture mTexture;
+	Omega::Graphics::Sampler mSampler;
+	Omega::Graphics::ConstantBuffer mConstantBuffer;
+
+	Omega::Cloth mCloth;
 };

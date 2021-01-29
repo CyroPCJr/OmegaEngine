@@ -83,7 +83,8 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f,  0.0f,  0.5f }, 1.0f, 1.0f });
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
-	mMesh = MeshBuilder::CreateSpherePX(10.0f);
+	//mMesh = MeshBuilder::CreateSpherePX(10.0f, 30, 30, false);
+	mMesh = MeshBuilder::CreatePlanePX(10, 10);
 	mMeshBuffer.Initialize(mMesh);
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
@@ -94,7 +95,8 @@ void GameState::Initialize()
 	mPixelShader.Initialize(doTexturingShader);
 
 	mSampler.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
-	mTexture.Initialize("beer.png");
+	//mTexture.Initialize("beer.png");
+	mTexture.Initialize("../../Assets/Textures/BandeiraImperial.jpg");
 }
 
 void GameState::Terminate()
@@ -152,10 +154,12 @@ void GameState::Render()
 	{
 		for (float x = -1; x <= 1; ++x)
 		{
-			auto matTrans = Matrix4::Translation({ x * spacing, y * spacing, 0.0f });
-			auto matWVP = Transpose(matTrans * matRot * matView * matProj);
-			mConstantBuffer.Update(&matWVP);
-			mMeshBuffer.Draw();
+			
 		}
 	}
+	//auto matTrans = Matrix4::Translation({ x * spacing, y * spacing, 0.0f });
+	//auto matTrans = Matrix4::Translation({ x * spacing, y * spacing, 0.0f });
+	auto matWVP = Transpose(matRot * matView * matProj);
+	mConstantBuffer.Update(&matWVP);
+	mMeshBuffer.Draw();
 }
