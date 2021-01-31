@@ -83,8 +83,8 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{ -0.5f,  0.0f,  0.5f }, 1.0f, 1.0f });
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
-	//mMesh = MeshBuilder::CreateSpherePX(10.0f, 30, 30, false);
-	mMesh = MeshBuilder::CreatePlanePX(10, 10);
+	//mMesh = MeshBuilder::CreateSpherePX(100.0f, 30, 30, false);
+	mMesh = MeshBuilder::CreatePlanePX(20,15);
 	mMeshBuffer.Initialize(mMesh);
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 
@@ -94,9 +94,8 @@ void GameState::Initialize()
 	// Compile and create pixel shader
 	mPixelShader.Initialize(doTexturingShader);
 
-	mSampler.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
-	//mTexture.Initialize("beer.png");
-	mTexture.Initialize("../../Assets/Textures/BandeiraImperial.jpg");
+	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
+	mTexture.Initialize("../../Assets/Textures/Brazil_flag.png");//beer.png");
 }
 
 void GameState::Terminate()
@@ -150,13 +149,13 @@ void GameState::Render()
 	mTexture.BindPS();
 	
 	const float spacing = 1.8f;
-	for (int y = -1; y <= 1; ++y)
+	/*for (int y = -1; y <= 1; ++y)
 	{
 		for (float x = -1; x <= 1; ++x)
 		{
 			
 		}
-	}
+	}*/
 	//auto matTrans = Matrix4::Translation({ x * spacing, y * spacing, 0.0f });
 	//auto matTrans = Matrix4::Translation({ x * spacing, y * spacing, 0.0f });
 	auto matWVP = Transpose(matRot * matView * matProj);

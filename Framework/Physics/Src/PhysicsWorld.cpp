@@ -94,7 +94,7 @@ void PhysicsWorld::AccumulatedForces()
 void PhysicsWorld::Integrate()
 {
 	const float timeStepSqr = Math::Sqr(mSettings.timeStep);
-	for (auto p : mParticles)
+	for (auto& p : mParticles)
 	{
 		Math::Vector3 displacement = (p->position - p->lastPosition) + (p->acceleration * timeStepSqr);
 		p->lastPosition = p->position;
@@ -112,9 +112,9 @@ void PhysicsWorld::SatisfyConstraints()
 		}
 	}
 
-	for (auto plane : mPlanes)
+	for (const auto& plane : mPlanes)
 	{
-		for (auto p : mParticles)
+		for (auto& p : mParticles)
 		{
 			if (Math::Dot(p->position, plane.n) <= plane.d &&
 				Math::Dot(p->lastPosition, plane.n) > plane.d)
@@ -129,9 +129,9 @@ void PhysicsWorld::SatisfyConstraints()
 		}
 	}
 
-	for (auto obb : mOBBs)
+	for (const auto& obb : mOBBs)
 	{
-		for (auto p : mParticles)
+		for (auto& p : mParticles)
 		{
 			if (IsContained(p->position, obb))
 			{

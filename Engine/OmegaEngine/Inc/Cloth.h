@@ -10,17 +10,23 @@ namespace Omega
 		Cloth() = default;
 		~Cloth() = default;
 
-		void Initialize(const std::filesystem::path& texturePath, uint32_t size = 20);
+		void Initialize(const std::filesystem::path& texturePath, uint32_t width = 20, uint32_t height = 20);
 		void Render(const Omega::Graphics::Camera& camera);
 
-		void ShowParticles();
+		void ShowCloth(const Omega::Math::Vector3& position);
 
-		void Update();
+		void Update(float deltaTime);
 		void Terminate();
+
+		void IsUseCloth(bool use) { mIsUseCloth = use; }
 
 	private:
 
-		uint32_t mSize = 0;
+		int GetIndex(int x, int y, int column) { return (y * column) + x; }
+
+		uint32_t mWidth = 0;
+		uint32_t mHeight = 0;
+		bool mIsUseCloth = false;
 
 		Omega::Graphics::MeshPX mMeshPlane;
 		Omega::Graphics::MeshBuffer mMeshBuffer;

@@ -83,47 +83,43 @@ MeshPX MeshBuilder::CreateCubePX()
 	return mesh;
 }
 
-MeshPX MeshBuilder::CreatePlanePX(uint32_t row, uint32_t col)
+MeshPX MeshBuilder::CreatePlanePX(int row, int col)
 {
 	OMEGAASSERT((row > 1 && col > 1), "[PlanePX] To create plane, width and height should be more than 1.");
 	MeshPX mesh;
-	const float du = 1.0f / static_cast<float>(row - 1.0f);
-	const float dv = 1.0f / static_cast<float>(col - 1.0f);
-
-	for (float y = 0.0f; y < col; ++y)
+	Math::Vector3 offset = { row * -0.5f, col * -0.5f ,0.0f };
+	for (int y = 0; y < col; ++y)
 	{
-		for (float x = 0.0f; x < row; ++x)
+		for (int x = 0; x < row; ++x)
 		{
-			mesh.vertices.emplace_back(VertexPX{ Vector3{ x, y, 0.0f} ,
-										1.0f - x * du , 1.0f - y * dv });
+			float du = static_cast<float>(x) / static_cast<float>(row - 1);
+			float dv = static_cast<float>(y) / static_cast<float>(col - 1);
+			VertexPX vertex;
+			vertex.position = { offset.x + static_cast<float>(x), offset.y - static_cast<float>(y), offset.z };
+			vertex.u = du;
+			vertex.v = dv;
+
+			mesh.vertices.push_back(vertex);
+
+			if ((y != col - 1) && (x != row - 1))
+			{
+				//		Indices read to anti-clockwise ->
+				//		2|-------------|3
+				//		 |			   |
+				//		 |			   |
+				//		0|-------------|1
+
+				mesh.indices.push_back(y * row + x);
+				mesh.indices.push_back((y + 1) * row + x + 1);
+				mesh.indices.push_back((y + 1) * row + x);
+
+				mesh.indices.push_back(y * row + x);
+				mesh.indices.push_back(y * row + x + 1);
+				mesh.indices.push_back((y + 1) * row + x + 1);
+			}
+
 		}
 	}
-
-	for (unsigned int y = 0; y < col - 1; ++y)
-	{
-		for (unsigned int x = 0; x < row - 1; ++x)
-		{
-			/*
-
-			Indices read to anti-clockwise ->
-			2|-------------|3
-			 |			   |
-			 |			   |
-			0|-------------|1
-
-			*/
-
-			// get the corrnes
-			mesh.indices.push_back(y * col + x);
-			mesh.indices.push_back((y + 1) * col + x);
-			mesh.indices.push_back(y * col + (x + 1));
-
-			mesh.indices.push_back((y + 1) * col + x);
-			mesh.indices.push_back((y + 1) * col + (x + 1));
-			mesh.indices.push_back(y * col + (x + 1));
-		}
-	}
-
 
 	return mesh;
 }

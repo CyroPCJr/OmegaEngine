@@ -26,5 +26,6 @@ private:
 	Omega::Graphics::Sampler mSampler;
 	Omega::Graphics::ConstantBuffer mConstantBuffer;
 
-	Omega::Cloth mCloth;
+	Omega::Cloth mClothImperialBrazilFlag;
+	Omega::Cloth mClothCanadaFlag;
 };

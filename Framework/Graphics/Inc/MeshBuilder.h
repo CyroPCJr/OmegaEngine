@@ -8,7 +8,7 @@ namespace Omega::Graphics
 	{
 	public:
 		static MeshPX CreateCubePX();
-		static MeshPX CreatePlanePX(uint32_t row, uint32_t col);
+		static MeshPX CreatePlanePX(int row, int col);
 		static MeshPX CreateCylinderPX(float radius, int rings = 16, int slices = 16);
 		static MeshPX CreateSpherePX(float radius, int rings = 16, int slices = 16, bool isSpace = false);
 		static MeshPX CreateNDCQuad();
