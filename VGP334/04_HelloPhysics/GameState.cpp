@@ -26,14 +26,14 @@ void GameState::Initialize()
 	mPhysicsWorld.AddStaticOBB({ {0.0f, 2.0f, 0.0f}, { 4.0f, 0.5f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, 10.0f * Constants::DegToRad) });
 	mPhysicsWorld.AddStaticOBB({ { -5.0f, 7.f, 0.0f}, { 4.0f, 0.2f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, -10.0f * Constants::DegToRad) });
 
-	mClothImperialBrazilFlag.Initialize(L"../../Assets/Textures/Brazil_flag.png", 20, 15);
+	mClothBrazilFlag.Initialize(L"../../Assets/Textures/Brazil_flag.png", 20, 15);
 	mClothCanadaFlag.Initialize(L"../../Assets/Textures/Canada_flag.jpg", 20, 15);
 }
 
 void GameState::Terminate()
 {
 	mClothCanadaFlag.Terminate();
-	mClothImperialBrazilFlag.Terminate();
+	mClothBrazilFlag.Terminate();
 	mPhysicsWorld.Clear();
 }
 
@@ -67,13 +67,13 @@ void GameState::Update(float deltaTime)
 		mCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
 	mPhysicsWorld.Update(deltaTime);
-	mClothImperialBrazilFlag.Update(deltaTime);
+	mClothBrazilFlag.Update(deltaTime);
 	mClothCanadaFlag.Update(deltaTime);
 }
 
 void GameState::Render()
 {
-	mClothImperialBrazilFlag.Render(mCamera);
+	mClothBrazilFlag.Render(mCamera);
 	mClothCanadaFlag.Render(mCamera);
 	mPhysicsWorld.DebugDraw();
 
@@ -95,7 +95,7 @@ void GameState::DebugUI()
 
 	if (ImGui::Button("Particles!"))
 	{
-		mClothImperialBrazilFlag.IsUseCloth(false);
+		mClothBrazilFlag.IsUseCloth(false);
 		mClothCanadaFlag.IsUseCloth(false);
 		mPhysicsWorld.Clear(true);
 		for (int i = 0; i < 100; ++i)
@@ -111,7 +111,7 @@ void GameState::DebugUI()
 	}
 	if (ImGui::Button("Stick!"))
 	{
-		mClothImperialBrazilFlag.IsUseCloth(false);
+		mClothBrazilFlag.IsUseCloth(false);
 		mClothCanadaFlag.IsUseCloth(false);
 		mPhysicsWorld.Clear(true);
 		for (int i = 0; i < 50; ++i)
@@ -133,7 +133,7 @@ void GameState::DebugUI()
 	}
 	if (ImGui::Button("Tetrahedron!"))
 	{
-		mClothImperialBrazilFlag.IsUseCloth(false);
+		mClothBrazilFlag.IsUseCloth(false);
 		mClothCanadaFlag.IsUseCloth(false);
 		mPhysicsWorld.Clear(true);
 		for (int i = 0; i < 20; ++i)
@@ -179,7 +179,7 @@ void GameState::DebugUI()
 
 	if (ImGui::Button("Cube!"))
 	{
-		mClothImperialBrazilFlag.IsUseCloth(false);
+		mClothBrazilFlag.IsUseCloth(false);
 		mClothCanadaFlag.IsUseCloth(false);
 		mPhysicsWorld.Clear(true);
 		const float pos = 0.5f;
@@ -268,7 +268,7 @@ void GameState::DebugUI()
 
 	if (ImGui::Button("Ball and chains!"))
 	{
-		mClothImperialBrazilFlag.IsUseCloth(false);
+		mClothBrazilFlag.IsUseCloth(false);
 		mClothCanadaFlag.IsUseCloth(false);
 		const float restLength = 2.0f;
 		mPhysicsWorld.Clear(true);
@@ -320,7 +320,7 @@ void GameState::DebugUI()
 	}
 	if (ImGui::Button("Cloth Particles!"))
 	{
-		mClothImperialBrazilFlag.IsUseCloth(false);
+		mClothBrazilFlag.IsUseCloth(false);
 		mClothCanadaFlag.IsUseCloth(false);
 		std::vector<Omega::Physics::Particle*> aux;
 		aux.clear();
@@ -367,8 +367,8 @@ void GameState::DebugUI()
 	if (ImGui::Button("Cloth with texture"))
 	{
 		mPhysicsWorld.Clear(true);
-		mClothImperialBrazilFlag.IsUseCloth(true);
-		mClothImperialBrazilFlag.ShowCloth({ 10.0f, 20.0f,0.0f });
+		mClothBrazilFlag.IsUseCloth(true);
+		mClothBrazilFlag.ShowCloth({ 10.0f, 20.0f,0.0f });
 		mClothCanadaFlag.ShowCloth({ -10.0f, 20.0f,0.0f });
 	}
 
