@@ -21,7 +21,9 @@ private:
 	Omega::Graphics::Camera mCamera;
 
 	Omega::Graphics::Mesh mMesh;
-	
+	Omega::Graphics::MeshPX mMeshSkyDome;
+
+	Omega::Graphics::MeshBuffer mMeshBufferSkyDome;
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::MeshBuffer mMeshClouds;
 	Omega::Graphics::Sampler mSamplers;
@@ -31,6 +33,7 @@ private:
 	Omega::Graphics::Texture mNormalMap;
 	Omega::Graphics::Texture mClouds;
 	Omega::Graphics::Texture mNightLights;
+	Omega::Graphics::Texture mSkyDomeTexture;
 
 	struct TransformData
 	{
@@ -54,6 +57,9 @@ private:
 	
 	using SettingsDataBuffer = Omega::Graphics::TypedConstantBuffer<SettingsData>;
 
+	Omega::Graphics::ConstantBuffer mConstantBufferSkyDome;
+
+
 	SettingsDataBuffer mSettingsDataBuffer;
 
 	TransformBuffer mTransformBuffer;
@@ -69,12 +75,16 @@ private:
 	
 	Omega::Graphics::VertexShader mCloudVertexShader;
 	Omega::Graphics::PixelShader mCloudPixelShader;
-	
+
+	Omega::Graphics::VertexShader mVSSkyDome;
+	Omega::Graphics::PixelShader mPSSkyDome;
 
 	Omega::Graphics::BlendState mBlendState;	
 
 	Omega::Math::Vector3 mRotation = 0.0f;
 	float mCloudRotation = 0.0f;
+
+	Omega::Math::Vector3 mSkyDomePos = 0.0f;
 
 	// Post processing
 	Omega::Graphics::RenderTarget mRenderTarget;

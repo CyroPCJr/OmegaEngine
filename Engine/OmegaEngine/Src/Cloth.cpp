@@ -51,43 +51,6 @@ void Cloth::Render(const Camera& camera)
 
 void Cloth::ShowCloth(const Omega::Math::Vector3& position)
 {
-	//mParticles.clear();
-	//mPhysicsWorld.Clear(true);
-	//const float offsetX = mWidth * 0.5f;
-	//const float offsetY = mHeight * 0.5f + 10.f;
-	//for (float y = 0.f; y < mHeight; y += 1.0f)
-	//{
-	//	for (float x = 0.f; x < mWidth; x += 1.0f)
-	//	{
-	//		auto p1 = new Particle();
-	//		p1->SetPosition({ -offsetX + x, offsetY - y , 0.0f });
-	//		p1->radius = 0.1f;
-	//		p1->SetVelocity(Random::RandomFloat(0.01f, 0.1f));
-	//		mPhysicsWorld.AddParticle(p1);
-	//		mParticles.push_back(p1);
-	//	}
-	//}
-
-	//for (float y = 0.f; y < mHeight; y += 1.0f)
-	//{
-	//	for (float x = 0.f; x < mWidth; x += 1.0f)
-	//	{
-	//		//if ((y == 0.f) && (x == mWidth - 1.f || x == 0.f))
-	//		if ((y == 0.f) && (x == 0 || x == static_cast<int>(mWidth * 0.5f)) || x == mWidth - 1)
-	//		{
-	//			mPhysicsWorld.AddConstraint(new Fixed(mParticles[static_cast<size_t>(y * mWidth + x)]));
-	//		}
-	//		if (x + 1.f < mWidth)
-	//		{
-	//			mPhysicsWorld.AddConstraint(new Spring(mParticles[static_cast<size_t>(y * mWidth + x)], mParticles[static_cast<size_t>(y * mWidth + x + 1.f)]));
-	//		}
-
-	//		if (y + 1.f < mHeight)
-	//		{
-	//			mPhysicsWorld.AddConstraint(new Spring(mParticles[static_cast<size_t>(y * mWidth + x)], mParticles[static_cast<size_t>((y + 1.f) * mWidth + x)]));
-	//		}
-	//	}
-	//}
 	mIsUseCloth = true;
 	Math::Vector3 offset = { -0.5f * mWidth + position.x, 0.5f * mHeight + position.y, 0.0f };
 	mParticles.clear();
@@ -127,13 +90,6 @@ void Cloth::ShowCloth(const Omega::Math::Vector3& position)
 				auto c2 = new Spring(mParticles[GetIndex(x, y, mWidth)], mParticles[GetIndex(x, y + 1, mWidth)]);
 				mPhysicsWorld.AddConstraint(c2);
 			}
-
-			/*if (x >= mWidth)
-			{
-				auto c = new Spring(mParticles[GetIndex(x+ 1, y, mWidth)], mParticles[GetIndex(x, y, mWidth)]);
-				mPhysicsWorld.AddConstraint(c);
-			}*/
-
 		}
 	}
 }
@@ -142,15 +98,13 @@ void Cloth::Update(float deltaTime)
 {
 	mPhysicsWorld.Update(deltaTime);
 
-	if (mIsUseCloth && (mMeshPlane.vertices.size() == mParticles.size()))
+	if (mIsUseCloth)
 	{
 		for (size_t i = 0; i < mParticles.size(); ++i)
 		{
 			mMeshPlane.vertices[i].position = mParticles[i]->position;
 		}
 	}
-
-	//mMeshBuffer.Update(mMeshPlane.vertices.data(), static_cast<uint32_t>(mMeshPlane.vertices.size()));
 }
 
 void Cloth::Terminate()

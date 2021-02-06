@@ -16,10 +16,13 @@ void GameState::Initialize()
 	mMesh = MeshBuilder::CreateSphere(10, 64, 64);
 	mMeshBuffer.Initialize(mMesh);
 
+	mMeshSkyDome = MeshBuilder::CreateSpherePX(1000.0f, 30, 30, false);
+	mMeshBufferSkyDome.Initialize(mMeshSkyDome);
+
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
 	mMaterialBuffer.Initialize();
-	
+
 	mDirectionalLight.direction = Normalize({ 1.0f, -1.0f ,1.0f });
 	mDirectionalLight.ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
 	mDirectionalLight.diffuse = { 0.75f, 0.75f,0.75f,1.0f };
@@ -28,7 +31,7 @@ void GameState::Initialize()
 	mMaterial.ambient = { 1.0f };
 	mMaterial.diffuse = { 1.0f };
 	mMaterial.specular = { 1.0f };
-	mMaterial.power =  10.0f ;
+	mMaterial.power = 10.0f;
 
 	mSettingsData.bumpMapWeight = 0.2f;
 
@@ -44,13 +47,22 @@ void GameState::Initialize()
 	mDifuseTexture.Initialize(root / "earth.jpg");
 	mSpecularTexture.Initialize(root / "earth_spec.tif");
 	mDisplacementTexture.Initialize(root / "earth_bump.jpg");
-	mNormalMap.Initialize(root/ "earth_normal.tif");
+	mNormalMap.Initialize(root / "earth_normal.tif");
 	mClouds.Initialize(root / "earth_clouds.jpg");
 	mNightLights.Initialize(root / "earth_lights.jpg");
 
 	mBlendState.Initialize(BlendState::Mode::AlphaBlending);
 
 	mSettingsDataBuffer.Initialize();
+
+	// SkyDome
+	std::filesystem::path doTexturingShader = "../../Assets/Shaders/DoTexturing.fx";
+	mVSSkyDome.Initialize(doTexturingShader, VertexPX::Format);
+	mPSSkyDome.Initialize(doTexturingShader);
+
+	mSamplers.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
+	mSkyDomeTexture.Initialize("../../Assets/Textures/Space_Skybox.jpg");
+	mConstantBufferSkyDome.Initialize(sizeof(Matrix4));
 
 	auto graphicsSystem = GraphicsSystem::Get();
 	mRenderTarget.Initialize(graphicsSystem->GetBackBufferWidth(),
@@ -60,7 +72,7 @@ void GameState::Initialize()
 	// Createa a Quad
 	mScreenQuad = MeshBuilder::CreateNDCQuad();
 	mScreenQuadBuffer.Initialize(mScreenQuad);
-	
+
 	std::filesystem::path postProcessingShader = "../../Assets/Shaders/PostProcessing.fx";
 	mPostProcessingVertexShader.Initialize(postProcessingShader, VertexPX::Format);
 	//mPostProcessingPixelShader.Initialize(postProcessingShader, "PSSepiaTone");
@@ -100,22 +112,26 @@ void GameState::Update(float deltaTime)
 	auto inputSystem = InputSystem::Get();
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
-		mCamera.Walk(kMoveSpeed*deltaTime);
+		mCamera.Walk(kMoveSpeed * deltaTime);
+		mSkyDomePos.z += kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
 		mCamera.Walk(-kMoveSpeed * deltaTime);
+		mSkyDomePos.z += -kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::D))
 	{
-		mCamera.Strafe(-kMoveSpeed * deltaTime);
+		mCamera.Strafe(kMoveSpeed * deltaTime);
+		mSkyDomePos.x += kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
-		mCamera.Strafe(kMoveSpeed * deltaTime);
+		mCamera.Strafe(-kMoveSpeed * deltaTime);
+		mSkyDomePos.x += -kMoveSpeed * deltaTime;
 	}
 
 	mCloudRotation += 0.0001f;
@@ -165,7 +181,7 @@ void GameState::DebugUI()
 		static bool specularMap = true;
 		static bool normalMap = true;
 		ImGui::SliderFloat("Displacement", &mSettingsData.bumpMapWeight, 0.0f, 100.0f);
-		if(ImGui::Checkbox("Specular", &specularMap))
+		if (ImGui::Checkbox("Specular", &specularMap))
 		{
 			mSettingsData.specularWeight = specularMap ? 1.0f : 0.0f;
 		}
@@ -189,14 +205,6 @@ void GameState::DebugUI()
 		static bool InverseColor = false;
 		static bool DistortionColor = false;
 		static bool Default = true;
-		if (ImGui::Checkbox("Sepia Tone", &PosProcessingSepiaTone))
-		{
-			DistortionColor = false;
-			InverseColor = false;
-			GreyScale = false;
-			Default = false;
-			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSSepiaTone");
-		}
 
 		if (ImGui::Checkbox("No Post Processing", &Default))
 		{
@@ -205,6 +213,15 @@ void GameState::DebugUI()
 			GreyScale = false;
 			PosProcessingSepiaTone = false;
 			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSNoProcessing");
+		}
+
+		if (ImGui::Checkbox("Sepia Tone", &PosProcessingSepiaTone))
+		{
+			DistortionColor = false;
+			InverseColor = false;
+			GreyScale = false;
+			Default = false;
+			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSSepiaTone");
 		}
 
 		if (ImGui::Checkbox("GreyScale", &GreyScale))
@@ -224,15 +241,7 @@ void GameState::DebugUI()
 			PosProcessingSepiaTone = false;
 			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSInverseColor");
 		}
-
-		/*if (ImGui::Checkbox("Distortion Color", &DistortionColor))
-		{
-			Default = false;
-			GreyScale = false;
-			InverseColor = false;
-			PosProcessingSepiaTone = false;
-			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSDistortionColor");
-		}*/
+		
 	}
 
 	ImGui::End();
@@ -240,12 +249,29 @@ void GameState::DebugUI()
 
 void GameState::DrawScene()
 {
+	auto matView = mCamera.GetViewMatrix();
+	auto matProj = mCamera.GetPerspectiveMatrix();
+
+	// SkyDome
+	auto skyDomePos = Matrix4::Translation(mSkyDomePos);
+	auto transposeSkyDome = Transpose(skyDomePos * matView * matProj);;
+
+	mConstantBufferSkyDome.BindVS();
+	mConstantBufferSkyDome.BindPS();
+	mVSSkyDome.Bind();
+	mPSSkyDome.Bind();
+	mSkyDomeTexture.BindPS();
+	mSamplers.BindPS();
+
+	mConstantBufferSkyDome.Update(&transposeSkyDome);
+	mMeshBufferSkyDome.Draw();
+
 	auto maTranslation = Matrix4::Translation({ 0.0f , 0.0f, 0.0f });
 
 	auto matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
 	auto matWorld = matRotation * maTranslation;
-	auto matView = mCamera.GetViewMatrix();
-	auto matProj = mCamera.GetPerspectiveMatrix();
+	/*auto matView = mCamera.GetViewMatrix();
+	auto matProj = mCamera.GetPerspectiveMatrix();*/
 
 	TransformData transformData;
 	transformData.viewPosition = mCamera.GetPosition();

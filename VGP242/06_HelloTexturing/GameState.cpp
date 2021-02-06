@@ -84,7 +84,8 @@ void GameState::Initialize()
 	mMesh.vertices.emplace_back(VertexPX{ Vector3{  0.0f, -0.5f,  0.5f }, 1.0f, 0.0f });*/
 
 	//mMesh = MeshBuilder::CreateSpherePX(100.0f, 30, 30, false);
-	mMesh = MeshBuilder::CreatePlanePX(20,15);
+	mMesh = MeshBuilder::CreateSpherePX(1000.0f, 30, 30, false);
+	//mMesh = MeshBuilder::CreatePlanePX(10,15); // It's okay
 	mMeshBuffer.Initialize(mMesh);
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 

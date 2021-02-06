@@ -108,7 +108,7 @@ void GameState::Initialize()
 
 	mTerrain.Initialize(200, 200, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
-	mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
+	//mTerrain.LoadHeightmap("../../Assets/Heightmaps/heightmap_200x200.raw");
 }
 
 void GameState::Terminate()
