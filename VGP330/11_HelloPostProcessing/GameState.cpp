@@ -13,11 +13,14 @@ void GameState::Initialize()
 	mCamera.SetPosition({ 0.0f, 0.0f, -50.0f });
 	mCamera.SetDirection({ 0.0f, 0.0f, 1.0f });
 
-	mMesh = MeshBuilder::CreateSphere(10, 64, 64);
+	mMesh = MeshBuilder::CreateSphere(10.0f, 64, 64);
 	mMeshBuffer.Initialize(mMesh);
 
-	mMeshSkyDome = MeshBuilder::CreateSpherePX(1000.0f, 30, 30, false);
+	mMeshSkyDome = MeshBuilder::CreateSpherePX(1000.0f, 30, 50, false);
 	mMeshBufferSkyDome.Initialize(mMeshSkyDome);
+
+	mMeshMoon = MeshBuilder::CreateSpherePX(1.0f, 15, 15);
+	mMeshBufferMoon.Initialize(mMeshMoon);
 
 	mTransformBuffer.Initialize();
 	mLightBuffer.Initialize();
@@ -42,14 +45,13 @@ void GameState::Initialize()
 	mCloudVertexShader.Initialize(assetsEarth, "VSCloud", Vertex::Format);
 	mCloudPixelShader.Initialize(assetsEarth, "PSCloud");
 
-	mSamplers.Initialize(Sampler::Filter::Point, Sampler::AddressMode::Wrap);
-	std::filesystem::path root = "../../Assets/Textures";
-	mDifuseTexture.Initialize(root / "earth.jpg");
-	mSpecularTexture.Initialize(root / "earth_spec.tif");
-	mDisplacementTexture.Initialize(root / "earth_bump.jpg");
-	mNormalMap.Initialize(root / "earth_normal.tif");
-	mClouds.Initialize(root / "earth_clouds.jpg");
-	mNightLights.Initialize(root / "earth_lights.jpg");
+	std::filesystem::path rootTextures = "../../Assets/Textures";
+	mDifuseTexture.Initialize(rootTextures / "earth.jpg");
+	mSpecularTexture.Initialize(rootTextures / "earth_spec.tif");
+	mDisplacementTexture.Initialize(rootTextures / "earth_bump.jpg");
+	mNormalMap.Initialize(rootTextures / "earth_normal.tif");
+	mClouds.Initialize(rootTextures / "earth_clouds.jpg");
+	mNightLights.Initialize(rootTextures / "earth_lights.jpg");
 
 	mBlendState.Initialize(BlendState::Mode::AlphaBlending);
 
@@ -61,8 +63,15 @@ void GameState::Initialize()
 	mPSSkyDome.Initialize(doTexturingShader);
 
 	mSamplers.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
-	mSkyDomeTexture.Initialize("../../Assets/Textures/Space_Skybox.jpg");
-	mConstantBufferSkyDome.Initialize(sizeof(Matrix4));
+	mSkyDomeTexture.Initialize(rootTextures / "Space_Skybox.jpg");
+	const int sizeofMatrix = sizeof(Matrix4);
+	mConstantBufferSkyDome.Initialize(sizeofMatrix);
+
+	// Moon
+	mVSMoon.Initialize(doTexturingShader, VertexPX::Format);
+	mPSMoon.Initialize(doTexturingShader);
+	mMoonTexture.Initialize(rootTextures / "Moon_texture.jpg");
+	mConstantBufferMoon.Initialize(sizeofMatrix);
 
 	auto graphicsSystem = GraphicsSystem::Get();
 	mRenderTarget.Initialize(graphicsSystem->GetBackBufferWidth(),
@@ -81,10 +90,25 @@ void GameState::Initialize()
 
 void GameState::Terminate()
 {
+	// Post Processing 
 	mPostProcessingPixelShader.Terminate();
 	mPostProcessingVertexShader.Terminate();
 	mScreenQuadBuffer.Terminate();
 	mRenderTarget.Terminate();
+
+	// Moon
+	mConstantBufferMoon.Terminate();
+	mMoonTexture.Terminate();
+	mPSMoon.Terminate();
+	mVSMoon.Terminate();
+
+	// Sky Dome
+	mConstantBufferSkyDome.Terminate();
+	mPSSkyDome.Terminate();
+	mVSSkyDome.Terminate();
+	mSkyDomeTexture.Terminate();
+
+	// Earth
 	mSettingsDataBuffer.Terminate();
 	mNightLights.Terminate();
 	mBlendState.Terminate();
@@ -101,6 +125,9 @@ void GameState::Terminate()
 	mMaterialBuffer.Terminate();
 	mLightBuffer.Terminate();
 	mTransformBuffer.Terminate();
+
+	mMeshBufferMoon.Terminate();
+	mMeshBufferSkyDome.Terminate();
 	mMeshBuffer.Terminate();
 }
 
@@ -135,6 +162,7 @@ void GameState::Update(float deltaTime)
 	}
 
 	mCloudRotation += 0.0001f;
+	mMoonRotation += 0.005f;
 }
 
 void GameState::Render()
@@ -241,7 +269,7 @@ void GameState::DebugUI()
 			PosProcessingSepiaTone = false;
 			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSInverseColor");
 		}
-		
+
 	}
 
 	ImGui::End();
@@ -266,12 +294,10 @@ void GameState::DrawScene()
 	mConstantBufferSkyDome.Update(&transposeSkyDome);
 	mMeshBufferSkyDome.Draw();
 
+	// Earth
 	auto maTranslation = Matrix4::Translation({ 0.0f , 0.0f, 0.0f });
-
 	auto matRotation = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
 	auto matWorld = matRotation * maTranslation;
-	/*auto matView = mCamera.GetViewMatrix();
-	auto matProj = mCamera.GetPerspectiveMatrix();*/
 
 	TransformData transformData;
 	transformData.viewPosition = mCamera.GetPosition();
@@ -333,6 +359,21 @@ void GameState::DrawScene()
 
 	mMeshBuffer.Draw();
 	BlendState::ClearState();
+
+	// Moon
+	auto MoonPos = Matrix4::Translation({ 30.0f, 0.0f, 0.0f });
+	auto MoonRotation = Matrix4::RotationY(mMoonRotation.y * 0.5f);
+	auto transposeMoon = Transpose(MoonPos * MoonRotation * matWorld * matView * matProj);;
+
+	mConstantBufferMoon.BindVS();
+	mConstantBufferMoon.BindPS();
+	mVSMoon.Bind();
+	mPSMoon.Bind();
+	mMoonTexture.BindPS();
+	mSamplers.BindPS();
+
+	mConstantBufferMoon.Update(&transposeMoon);
+	mMeshBufferMoon.Draw();
 
 	SimpleDraw::Render(mCamera);
 }

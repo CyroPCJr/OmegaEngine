@@ -22,7 +22,9 @@ private:
 
 	Omega::Graphics::Mesh mMesh;
 	Omega::Graphics::MeshPX mMeshSkyDome;
+	Omega::Graphics::MeshPX mMeshMoon;
 
+	Omega::Graphics::MeshBuffer mMeshBufferMoon;
 	Omega::Graphics::MeshBuffer mMeshBufferSkyDome;
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::MeshBuffer mMeshClouds;
@@ -34,6 +36,7 @@ private:
 	Omega::Graphics::Texture mClouds;
 	Omega::Graphics::Texture mNightLights;
 	Omega::Graphics::Texture mSkyDomeTexture;
+	Omega::Graphics::Texture mMoonTexture;
 
 	struct TransformData
 	{
@@ -58,7 +61,7 @@ private:
 	using SettingsDataBuffer = Omega::Graphics::TypedConstantBuffer<SettingsData>;
 
 	Omega::Graphics::ConstantBuffer mConstantBufferSkyDome;
-
+	Omega::Graphics::ConstantBuffer mConstantBufferMoon;
 
 	SettingsDataBuffer mSettingsDataBuffer;
 
@@ -79,9 +82,13 @@ private:
 	Omega::Graphics::VertexShader mVSSkyDome;
 	Omega::Graphics::PixelShader mPSSkyDome;
 
+	Omega::Graphics::VertexShader mVSMoon;
+	Omega::Graphics::PixelShader mPSMoon;
+
 	Omega::Graphics::BlendState mBlendState;	
 
 	Omega::Math::Vector3 mRotation = 0.0f;
+	Omega::Math::Vector3 mMoonRotation = 0.0f;
 	float mCloudRotation = 0.0f;
 
 	Omega::Math::Vector3 mSkyDomePos = 0.0f;
