@@ -28,13 +28,13 @@ void GameState::Initialize()
 	GraphicsSystem::Get()->SetClearColor(Colors::Black);
 
 	mDefaultCamera.SetNearPlane(0.1f);
-	mDefaultCamera.SetFarPlane(30000.0f);
+	mDefaultCamera.SetFarPlane(1000.0f);
 	mDefaultCamera.SetPosition({ 600.0f, 150.0f, 50.0f });
 	//mDefaultCamera.SetLookAt({ 0.0f, 100.0f, 1000.0f });
 	mDefaultCamera.SetLookAt({ 600.0f, 100.0f, 1000.0f });
 
 	mDebugCamera.SetNearPlane(0.001f);
-	mDebugCamera.SetFarPlane(10000.0f);
+	mDebugCamera.SetFarPlane(1000.0f);
 	mDebugCamera.SetPosition({ 0.0f, 10.0f, -30.0f });
 	mDebugCamera.SetLookAt({ 0.0f, 0.0f, 0.0f });
 

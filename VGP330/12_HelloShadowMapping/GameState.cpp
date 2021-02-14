@@ -74,7 +74,7 @@ void GameState::Initialize()
 	mSettings.useShadow = 1;
 	mSettings.depthBias = 0.0003f;
 
-	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", Vertex::Format);
+	mVertexShader.Initialize("../../Assets/Shaders/Standard.fx", BoneVertex::Format);
 	mPixelShader.Initialize("../../Assets/Shaders/Standard.fx");
 
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
@@ -83,7 +83,7 @@ void GameState::Initialize()
 	mNormalMap.Initialize("../../Assets/Models/Tank/tank_normal.jpg");
 	mAOMap.Initialize("../../Assets/Models/Tank/tank_ao.jpg");
 
-	mGroundDiffuseMap.Initialize("../../Assets/Textures/grass.jpg");
+	mGroundDiffuseMap.Initialize("../../Assets/Images/grass.jpg");
 
 	auto graphicsSystem = GraphicsSystem::Get();
 
