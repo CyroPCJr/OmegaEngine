@@ -23,6 +23,9 @@
 // Cloth headers
 #include "Cloth.h"
 
+// Skydome
+#include "Skydome.h"
+
 // World headers
 #include "Component.h"
 #include "GameObject.h"

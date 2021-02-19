@@ -49,6 +49,12 @@
     <Filter Include="Src\Cloth">
       <UniqueIdentifier>{08c17f8a-c06b-4f0a-b0d0-c3f97b87217e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Skydome">
+      <UniqueIdentifier>{7b6a09ba-e880-48ac-a10f-5941530ed683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Skydome">
+      <UniqueIdentifier>{ac0cb26c-e84e-4d49-8bff-8cdad59254c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Omega.h">
@@ -99,6 +105,9 @@
     <ClInclude Include="Inc\Cloth.h">
       <Filter>Inc\Cloth</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Skydome.h">
+      <Filter>Inc\Skydome</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">
@@ -142,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="Src\Cloth.cpp">
       <Filter>Src\Cloth</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Skydome.cpp">
+      <Filter>Src\Skydome</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

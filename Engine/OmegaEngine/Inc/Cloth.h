@@ -1,6 +1,6 @@
 #pragma once
-
 #include <OmegaEngine/Inc/Omega.h>
+
 namespace Omega
 {
 	class Cloth

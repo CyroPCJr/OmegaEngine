@@ -16,10 +16,7 @@ void GameState::Initialize()
 	mMesh = MeshBuilder::CreateSphere(10.0f, 64, 64);
 	mMeshBuffer.Initialize(mMesh);
 
-	mMeshSkyDome = MeshBuilder::CreateSpherePX(1000.0f, 30, 50, false);
-	mMeshBufferSkyDome.Initialize(mMeshSkyDome);
-
-	mMeshMoon = MeshBuilder::CreateSpherePX(1.0f, 15, 15);
+	mMeshMoon = MeshBuilder::CreateSphere(1.0f, 15, 15);
 	mMeshBufferMoon.Initialize(mMeshMoon);
 
 	mTransformBuffer.Initialize();
@@ -38,12 +35,12 @@ void GameState::Initialize()
 
 	mSettingsData.bumpMapWeight = 0.2f;
 
-	std::filesystem::path assetsEarth = "../../Assets/Shaders/Earth.fx";
-	mEarthVertexShader.Initialize(assetsEarth, "VSEarth", Vertex::Format);
-	mEarthPixelShader.Initialize(assetsEarth, "PSEarth");
+	std::filesystem::path EarthShader = "../../Assets/Shaders/Earth.fx";
+	mEarthVertexShader.Initialize(EarthShader, "VSEarth", Vertex::Format);
+	mEarthPixelShader.Initialize(EarthShader, "PSEarth");
 
-	mCloudVertexShader.Initialize(assetsEarth, "VSCloud", Vertex::Format);
-	mCloudPixelShader.Initialize(assetsEarth, "PSCloud");
+	mCloudVertexShader.Initialize(EarthShader, "VSCloud", Vertex::Format);
+	mCloudPixelShader.Initialize(EarthShader, "PSCloud");
 
 	std::filesystem::path rootTextures = "../../Assets/Textures";
 	mDifuseTexture.Initialize(rootTextures / "earth.jpg");
@@ -58,20 +55,13 @@ void GameState::Initialize()
 	mSettingsDataBuffer.Initialize();
 
 	// SkyDome
-	std::filesystem::path doTexturingShader = "../../Assets/Shaders/DoTexturing.fx";
-	mVSSkyDome.Initialize(doTexturingShader, VertexPX::Format);
-	mPSSkyDome.Initialize(doTexturingShader);
-
-	mSamplers.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
-	mSkyDomeTexture.Initialize(rootTextures / "Space_Skybox.jpg");
-	const int sizeofMatrix = sizeof(Matrix4);
-	mConstantBufferSkyDome.Initialize(sizeofMatrix);
+	mSkydome.Initialize("4k_space.jpg");
 
 	// Moon
-	mVSMoon.Initialize(doTexturingShader, VertexPX::Format);
-	mPSMoon.Initialize(doTexturingShader);
+	mVSMoon.Initialize(EarthShader, "VSEarth", Vertex::Format);
+	mPSMoon.Initialize(EarthShader, "PSEarth");
 	mMoonTexture.Initialize(rootTextures / "Moon_texture.jpg");
-	mConstantBufferMoon.Initialize(sizeofMatrix);
+	mSettingsMoonDataBuffer.Initialize();
 
 	auto graphicsSystem = GraphicsSystem::Get();
 	mRenderTarget.Initialize(graphicsSystem->GetBackBufferWidth(),
@@ -97,16 +87,13 @@ void GameState::Terminate()
 	mRenderTarget.Terminate();
 
 	// Moon
-	mConstantBufferMoon.Terminate();
+	mSettingsMoonDataBuffer.Terminate();
 	mMoonTexture.Terminate();
 	mPSMoon.Terminate();
 	mVSMoon.Terminate();
 
 	// Sky Dome
-	mConstantBufferSkyDome.Terminate();
-	mPSSkyDome.Terminate();
-	mVSSkyDome.Terminate();
-	mSkyDomeTexture.Terminate();
+	mSkydome.Terminate();
 
 	// Earth
 	mSettingsDataBuffer.Terminate();
@@ -127,7 +114,6 @@ void GameState::Terminate()
 	mTransformBuffer.Terminate();
 
 	mMeshBufferMoon.Terminate();
-	mMeshBufferSkyDome.Terminate();
 	mMeshBuffer.Terminate();
 }
 
@@ -135,32 +121,28 @@ void GameState::Update(float deltaTime)
 {
 	const float kMoveSpeed = 100.5f;
 	const float kTurnSpeed = 0.5f;
-
+	mSkydome.Update(mCamera);
 	auto inputSystem = InputSystem::Get();
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
 		mCamera.Walk(kMoveSpeed * deltaTime);
-		mSkyDomePos.z += kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
 		mCamera.Walk(-kMoveSpeed * deltaTime);
-		mSkyDomePos.z += -kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::D))
 	{
 		mCamera.Strafe(kMoveSpeed * deltaTime);
-		mSkyDomePos.x += kMoveSpeed * deltaTime;
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
 		mCamera.Strafe(-kMoveSpeed * deltaTime);
-		mSkyDomePos.x += -kMoveSpeed * deltaTime;
 	}
-
+	
 	mCloudRotation += 0.0001f;
 	mMoonRotation += 0.005f;
 }
@@ -281,18 +263,7 @@ void GameState::DrawScene()
 	auto matProj = mCamera.GetPerspectiveMatrix();
 
 	// SkyDome
-	auto skyDomePos = Matrix4::Translation(mSkyDomePos);
-	auto transposeSkyDome = Transpose(skyDomePos * matView * matProj);;
-
-	mConstantBufferSkyDome.BindVS();
-	mConstantBufferSkyDome.BindPS();
-	mVSSkyDome.Bind();
-	mPSSkyDome.Bind();
-	mSkyDomeTexture.BindPS();
-	mSamplers.BindPS();
-
-	mConstantBufferSkyDome.Update(&transposeSkyDome);
-	mMeshBufferSkyDome.Draw();
+	mSkydome.Render(mCamera);
 
 	// Earth
 	auto maTranslation = Matrix4::Translation({ 0.0f , 0.0f, 0.0f });
@@ -365,14 +336,19 @@ void GameState::DrawScene()
 	auto MoonRotation = Matrix4::RotationY(mMoonRotation.y * 0.5f);
 	auto transposeMoon = Transpose(MoonPos * MoonRotation * matWorld * matView * matProj);;
 
-	mConstantBufferMoon.BindVS();
-	mConstantBufferMoon.BindPS();
+	transformData.world = MoonPos;
+	transformData.wvp = transposeMoon;
+	mTransformBuffer.Update(transformData);
+
+	mSettingsMoonDataBuffer.Update(mSettingsMoonData);
+	mSettingsMoonDataBuffer.BindPS(3);
+	mSettingsMoonDataBuffer.BindVS(3);
+
 	mVSMoon.Bind();
 	mPSMoon.Bind();
 	mMoonTexture.BindPS();
 	mSamplers.BindPS();
 
-	mConstantBufferMoon.Update(&transposeMoon);
 	mMeshBufferMoon.Draw();
 
 	SimpleDraw::Render(mCamera);

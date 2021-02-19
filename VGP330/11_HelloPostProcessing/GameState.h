@@ -17,15 +17,14 @@ private:
 	void PostProcess();
 
 private:
+	Omega::Skydome mSkydome;
 
 	Omega::Graphics::Camera mCamera;
 
 	Omega::Graphics::Mesh mMesh;
-	Omega::Graphics::MeshPX mMeshSkyDome;
-	Omega::Graphics::MeshPX mMeshMoon;
+	Omega::Graphics::Mesh mMeshMoon;
 
 	Omega::Graphics::MeshBuffer mMeshBufferMoon;
-	Omega::Graphics::MeshBuffer mMeshBufferSkyDome;
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::MeshBuffer mMeshClouds;
 	Omega::Graphics::Sampler mSamplers;
@@ -35,7 +34,6 @@ private:
 	Omega::Graphics::Texture mNormalMap;
 	Omega::Graphics::Texture mClouds;
 	Omega::Graphics::Texture mNightLights;
-	Omega::Graphics::Texture mSkyDomeTexture;
 	Omega::Graphics::Texture mMoonTexture;
 
 	struct TransformData
@@ -54,22 +52,30 @@ private:
 		float padding;
 	};
 
+	struct SettingsMoonData
+	{
+		float specularWeight = 1.0f;
+		float bumpMapWeight = 0.0f;
+		float normalMapWeight = 0.0f;
+		float padding;
+	};
+
 	using TransformBuffer = Omega::Graphics::TypedConstantBuffer<TransformData>;
 	using LightBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::DirectionalLight>;
 	using MaterialBuffer = Omega::Graphics::TypedConstantBuffer<Omega::Graphics::Material>;
 	
 	using SettingsDataBuffer = Omega::Graphics::TypedConstantBuffer<SettingsData>;
-
-	Omega::Graphics::ConstantBuffer mConstantBufferSkyDome;
-	Omega::Graphics::ConstantBuffer mConstantBufferMoon;
+	using SettingsMoonDataBuffer = Omega::Graphics::TypedConstantBuffer<SettingsMoonData>;
 
 	SettingsDataBuffer mSettingsDataBuffer;
+	SettingsMoonDataBuffer mSettingsMoonDataBuffer;
 
 	TransformBuffer mTransformBuffer;
 	LightBuffer mLightBuffer;
 	MaterialBuffer mMaterialBuffer;
 
 	SettingsData mSettingsData;
+	SettingsMoonData mSettingsMoonData;
 	Omega::Graphics::DirectionalLight mDirectionalLight;
 	Omega::Graphics::Material mMaterial;
 
@@ -79,9 +85,6 @@ private:
 	Omega::Graphics::VertexShader mCloudVertexShader;
 	Omega::Graphics::PixelShader mCloudPixelShader;
 
-	Omega::Graphics::VertexShader mVSSkyDome;
-	Omega::Graphics::PixelShader mPSSkyDome;
-
 	Omega::Graphics::VertexShader mVSMoon;
 	Omega::Graphics::PixelShader mPSMoon;
 
@@ -90,8 +93,6 @@ private:
 	Omega::Math::Vector3 mRotation = 0.0f;
 	Omega::Math::Vector3 mMoonRotation = 0.0f;
 	float mCloudRotation = 0.0f;
-
-	Omega::Math::Vector3 mSkyDomePos = 0.0f;
 
 	// Post processing
 	Omega::Graphics::RenderTarget mRenderTarget;

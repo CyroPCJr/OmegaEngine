@@ -163,6 +163,7 @@
     <ClInclude Include="Inc\GameWorld.h" />
     <ClInclude Include="Inc\Omega.h" />
     <ClInclude Include="Inc\Service.h" />
+    <ClInclude Include="Inc\Skydome.h" />
     <ClInclude Include="Inc\Terrain.h" />
     <ClInclude Include="Inc\TransformComponent.h" />
     <ClInclude Include="Src\MetaRegistration.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Precompiled.cpp" />
     <ClCompile Include="Src\Service.cpp" />
+    <ClCompile Include="Src\Skydome.cpp" />
     <ClCompile Include="Src\Terrain.cpp" />
     <ClCompile Include="Src\TransformComponent.cpp" />
   </ItemGroup>
