@@ -6,22 +6,21 @@ using namespace Omega::Math;
 
 void Skydome::Initialize(const std::filesystem::path& texturePath)
 {
-	MeshPX mMeshSkyDome = MeshBuilder::CreateSpherePX(1500.0f, 40, 60, false);
+	MeshPX mMeshSkyDome = MeshBuilder::CreateSpherePX(1500.0f, 200, 200, false);
 	mMeshBufferSkyDome.Initialize(mMeshSkyDome);
 
-	// SkyDome
 	std::filesystem::path doTexturingShader = "../../Assets/Shaders/DoTexturing.fx";
 	mVSSkyDome.Initialize(doTexturingShader, VertexPX::Format);
 	mPSSkyDome.Initialize(doTexturingShader);
 
-	std::filesystem::path rootImages = "../../Assets/Images";
+	std::filesystem::path rootImages = "../../Assets/Textures";
 	mSamplers.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
 	mSkyDomeTexture.Initialize(rootImages / texturePath);
 	mConstantBufferSkyDome.Initialize(sizeof(Matrix4));
 
 }
 
-void Skydome::Render(const Omega::Graphics::Camera& camera)
+void Skydome::Render(const Camera& camera)
 {
 	auto matView = camera.GetViewMatrix();
 	auto matProj = camera.GetPerspectiveMatrix();

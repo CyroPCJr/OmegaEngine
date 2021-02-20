@@ -46,7 +46,7 @@ void GameState::Initialize()
 	mDifuseTexture.Initialize(rootTextures / "earth.jpg");
 	mSpecularTexture.Initialize(rootTextures / "earth_spec.tif");
 	mDisplacementTexture.Initialize(rootTextures / "earth_bump.jpg");
-	mNormalMap.Initialize(rootTextures / "earth_normal.tif");
+	mNormalMap.Initialize(rootTextures / "earth_normal.tif"); 
 	mClouds.Initialize(rootTextures / "earth_clouds.jpg");
 	mNightLights.Initialize(rootTextures / "earth_lights.jpg");
 
@@ -55,12 +55,12 @@ void GameState::Initialize()
 	mSettingsDataBuffer.Initialize();
 
 	// SkyDome
-	mSkydome.Initialize("4k_space.jpg");
+	mSkydome.Initialize("8k_stars.jpg");
 
 	// Moon
 	mVSMoon.Initialize(EarthShader, "VSEarth", Vertex::Format);
 	mPSMoon.Initialize(EarthShader, "PSEarth");
-	mMoonTexture.Initialize(rootTextures / "Moon_texture.jpg");
+	mMoonTexture.Initialize(rootTextures / "8k_moon.jpg");
 	mSettingsMoonDataBuffer.Initialize();
 
 	auto graphicsSystem = GraphicsSystem::Get();
@@ -74,7 +74,6 @@ void GameState::Initialize()
 
 	std::filesystem::path postProcessingShader = "../../Assets/Shaders/PostProcessing.fx";
 	mPostProcessingVertexShader.Initialize(postProcessingShader, VertexPX::Format);
-	//mPostProcessingPixelShader.Initialize(postProcessingShader, "PSSepiaTone");
 	mPostProcessingPixelShader.Initialize(postProcessingShader, "PSNoProcessing");
 }
 
@@ -204,8 +203,8 @@ void GameState::DebugUI()
 
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::DragFloat("Rotation X##Transform", &mRotation.y, 0.01f);
-		ImGui::DragFloat("Rotation Y##Transform", &mRotation.x, 0.01f);
+		ImGui::DragFloat("Rotation X##Transform", &mRotation.x, 0.01f);
+		ImGui::DragFloat("Rotation Y##Transform", &mRotation.y, 0.01f);
 	}
 
 	if (ImGui::CollapsingHeader("Post Processing", ImGuiTreeNodeFlags_DefaultOpen))
@@ -334,10 +333,9 @@ void GameState::DrawScene()
 	// Moon
 	auto MoonPos = Matrix4::Translation({ 30.0f, 0.0f, 0.0f });
 	auto MoonRotation = Matrix4::RotationY(mMoonRotation.y * 0.5f);
-	auto transposeMoon = Transpose(MoonPos * MoonRotation * matWorld * matView * matProj);;
 
-	transformData.world = MoonPos;
-	transformData.wvp = transposeMoon;
+	transformData.world = Transpose(MoonPos * MoonRotation * matWorld);
+	transformData.wvp = Transpose(MoonPos * MoonRotation * matWorld * matView * matProj);
 	mTransformBuffer.Update(transformData);
 
 	mSettingsMoonDataBuffer.Update(mSettingsMoonData);
