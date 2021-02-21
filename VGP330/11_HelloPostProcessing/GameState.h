@@ -100,4 +100,8 @@ private:
 	Omega::Graphics::MeshBuffer mScreenQuadBuffer;
 	Omega::Graphics::VertexShader mPostProcessingVertexShader;
 	Omega::Graphics::PixelShader mPostProcessingPixelShader;
+
+	// ImGui
+	std::vector<float> mVecFrames;
+	const size_t mMaxFrameSize = 100;
 };

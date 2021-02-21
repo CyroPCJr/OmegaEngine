@@ -124,6 +124,7 @@ void GameState::Initialize()
 	mTerrain.SetHeightScale(30.0f);
 
 	mSkydome.Initialize("hdri_sky.jpg");
+	mVecFrames.reserve(mMaxFrameSize);
 }
 
 void GameState::Terminate()
@@ -298,6 +299,23 @@ void GameState::Render()
 void GameState::DebugUI()
 {
 	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	float fps = ImGui::GetIO().Framerate; //Get frames
+	const size_t frameSize = mVecFrames.size();
+	if (frameSize > mMaxFrameSize) //Max seconds to show
+	{
+		for (size_t i = 1; i < frameSize; ++i)
+		{
+			mVecFrames[i - 1] = mVecFrames[i];
+		}
+		mVecFrames[frameSize - 1] = fps;
+	}
+	else
+	{
+		mVecFrames.push_back(fps);
+	}
+	ImGui::PlotLines("", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
 	//if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	//{
 	//	/*bool lightCamera = mActiveCamera == &mLightCamera;

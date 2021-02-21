@@ -28,6 +28,7 @@ void GameState::Initialize()
 
 	mClothBrazilFlag.Initialize(L"../../Assets/Textures/Brazil_flag.png", 20, 15);
 	mClothCanadaFlag.Initialize(L"../../Assets/Textures/Canada_flag.jpg", 20, 15);
+	mVecFrames.reserve(mMaxFrameSize);
 }
 
 void GameState::Terminate()
@@ -86,12 +87,21 @@ void GameState::DebugUI()
 {
 	ImGui::Begin("Physics", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	float lines[120]{};
-	for (int n = 0; n < 120; ++n)
+	float fps = ImGui::GetIO().Framerate; //Get frames
+	const size_t frameSize = mVecFrames.size();
+	if (frameSize > mMaxFrameSize) //Max seconds to show
 	{
-		lines[n] = 1000.0f / ImGui::GetIO().Framerate;
+		for (size_t i = 1; i < frameSize; ++i)
+		{
+			mVecFrames[i - 1] = mVecFrames[i];
+		}
+		mVecFrames[frameSize - 1] = fps;
 	}
-	ImGui::PlotLines("FPS", lines, IM_ARRAYSIZE(lines));
+	else
+	{
+		mVecFrames.push_back(fps);
+	}
+	ImGui::PlotLines("", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
 
 	if (ImGui::Button("Particles!"))
 	{

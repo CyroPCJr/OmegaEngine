@@ -23,5 +23,5 @@ private:
 
 	// ImGui
 	std::vector<float> mVecFrames;
-	int max_fps = 30;
+	const size_t mMaxFrameSize = 100;
 };

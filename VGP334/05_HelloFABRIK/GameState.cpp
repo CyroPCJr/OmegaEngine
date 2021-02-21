@@ -25,6 +25,7 @@ void GameState::Initialize()
 		mPoints.push_back(mPoints.back() + Vector3{ 0.0f, boneLength, 0.0f });
 	}
 	mTarget = mPoints.back();
+	mVecFrames.reserve(mMaxFrameSize);
 }
 
 void GameState::Terminate()
@@ -103,25 +104,20 @@ void GameState::Render()
 void GameState::DebugUI()
 {
 	ImGui::Begin("Physics", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	float lines[120]{};
-	for (int n = 0; n < 120; ++n)
-	{
-		lines[n] = 1000.0f / ImGui::GetIO().Framerate;
-	}
-	ImGui::PlotLines("FPS", lines, IM_ARRAYSIZE(lines));
+	DrawCounterFramesUI(true);
 	ImGui::End();
 
-	DrawCounterFramesUI(true);
+	
 }
 
 void GameState::DrawCounterFramesUI(bool active)
 {
 	if (!active) return;
 
-	float fps = 1000.0f / ImGui::GetIO().Framerate; //Get frames
-	const size_t frameSize = mVecFrames.size();	
-	if (frameSize > 100) //Max seconds to show
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	float fps = ImGui::GetIO().Framerate; //Get frames
+	const size_t frameSize = mVecFrames.size();
+	if (frameSize > mMaxFrameSize) //Max seconds to show
 	{
 		for (size_t i = 1; i < frameSize; ++i)
 		{
@@ -133,9 +129,5 @@ void GameState::DrawCounterFramesUI(bool active)
 	{
 		mVecFrames.push_back(fps);
 	}
-
-	ImGui::Begin("FPS Graph", &active, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::Text("Frames: %.1f", ImGui::GetIO().Framerate);
-	ImGui::PlotHistogram("Framerate", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 100.0f, ImVec2(100, 50));
-	ImGui::End();
+	ImGui::PlotLines("", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
 }

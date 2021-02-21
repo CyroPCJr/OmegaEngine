@@ -10,7 +10,7 @@ void GameState::Initialize()
 	mCamera.SetPosition({ 0.0f, 0.0f, -5.0f });
 	mCamera.SetDirection({ 0.0f, 0.0f, 1.0f });
 
-	SimpleDraw::StaticInitialize();
+	//SimpleDraw::StaticInitialize();
 }
 
 void GameState::Terminate()

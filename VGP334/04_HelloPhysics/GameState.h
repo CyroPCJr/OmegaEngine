@@ -28,4 +28,8 @@ private:
 
 	Omega::Cloth mClothBrazilFlag;
 	Omega::Cloth mClothCanadaFlag;
+
+	// ImGui
+	std::vector<float> mVecFrames;
+	const size_t mMaxFrameSize = 100;
 };

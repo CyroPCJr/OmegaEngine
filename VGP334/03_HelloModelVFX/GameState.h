@@ -125,4 +125,8 @@ private:
 	bool mSetTimeCheck = false;
 
 	Omega::Skydome mSkydome;
+
+	// ImGui
+	std::vector<float> mVecFrames;
+	const size_t mMaxFrameSize = 100;
 };
