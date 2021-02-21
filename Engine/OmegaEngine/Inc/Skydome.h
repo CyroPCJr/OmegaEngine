@@ -10,6 +10,7 @@ namespace Omega
 		~Skydome() = default;
 
 		void Initialize(const std::filesystem::path& texturePath);
+		void SetSize(float radius, int rings, int slices);
 		void Render(const Omega::Graphics::Camera& camera);
 
 		void Update(const Omega::Graphics::Camera& camera);

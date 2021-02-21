@@ -102,8 +102,7 @@ void GameState::Initialize()
 
 	// Initialize and load model from assimp
 	//mModel.Initialize("../../Assets/Models/mutant.model");
-	//mModel.Initialize("../../Assets/Models/Breaking_Dance/Breakdance.model");
-	mModel.Initialize("../../Assets/Models/HipHopDancing/HipHopDancing.model");
+	mModel.Initialize("../../Assets/Models/Breaking_Dance/Breakdance.model");
 	mBoneMatrices.resize(mModel.skeleton.bones.size());
 	// calcualte the bone matrices
 	UpdateBindPose(mModel.skeleton.root, mBoneMatrices, false);

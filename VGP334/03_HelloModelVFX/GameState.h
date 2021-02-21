@@ -94,7 +94,7 @@ private:
 
 	// Render Target
 	Omega::Graphics::RenderTarget mRenderTarget;
-	
+
 	//Model
 	Omega::Graphics::Model mModel;
 	Omega::Graphics::Model mModel2;
@@ -105,7 +105,6 @@ private:
 	Omega::Math::Vector3 mModelStartPosition;
 	Omega::Math::Vector3 mModel2_StartPosition;
 	Omega::Math::Vector3 mModel3_StartPosition;
-
 
 	// Skeleton Buffer
 	struct BoneTransformData
@@ -124,4 +123,6 @@ private:
 	Omega::Terrain mTerrain;
 	float mSetTime = 0.0f;
 	bool mSetTimeCheck = false;
+
+	Omega::Skydome mSkydome;
 };

@@ -53,14 +53,14 @@ void GameState::Initialize()
 	mPostProcessingSettingsBuffer.Initialize();
 
 	mDirectionalLight.direction = Normalize({ 1.0f, -1.0f, 1.0f });
-	mDirectionalLight.ambient = { 0.8f, 0.8f, 0.8f, 1.0f };
-	mDirectionalLight.diffuse = { 0.75f, 0.75f, 0.75f, 1.0f };
+	mDirectionalLight.ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+	mDirectionalLight.diffuse = { 0.75f, 0.75f,0.75f,1.0f };
 	mDirectionalLight.specular = { 0.5f, 0.5f, 0.5f, 1.0f };
 
-	mMaterial.ambient = { 0.8f, 0.8f, 0.8f, 1.0f };
-	mMaterial.diffuse = { 0.8f, 0.8f, 0.8f, 1.0f };
-	mMaterial.specular = { 0.5f, 0.5f, 0.5f, 1.0f };
-	mMaterial.power = 40.0f;
+	mMaterial.ambient = { 1.0f };
+	mMaterial.diffuse = { 1.0f };
+	mMaterial.specular = { 1.0f };
+	mMaterial.power = 10.0f;
 
 	mSettings.specularMapWeight = 1.0f;
 	mSettings.bumpMapWeight = 0.0f;
@@ -122,10 +122,13 @@ void GameState::Initialize()
 	// Load terrain 
 	mTerrain.Initialize(1200, 1200, 1.0f);
 	mTerrain.SetHeightScale(30.0f);
+
+	mSkydome.Initialize("hdri_sky.jpg");
 }
 
 void GameState::Terminate()
 {
+	mSkydome.Terminate();
 	mTerrain.Terminate();
 
 	// Bone ConstatBuffer
@@ -190,6 +193,9 @@ void GameState::Update(float deltaTime)
 		mActiveCamera->Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
 		mActiveCamera->Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
 	}
+
+	mSkydome.Update(*mActiveCamera);
+
 	mAnimator.ShowSkeleton(mIsSkeleton);
 	mAnimator.Update(deltaTime);
 
@@ -306,15 +312,15 @@ void GameState::DebugUI()
 	//	}*/
 
 	//	// comment because is not using
-	//	/*ImGui::Image(
-	//		mDepthMapRenderTarget.GetShaderResourceView(),
-	//		{ 150.0f, 150.0f },
-	//		{ 0.0f, 0.0f },
-	//		{ 1.0f, 1.0f },
-	//		{ 1.0f, 1.0f, 1.0f, 1.0f },
-	//		{ 1.0f, 1.0f, 1.0f, 1.0f }
-	//	);*/
-	//}
+		/*ImGui::Image(
+			mDepthMapRenderTarget.GetShaderResourceView(),
+			{ 150.0f, 150.0f },
+			{ 0.0f, 0.0f },
+			{ 1.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 1.0f, 1.0f, 1.0f }
+		);*/
+		//}
 
 	ImGui::Checkbox("Set time", &mSetTimeCheck);
 	if (mSetTimeCheck)
@@ -353,6 +359,8 @@ void GameState::DrawScene()
 	auto matProj = mActiveCamera->GetPerspectiveMatrix();
 	auto matViewLight = mLightCamera.GetViewMatrix();
 	auto matProjLight = mLightProjectMatrix; //mLightCamera.GetPerspectiveMatrix();
+
+	mSkydome.Render(*mActiveCamera);
 
 	mLightBuffer.Update(mDirectionalLight);
 	mLightBuffer.BindVS(1);
@@ -496,7 +504,6 @@ void GameState::DrawScene()
 	SimpleDraw::AddLine(mViewFrustumVertices[7], mViewFrustumVertices[4], Colors::White);
 
 	SimpleDrawCamera(mDefaultCamera);
-
 	SimpleDraw::Render(*mActiveCamera);
 }
 

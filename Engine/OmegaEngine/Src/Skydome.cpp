@@ -6,7 +6,7 @@ using namespace Omega::Math;
 
 void Skydome::Initialize(const std::filesystem::path& texturePath)
 {
-	MeshPX mMeshSkyDome = MeshBuilder::CreateSpherePX(1500.0f, 200, 200, false);
+	MeshPX mMeshSkyDome = MeshBuilder::CreateSpherePX(1000.0f, 64, 64, false);
 	mMeshBufferSkyDome.Initialize(mMeshSkyDome);
 
 	std::filesystem::path doTexturingShader = "../../Assets/Shaders/DoTexturing.fx";
@@ -18,6 +18,12 @@ void Skydome::Initialize(const std::filesystem::path& texturePath)
 	mSkyDomeTexture.Initialize(rootImages / texturePath);
 	mConstantBufferSkyDome.Initialize(sizeof(Matrix4));
 
+}
+
+void Skydome::SetSize(float radius, int rings, int slices)
+{
+	MeshPX mMeshSkyDome = MeshBuilder::CreateSpherePX(radius, rings, slices, false);
+	mMeshBufferSkyDome.Initialize(mMeshSkyDome);
 }
 
 void Skydome::Render(const Camera& camera)

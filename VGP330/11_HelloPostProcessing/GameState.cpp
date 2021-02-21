@@ -120,7 +120,7 @@ void GameState::Update(float deltaTime)
 {
 	const float kMoveSpeed = 100.5f;
 	const float kTurnSpeed = 0.5f;
-	mSkydome.Update(mCamera);
+	
 	auto inputSystem = InputSystem::Get();
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
@@ -141,7 +141,7 @@ void GameState::Update(float deltaTime)
 	{
 		mCamera.Strafe(-kMoveSpeed * deltaTime);
 	}
-	
+	mSkydome.Update(mCamera);
 	mCloudRotation += 0.0001f;
 	mMoonRotation += 0.005f;
 }
