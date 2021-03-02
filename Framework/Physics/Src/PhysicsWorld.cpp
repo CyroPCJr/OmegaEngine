@@ -38,7 +38,7 @@ void PhysicsWorld::DebugDraw() const
 
 	for (auto& obb : mOBBs)
 	{
-		Graphics::SimpleDraw::AddOBB(obb, Graphics::Colors::Blue);
+		Graphics::SimpleDraw::AddOBB(obb, Graphics::Colors::Red);
 	}
 }
 

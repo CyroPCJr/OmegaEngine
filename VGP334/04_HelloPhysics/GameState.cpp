@@ -9,7 +9,7 @@ using namespace Omega::Physics;
 
 void GameState::Initialize()
 {
-	GraphicsSystem::Get()->SetClearColor(Colors::Black);
+	GraphicsSystem::Get()->SetClearColor(Colors::LightSlateGray);
 
 	mCamera.SetNearPlane(0.1f);
 	mCamera.SetFarPlane(300.0f);
@@ -23,8 +23,8 @@ void GameState::Initialize()
 	settings.iterations = 1;
 	mPhysicsWorld.Initilize(settings);
 	mPhysicsWorld.AddStaticPlane({ Vector3::YAxis, 0.0f });
-	mPhysicsWorld.AddStaticOBB({ {0.0f, 2.0f, 0.0f}, { 4.0f, 0.5f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, 10.0f * Constants::DegToRad) });
-	mPhysicsWorld.AddStaticOBB({ { -5.0f, 7.f, 0.0f}, { 4.0f, 0.2f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, -10.0f * Constants::DegToRad) });
+	mPhysicsWorld.AddStaticOBB({ {5.0f, 4.0f, 0.0f}, { 4.0f, 0.5f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, 10.0f * Constants::DegToRad) });
+	mPhysicsWorld.AddStaticOBB({ { -5.0f, 8.f, 0.0f}, { 4.0f, 0.2f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, -10.0f * Constants::DegToRad) });
 
 	mClothBrazilFlag.Initialize(L"../../Assets/Textures/Brazil_flag.png", 20, 15);
 	mClothCanadaFlag.Initialize(L"../../Assets/Textures/Canada_flag.jpg", 20, 15);
@@ -78,7 +78,7 @@ void GameState::Render()
 	mClothCanadaFlag.Render(mCamera);
 	mPhysicsWorld.DebugDraw();
 
-	SimpleDraw::AddGroundPlane(30.0f);
+	SimpleDraw::AddGroundPlane(50.0f);
 
 	SimpleDraw::Render(mCamera);
 }
@@ -289,43 +289,51 @@ void GameState::DebugUI()
 			auto p3 = new Particle();
 			auto p4 = new Particle();
 			auto p5 = new Particle();
+			auto p6 = new Particle();
 
-			p1->SetPosition({ -0.5f, 5.0f, 0.0f });
+			p1->SetPosition({ -0.5f, 15.0f, 0.0f });
 			p1->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p1->radius = 0.1f;
 			p1->bounce = 0.3f;
 
-			p2->SetPosition({ 0.5f, 5.0f, 0.0f });
+			p2->SetPosition({ 0.5f, 15.0f, 0.0f });
 			p2->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p2->radius = 0.1f;
 			p2->bounce = 0.3f;
 
-			p3->SetPosition({ 1.0f, 5.0f, 0.0f });
+			p3->SetPosition({ 1.0f, 15.0f, 0.0f });
 			p3->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p3->radius = 0.1f;
 			p3->bounce = 0.3f;
 
-			p4->SetPosition({ 0.5f, 5.0f, 1.0f });
+			p4->SetPosition({ 0.5f, 15.0f, 1.0f });
 			p4->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
 			p4->radius = 0.1f;
 			p4->bounce = 0.3f;
 
-			p5->SetPosition({ 0.0f, 6.0f, 0.0f });
+			p5->SetPosition({ 0.0f, 15.0f, 0.0f });
 			p5->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
-			p5->radius = 1.0f;
+			p5->radius = 0.1f;
 			p5->bounce = 0.3f;
+
+			p6->SetPosition({ 0.0f, 16.0f, 0.0f });
+			p6->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
+			p6->radius = 1.0f;
+			p6->bounce = 0.3f;
 
 			mPhysicsWorld.AddParticle(p1);
 			mPhysicsWorld.AddParticle(p2);
 			mPhysicsWorld.AddParticle(p3);
 			mPhysicsWorld.AddParticle(p4);
 			mPhysicsWorld.AddParticle(p5);
+			mPhysicsWorld.AddParticle(p6);
 
 			mPhysicsWorld.AddConstraint(new Fixed(p1, p2->position));
 			mPhysicsWorld.AddConstraint(new Spring(p1, p2, restLength));
 			mPhysicsWorld.AddConstraint(new Spring(p2, p3, restLength));
 			mPhysicsWorld.AddConstraint(new Spring(p3, p4, restLength));
 			mPhysicsWorld.AddConstraint(new Spring(p4, p5, restLength));
+			mPhysicsWorld.AddConstraint(new Spring(p5, p6, restLength));
 		}
 	}
 	if (ImGui::Button("Cloth Particles!"))

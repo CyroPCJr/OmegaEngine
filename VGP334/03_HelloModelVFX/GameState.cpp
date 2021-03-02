@@ -124,6 +124,7 @@ void GameState::Initialize()
 	mTerrain.SetHeightScale(30.0f);
 
 	mSkydome.Initialize("hdri_sky.jpg");
+	//mSkydome.Initialize("sky_skydome.jpg");
 	mVecFrames.reserve(mMaxFrameSize);
 }
 
