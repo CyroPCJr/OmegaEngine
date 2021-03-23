@@ -17,7 +17,6 @@ namespace Omega::Core
 		HandlePool(size_t capacity)
 		{
 			OMEGAASSERT(capacity > 0, "[HandlePool] -- Invalid capacity.");
-			// TODO 
 			// allocate capacity + 1 entries (we dont use slot 0)
 			// add freeslots to mFreeSlots (excluding 0)
 			mEntries.resize(capacity + 1);
@@ -41,11 +40,10 @@ namespace Omega::Core
 			OMEGAASSERT(instance != nullptr, "[HandlePool] -- Invalid instance.");
 			OMEGAASSERT(!mFreeSlots.empty(), "[HandlePool] -- No more free slots available.");
 
-			// TODO
 			// Get the next free slots
 			// Set entry instance pointer
 			// Return a handle to this entry (set index and generation)
-			uint32_t key = mFreeSlots.back();
+			size_t key = mFreeSlots.back();
 			mFreeSlots.pop_back();
 
 			mEntries[key].instance = std::move(instance);
@@ -59,7 +57,6 @@ namespace Omega::Core
 
 		void Unregister(HandleType handle)
 		{
-			// TODO 
 			// Skip is handle is invalid
 			// Find the entry and increment the generation ( this invalidade all existing handles to this slot)
 			// Recycle the slot ( add the index back to mFreeSlots)
@@ -71,7 +68,6 @@ namespace Omega::Core
 
 		void Flush()
 		{
-			// TODO
 			// Loop thought all entries and increment generation ( invalidates all existing handles)
 			// Re-add all slot indices to mFreeSlots
 			const size_t size = mEntries.size();

@@ -272,7 +272,7 @@ void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet)
 		fprintf_s(file, "Name: %s\n", animationSet.clips[i]->name.c_str());
 		fprintf_s(file, "Duration: %f\n", animationSet.clips[i]->duration);
 		fprintf_s(file, "TickPerSecond: %f\n", animationSet.clips[i]->tickPerSecond);
-		fprintf_s(file, "BoneAnimationCount: %d\n", animationSet.clips[i]->boneAnimations.size());
+		fprintf_s(file, "BoneAnimationCount: %d\n", static_cast<uint32_t>(animationSet.clips[i]->boneAnimations.size()));
 		AnimationIO::Write(file, *animationSet.clips[i]);
 	}
 

@@ -31,14 +31,15 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 
 	uint32_t numMaterial = 0;
 	fscanf_s(file, "MaterialCount: %d\n", &numMaterial);
+
 	model.materialData.resize(numMaterial);
 
 	for (uint32_t i = 0; i < numMaterial; ++i)
 	{
 		// Reference:
 		// https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/c4473?view=vs-2019
-		char name[128];
-		fscanf_s(file, "DiffuseMapName %s\n", &name, sizeof(name));
+		char name[128]{};
+		fscanf_s(file, "DiffuseMapName %s\n", &name, static_cast<uint32_t>(sizeof(name)));
 		model.materialData[i].diffuseMapName = name;
 		MeshIO::Read(file, model.materialData[i].material);
 	}
@@ -96,9 +97,11 @@ void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet&
 	fileName.replace_extension("animset");
 
 	FILE* file = nullptr;
-	fopen_s(&file, fileName.u8string().c_str(), "r");
+	int fileErr = fopen_s(&file, fileName.u8string().c_str(), "r");
+	OMEGAASSERT(fileErr == 0, "[Model] File not found.");
 
 	uint32_t numClipCount = 0;
+
 	fscanf_s(file, "ClipCount: %d\n", &numClipCount);
 	animationSet.clips.resize(numClipCount);
 
@@ -106,7 +109,7 @@ void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet&
 	{
 		auto clip = std::make_unique<AnimationClip>();
 		char name[20];
-		fscanf_s(file, "Name: %s\n", &name, sizeof(name));
+		fscanf_s(file, "Name: %s\n", &name, static_cast<uint32_t>(sizeof(name)));
 		clip->name = name;
 		fscanf_s(file, "Duration: %f\n", &clip->duration);
 		fscanf_s(file, "TickPerSecond: %f\n", &clip->tickPerSecond);

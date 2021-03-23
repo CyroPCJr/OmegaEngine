@@ -315,7 +315,7 @@ void GameState::DebugUI()
 	{
 		mVecFrames.push_back(fps);
 	}
-	ImGui::PlotLines("", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
+	ImGui::PlotLines("", &mVecFrames[0], static_cast<int>(frameSize), 0, NULL, 0.0f, 300.0f, ImVec2(250.0f, 30.0f));
 	//if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	//{
 	//	/*bool lightCamera = mActiveCamera == &mLightCamera;
@@ -411,16 +411,16 @@ void GameState::DrawScene()
 	mBoneTransformBuffer.BindVS(5);
 
 	// Model 1
-	auto matWorld1 = Matrix4::Translation(mModelStartPosition);
+	auto matWorld = Matrix4::Translation(mModelStartPosition);
 
-	TransformData transformData1;
-	transformData1.world = Transpose(matWorld1);
-	transformData1.wvp = Transpose(matWorld1 * matView * matProj);
-	transformData1.viewPosition = mActiveCamera->GetPosition();
-	mTransformBuffer.Update(transformData1);
+	TransformData transformData;
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+	transformData.viewPosition = mActiveCamera->GetPosition();
+	mTransformBuffer.Update(transformData);
 
-	auto wvpLight1 = Transpose(matWorld1 * matViewLight * matProjLight);
-	mShadowConstantBuffer.Update(wvpLight1);
+	auto wvpLight = Transpose(matWorld * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight);
 
 	BoneTransformData boneTransformData{};
 	for (size_t i = 0; i < mAnimator.GetBoneMatrices().size(); ++i)
@@ -440,15 +440,15 @@ void GameState::DrawScene()
 	}
 
 	// Model 2
-	auto matWorld2 = Matrix4::Translation(mModel2_StartPosition);
-	TransformData transformData2;
-	transformData2.world = Transpose(matWorld2);
-	transformData2.wvp = Transpose(matWorld2 * matView * matProj);
-	transformData2.viewPosition = mActiveCamera->GetPosition();
-	mTransformBuffer.Update(transformData2);
+	matWorld = Matrix4::Translation(mModel2_StartPosition);
+	
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+	transformData.viewPosition = mActiveCamera->GetPosition();
+	mTransformBuffer.Update(transformData);
 
-	auto wvpLight2 = Transpose(matWorld2 * matViewLight * matProjLight);
-	mShadowConstantBuffer.Update(wvpLight2);
+	wvpLight = Transpose(matWorld * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight);
 
 	boneTransformData.boneTransforms;
 	for (size_t i = 0; i < mAnimatorModel2.GetBoneMatrices().size(); ++i)
@@ -468,15 +468,14 @@ void GameState::DrawScene()
 	}
 
 	// Model 3
-	auto matWorld3 = Matrix4::Translation(mModel3_StartPosition);
-	TransformData transformData3;
-	transformData3.world = Transpose(matWorld3);
-	transformData3.wvp = Transpose(matWorld3 * matView * matProj);
-	transformData3.viewPosition = mActiveCamera->GetPosition();
-	mTransformBuffer.Update(transformData3);
+	matWorld = Matrix4::Translation(mModel3_StartPosition);
+	transformData.world = Transpose(matWorld);
+	transformData.wvp = Transpose(matWorld * matView * matProj);
+	transformData.viewPosition = mActiveCamera->GetPosition();
+	mTransformBuffer.Update(transformData);
 
-	auto wvpLight3 = Transpose(matWorld3 * matViewLight * matProjLight);
-	mShadowConstantBuffer.Update(wvpLight3);
+	wvpLight = Transpose(matWorld * matViewLight * matProjLight);
+	mShadowConstantBuffer.Update(wvpLight);
 
 	boneTransformData.boneTransforms;
 	for (size_t i = 0; i < mAnimatorModel3.GetBoneMatrices().size(); ++i)
@@ -497,14 +496,6 @@ void GameState::DrawScene()
 
 	mTerrain.SetDirectionalLight(mDirectionalLight);
 	mTerrain.Render(mDefaultCamera);
-
-	SettingsData settings;
-	settings.specularMapWeight = 0.0f;
-	settings.bumpMapWeight = 0.0f;
-	settings.normalMapWeight = 0.0f;
-	settings.aoMapWeight = 0.0f;
-	settings.useShadow = 1;
-	mSettingsBuffer.Update(settings);
 
 	SimpleDraw::AddLine(mViewFrustumVertices[0], mViewFrustumVertices[1], Colors::White);
 	SimpleDraw::AddLine(mViewFrustumVertices[1], mViewFrustumVertices[2], Colors::White);

@@ -6,19 +6,19 @@ using namespace Omega::Graphics;
 
 void AnimationIO::Write(FILE* file, const Animation& animation)
 {
-	fprintf_s(file, "PositionCount: %d\n", animation.mPositionKeys.size());
+	fprintf_s(file, "PositionCount: %d\n", static_cast<int>(animation.mPositionKeys.size()));
 	for (auto& position : animation.mPositionKeys)
 	{
 		fprintf_s(file, "Position/Time: %f %f %f %.2f\n", position.key.x, position.key.y, position.key.z, position.time);
 	}
 
-	fprintf_s(file, "RotationCount: %d\n", animation.mRotationKeys.size());
+	fprintf_s(file, "RotationCount: %d\n", static_cast<int>(animation.mRotationKeys.size()));
 	for (auto& rotation : animation.mRotationKeys)
 	{
 		fprintf_s(file, "Rotation/Time: %f %f %f %.2f\n", rotation.key.x, rotation.key.y, rotation.key.z, rotation.time);
 	}
 
-	fprintf_s(file, "ScaleCount: %d\n", animation.mScaleKeys.size());
+	fprintf_s(file, "ScaleCount: %d\n", static_cast<int>(animation.mScaleKeys.size()));
 	for (auto& scaling : animation.mScaleKeys)
 	{
 		fprintf_s(file, "Scale/Time: %f %f %f %.2f\n", scaling.key.x, scaling.key.y, scaling.key.z, scaling.time);

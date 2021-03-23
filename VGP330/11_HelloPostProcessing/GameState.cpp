@@ -177,7 +177,7 @@ void GameState::DebugUI()
 	{
 		mVecFrames.push_back(fps);
 	}
-	ImGui::PlotLines("", &mVecFrames[0], frameSize, 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
+	ImGui::PlotLines("", &mVecFrames[0], static_cast<int>(frameSize), 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
 
 
 	if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen))
