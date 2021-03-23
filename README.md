@@ -1,1 +1,1 @@
-# OmegaEngine
+# Omega Engine
