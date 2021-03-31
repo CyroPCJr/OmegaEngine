@@ -15,6 +15,8 @@ void Texture::Initialize(const std::filesystem::path& fileName)
 {
 	HRESULT hr = DirectX::CreateWICTextureFromFile(GetDevice(), GetContext(), fileName.c_str(), nullptr, &mShaderResourceView);
 	OMEGAASSERT(SUCCEEDED(hr), "Failed to load texture %ls.", fileName.c_str());
+
+	
 }
 
 void Texture::Terminate()

@@ -141,6 +141,12 @@
     <ClInclude Include="Inc\AnimationUtil.h">
       <Filter>Inc\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\TextureManager.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\TextureTypes.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -219,6 +225,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\AnimationUtil.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextureManager.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

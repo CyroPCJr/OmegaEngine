@@ -176,6 +176,8 @@
     <ClInclude Include="Inc\Skeleton.h" />
     <ClInclude Include="Inc\SkeletonIO.h" />
     <ClInclude Include="Inc\Texture.h" />
+    <ClInclude Include="Inc\TextureManager.h" />
+    <ClInclude Include="Inc\TextureTypes.h" />
     <ClInclude Include="Inc\VertexTypes.h" />
     <ClInclude Include="Inc\VertexShader.h" />
     <ClInclude Include="Src\D3DUtil.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="Src\Skeleton.cpp" />
     <ClCompile Include="Src\SkeletonIO.cpp" />
     <ClCompile Include="Src\Texture.cpp" />
+    <ClCompile Include="Src\TextureManager.cpp" />
     <ClCompile Include="Src\VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>

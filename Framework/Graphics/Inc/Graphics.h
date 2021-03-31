@@ -50,3 +50,7 @@
 // Model
 #include "MeshIO.h"
 #include "Model.h"
+
+// Sprite and TextureManager
+#include "TextureTypes.h"
+#include "TextureManager.h"
