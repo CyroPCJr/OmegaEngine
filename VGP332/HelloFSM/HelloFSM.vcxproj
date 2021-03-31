@@ -147,19 +147,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AI\AI.vcxproj">
-      <Project>{df35f932-f504-42ea-b95e-58cdda09f42e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\X\X.vcxproj">
-      <Project>{6682bfd4-c79f-49bd-a114-6ee8fb79e8c3}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Cat.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cat.h" />
+    <ClInclude Include="GameState.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Engine\OmegaEngine\OmegaEngine.vcxproj">
+      <Project>{86dacdcb-61ec-4518-9478-17fcb7f17da8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

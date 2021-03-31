@@ -17,4 +17,4 @@ namespace Omega::Graphics::DebugUI
 	void BeginRender();
 	void EndRender();
 
-} // namespace Omega::Graphics::DebugUI
+}

@@ -16,7 +16,16 @@ void Texture::Initialize(const std::filesystem::path& fileName)
 	HRESULT hr = DirectX::CreateWICTextureFromFile(GetDevice(), GetContext(), fileName.c_str(), nullptr, &mShaderResourceView);
 	OMEGAASSERT(SUCCEEDED(hr), "Failed to load texture %ls.", fileName.c_str());
 
-	
+	// Cache the texture dimensions
+	ID3D11Resource* resource = nullptr;
+	mShaderResourceView->GetResource(&resource);
+
+	ID3D11Texture2D* texture = static_cast<ID3D11Texture2D*>(resource);
+	D3D11_TEXTURE2D_DESC desc = {};
+	texture->GetDesc(&desc);
+
+	mWidth = desc.Width;
+	mHeight = desc.Height;
 }
 
 void Texture::Terminate()
