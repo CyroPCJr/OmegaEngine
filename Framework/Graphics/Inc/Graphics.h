@@ -55,3 +55,9 @@
 #include "TextureTypes.h"
 #include "TextureManager.h"
 #include "SpriteRenderer.h"
+
+// Sprite Renderer Manager
+#include "SpriteRendererManager.h"
+
+// Font
+#include "Font.h"

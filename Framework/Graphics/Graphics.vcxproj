@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -160,6 +160,7 @@
     <ClInclude Include="Inc\Easing.h" />
     <ClInclude Include="Inc\Graphics.h" />
     <ClInclude Include="Inc\GraphicsSystem.h" />
+    <ClInclude Include="Inc\Font.h" />
     <ClInclude Include="Inc\Keyframe.h" />
     <ClInclude Include="Inc\LightTypes.h" />
     <ClInclude Include="Inc\Material.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Inc\Skeleton.h" />
     <ClInclude Include="Inc\SkeletonIO.h" />
     <ClInclude Include="Inc\SpriteRenderer.h" />
+    <ClInclude Include="Inc\SpriteRendererManager.h" />
     <ClInclude Include="Inc\Texture.h" />
     <ClInclude Include="Inc\TextureManager.h" />
     <ClInclude Include="Inc\TextureTypes.h" />
@@ -196,6 +198,7 @@
     <ClCompile Include="Src\ConstantBuffer.cpp" />
     <ClCompile Include="Src\D3DUtil.cpp" />
     <ClCompile Include="Src\DebugUI.cpp" />
+    <ClCompile Include="Src\Font.cpp" />
     <ClCompile Include="Src\GraphicsSystem.cpp" />
     <ClCompile Include="Src\MeshBuffer.cpp" />
     <ClCompile Include="Src\MeshBuilder.cpp" />
@@ -215,6 +218,7 @@
     <ClCompile Include="Src\Skeleton.cpp" />
     <ClCompile Include="Src\SkeletonIO.cpp" />
     <ClCompile Include="Src\SpriteRenderer.cpp" />
+    <ClCompile Include="Src\SpriteRendererManager.cpp" />
     <ClCompile Include="Src\Texture.cpp" />
     <ClCompile Include="Src\TextureManager.cpp" />
     <ClCompile Include="Src\VertexShader.cpp" />

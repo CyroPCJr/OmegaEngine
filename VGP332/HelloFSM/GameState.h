@@ -1,9 +1,10 @@
 #pragma once
-
-#include <OmegaEngine\Inc\Omega.h>
+#include "Cat.h"
 
 namespace FSM
 {
+	class Cat;
+
 	class GameState : public Omega::AppState
 	{
 	public:
@@ -14,6 +15,6 @@ namespace FSM
 		void Render() override;
 		void DebugUI() override;
 	private:
-		void DrawScene();
+		Cat mCat;
 	};
 }

@@ -3,6 +3,8 @@
 
 #include "MetaRegistration.h"
 
+#pragma comment(lib, "FW1FontWrapper.lib")
+
 using namespace Omega;
 using namespace Omega::Core;
 using namespace Omega::Graphics;
@@ -44,8 +46,9 @@ void App::Run(AppConfig appConfig)
 	GraphicsSystem::StaticInitialize(handle, false);
 	DebugUI::StaticInitialize(handle, false, true);
 	SimpleDraw::StaticInitialize();
-
+	SpriteRenderer::StaticInitialize();
 	TextureManager::StaticInitialize("../Assets/Images");
+	SpriteRendererManager::StaticInitialize();
 
 #pragma region Initialize engine system
 	//OnInit
@@ -86,34 +89,8 @@ void App::Run(AppConfig appConfig)
 
 		graphicsSystem->BeginRender();
 
-		// --- Sprites ---
-		//TODO: Continue tomorrow from here ....
-		//TextureId id = 0;
-		//Texture* texture = nullptr;
-		//SpriteRenderer::Get()->BeginRender();
-		//for (const auto& command : mySpriteCommands)
-		//{
-		//	if (id != command.textureId)
-		//	{
-		//		texture = TextureManager::Get()->GetTexture(command.textureId);
-		//		id = command.textureId;
-		//	}
-		//	if (texture)
-		//	{
-		//		if (Math::IsEmpty(command.sourceRect))
-		//		{
-		//			SpriteRenderer::Get()->Draw(*texture, command.position, command.rotation, command.pivot, command.flip);
-		//		}
-		//		else
-		//		{
-		//			SpriteRenderer::Get()->Draw(*texture, command.sourceRect, command.position, command.rotation, command.pivot, command.flip);
-		//		}
-		//	}
-		//}
-		//mySpriteCommands.clear();
-		//SpriteRenderer::Get()->EndRender();
-
 		mCurrentState->Render();
+		SpriteRendererManager::Get()->Render();
 
 		DebugUI::BeginRender();
 		mCurrentState->DebugUI();
@@ -133,6 +110,8 @@ void App::Run(AppConfig appConfig)
 	GraphicsSystem::StaticTerminate();
 	SimpleDraw::StaticTerminate();
 	TextureManager::StaticTerminate();
+	SpriteRenderer::StaticTerminate();
+	SpriteRendererManager::StaticTerminate();
 
 	mWindow.Terminate();
 

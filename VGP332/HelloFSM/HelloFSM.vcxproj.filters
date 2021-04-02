@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="Cat.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="Cat.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cat.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Cat.h" />
   </ItemGroup>
 </Project>

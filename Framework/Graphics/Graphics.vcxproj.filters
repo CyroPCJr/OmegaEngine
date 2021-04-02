@@ -28,6 +28,9 @@
     <Filter Include="Inc\Material">
       <UniqueIdentifier>{752c5660-ba64-48ad-9ce0-cac0113d9422}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Font">
+      <UniqueIdentifier>{8351ad29-ffc5-47c7-821c-e3092ee26210}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -141,14 +144,20 @@
     <ClInclude Include="Inc\AnimationUtil.h">
       <Filter>Inc\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\TextureManager.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\TextureTypes.h">
-      <Filter>Inc</Filter>
+    <ClInclude Include="Inc\Font.h">
+      <Filter>Inc\Font</Filter>
     </ClInclude>
     <ClInclude Include="Inc\SpriteRenderer.h">
-      <Filter>Inc</Filter>
+      <Filter>Inc\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\SpriteRendererManager.h">
+      <Filter>Inc\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\TextureManager.h">
+      <Filter>Inc\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\TextureTypes.h">
+      <Filter>Inc\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +243,12 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\SpriteRenderer.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Font.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SpriteRendererManager.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace Omega::Graphics
 {
 	class PixelShader
