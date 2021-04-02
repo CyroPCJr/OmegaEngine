@@ -3,6 +3,8 @@
 
 #include "MetaRegistration.h"
 
+#pragma comment(lib, "FW1FontWrapper.lib")
+
 using namespace Omega;
 using namespace Omega::Core;
 using namespace Omega::Graphics;
@@ -44,6 +46,9 @@ void App::Run(AppConfig appConfig)
 	GraphicsSystem::StaticInitialize(handle, false);
 	DebugUI::StaticInitialize(handle, false, true);
 	SimpleDraw::StaticInitialize();
+	SpriteRenderer::StaticInitialize();
+	TextureManager::StaticInitialize("../Assets/Images");
+	SpriteRendererManager::StaticInitialize();
 
 #pragma region Initialize engine system
 	//OnInit
@@ -53,6 +58,7 @@ void App::Run(AppConfig appConfig)
 	mCurrentState->Initialize();
 
 	mRunning = true;
+	auto graphicsSystem = GraphicsSystem::Get();
 	while (mRunning)
 	{
 		mWindow.ProcessMessage();
@@ -81,9 +87,10 @@ void App::Run(AppConfig appConfig)
 		float deltaTime = TimeUtil::GetDeltaTime();
 		mCurrentState->Update(deltaTime);
 
-		auto graphicsSystem = GraphicsSystem::Get();
 		graphicsSystem->BeginRender();
+
 		mCurrentState->Render();
+		SpriteRendererManager::Get()->Render();
 
 		DebugUI::BeginRender();
 		mCurrentState->DebugUI();
@@ -102,6 +109,10 @@ void App::Run(AppConfig appConfig)
 	InputSystem::StaticTerminate();
 	GraphicsSystem::StaticTerminate();
 	SimpleDraw::StaticTerminate();
+	TextureManager::StaticTerminate();
+	SpriteRenderer::StaticTerminate();
+	SpriteRendererManager::StaticTerminate();
+
 	mWindow.Terminate();
 
 #pragma endregion

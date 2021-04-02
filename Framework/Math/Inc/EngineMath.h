@@ -70,6 +70,11 @@ namespace Omega::Math
 		return value * value;
 	}
 
+	constexpr bool IsEmpty(const Rect& rect)
+	{ 
+		return rect.right <= rect.left || rect.bottom <= rect.top; 
+	}
+
 #pragma region Vector 2
 
 	constexpr Vector2 PerpendicularLH(const Vector2& v)

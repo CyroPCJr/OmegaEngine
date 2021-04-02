@@ -1,6 +1,8 @@
 #include "Cat.h"
 
 using namespace FSM;
+using namespace Omega::Input;
+using namespace Omega::Graphics;
 
 void Cat::Load()
 {
@@ -16,12 +18,14 @@ void Cat::UnLoad()
 
 void Cat::Update(float deltaTime)
 {
-	if (X::IsKeyPressed(X::Keys::A))
+	auto input = InputSystem::Get();
+
+	if (input->IsKeyDown(KeyCode::A))
 	{
 		mStateMachine->ChangeState("Idle");
 	}
 
-	if (X::IsKeyPressed(X::Keys::D))
+	if (input->IsKeyDown(KeyCode::D))
 	{
 		mStateMachine->ChangeState("Walk");
 	}
@@ -47,10 +51,10 @@ void IdleState::Enter(Cat& agent)
 
 void IdleState::Update(Cat& agent, float deltaTime)
 {
-	X::DrawScreenText(agent.GetMessageCat(), 100.f, 100.f, 20.f, X::Colors::Blue);
+	SpriteRendererManager::Get()->DrawScreenText(agent.GetMessageCat(), 100.f, 100.f, 20.f, Colors::Blue);
 	currentTime += deltaTime;
 	std::string msg = "[Idle] time idle = " + std::to_string(currentTime);
-	X::DrawScreenText(msg.c_str(), 100.0f, 120.0f, 25.f, X::Colors::Red);
+	SpriteRendererManager::Get()->DrawScreenText(msg.c_str(), 100.0f, 120.0f, 25.f, Colors::Red);
 }
 
 void IdleState::Exit(Cat& agent)
@@ -67,10 +71,10 @@ void WalkState::Enter(Cat& agent)
 
 void WalkState::Update(Cat& agent, float deltaTime)
 {
-	X::DrawScreenText(agent.GetMessageCat(), 100.f, 100.f, 20.f, X::Colors::Blue);
+	SpriteRendererManager::Get()->DrawScreenText(agent.GetMessageCat(), 100.f, 100.f, 20.f, Colors::Blue);
 	currentTime += deltaTime;
 	std::string msg = "[Walk] time Walking = " + std::to_string(currentTime);
-	X::DrawScreenText(msg.c_str(), 100.0f, 120.0f, 25.f, X::Colors::Red);
+	SpriteRendererManager::Get()->DrawScreenText(msg.c_str(), 100.0f, 120.0f, 25.f, Colors::Red);
 }
 
 void WalkState::Exit(Cat& agent)

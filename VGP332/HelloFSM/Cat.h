@@ -1,9 +1,6 @@
 #pragma once
 
-#include "State.h"
-#include "StateMachine.h"
-#include  <AI.h>
-#include <XEngine.h>
+#include <OmegaEngine\Inc\Omega.h>
 
 namespace FSM
 {
