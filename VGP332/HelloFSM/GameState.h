@@ -1,10 +1,10 @@
 #pragma once
 #include "Cat.h"
 
+#include <OmegaEngine/Inc/Omega.h>
+
 namespace FSM
 {
-	class Cat;
-
 	class GameState : public Omega::AppState
 	{
 	public:

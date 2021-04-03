@@ -1,6 +1,5 @@
 #include "Precompiled.h"
 #include "Font.h"
-#include "Colors.h"
 
 #include "D3DUtil.h"
 #include <FW1FontWrapper_1_1\FW1FontWrapper.h>

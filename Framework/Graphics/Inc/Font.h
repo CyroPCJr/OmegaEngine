@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Colors.h"
 
 interface IFW1Factory;

@@ -21,7 +21,7 @@ void Texture::Initialize(const std::filesystem::path& fileName)
 	mShaderResourceView->GetResource(&resource);
 
 	ID3D11Texture2D* texture = static_cast<ID3D11Texture2D*>(resource);
-	D3D11_TEXTURE2D_DESC desc = {};
+	D3D11_TEXTURE2D_DESC desc{};
 	texture->GetDesc(&desc);
 
 	mWidth = desc.Width;

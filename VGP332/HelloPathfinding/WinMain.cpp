@@ -1,40 +1,10 @@
-//#include "TileMap.h"
-//#include <XEngine.h>
-//
-//TileMap tileMap;
-//
-//void GameInit()
-//{
-//	tileMap.Load();
-//}
-//
-//void GameCleanup()
-//{
-//	tileMap.UnLoad();
-//}
-//
-//bool GameLoop(float deltaTime)
-//{
-//	tileMap.Update(deltaTime);
-//	tileMap.Render();
-//	return X::IsKeyPressed(X::Keys::ESCAPE);
-//}
-//
-//int WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-//{
-//	X::Start("xconfig.json");
-//	GameInit();
-//	X::Run(GameLoop);
-//	GameCleanup();
-//	X::Stop();
-//	return 0;
-//}
-
 #include "GameState.h"
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+	_In_ PSTR szCmdLine, _In_ int iCmdShow)
 {
-	Omega::MainApp().AddState<GameState>("GameState");
-	Omega::MainApp().Run({ "VGP332 - Hello Pathfinding", 1280,720 });
+	Omega::App app;
+	app.AddState<PathFinding::GameState>("GameState");
+	app.Run({ "VGP332 - Hello Pathfinding", 1280,720 });
 	return 0;
 }

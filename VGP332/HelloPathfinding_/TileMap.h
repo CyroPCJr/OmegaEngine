@@ -64,11 +64,6 @@ private:
 	std::array<std::size_t, 6> mTextureIds;
 	std::size_t mCircle;
 	std::vector<int> mTiles;
-
-	bool mBeginCoord = false;
-	bool mEndCoord = false;
-	bool mShowGraph = true;
-
 	int mColumns = 0;
 	int mRows = 0;
 	int mTileSize = 32;

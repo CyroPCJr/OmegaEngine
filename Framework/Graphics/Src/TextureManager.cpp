@@ -82,7 +82,7 @@ void TextureManager::BindPS(TextureId id, uint32_t slot)
 	}
 }
 
-Texture* Omega::Graphics::TextureManager::GetTexture(TextureId id)
+Texture* TextureManager::GetTexture(TextureId id)
 {
 	if (auto iter = mInventory.find(id);
 		iter != mInventory.end())

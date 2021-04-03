@@ -7,9 +7,9 @@ namespace Omega
 
 	struct AppConfig
 	{
-		std::string appName{ "Omega" };
-		uint32_t windowWidth{ 1280 };
-		uint32_t windowHeight{ 720 };
+		std::string appName = "Omega";
+		uint32_t windowWidth = 1280;
+		uint32_t windowHeight = 720;
 	};
 
 	class App
@@ -17,7 +17,7 @@ namespace Omega
 	public:
 
 		template<class StateType>
-		void AddState(std::string name) 
+		void AddState(std::string name)
 		{
 			static_assert(std::is_base_of_v<AppState, StateType>,
 				"[App] -- Cannot add type AppState which is not derived from StateType.");
@@ -31,6 +31,11 @@ namespace Omega
 		void Run(AppConfig appConfig);
 		void Quit() { mRunning = false; }
 
+		bool OpenFileDialog(char fileName[MAX_PATH], const char* title, const char* filter);
+		bool SaveFileDialog(char fileName[MAX_PATH], const char* title, const char* filter);
+		float GetTime();
+
+
 	private:
 		AppConfig mAppConfig;
 		Core::Window mWindow;
@@ -40,6 +45,6 @@ namespace Omega
 		AppState* mCurrentState = nullptr;
 		AppState* mNextState = nullptr;
 
-	};	
+	};
 
 }

@@ -13,26 +13,17 @@ namespace
 	struct SpriteCommand
 	{
 		SpriteCommand(TextureId inTextureId, const Math::Vector2& inPosiiton, float inRotation)
-			: textureId(inTextureId)
-			, sourceRect({ 0.0f, 0.0f, 0.0f, 0.0f })
-			, position(inPosiiton)
+			: textureId(inTextureId), sourceRect({ 0.0f, 0.0f, 0.0f, 0.0f }), position(inPosiiton)
 			, rotation(inRotation)
 		{}
 
 		SpriteCommand(TextureId inTextureId, const Math::Vector2& inPosiiton, float inRotation, Pivot pivot, Flip flip)
-			: textureId(inTextureId)
-			, sourceRect({ 0.0f, 0.0f, 0.0f, 0.0f })
-			, position(inPosiiton)
-			, rotation(inRotation)
-			, pivot(pivot)
-			, flip(flip)
+			: textureId(inTextureId), sourceRect({ 0.0f, 0.0f, 0.0f, 0.0f }), position(inPosiiton), rotation(inRotation)
+			, pivot(pivot), flip(flip)
 		{}
 
 		SpriteCommand(TextureId inTextureId, const Math::Rect& inSourceRect, const Math::Vector2& inPosiiton, float inRotation)
-			: textureId(inTextureId)
-			, sourceRect(inSourceRect)
-			, position(inPosiiton)
-			, rotation(inRotation)
+			: textureId(inTextureId), sourceRect(inSourceRect) , position(inPosiiton) , rotation(inRotation)
 		{}
 
 		TextureId textureId = 0;
@@ -46,11 +37,7 @@ namespace
 	struct TextCommand
 	{
 		TextCommand(std::wstring inStr, float inSize, float inX, float inY, const Color& inColor)
-			: str(std::move(inStr))
-			, size(inSize)
-			, x(inX)
-			, y(inY)
-			, color(inColor)
+			: str(std::move(inStr)), size(inSize), x(inX), y(inY), color(inColor)
 		{}
 
 		std::wstring str;
@@ -159,4 +146,14 @@ void SpriteRendererManager::DrawSprite(TextureId textureId, const Math::Vector2&
 void SpriteRendererManager::DrawSprite(TextureId textureId, const Math::Rect& sourceRect, const Math::Vector2& position)
 {
 	SpriteCommands.emplace_back(textureId, sourceRect, position, 0.0f);
+}
+
+TextureId SpriteRendererManager::LoadTexture(const std::filesystem::path& fileName)
+{
+	return TextureManager::Get()->Load(fileName);
+}
+
+void SpriteRendererManager::ClearAllTextures()
+{
+	TextureManager::Get()->Clear();
 }

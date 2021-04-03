@@ -27,7 +27,7 @@ void App::Run(AppConfig appConfig)
 	Core::StaticMetaRegister();
 	Math::StaticMetaRegister();
 	Omega::StaticMetaRegister();
-	
+
 	// Initialize timer
 	TimeUtil::GetTime();
 
@@ -44,10 +44,11 @@ void App::Run(AppConfig appConfig)
 
 	// Initialize the graphics system
 	GraphicsSystem::StaticInitialize(handle, false);
+	GraphicsSystem::Get()->SetClearColor(Colors::Black); // default background color
 	DebugUI::StaticInitialize(handle, false, true);
-	SimpleDraw::StaticInitialize();
+	SimpleDraw::StaticInitialize(1024 * 1024);
 	SpriteRenderer::StaticInitialize();
-	TextureManager::StaticInitialize("../Assets/Images");
+	TextureManager::StaticInitialize("../../Assets/Images");
 	SpriteRendererManager::StaticInitialize();
 
 #pragma region Initialize engine system
@@ -117,4 +118,37 @@ void App::Run(AppConfig appConfig)
 
 #pragma endregion
 
+}
+
+bool App::OpenFileDialog(char fileName[MAX_PATH], const char* title, const char* filter)
+{
+	//TODO: Figure out how to fixes this
+	/*OPENFILENAMEA ofn = {};
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = mWindow;
+	ofn.lpstrFilter = filter;
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrTitle = title;
+	return GetOpenFileNameA(&ofn);*/
+	return true;
+}
+
+bool App::SaveFileDialog(char fileName[MAX_PATH], const char* title, const char* filter)
+{
+	//TODO: Figure out how to fixes this
+	/*OPENFILENAMEA ofn = {};
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = mWindow;
+	ofn.lpstrFilter = filter;
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrTitle = title;
+	return GetSaveFileNameA(&ofn);*/
+	return true;
+}
+
+float App::GetTime()
+{
+	return TimeUtil::GetTime();
 }

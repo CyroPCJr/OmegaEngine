@@ -20,6 +20,9 @@ namespace Omega::Graphics
 		void DrawSprite(TextureId textureId, const Math::Vector2& position, Pivot pivot = Pivot::Center, Flip flip = Flip::None);
 		void DrawSprite(TextureId textureId, const Math::Vector2& position, float rotation, Pivot pivot = Pivot::Center, Flip flip = Flip::None);
 		void DrawSprite(TextureId textureId, const Math::Rect& sourceRect, const Math::Vector2& position);
+
+		TextureId LoadTexture(const std::filesystem::path& fileName);
+		void ClearAllTextures();
 	};
 
 }

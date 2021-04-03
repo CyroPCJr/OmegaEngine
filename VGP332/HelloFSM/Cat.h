@@ -1,6 +1,6 @@
 #pragma once
 
-#include <OmegaEngine\Inc\Omega.h>
+#include <OmegaEngine/Inc/Omega.h>
 
 namespace FSM
 {
@@ -16,7 +16,7 @@ namespace FSM
 		void Walk();
 
 		void SetMessageCat(const char* message) { mMessage = message; }
-		const char* GetMessageCat() { return mMessage.c_str(); }
+		const char* GetMessageCat() const { return mMessage.c_str(); }
 
 	private:
 		std::string mMessage;

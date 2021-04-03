@@ -9,9 +9,6 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)Framework;$(SolutionDir)External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-	  <WarningLevel>Level4</WarningLevel>
-      <ConformanceMode>true</ConformanceMode>
-      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
 	<PostBuildEvent>
       <Command>copy /y "$(SolutionDir)External\FW1FontWrapper_1_1\$(PlatformTarget)\*.dll" "$(OutDir)"</Command>

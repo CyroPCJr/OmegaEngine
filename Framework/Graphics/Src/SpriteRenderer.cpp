@@ -46,7 +46,7 @@ namespace
 		return DirectX::SpriteEffects_None;
 	}
 
-	DirectX::XMFLOAT2 ToXMFLOAT2(const Omega::Math::Vector2& v)
+	constexpr DirectX::XMFLOAT2 ToXMFLOAT2(const Omega::Math::Vector2& v)
 	{
 		return { v.x, v.y };
 	}
@@ -90,6 +90,7 @@ void Omega::Graphics::SpriteRenderer::Terminate()
 {
 	OMEGAASSERT(mSpriteBatch != nullptr, "[SpriteRenderer] Already terminated!");
 	mSpriteBatch.reset();
+	mCommonStates.reset();
 }
 
 void SpriteRenderer::BeginRender()
