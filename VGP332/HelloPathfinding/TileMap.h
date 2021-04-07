@@ -21,12 +21,12 @@ public:
 
 private:
 
-	inline int GetIndex(int x, int y) const
+	constexpr int GetIndex(int x, int y) const
 	{
 		return x + (y * mColumns);
 	}
 
-	inline Omega::Math::Vector2 GetPosition(float x, float y) const
+	constexpr Omega::Math::Vector2 GetPosition(float x, float y) const
 	{
 		return { x * mTileSize + mTileHalfSize, y * mTileSize + mTileHalfSize };
 	}
@@ -34,7 +34,6 @@ private:
 	void SaveMap(const char* mapFileName);
 	
 	void LoadMap(const char* mapFileName);
-	
 
 	void RenderAIPath(const Types& types);
 
@@ -74,4 +73,6 @@ private:
 	int mTileSize = 32;
 	int mTileHalfSize = mTileSize >> 1;
 	float mFps = 0;
+	float mCircleSize = mTileHalfSize * 0.5f;
+	int mSelectedTile = 0;
 };

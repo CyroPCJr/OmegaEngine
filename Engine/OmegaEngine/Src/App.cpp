@@ -120,34 +120,6 @@ void App::Run(AppConfig appConfig)
 
 }
 
-bool App::OpenFileDialog(char fileName[MAX_PATH], const char* title, const char* filter)
-{
-	//TODO: Figure out how to fixes this
-	/*OPENFILENAMEA ofn = {};
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = mWindow;
-	ofn.lpstrFilter = filter;
-	ofn.lpstrFile = fileName;
-	ofn.nMaxFile = MAX_PATH;
-	ofn.lpstrTitle = title;
-	return GetOpenFileNameA(&ofn);*/
-	return true;
-}
-
-bool App::SaveFileDialog(char fileName[MAX_PATH], const char* title, const char* filter)
-{
-	//TODO: Figure out how to fixes this
-	/*OPENFILENAMEA ofn = {};
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = mWindow;
-	ofn.lpstrFilter = filter;
-	ofn.lpstrFile = fileName;
-	ofn.nMaxFile = MAX_PATH;
-	ofn.lpstrTitle = title;
-	return GetSaveFileNameA(&ofn);*/
-	return true;
-}
-
 float App::GetTime()
 {
 	return TimeUtil::GetTime();

@@ -69,6 +69,24 @@ float4 PSInverseColor(VSOutput input) : SV_Target
 }
 
 
+float4 PSRadialBlur(VSOutput input) : SV_Target
+{
+    float2 Center = float2(0.5f, 0.5f);
+    float BlurStart = 1.0f;
+    float BlurWidth = -0.14f;
+    float samples = 16;
+    float4 color = 0.0f;
+    for (int i = 0; i < samples; ++i)
+    {
+        float scale = BlurStart + BlurWidth * (i / (samples - 1.0f));
+        color += textureMap.Sample(textureSampler, (input.texCoord - 0.5f) * scale + Center);
+    }
+
+    color /= samples;
+
+    return color;
+}
+
 //float4 PSDistortionColor(VSOutput input) : SV_Target
 //{
 //    float4 colorTexture = textureMap.Sample(textureSampler, input.texCoord);

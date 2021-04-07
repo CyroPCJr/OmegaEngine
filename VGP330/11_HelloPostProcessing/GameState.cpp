@@ -233,6 +233,7 @@ void GameState::DebugUI()
 		static bool GreyScale = false;
 		static bool InverseColor = false;
 		static bool DistortionColor = false;
+		static bool RadialBlur = false;
 		static bool Default = true;
 
 		if (ImGui::Checkbox("No Post Processing", &Default))
@@ -241,6 +242,7 @@ void GameState::DebugUI()
 			InverseColor = false;
 			GreyScale = false;
 			PosProcessingSepiaTone = false;
+			RadialBlur = false;
 			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSNoProcessing");
 		}
 
@@ -250,6 +252,7 @@ void GameState::DebugUI()
 			InverseColor = false;
 			GreyScale = false;
 			Default = false;
+			RadialBlur = false;
 			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSSepiaTone");
 		}
 
@@ -259,6 +262,7 @@ void GameState::DebugUI()
 			InverseColor = false;
 			Default = false;
 			PosProcessingSepiaTone = false;
+			RadialBlur = false;
 			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSGreyScale");
 		}
 
@@ -268,7 +272,17 @@ void GameState::DebugUI()
 			Default = false;
 			GreyScale = false;
 			PosProcessingSepiaTone = false;
+			RadialBlur = false;
 			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSInverseColor");
+		}
+
+		if (ImGui::Checkbox("Radial Blur", &RadialBlur))
+		{
+			DistortionColor = false;
+			Default = false;
+			GreyScale = false;
+			PosProcessingSepiaTone = false;
+			mPostProcessingPixelShader.Initialize("../../Assets/Shaders/PostProcessing.fx", "PSRadialBlur");
 		}
 
 	}

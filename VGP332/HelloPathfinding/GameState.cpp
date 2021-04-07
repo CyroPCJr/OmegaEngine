@@ -16,7 +16,6 @@ void GameState::Terminate()
 void GameState::Update(float deltaTime)
 {
 	mTileMap.Update(deltaTime);
-	mTileMap.Render();
 }
 
 void GameState::Render()

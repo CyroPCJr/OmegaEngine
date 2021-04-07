@@ -13,7 +13,7 @@ void Skydome::Initialize(const std::filesystem::path& texturePath)
 	mVSSkyDome.Initialize(doTexturingShader, VertexPX::Format);
 	mPSSkyDome.Initialize(doTexturingShader);
 
-	std::filesystem::path rootImages = "../../Assets/Textures";
+	std::filesystem::path rootImages = L"../../Assets/Textures";
 	mSamplers.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
 	mSkyDomeTexture.Initialize(rootImages / texturePath);
 	mConstantBufferSkyDome.Initialize(sizeof(Matrix4));

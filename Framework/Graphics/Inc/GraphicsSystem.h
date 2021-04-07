@@ -38,9 +38,9 @@ namespace Omega::Graphics {
 
 		//TODO: Remove theses eventually
 		// Video memory manager
-		ID3D11Device* GetDevice() { return mD3DDevice; }
-		//
-		ID3D11DeviceContext* GetContext() { return mImmediateContext; };
+		//ID3D11Device* GetDevice() { return mD3DDevice; }
+		////
+		//ID3D11DeviceContext* GetContext() { return mImmediateContext; };
 
 	private:
 		static LRESULT CALLBACK GraphicsSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam);

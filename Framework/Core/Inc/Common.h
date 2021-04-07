@@ -6,10 +6,10 @@
 // Win32 headers
 #include <objbase.h>
 #include <Windows.h>
+#include <shobjidl.h> // https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb776913(v=vs.85) 
 
 // Standard headers
 #include <algorithm>
-#include <codecvt>
 #include <array>
 #include <atomic>
 #include <chrono>

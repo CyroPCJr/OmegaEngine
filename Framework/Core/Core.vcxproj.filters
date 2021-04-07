@@ -78,6 +78,9 @@
     <ClCompile Include="Src\MetaRegistry.cpp">
       <Filter>Src\Meta</Filter>
     </ClCompile>
+    <ClCompile Include="Src\DialogBoxUtil.cpp">
+      <Filter>Src\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Inc\MetaRegistry.h">
       <Filter>Inc\Meta</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\DialogBoxUtil.h">
+      <Filter>Inc\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

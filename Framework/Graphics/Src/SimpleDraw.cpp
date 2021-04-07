@@ -379,8 +379,7 @@ namespace Omega::Graphics
 
 		void AddScreenCircle(const Vector2& center, float radius, const Color& color)
 		{
-			if (m2DVertexCount + 32 >= mMaxVertexCount)
-				return;
+			if (m2DVertexCount + 32 >= mMaxVertexCount) return;
 			const int slices = 16;
 			float thetaIncrement = Math::Constants::TwoPi / slices;
 
@@ -390,7 +389,7 @@ namespace Omega::Graphics
 				list.push_back(Math::Vector2{ radius * cosf(theta),radius * sinf(theta) } + center);
 			}
 
-			for (size_t i = 0; i < list.size() - 1; i++)
+			for (size_t i = 0; i < list.size() - 1; ++i)
 			{
 				AddScreenLine(list[i], list[i + 1], color);
 			}
