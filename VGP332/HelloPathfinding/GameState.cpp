@@ -25,6 +25,7 @@ void GameState::Render()
 
 void GameState::DebugUI()
 {
+	//TODO: Why the simple draw render works here instead Gamestate::reder ?
 	SimpleDraw::Render(mCamera);
 	mTileMap.DebugUI();
 }

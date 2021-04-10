@@ -25,3 +25,10 @@ Vector2 Random::RandomVector2(const Vector2& min, const Vector2& max)
 {
 	return { RandomFloat(min.x, min.y), RandomFloat(max.x, max.y) };
 }
+
+Vector2 Random::RandomUnitCircle()
+{
+	const float angle = RandomFloat(0.0f, 360.0f);
+	const float radius = RandomFloat(-1.0f, 1.0f);
+	return Normalize({ radius * cosf(angle), radius * sinf(angle) });
+}

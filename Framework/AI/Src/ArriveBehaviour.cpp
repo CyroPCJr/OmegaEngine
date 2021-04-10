@@ -7,26 +7,18 @@ using namespace Omega::Math;
 
 Vector2 ArriveBehaviour::Calculate(Agent& agent)
 {
+	return Arrive(agent, agent.destination);
+}
+
+Vector2 AI::ArriveBehaviour::Arrive(AI::Agent& agent, Omega::Math::Vector2 destination)
+{
 	Vector2 toTarget = agent.destination - agent.position;
-	float distance = Magnitude(toTarget);
-	const float slowInRadius = 1000.0f;
-	if (distance < slowInRadius)
+	const float distance = Magnitude(toTarget);
+	if (distance > 0.0f)
 	{
-		toTarget = Normalize(toTarget) * agent.maxSpeed * (distance / slowInRadius);
+		float speed = std::min(distance / (deceleration * decelerationTweaker), agent.maxSpeed);
+		Vector2 desiredVelocity = toTarget * (speed / distance);
+		return desiredVelocity - agent.velocity;
 	}
-	else
-	{
-		toTarget = Normalize(toTarget) * agent.maxSpeed;
-	}
-	return toTarget - agent.velocity;
-	/*if (distance > 0.1f)
-	{
-		float decel = Deceleration::slow;
-		const float decelTweaker = 0.3f;
-		float speed = distance / (decel * decelTweaker);
-		speed = std::min(speed, agent.maxSpeed);
-		X::Math::Vector2 DesiredVelocity = toTarget * speed / distance;
-		return DesiredVelocity - agent.velocity;
-	}
-	return X::Math::Vector2::Zero();*/
+	return Vector2::Zero;
 }

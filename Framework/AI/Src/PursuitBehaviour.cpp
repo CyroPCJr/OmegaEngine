@@ -7,14 +7,9 @@ using namespace Omega::Math;
 
 Vector2 PursuitBehaviour::Calculate(AI::Agent& agent)
 {
-	Vector2 toEvader = agent.threat->position - agent.position;
-
+	const Vector2 toEvader = agent.threat->position - agent.position;
 	const float differenceDistance = Magnitude(toEvader);
-	float distanceAhead = differenceDistance / agent.maxSpeed;
-
-	agent.destination = agent.threat->position + agent.threat->velocity * distanceAhead;
-
-	// Seek formula
-	auto desiredVelocity = Normalize(agent.destination - agent.position) * agent.maxSpeed;
-	return desiredVelocity - agent.velocity;
+	const float distanceAhead = differenceDistance / agent.maxSpeed;
+	const Vector2 destination = agent.threat->position + agent.threat->velocity * distanceAhead;
+	return Seek(agent, destination);
 }

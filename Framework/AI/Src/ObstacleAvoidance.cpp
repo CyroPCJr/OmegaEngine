@@ -11,27 +11,22 @@ Vector2 ObstacleAvoidance::Calculate(Agent & agent)
 	Vector2 ahead = agent.position +agent.velocity*agent.maxSpeed;
 	Vector2 ahead2 = ahead * 0.5f;
 
-	auto mostThreatening = CheckObstacleAhead(ahead, ahead2, agent);
+	const auto mostThreatening = CheckObstacleAhead(ahead, ahead2, agent);
 	Vector2 avoidance = Vector2::Zero;
 
 	avoidance = ahead - mostThreatening.center;
 	avoidance = Normalize(avoidance);
 	avoidance *= agent.maxSpeed;
-	//}
-	//else {
-	//	avoidance.scaleBy(0); // nullify the avoidance force
-	//}
+	
 	return avoidance - agent.velocity;
 }
 
-Circle ObstacleAvoidance::CheckObstacleAhead(const Vector2& ahead, const Vector2& ahead2, Agent& agent)
+Circle ObstacleAvoidance::CheckObstacleAhead(const Vector2& ahead, const Vector2& ahead2, const Agent& agent) const
 {
-	Circle obstacle;
+	Circle obstacle{};
 	// Access the worl throught the agent
 	auto world = &agent.world;
-	auto obstList = world->GetObstacles();
-
-	for (const auto& obs : obstList)
+	for (auto& obs : world->GetObstacles())
 	{
 		bool isCollide = lineIntersectsCircle(ahead, ahead2, obs);
 		if (isCollide ||
@@ -43,7 +38,7 @@ Circle ObstacleAvoidance::CheckObstacleAhead(const Vector2& ahead, const Vector2
 	return obstacle;
 }
 
-bool ObstacleAvoidance::lineIntersectsCircle(const Vector2 & ahead, const Vector2 & ahead2, Circle obstacle)
+bool ObstacleAvoidance::lineIntersectsCircle(const Vector2 & ahead, const Vector2 & ahead2, const Circle& obstacle) const
 {
 	// distance between center obstacle and look ahead in agent
 	const float distanceAhead =  Magnitude(obstacle.center - ahead);

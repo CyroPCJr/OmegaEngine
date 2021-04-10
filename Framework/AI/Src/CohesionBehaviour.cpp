@@ -7,13 +7,23 @@ using namespace Omega::Math;
 
 Vector2 CohesionBehaviour::Calculate(Agent& agent)
 {
+	//TODO: need to rewritte, fixing
 	Vector2 averagePosition = agent.position;
-	for (auto& neighbor : agent.neighbors)
+	for (const auto& neighbor : agent.neighbors)
 	{
 		averagePosition += neighbor->position;
 	}
-	averagePosition /= (agent.neighbors.size() + 1.0f);
-	// Seek formula
-	//return (X::Math::Normalize(averagePosition - agent.position)*agent.maxSpeed) - agent.velocity;
-	return averagePosition - agent.position;
+
+	if (const float size = static_cast<float>(agent.neighbors.size());
+		size > 0.0f)
+	{
+		auto target = averagePosition / size;
+		return (target == agent.position) ? 
+			(agent.heading * agent.maxSpeed) : 
+			Seek(agent, target);
+	}
+	else
+	{
+		return Vector2::Zero;
+	}
 }

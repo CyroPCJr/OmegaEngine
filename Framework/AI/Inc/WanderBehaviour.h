@@ -1,12 +1,13 @@
 #pragma once
 
-#include "SteeringBehavior.h"
+#include "SeekBehaviour.h"
 
 namespace AI
 {
-	class WanderBehaviour :public AI::SteeringBehavior
+	class WanderBehaviour :public AI::SeekBehaviour
 	{
 	public:
+		virtual ~WanderBehaviour() = default;
 
 		struct Settings
 		{
@@ -15,10 +16,14 @@ namespace AI
 			float distance = 40.0f;
 		};
 
-		Omega::Math::Vector2 Calculate(AI::Agent& agent) override;
-		void SetSettings(Settings settings) { mSettings = settings; }
+		Omega::Math::Vector2 Calculate(Agent& agent) override;
+		void SetSettings(const Settings& settings) { mSettings = settings; }
+
+		void ShowDebugDraw(const Agent& agent) override;
 	private:
-		Omega::Math::Vector2 mLocalTarget = Omega::Math::Vector2::Zero;
 		Settings mSettings;
+		Omega::Math::Vector2 mLocalTarget = Omega::Math::Vector2::Zero;
+		Omega::Math::Vector2 mCircleProjection = Omega::Math::Vector2::Zero;
+		Omega::Math::Vector2 mCircleJitter = Omega::Math::Vector2::Zero;
 	};
 }

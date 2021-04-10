@@ -67,23 +67,20 @@ void TileMap::Update(float deltaTime)
 
 	if (inputSystem->IsMousePressed(MouseButton::RBUTTON))
 	{
-		if (mBeginCoord)
+		if (row < mRows &&
+			column < mColumns)
 		{
-			mBeginCoord = false;
-			mSettingData.coordStart = { column, row };
+			if (mBeginCoord)
+			{
+				mBeginCoord = false;
+				mSettingData.coordStart = { column, row };
+			}
 
-		}
-
-		if (mEndCoord)
-		{
-			mEndCoord = false;
-			mSettingData.coordEnd = { column, row };
-		}
-
-		if (row < mRows && column < mColumns)
-		{
-			const int index = GetIndex(column, row);
-			mTiles[index] = mSelectedTile;
+			if (mEndCoord)
+			{
+				mEndCoord = false;
+				mSettingData.coordEnd = { column, row };
+			}
 		}
 
 	}

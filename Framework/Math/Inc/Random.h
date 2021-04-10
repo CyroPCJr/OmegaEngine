@@ -7,4 +7,7 @@ namespace Omega::Math::Random
 	float RandomFloat(float min = 0.0f, float max = 1.0f);
 
 	Omega::Math::Vector2 RandomVector2(const Omega::Math::Vector2& min, const Omega::Math::Vector2& max);
+
+	Omega::Math::Vector2 RandomUnitCircle();
+	
 }

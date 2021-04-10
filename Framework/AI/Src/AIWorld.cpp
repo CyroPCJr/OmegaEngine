@@ -12,7 +12,7 @@ namespace
 	template<class Element>
 	std::vector<Element*> GetElements(
 		const PartitionGrid<Entity>& grid,
-		const Omega::Math::Circle& range,
+		const Circle& range,
 		float cellSize,
 		uint32_t typeId
 	)
@@ -126,7 +126,7 @@ void AI::AIWorld::DebugDraw() const
 {
 	for (auto& obstacle : mObstacles)
 	{
-		SimpleDraw::AddScreenLine(obstacle.center, obstacle.radius, Colors::Cyan);
+		SimpleDraw::AddScreenCircle(obstacle.center, obstacle.radius, Colors::Cyan);
 	}
 
 	for (auto& wall : mWalls)
@@ -136,9 +136,9 @@ void AI::AIWorld::DebugDraw() const
 
 	for (int i = 0; i < mPartitionGrid.GetColumns(); ++i)
 	{
-		Vector3 from = { static_cast<float>(i) * mSettings.partitionGridSize, 0.0f,0.0f };
-		Vector3 to = { static_cast<float>(i) * mSettings.partitionGridSize, mSettings.worldSize.y,0.0f };
-		SimpleDraw::AddLine(from, to, Colors::White);
+		Vector2 from = { static_cast<float>(i) * mSettings.partitionGridSize, 0.0f};
+		Vector2 to = { static_cast<float>(i) * mSettings.partitionGridSize, mSettings.worldSize.y};
+		SimpleDraw::AddScreenLine(from, to, Colors::White);
 	}
 
 	for (int i = 0; i < mPartitionGrid.GetRows(); ++i)

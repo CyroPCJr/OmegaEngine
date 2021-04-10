@@ -37,7 +37,7 @@ namespace Omega::Graphics::SimpleDraw
 	void AddScreenRect(const Math::Rect& rect, const Color& color);
 	void AddScreenRect(const Math::Vector2& min, const Math::Vector2& max, const Color& color);
 	void AddScreenRect(float left, float top, float right, float bottom, const Color& color);
-
+	void AddScreenArc(const Math::Vector2& center, float radius, float fromAngle, float toAngle, const Math::Vector4& color);
 #pragma endregion
 
 

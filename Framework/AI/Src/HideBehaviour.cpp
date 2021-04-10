@@ -7,22 +7,11 @@ using namespace AI;
 using namespace Omega::Math;
 using namespace Omega::Graphics;
 
-namespace
-{
-	inline Vector2 GetHidingPosition(const Vector2& obstaclePos,  const float radius, const Vector2& targetPos)
-	{
-		const float distanceFromBoundary = 30.0f;
-		float distanceAway = radius + distanceFromBoundary;
-		auto toOrb = Normalize(obstaclePos - targetPos);
-		return (toOrb * distanceAway) + obstaclePos;
-	}
-}
-
-Vector2 HideBehaviour::Calculate(Agent & agent)
+Vector2 HideBehaviour::Calculate(Agent& agent)
 {
 	// Access the worl throught the agent
 	auto world = &agent.world;
-	auto obstList = world->GetObstacles();
+	auto& obstList = world->GetObstacles();
 
 	if (obstList.size() <= 0)
 	{
@@ -33,13 +22,12 @@ Vector2 HideBehaviour::Calculate(Agent & agent)
 	Circle mClosestObstacle;
 	for (const auto& obstacle : obstList)
 	{
-		Vector2 hiddindSpot = GetHidingPosition(obstacle.center, obstacle.radius, agent.position);
-		SimpleDraw::AddScreenLine(agent.position, hiddindSpot, Colors::Blue);
-		float distance = Magnitude(hiddindSpot - agent.position);
+		mHidingSpot = GetHidingPosition(obstacle.center, obstacle.radius, agent.position);
+		float distance = Magnitude(mHidingSpot - agent.position);
 		if (distance < minDistance)
 		{
 			minDistance = distance;
-			mClosestObstacle.center = hiddindSpot + obstacle.radius;
+			mClosestObstacle.center = mHidingSpot + obstacle.radius;
 		}
 	}
 
@@ -50,8 +38,23 @@ Vector2 HideBehaviour::Calculate(Agent & agent)
 		return diseredVel - agent.velocity;
 	}
 	agent.destination = mClosestObstacle.center;
-	SimpleDraw::AddScreenLine(agent.position, agent.destination, Colors::Green);
+
 	// Seek formula
 	Vector2 diseredVel = Normalize(agent.destination - agent.position) * agent.maxSpeed;
 	return diseredVel - agent.velocity;
+}
+
+void AI::HideBehaviour::ShowDebugDraw(const Agent& agent)
+{
+	SimpleDraw::AddScreenLine(agent.position, mHidingSpot, Colors::Blue);
+	SimpleDraw::AddScreenLine(agent.position, agent.destination, Colors::Green);
+}
+
+Vector2 HideBehaviour::GetHidingPosition(const Vector2& obstaclePos,
+	const float radius, const Vector2& targetPos)
+{
+	const float distanceFromBoundary = 30.0f;
+	float distanceAway = radius + distanceFromBoundary;
+	auto toOrb = Normalize(obstaclePos - targetPos);
+	return (toOrb * distanceAway) + obstaclePos;
 }
