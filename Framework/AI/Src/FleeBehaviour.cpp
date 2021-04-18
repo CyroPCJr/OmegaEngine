@@ -5,18 +5,19 @@
 using namespace AI;
 using namespace Omega::Math;
 
-//TODO: need to test this function again.
 Vector2 FleeBehaviour::Calculate(Agent& agent)
 {
-	const float panicDistance = 100.0f*100.0f;
-	Vector2 diff = agent.position - agent.destination;
-	float distance = Magnitude(diff);
-
-	if (distance == 0.0f || distance > panicDistance)
+	const float panicDistance = 10.0f * 10.0f;
+	if (float distance = Magnitude(agent.position - agent.destination); 
+		distance == 0.0f || distance > panicDistance)
 	{
 		return Vector2::Zero;
 	}
+	return Fleeing(agent, agent.destination);
+}
 
-	Vector2 diseredVel = Normalize(agent.position - agent.destination) * agent.maxSpeed;
+Vector2 AI::FleeBehaviour::Fleeing(Agent& agent, const Vector2& destination)
+{
+	Vector2 diseredVel = Normalize(agent.position - destination) * agent.maxSpeed;
 	return diseredVel - agent.velocity;
 }

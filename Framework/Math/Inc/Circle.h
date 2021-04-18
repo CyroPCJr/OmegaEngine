@@ -5,10 +5,10 @@ namespace Omega::Math
 	struct Circle
 	{
 		Vector2 center;
-		float radius;
+		float radius = 1.0f;
 
-		Circle() : center(0.0f, 0.0f), radius(1.0f) {}
-		Circle(const Vector2& center, float radius) : center(center), radius(radius) {}
-		Circle(float x, float y, float radius) : center(x, y), radius(radius) {}
+		constexpr Circle() noexcept : center(0.0f, 0.0f), radius(1.0f) {}
+		constexpr Circle(const Vector2& center, float radius) noexcept : center(center), radius(radius) {}
+		constexpr Circle(float x, float y, float radius) noexcept : center(x, y), radius(radius) {}
 	};
 }

@@ -71,8 +71,8 @@ namespace Omega::Math
 	}
 
 	constexpr bool IsEmpty(const Rect& rect)
-	{ 
-		return rect.right <= rect.left || rect.bottom <= rect.top; 
+	{
+		return rect.right <= rect.left || rect.bottom <= rect.top;
 	}
 
 #pragma region Vector 2
@@ -114,15 +114,29 @@ namespace Omega::Math
 
 	inline Vector2 Normalize(const Vector2& v)
 	{
-		const float lenght = Magnitude(v);
-		//OMEGAASSERT(lenght != 0, "Length cannot be zero.");
-		const float invNorm = 1.0f / lenght;
-		return { v * invNorm };
+		if (const float lenght = Magnitude(v); 
+			lenght > 0.0f)
+		{
+			const float invNorm = 1.0f / lenght;
+			return { v * invNorm };
+		}
+		return v;
 	}
 
-	inline Vector2 Lerp(const Vector2& v1, const Vector2& v2, float t)
+	constexpr Vector2 Lerp(const Vector2& v1, const Vector2& v2, float t)
 	{
 		return v1 + ((v2 - v1) * t);
+	}
+
+	inline Vector2 Truncate(const Vector2& v, float max)
+	{
+		const float lenght = Magnitude(v);
+		if (const float i = (lenght != 0.0f) ? max / lenght : 0.0f; 
+			i < 1.0f)
+		{
+			return v * i;
+		}
+		return v;
 	}
 #pragma endregion
 
@@ -173,7 +187,7 @@ namespace Omega::Math
 			return { v };
 		}
 		///OMEGAASSERT(lenght != 0, "Length cannot be zero.");
-		
+
 	}
 
 #pragma endregion
@@ -218,6 +232,15 @@ namespace Omega::Math
 		return result;
 	}
 
+	constexpr float Determinant(const Matrix3& m)
+	{
+		float det = 0.0f;
+		det = (m._11 * (m._22 * m._33 - m._23 * m._32));
+		det -= (m._12 * (m._21 * m._33 - m._23 * m._31));
+		det += (m._13 * (m._21 * m._32 - m._22 * m._31));
+		return det;
+	}
+
 	constexpr float Determinant(const Matrix4& m)
 	{
 		float cofactor1 = m._11 * ((m._22 * ((m._33 * m._44) - (m._34 * m._43))) - ((m._23 * ((m._32 * m._44) - (m._34 * m._42)))) + ((m._24 * ((m._32 * m._43) - (m._33 * m._42)))));
@@ -226,6 +249,14 @@ namespace Omega::Math
 		float cofactor4 = m._14 * ((m._21 * ((m._32 * m._43) - (m._33 * m._42))) - ((m._22 * ((m._31 * m._43) - (m._33 * m._41)))) + ((m._23 * ((m._31 * m._42) - (m._32 * m._41)))));
 		float det = cofactor1 - cofactor2 + cofactor3 - cofactor4;
 		return det;
+	}
+
+	inline Matrix3 Inverse(const Matrix3& m)
+	{
+		const float det = Determinant(m);
+		const float inverseDet = 1.0f / det;
+		Matrix3 matrix{};
+		return matrix.Adjoint(m) * inverseDet;
 	}
 
 	inline Matrix4 Inverse(const Matrix4& m)
@@ -249,6 +280,14 @@ namespace Omega::Math
 		vec.x = ((m._11 * v.x) + (m._21 * v.y) + (m._31 * v.z) + m._41) / w;
 		vec.y = ((m._12 * v.x) + (m._22 * v.y) + (m._32 * v.z) + m._42) / w;
 		vec.z = ((m._13 * v.x) + (m._23 * v.y) + (m._33 * v.z) + m._43) / w;
+		return vec;
+	}
+
+	constexpr Vector2 TransformNormal(const Vector2& v, const Matrix3& m)
+	{
+		Vector2 vec;
+		vec.x = (v.x * m._11) + (v.y * m._21);
+		vec.y = (v.x * m._12) + (v.y * m._22);
 		return vec;
 	}
 

@@ -70,8 +70,8 @@ private:
 
 	int mColumns = 0;
 	int mRows = 0;
-	int mTileSize = 32;
-	int mTileHalfSize = mTileSize >> 1;
+	const int mTileSize = 32;
+	const int mTileHalfSize = mTileSize >> 1;
 	float mFps = 0;
 	float mCircleSize = mTileHalfSize * 0.5f;
 	int mSelectedTile = 0;

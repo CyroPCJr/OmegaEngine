@@ -4,29 +4,39 @@
 
 using namespace AI;
 using namespace Omega::Math;
+using namespace Omega::Graphics;
 
 Vector2 ArriveBehaviour::Calculate(Agent& agent)
 {
-	Vector2 toTarget = agent.destination - agent.position;
-	float distance = Magnitude(toTarget);
-	const float slowInRadius = 1000.0f;
-	if (distance < slowInRadius)
+	return Arrive(agent, agent.destination);
+}
+
+Vector2 AI::ArriveBehaviour::Arrive(AI::Agent& agent, Omega::Math::Vector2 destination)
+{
+	Vector2 desiredVelocity = destination - agent.position;
+	const float distance = Magnitude(desiredVelocity);
+
+	//if (distance > 0.0f)
+	//{
+	//	float speed = std::min(distance / (deceleration * decelerationTweaker), agent.maxSpeed);
+	//	Vector2 desiredVelocity = desiredVelocity * speed/ distance;
+	//	return desiredVelocity - agent.velocity;
+	//}
+	//return Vector2::Zero;
+	if (distance < mSlowRadius)
 	{
-		toTarget = Normalize(toTarget) * agent.maxSpeed * (distance / slowInRadius);
+		// Inside the slowing area
+		desiredVelocity = Normalize(desiredVelocity) * (distance / mSlowRadius);
 	}
 	else
 	{
-		toTarget = Normalize(toTarget) * agent.maxSpeed;
+		// Outside the slowing area
+		desiredVelocity = Normalize(desiredVelocity) * agent.maxSpeed;
 	}
-	return toTarget - agent.velocity;
-	/*if (distance > 0.1f)
-	{
-		float decel = Deceleration::slow;
-		const float decelTweaker = 0.3f;
-		float speed = distance / (decel * decelTweaker);
-		speed = std::min(speed, agent.maxSpeed);
-		X::Math::Vector2 DesiredVelocity = toTarget * speed / distance;
-		return DesiredVelocity - agent.velocity;
-	}
-	return X::Math::Vector2::Zero();*/
+	return (desiredVelocity - agent.velocity) * agent.mass * (mSlowRadius / distance);
+}
+
+void ArriveBehaviour::ShowDebugDraw(const Agent& agent)
+{
+	SimpleDraw::AddScreenCircle({ agent.destination, mSlowRadius }, Colors::SlateGray);
 }

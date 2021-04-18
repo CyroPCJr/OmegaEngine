@@ -20,6 +20,7 @@
 #include "WanderBehaviour.h"
 #include "HideBehaviour.h"
 #include "ObstacleAvoidance.h"
+#include "Interpose.h"
 
 // Steering Group Behaviours
 #include "SeparationBehaviour.h"

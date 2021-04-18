@@ -174,6 +174,7 @@
     <ClInclude Include="Inc\GoalComposite.h" />
     <ClInclude Include="Inc\Graph.h" />
     <ClInclude Include="Inc\HideBehaviour.h" />
+    <ClInclude Include="Inc\Interpose.h" />
     <ClInclude Include="Inc\MemoryRecord.h" />
     <ClInclude Include="Inc\ObstacleAvoidance.h" />
     <ClInclude Include="Inc\PartitionGrid.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="Src\FleeBehaviour.cpp" />
     <ClCompile Include="Src\Graph.cpp" />
     <ClCompile Include="Src\HideBehaviour.cpp" />
+    <ClCompile Include="src\Interpose.cpp" />
     <ClCompile Include="Src\ObstacleAvoidance.cpp" />
     <ClCompile Include="Src\PerceptionModule.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">

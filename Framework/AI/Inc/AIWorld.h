@@ -11,7 +11,7 @@ namespace AI
 	public:
 		struct Settings
 		{
-			Omega::Math::Vector2 worldSize;
+			Omega::Math::Vector2 worldSize = Omega::Math::Vector2::Zero;
 			float partitionGridSize = 0.0f;
 		};
 

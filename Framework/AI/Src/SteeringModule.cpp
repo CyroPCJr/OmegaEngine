@@ -20,3 +20,15 @@ Vector2 SteeringModule::Calculate()
 	}
 	return total;
 }
+
+void SteeringModule::ShowDebugDraw() const
+{
+	for (auto& [name, behavior] : mBehaviors)
+	{
+		if (behavior->IsActive())
+		{
+			behavior->ShowDebugDraw(mAgent);
+		}
+	}
+}
+

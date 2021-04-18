@@ -7,10 +7,16 @@ namespace AI
 	class ObstacleAvoidance :public SteeringBehavior
 	{
 	public:
-		Omega::Math::Vector2 Calculate(Agent& agent) override;
-	private:
-		Omega::Math::Circle CheckObstacleAhead(const Omega::Math::Vector2& ahead, const Omega::Math::Vector2& ahead2, Agent& agent);
+		virtual ~ObstacleAvoidance() = default;
 
-		bool lineIntersectsCircle(const Omega::Math::Vector2& ahead, const Omega::Math::Vector2& ahead2, Omega::Math::Circle obstacle);
+		Omega::Math::Vector2 Calculate(Agent& agent) override;
+		void ShowDebugDraw(const Agent& agent);
+	private:
+
+		float boxExtention = 85.0f;
+		float brakingWeight = 2.8f;
+		float sideForceScale = 2.0f;
+
+		float mProjectionBoxLength = 0.0f;
 	};
 }

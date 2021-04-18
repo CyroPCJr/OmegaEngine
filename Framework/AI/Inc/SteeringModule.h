@@ -24,6 +24,7 @@ namespace AI
 		}
 
 		Omega::Math::Vector2 Calculate();
+		void ShowDebugDraw() const;
 
 	private:
 		using BehaviorMap = std::unordered_map<std::string, std::unique_ptr<SteeringBehavior>>;

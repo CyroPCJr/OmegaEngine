@@ -1,17 +1,21 @@
 #pragma once
 
-#include <AI.h>
-
-#include <Agent.h>
+#include <OmegaEngine\Inc\Omega.h>
 
 namespace Steering
 {
-	class AIWorld;
-
 	class Carrier : public AI::Agent
 	{
 	public:
-		Carrier(AI::AIWorld& world);
+
+		enum class Behaviours
+		{
+			Seek,
+			Arrive,
+			ObstacleAvoidance
+		};
+
+		Carrier(AI::AIWorld& world) noexcept;
 		~Carrier() override = default;
 
 		void Load();
@@ -20,17 +24,14 @@ namespace Steering
 		void Update(float deltaTime);
 		void Render();
 
-		void DebugUI();
+		void SwitchBehaviour(const Behaviours& behaviours, bool active = true) const;
+		void SetSlowRadius(float radius) { mSlowRadius = radius; }
+
+		bool isDebugShowDraw = true;
 	private:
 		std::unique_ptr<AI::SteeringModule> mSteeringModule = nullptr;
-		std::array<X::TextureId, 32> mTexturesIds;
-
-
-		int mActive = 0;
-		float mWidth = 0.0f;
-		float mHeight = 0.0f;
+		std::array<Omega::Graphics::TextureId, 32> mTexturesIds;
+		float mSlowRadius = 100.0f;
 	};
-
-
 
 }

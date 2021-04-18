@@ -24,12 +24,13 @@ namespace Omega::Graphics
 		{
 			mVertexShader.Initialize("../../Assets/Shaders/SimpleDraw.fx", VertexPC::Format);
 			mPixelShader.Initialize("../../Assets/Shaders/SimpleDraw.fx");
-			mConstantBuffer.Initialize(sizeof(Math::Matrix4));
+			mConstantBuffer.Initialize(sizeof(Matrix4));
 			mMeshBuffer.Initialize<VertexPC>(nullptr, maxVertexCount, true);
 			mLineVertices = make_unique<VertexPC[]>(maxVertexCount);
 			m2DLineVertices = make_unique<VertexPC[]>(maxVertexCount);
-			mFillVertices = make_unique<VertexPC[]>(static_cast<size_t>(maxVertexCount * 3.0f));
+			mFillVertices = make_unique<VertexPC[]>(static_cast<size_t>(maxVertexCount * 3));
 			mVertexCount = 0;
+			m2DVertexCount = 0;
 			mFillVertexCount = 0;
 			mMaxVertexCount = maxVertexCount;
 		}
@@ -423,6 +424,30 @@ namespace Omega::Graphics
 			OMEGAASSERT(mVertexCount < mMaxVertexCount, "[SimpleDraw] Too many vertices!");
 		}
 
+		void AddScreenArc(const Math::Vector2& center, float radius, float fromAngle, float toAngle, const Math::Vector4& color)
+		{
+			if (m2DVertexCount + 32 <= mMaxVertexCount)
+			{
+				float x = center.x;
+				float y = center.y;
+				float r = radius;
+
+				// Add line
+				const float kAngle = (toAngle - fromAngle) / 16.0f;
+				for (uint32_t i = 0; i < 16; ++i)
+				{
+					const float alpha = i * kAngle + fromAngle;
+					const float beta = alpha + kAngle;
+					const float x0 = x + (r * cos(alpha));
+					const float y0 = y + (r * sin(alpha));
+					const float x1 = x + (r * cos(beta));
+					const float y1 = y + (r * sin(beta));
+					m2DLineVertices[m2DVertexCount++] = { Math::Vector3(x0, y0, 0.0f), color };
+					m2DLineVertices[m2DVertexCount++] = { Math::Vector3(x1, y1, 0.0f), color };
+				}
+			}
+		}
+
 #pragma endregion
 
 		void Render(const Camera& camera)
@@ -452,18 +477,14 @@ namespace Omega::Graphics
 			const uint32_t h = system->GetBackBufferHeight();
 			Math::Matrix4 screenToNDC
 			{
-				2.0f / w, 0.0f,0.0f,0.0f,
-				0.0f, -2.0f / h, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f,0.0f,
-				-1.0f, 1.0f, 0.0f,1.0f
+				2.0f / w,  0.0f,       0.0f,  0.0f,
+				0.0f,     -2.0f / h,   0.0f,  0.0f,
+				0.0f,      0.0f,       1.0f,  0.0f,
+			   -1.0f,      1.0f,       0.0f,  1.0f
 			};
 			auto transposeNDC = Math::Transpose(screenToNDC); // moved to local variable
 			mConstantBuffer.Update(&transposeNDC);
 			mConstantBuffer.BindVS();
-
-			/*mMeshBuffer.Update(mFillVertices.get(), mVertexCount);
-			mMeshBuffer.SetTopology(MeshBuffer::Topology::Triangles);
-			mMeshBuffer.Draw();*/
 
 			mMeshBuffer.Update(m2DLineVertices.get(), m2DVertexCount);
 			mMeshBuffer.SetTopology(MeshBuffer::Topology::Lines);
@@ -620,6 +641,11 @@ void SimpleDraw::AddScreenRect(float left, float top, float right, float bottom,
 {
 	Math::Rect rect(left, top, right, bottom);
 	sInstance->AddScreenRect(rect, color);
+}
+
+void SimpleDraw::AddScreenArc(const Math::Vector2& center, float radius, float fromAngle, float toAngle, const Math::Vector4& color)
+{
+	sInstance->AddScreenArc(center, radius, fromAngle, toAngle, color);
 }
 
 void SimpleDraw::AddScreenLine(const Math::Vector2& v0, const Math::Vector2& v1, const Color& color)

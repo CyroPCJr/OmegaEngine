@@ -76,7 +76,7 @@ namespace Omega::Math
 
 		inline Matrix4 operator*(const Matrix4& m)
 		{
-			Matrix4 aux;
+			Matrix4 aux{};
 			aux._11 = (_11 * m._11) + (_12 * m._21) + (_13 * m._31) + (_14 * m._41);
 			aux._12 = (_11 * m._12) + (_12 * m._22) + (_13 * m._32) + (_14 * m._42);
 			aux._13 = (_11 * m._13) + (_12 * m._23) + (_13 * m._33) + (_14 * m._43);
@@ -141,7 +141,7 @@ namespace Omega::Math
 
 		inline Matrix4 operator+(const Matrix4& m)
 		{
-			Matrix4 aux;
+			Matrix4 aux{};
 			aux._11 = (_11 + m._11); aux._12 = (_12 + m._12); aux._13 = (_13 + m._13); aux._14 = (_14 + m._14);
 			aux._21 = (_21 + m._21); aux._22 = (_22 + m._22); aux._23 = (_23 + m._23); aux._24 = (_24 + m._24);
 			aux._31 = (_31 + m._31); aux._32 = (_32 + m._32); aux._33 = (_33 + m._33); aux._34 = (_34 + m._34);
@@ -160,7 +160,7 @@ namespace Omega::Math
 
 		inline Matrix4 operator-(const Matrix4& m)
 		{
-			Matrix4 aux;
+			Matrix4 aux{};
 			aux._11 = (_11 - m._11); aux._12 = (_12 - m._12); aux._13 = (_13 - m._13); aux._14 = (_14 - m._14);
 			aux._21 = (_21 - m._21); aux._22 = (_22 - m._22); aux._23 = (_23 - m._23); aux._24 = (_24 - m._24);
 			aux._31 = (_31 - m._31); aux._32 = (_32 - m._32); aux._33 = (_33 - m._33); aux._34 = (_34 - m._34);

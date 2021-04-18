@@ -1,17 +1,30 @@
 #pragma once
 
-#include <AI.h>
-
-#include <Agent.h>
+#include <OmegaEngine\Inc\Omega.h>
 
 namespace Steering
 {
-	class AIWorld;
+	
 
 	class Interceptor : public AI::Agent
 	{
 	public:
-		Interceptor(AI::AIWorld& world);
+		enum class Behaviours
+		{
+			Alignment,
+			Cohesion,
+			Separation,
+			Evade,
+			Flee,
+			Hide,
+			ObstacleAvoidance,
+			Pursuit,
+			Wandering,
+			Interpose
+		};
+
+
+		Interceptor(AI::AIWorld& world) noexcept;
 		~Interceptor() override = default;
 
 		void Load();
@@ -19,17 +32,18 @@ namespace Steering
 
 		void Update(float deltaTime);
 		void Render();
-		
+
+		bool isDebugShowDraw = true;
+
+		void SwitchBehaviour(const Behaviours& behaviours, bool active = true) const;
+
 	private:
 
 		std::unique_ptr<AI::SteeringModule> mSteeringModule = nullptr;
 
-		std::array<X::TextureId, 32> mTexturesIds;
+		std::array<Omega::Graphics::TextureId, 32> mTexturesIds;
 
-		float mWidth = 0.0f;
-		float mHeight = 0.0f;
+		/*float mWidth = 0.0f;
+		float mHeight = 0.0f;*/
 	};
-
-
-
 }

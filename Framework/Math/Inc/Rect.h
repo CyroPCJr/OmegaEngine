@@ -5,11 +5,13 @@ namespace Omega::Math
 
 	struct Rect
 	{
-		struct { float left, top; };
-		struct { float right, bottom; };
+		float left = 0.0f;
+		float top = 0.0f;
+		float right = 0.0f;
+		float bottom = 0.0f;
 
-		constexpr Rect() : Rect{ 0.0f, 0.0f, 1.0f, 1.0f } {}
-		constexpr Rect(float left, float top, float right, float bottom) : left{ left }, top{ top }, right{ right }, bottom{ bottom } {}
+		constexpr Rect() noexcept : Rect(0.0f, 0.0f, 1.0f, 1.0f) {}
+		constexpr Rect(float left, float top, float right, float bottom) noexcept : left(left), top(top), right(right), bottom(bottom) {}
 	};
 
 }
