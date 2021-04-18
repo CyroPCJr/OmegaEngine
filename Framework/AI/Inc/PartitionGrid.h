@@ -10,7 +10,7 @@ namespace AI
 
 		void Resize(int columns, int rows)
 		{
-			mCells.resize(columns* rows);
+			mCells.resize(columns * rows);
 			mColumns = columns;
 			mRows = rows;
 			ClearCells();
@@ -24,7 +24,7 @@ namespace AI
 			}
 		}
 
-		Cell& GetCell(int column, int row) { return mCells[column + (row* mColumns)]; }
+		Cell& GetCell(int column, int row) { return mCells[column + (row * mColumns)]; }
 		const Cell& GetCell(int column, int row) const { return mCells[column + (row * mColumns)]; }
 
 		int GetColumns() const { return mColumns; }

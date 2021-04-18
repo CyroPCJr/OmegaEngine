@@ -5,8 +5,6 @@
 using namespace AI;
 using namespace Omega::Math;
 
-//TODO: ask for Peter about this behaviour
-//TODO: double check in this behaviour
 Vector2 SeparationBehaviour::Calculate(Agent& agent)
 {
 	Vector2 totalForce;

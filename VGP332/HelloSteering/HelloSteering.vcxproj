@@ -152,11 +152,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Carrier.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Interceptor.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Carrier.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Interceptor.h" />
     <ClInclude Include="UnitType.h" />

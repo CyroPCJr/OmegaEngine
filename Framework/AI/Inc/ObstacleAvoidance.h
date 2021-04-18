@@ -10,9 +10,13 @@ namespace AI
 		virtual ~ObstacleAvoidance() = default;
 
 		Omega::Math::Vector2 Calculate(Agent& agent) override;
+		void ShowDebugDraw(const Agent& agent);
 	private:
-		Omega::Math::Circle CheckObstacleAhead(const Omega::Math::Vector2& ahead, const Omega::Math::Vector2& ahead2, const Agent& agent) const;
 
-		bool lineIntersectsCircle(const Omega::Math::Vector2& ahead, const Omega::Math::Vector2& ahead2, const Omega::Math::Circle& obstacle) const;
+		float boxExtention = 85.0f;
+		float brakingWeight = 2.8f;
+		float sideForceScale = 2.0f;
+
+		float mProjectionBoxLength = 0.0f;
 	};
 }

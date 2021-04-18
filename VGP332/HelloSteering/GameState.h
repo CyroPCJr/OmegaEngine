@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Interceptor.h"
+#include "Carrier.h"
 #include <OmegaEngine/Inc/Omega.h>
 
 namespace Steering
@@ -20,9 +21,10 @@ namespace Steering
 		void SettingInit();
 		void GeneralDebugUI();
 
-
 		Omega::Graphics::Camera mCamera;
 		std::vector<std::unique_ptr<Interceptor>> mInterceptorList;
+
+		std::unique_ptr<Carrier> mCarrier = nullptr;
 
 		const size_t maxInterceptor = 10;
 		AI::AIWorld::Settings mSettings;

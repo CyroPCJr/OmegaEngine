@@ -1,10 +1,10 @@
 #pragma once
 
-#include "SteeringBehavior.h"
+#include "ArriveBehaviour.h"
 
 namespace AI
 {
-	class HideBehaviour :public AI::SteeringBehavior
+	class HideBehaviour :public AI::ArriveBehaviour
 	{
 	public:
 		virtual ~HideBehaviour() = default;
@@ -14,8 +14,6 @@ namespace AI
 		void ShowDebugDraw(const Agent& agent) override;
 
 	private: 
-		Omega::Math::Vector2 GetHidingPosition(const Omega::Math::Vector2& obstaclePos, const float radius, const Omega::Math::Vector2& targetPos);
-
-		Omega::Math::Vector2 mHidingSpot = Omega::Math::Vector2::Zero;
+		Omega::Math::Vector2 mClosestObstacle = Omega::Math::Vector2::Zero;
 	};
 }

@@ -7,7 +7,6 @@ using namespace Omega::Math;
 
 Vector2 CohesionBehaviour::Calculate(Agent& agent)
 {
-	//TODO: need to rewritte, fixing
 	Vector2 averagePosition = agent.position;
 	for (const auto& neighbor : agent.neighbors)
 	{
@@ -17,10 +16,8 @@ Vector2 CohesionBehaviour::Calculate(Agent& agent)
 	if (const float size = static_cast<float>(agent.neighbors.size());
 		size > 0.0f)
 	{
-		auto target = averagePosition / size;
-		return (target == agent.position) ? 
-			(agent.heading * agent.maxSpeed) : 
-			Seek(agent, target);
+		Vector2 centerOfMass = averagePosition / (size + 1.0f);
+		return Seek(agent, centerOfMass);
 	}
 	else
 	{

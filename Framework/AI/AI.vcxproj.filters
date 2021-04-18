@@ -147,6 +147,9 @@
     <ClInclude Include="Inc\Strategy.h">
       <Filter>Inc\Decision</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Interpose.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -214,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="Src\PerceptionModule.cpp">
       <Filter>Src\Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Interpose.cpp">
+      <Filter>Src\Steering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

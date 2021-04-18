@@ -4,10 +4,12 @@
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Interceptor.cpp" />
+    <ClCompile Include="Carrier.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameState.h" />
     <ClInclude Include="UnitType.h" />
     <ClInclude Include="Interceptor.h" />
+    <ClInclude Include="Carrier.h" />
   </ItemGroup>
 </Project>

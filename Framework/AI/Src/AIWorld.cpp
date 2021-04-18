@@ -28,9 +28,9 @@ namespace
 		minY = Max(minY, 0);
 		maxY = Min(maxY, grid.GetRows() - 1);
 
-		for (int y = 0; y <= maxY; ++y)
+		for (int y = minY; y <= maxY; ++y)
 		{
-			for (int x = 0; x <= maxX; ++x)
+			for (int x = minX; x <= maxX; ++x)
 			{
 				auto& cell = grid.GetCell(x, y);
 				for (auto& element : cell)

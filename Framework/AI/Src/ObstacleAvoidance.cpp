@@ -5,44 +5,77 @@
 
 using namespace AI;
 using namespace Omega::Math;
+using namespace Omega::Graphics;
 
-Vector2 ObstacleAvoidance::Calculate(Agent & agent)
+Vector2 ObstacleAvoidance::Calculate(Agent& agent)
 {
-	Vector2 ahead = agent.position +agent.velocity*agent.maxSpeed;
-	Vector2 ahead2 = ahead * 0.5f;
+	AIWorld::Obstacles worldObstacles = agent.world.GetObstacles();
+	mProjectionBoxLength = boxExtention + (Magnitude(agent.velocity) / agent.maxSpeed) + boxExtention;
 
-	const auto mostThreatening = CheckObstacleAhead(ahead, ahead2, agent);
-	Vector2 avoidance = Vector2::Zero;
+	Matrix3 agentWorldToLocal = Inverse(agent.LocalToWorld());
+	Circle* closestObstacle = nullptr;
+	Vector2 localPositionObstacle = Vector2::Zero;
+	float closestDistanceObstacles = std::numeric_limits<float>::max();
 
-	avoidance = ahead - mostThreatening.center;
-	avoidance = Normalize(avoidance);
-	avoidance *= agent.maxSpeed;
-	
-	return avoidance - agent.velocity;
-}
-
-Circle ObstacleAvoidance::CheckObstacleAhead(const Vector2& ahead, const Vector2& ahead2, const Agent& agent) const
-{
-	Circle obstacle{};
-	// Access the worl throught the agent
-	auto world = &agent.world;
-	for (auto& obs : world->GetObstacles())
+	for (auto& obstacle : worldObstacles)
 	{
-		bool isCollide = lineIntersectsCircle(ahead, ahead2, obs);
-		if (isCollide ||
-			Magnitude(agent.position - obs.center) < Magnitude(agent.position - obstacle.center))
+		// if the distance of the obstacle is greater then the box projection loop again to next obstacle
+		if (Distance(obstacle.center, agent.position) - obstacle.radius > mProjectionBoxLength)
 		{
-			obstacle = obs;
+			continue;
+		}
+
+		//calculate this obstacle's position in local space
+		if (auto localPosition = TransformCoord(obstacle.center, agentWorldToLocal); 
+			localPosition.y >= 0)
+		{
+			float expandeRadius = obstacle.radius + agent.radius;
+			if (Abs(localPosition.x) < expandeRadius)
+			{
+				const float sqrExpandeRadius = sqrt((expandeRadius * expandeRadius) - (localPosition.x * localPosition.x));
+				float intersectionY = localPosition.y - sqrExpandeRadius;
+				if (intersectionY <= 0.0f)
+				{
+					intersectionY = localPosition.y + sqrExpandeRadius;
+				}
+
+				if (intersectionY < closestDistanceObstacles)
+				{
+					closestDistanceObstacles = intersectionY;
+					closestObstacle = &obstacle;
+					localPositionObstacle = localPosition;
+				}
+			}
 		}
 	}
-	return obstacle;
+
+	if (closestObstacle)
+	{
+		Matrix3 agentLocalWorld = agent.LocalToWorld();
+		float multiplier = sideForceScale + (mProjectionBoxLength - localPositionObstacle.y) / mProjectionBoxLength;
+		Vector2 steeringforce;
+		steeringforce.x = (closestObstacle->radius - localPositionObstacle.x) * multiplier;
+		steeringforce.y = (closestObstacle->radius - localPositionObstacle.y) * brakingWeight;
+
+		return TransformNormal(steeringforce, agentLocalWorld);
+	}
+	return Vector2::Zero;
 }
 
-bool ObstacleAvoidance::lineIntersectsCircle(const Vector2 & ahead, const Vector2 & ahead2, const Circle& obstacle) const
+void ObstacleAvoidance::ShowDebugDraw(const Agent& agent)
 {
-	// distance between center obstacle and look ahead in agent
-	const float distanceAhead =  Magnitude(obstacle.center - ahead);
-	const float distanceAhead2 = Magnitude(obstacle.center - ahead2);
+	Matrix3 localToWorld = agent.LocalToWorld();
+	const float agentLocalRadius = agent.radius * 10.0f;
 
-	return (distanceAhead <= obstacle.radius) || (distanceAhead2 <= obstacle.radius);
+	Vector2 debugBoxTopLeftWorld = TransformCoord({ agentLocalRadius ,0.0f }, localToWorld);
+	Vector2 debugBoxTopRightWorld = TransformCoord({ agentLocalRadius, mProjectionBoxLength }, localToWorld);
+	Vector2 debugBoxBottonLeftWorld = TransformCoord({ -agentLocalRadius,0.0f }, localToWorld);
+	Vector2 debugBoxBottonRightWorld = TransformCoord({ -agentLocalRadius,  mProjectionBoxLength }, localToWorld);
+
+	auto whiteBox = Colors::White;
+
+	SimpleDraw::AddScreenLine(debugBoxTopLeftWorld, debugBoxTopRightWorld, whiteBox);
+	SimpleDraw::AddScreenLine(debugBoxBottonLeftWorld, debugBoxBottonRightWorld, whiteBox);
+	SimpleDraw::AddScreenLine(debugBoxTopLeftWorld, debugBoxBottonLeftWorld, whiteBox);
+	SimpleDraw::AddScreenLine(debugBoxTopRightWorld, debugBoxBottonRightWorld, whiteBox);
 }

@@ -1,14 +1,19 @@
 #include "Interceptor.h"
 #include "UnitType.h"
 
-#include <ImGui\Inc\imgui.h>
-
 using namespace Steering;
 using namespace Omega;
 using namespace Omega::Graphics;
+using namespace Omega::Math;
 using namespace AI;
 
-Interceptor::Interceptor(AIWorld& world)
+namespace
+{
+	float width = 0.0f;
+	float height = 0.0f;
+}
+
+Interceptor::Interceptor(AIWorld& world) noexcept
 	: Agent(world, UnitType::Interceptor)
 {
 	mSteeringModule = std::make_unique<SteeringModule>(*this);
@@ -16,36 +21,36 @@ Interceptor::Interceptor(AIWorld& world)
 
 void Interceptor::Load()
 {
-	// Load textures
-	auto spriteRenderer = SpriteRendererManager::Get();
+	// Load images
 	for (size_t i = 0; i < mTexturesIds.size(); ++i)
 	{
 		char name[128];
 		sprintf_s(name, "Sprites/interceptor_%02zu.png", i + 1);
-		mTexturesIds[i] = spriteRenderer->LoadTexture(name);
+		mTexturesIds[i] = SpriteRendererManager::Get()->LoadTexture(name);
 	}
-	auto worldSize = world.GetSettings();
-
 	// Initial settings
-	mWidth = worldSize.worldSize.x;
-	mHeight = worldSize.worldSize.y;
-
-	mSteeringModule->AddBehavior<AI::PursuitBehaviour>("Pursuit")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::EvadeBehaviour>("Evade")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::AlignmentBehaviour>("Alignment")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::CohesionBehaviour>("Cohesion")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::SeparationBehaviour>("Separation")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::ObstacleAvoidance>("Avoidance")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::HideBehaviour>("Hide")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::WanderBehaviour>("Wandering")->SetActive(true);
-
-	//mSteeringModule->AddBehavior<AI::SeparationBehaviour>("Separation")->SetActive(true);
-	//mSteeringModule->AddBehavior<AI::AlignmentBehaviour>("Separation")->SetActive(true);
-	/*mSteeringModule->AddBehavior<AI::HideBehaviour>("Hide")->SetActive(true);
-	mSteeringModule->AddBehavior<AI::CohesionBehaviour>("Cohesion")->SetActive(true);*/
-
-
+	auto worldSize = world.GetSettings();
+	width = worldSize.worldSize.x;
+	height = worldSize.worldSize.y;
 	maxSpeed = 200.0f;
+
+	// Group Behaviours
+	mSteeringModule->AddBehavior<AI::AlignmentBehaviour>("Alignment");
+	mSteeringModule->AddBehavior<AI::CohesionBehaviour>("Cohesion");
+	mSteeringModule->AddBehavior<AI::SeparationBehaviour>("Separation");
+
+	// Steerin Behaviours
+	mSteeringModule->AddBehavior<AI::ArriveBehaviour>("Arrive");
+	mSteeringModule->AddBehavior<AI::EvadeBehaviour>("Evade");
+	mSteeringModule->AddBehavior<AI::FleeBehaviour>("Flee");
+	mSteeringModule->AddBehavior<AI::HideBehaviour>("Hide");
+	mSteeringModule->AddBehavior<AI::ObstacleAvoidance>("Avoidance");
+	mSteeringModule->AddBehavior<AI::PursuitBehaviour>("Pursuit");
+	mSteeringModule->AddBehavior<AI::WanderBehaviour>("Wandering");
+	mSteeringModule->AddBehavior<AI::Interpose>("Interpose");
+
+	// Initial steering 
+	mSteeringModule->GetBehavior<AI::WanderBehaviour>("Wandering")->SetActive(true);
 }
 
 void Interceptor::Unload()
@@ -56,25 +61,23 @@ void Interceptor::Unload()
 void Interceptor::Update(float deltaTime)
 {
 	neighbors = world.GetNeighborhood({ position, 100.0f }, UnitType::Interceptor);
-	std::remove_if(neighbors.begin(), neighbors.end(),
+	// To avoid warning in compilation, I used [[maybe_unused]]. 
+	// The reason that std::remove_if return type is flagged with [[no_discard]]
+	[[maybe_unused]] auto notUsed = std::remove_if(neighbors.begin(), neighbors.end(),
 		[this](auto neighbor)
 	{
 		return this == neighbor;
 	});
 
-	//destination = threat->position;
+	destination = threat->position;
 	auto force = mSteeringModule->Calculate();
 	auto acceleration = (force / mass);
 	velocity += acceleration * deltaTime;
-	auto speed = Math::Magnitude(velocity);
-	if (speed > maxSpeed)
-	{
-		velocity = velocity / speed * maxSpeed;
-	}
+	velocity = Truncate(velocity, maxSpeed);
 	position += velocity * deltaTime;
-	if (speed > 0.0f)
+	if (Magnitude(velocity) > 0.0f)
 	{
-		heading = Math::Normalize(velocity);
+		heading = Normalize(velocity);
 	}
 
 	// show debug draw
@@ -85,19 +88,19 @@ void Interceptor::Update(float deltaTime)
 
 	if (position.x < 0.0f) // left border
 	{
-		position.x += mWidth;
+		position.x += width;
 	}
-	if (position.x >= mWidth) // right border
+	if (position.x >= width) // right border
 	{
-		position.x -= mWidth;
+		position.x -= width;
 	}
 	if (position.y < 0.0f) // botton border
 	{
-		position.y += mHeight;
+		position.y += height;
 	}
-	if (position.y >= mHeight) // top border
+	if (position.y >= height) // top border
 	{
-		position.y -= mHeight;
+		position.y -= height;
 	}
 }
 
@@ -109,11 +112,42 @@ void Interceptor::Render()
 	SpriteRendererManager::Get()->DrawSprite(mTexturesIds[index], position);
 }
 
-void Interceptor::DebugUI()
+void Interceptor::SwitchBehaviour(const Behaviours& behaviours, bool active) const
 {
-	//TODO: Continuar daqui
-	std::string asd = "ASD";
-	const size_t size = sizeof(asd.length());
-	std::array<bool, size> teste{};
-
+	switch (behaviours)
+	{
+	case Interceptor::Behaviours::Alignment:
+		mSteeringModule->GetBehavior<AI::AlignmentBehaviour>("Alignment")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Cohesion:
+		mSteeringModule->GetBehavior<AI::CohesionBehaviour>("Cohesion")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Separation:
+		mSteeringModule->GetBehavior<AI::SeparationBehaviour>("Separation")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Evade:
+		mSteeringModule->GetBehavior<AI::EvadeBehaviour>("Evade")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Flee:
+		mSteeringModule->GetBehavior<AI::FleeBehaviour>("Cohesion")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Hide:
+		mSteeringModule->GetBehavior<AI::HideBehaviour>("Hide")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::ObstacleAvoidance:
+		mSteeringModule->GetBehavior<AI::ObstacleAvoidance>("Avoidance")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Pursuit:
+		mSteeringModule->GetBehavior<AI::PursuitBehaviour>("Pursuit")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Wandering:
+		mSteeringModule->GetBehavior<AI::WanderBehaviour>("Wandering")->SetActive(active);
+		break;
+	case Interceptor::Behaviours::Interpose:
+		mSteeringModule->GetBehavior<AI::Interpose>("Interpose")->SetActive(active);
+		break;
+	default:
+		mSteeringModule->GetBehavior<AI::WanderBehaviour>("Wandering")->SetActive(active);
+		break;
+	}
 }
