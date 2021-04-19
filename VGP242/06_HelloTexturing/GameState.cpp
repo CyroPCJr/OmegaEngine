@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include <Graphics\Src\D3DUtil.h>
 
 using namespace Omega::Graphics;
 using namespace Omega::Input;
@@ -136,7 +137,7 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-	auto context = GraphicsSystem::Get()->GetContext();
+	auto context = GetContext();
 
 	auto matRot = Matrix4::RotationX(mRotation.x) * Matrix4::RotationY(mRotation.y);
 	auto matView = mCamera.GetViewMatrix();

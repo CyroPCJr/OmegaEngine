@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include <Graphics\Src\D3DUtil.h>
 
 using namespace Omega::Graphics;
 using namespace Omega::Input;
@@ -14,7 +15,8 @@ void GameState::Initialize()
 	mVertices.emplace_back(Vertex{ Vector3{ 0.5f, -0.5f, 0.0f } });
 	mVertices.emplace_back(Vertex{ Vector3{ -0.5f, -0.5f, 0.0f } });
 
-	auto device = GraphicsSystem::Get()->GetDevice();
+	//auto device = GraphicsSystem::Get()->GetDevice();
+	auto device = GetDevice();
 
 #pragma region Create vertex buffer
 
@@ -124,7 +126,7 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-	auto context = GraphicsSystem::Get()->GetContext();
+	auto context = GetContext();
 	context->IASetInputLayout(mInputLayout);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

@@ -1,4 +1,5 @@
 #include "Shapes.h"
+#include <Graphics\Src\D3DUtil.h>
 
 using namespace Omega::Graphics;
 using namespace Omega::Math;
@@ -13,7 +14,7 @@ void Shapes::Initialize()
 	mVertices.emplace_back(Vertex{ Vector3{ 0.3f, -0.3f, 0.0f }, Color{Colors::Green} });
 	mVertices.emplace_back(Vertex{ Vector3{ -0.3f, -0.3f, 0.0f }, Color{Colors::Red} });*/
 
-	auto device = GraphicsSystem::Get()->GetDevice();
+	auto device = GetDevice();
 
 #pragma region Create vertex buffer
 
@@ -123,7 +124,7 @@ void Shapes::Update(float deltaTime)
 
 void Shapes::Render()
 {
-	auto context = GraphicsSystem::Get()->GetContext();
+	auto context = GetContext();
 	context->IASetInputLayout(mInputLayout);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
