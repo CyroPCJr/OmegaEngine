@@ -11,7 +11,7 @@ SteeringModule::SteeringModule(Agent& agent)
 Vector2 SteeringModule::Calculate()
 {
 	Vector2 total;
-	for (auto& [name, behavior] : mBehaviors)
+	for (const auto& [name, behavior] : mBehaviors)
 	{
 		if (behavior->IsActive())
 		{
@@ -23,7 +23,7 @@ Vector2 SteeringModule::Calculate()
 
 void SteeringModule::ShowDebugDraw() const
 {
-	for (auto& [name, behavior] : mBehaviors)
+	for (const auto& [name, behavior] : mBehaviors)
 	{
 		if (behavior->IsActive())
 		{

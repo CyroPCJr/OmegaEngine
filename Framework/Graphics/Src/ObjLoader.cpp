@@ -43,7 +43,7 @@ void ObjLoader::Load(const std::filesystem::path & filePath, float scale, Mesh &
 		}
 		else if (strcmp(buffer, "f") == 0)
 		{
-			uint32_t v[4], t[4], n[4];
+			uint32_t v[4]{}, t[4]{}, n[4]{};
 			fgets(buffer, static_cast<int>(std::size(buffer)), file);
 			if (sscanf_s(buffer, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n",
 				&v[0], &t[0], &n[0],

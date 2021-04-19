@@ -11,8 +11,8 @@ Vector2 SeparationBehaviour::Calculate(Agent& agent)
 	for (const auto& neighbor: agent.neighbors)
 	{
 		const auto neighborToAgent = agent.position - neighbor->position;
-		const auto distanceToAgent = Magnitude(neighborToAgent);
-		if (distanceToAgent <= std::numeric_limits<float>::epsilon())
+		if (const auto distanceToAgent = Magnitude(neighborToAgent); 
+			distanceToAgent <= std::numeric_limits<float>::epsilon())
 		{
 			totalForce += agent.heading * agent.maxSpeed;
 		}
