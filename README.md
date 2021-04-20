@@ -1,5 +1,7 @@
 # Omega Engine
 
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+
 ## About
 Omega engine is a Custom Game Engine developed using C++17 and DirectX 11. 
 
@@ -70,8 +72,6 @@ To use Dear ImGui API calls, it is necessary to include the header in .cpp files
 ---
 
 ## License
-
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - Copyright(c) 2021 CyroPCJr <a href="https://github.com/CyroPCJr/OmegaEngine/blob/main/LICENSE" target="_blank">LICENSE.md</a>.
 
