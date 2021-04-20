@@ -63,9 +63,12 @@ To use Dear ImGui API calls, it is necessary to include the header in .cpp files
 #### Math
 * Linear Algebra: Vector2, Vector3, Vector4, Matrix3, Matrix4, Quaternion and Perlin Noise.
 * Geometry: AABB, OBB, Ray, Sphere, Circle, Line Segment, Rectangle and Plane.
-* Implemented `EngineMath` as helper class to support all functionality such geometry interstion and helper function for linear algebra.
+* Implemented `EngineMath` as helper class to support all functionality such geometry intersections and helper function for linear algebra.
 
 #### Physics
+* Implmented Physics World to manage all physics particles and constraints in the scene.
+* Implemented Particles system using Verlet integration.
+* Constratints can be applied either fixed or spring constraints.
 
 ---
 
