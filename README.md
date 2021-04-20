@@ -5,6 +5,10 @@
 # Table of Contents
 1. [About](#about)
 2. [How to use](#how-to-use)
+3. [Features](#features)
+4. [External Libraries](#external-libraries)
+5. [License](#license)
+6. [Acknowledgments](#acknowledgments)
 
 ## About
 Omega engine is a Custom Game Engine developed using C++17 and DirectX 11. 
