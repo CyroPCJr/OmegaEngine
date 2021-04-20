@@ -29,7 +29,7 @@ To use Dear ImGui API calls, it is necessary to include the header in .cpp files
 
 ## Features
 
-#### AI
+#### Artificial intelligence
 * Implemented Agents, AIWorld and Entities, with that AIWorld can manage Agents along the world.
 * Implemented `Finite-State-Machine` supporting Agents that can switching states behaviours along the AIWorld.
 * Implmented pathfinding algorithms such as `Breadth-first search`, `Depth-first search`, `Dijkstra` and `A-star` allow for Agents moving along the graph.
@@ -54,9 +54,17 @@ To use Dear ImGui API calls, it is necessary to include the header in .cpp files
 * Implemented Meta System witch is usefull to retrieve objects information in run time: Including support : `ARRAY`, `POINTER`, `CLASS`, `FIELD`
 
 #### Graphics
+* Animation
+* Camera
+* Material
+* Mesh
+* Renderer
 
-#### Input
 #### Math
+* Linear Algebra: Vector2, Vector3, Vector4, Matrix3, Matrix4, Quaternion and Perlin Noise.
+* Geometry: AABB, OBB, Ray, Sphere, Circle, Line Segment, Rectangle and Plane.
+* Implemented `EngineMath` as helper class to support all functionality such geometry interstion and helper function for linear algebra.
+
 #### Physics
 
 ---
