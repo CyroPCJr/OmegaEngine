@@ -2,6 +2,10 @@
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
+# Table of Contents
+1. [About](#about)
+2. [How to use](#how-to-use)
+
 ## About
 Omega engine is a Custom Game Engine developed using C++17 and DirectX 11. 
 
