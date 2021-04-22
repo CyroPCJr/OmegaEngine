@@ -2,7 +2,7 @@
 #include "ArriveBehaviour.h"
 #include "Agent.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 using namespace Omega::Graphics;
 
@@ -11,7 +11,7 @@ Vector2 ArriveBehaviour::Calculate(Agent& agent)
 	return Arrive(agent, agent.destination);
 }
 
-Vector2 AI::ArriveBehaviour::Arrive(const AI::Agent& agent, const Omega::Math::Vector2& destination)
+Vector2 ArriveBehaviour::Arrive(const Agent& agent, const Omega::Math::Vector2& destination)
 {
 	Vector2 desiredVelocity = destination - agent.position;
 	const float distance = Magnitude(desiredVelocity);

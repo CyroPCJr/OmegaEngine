@@ -2,9 +2,9 @@
 
 #include "ArriveBehaviour.h"
 
-namespace AI 
+namespace Omega::AI
 {
-	class Interpose : public AI::ArriveBehaviour
+	class Interpose : public ArriveBehaviour
 	{
 	public:
 		virtual ~Interpose() = default;

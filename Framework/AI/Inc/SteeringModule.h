@@ -2,7 +2,7 @@
 
 #include "SteeringBehavior.h"
 
-namespace AI
+namespace Omega::AI
 {
 	class SteeringModule
 	{

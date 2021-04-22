@@ -2,9 +2,9 @@
 
 #include "SeekBehaviour.h"
 
-namespace AI
+namespace Omega::AI
 {
-	class CohesionBehaviour :public AI::SeekBehaviour
+	class CohesionBehaviour :public SeekBehaviour
 	{
 	public:
 		virtual ~CohesionBehaviour() = default;

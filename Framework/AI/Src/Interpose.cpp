@@ -2,7 +2,7 @@
 #include "Interpose.h"
 #include "Agent.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 
 //TODO: Still need more test

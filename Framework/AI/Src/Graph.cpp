@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "Graph.h"
 
-using namespace AI;
+using namespace Omega::AI;
 
 void Graph::Resize(int column, int rows)
 {
@@ -34,7 +34,7 @@ Graph::Node* Graph::GetNode(const Coord& coord)
 	return const_cast<Node*>(static_cast<const Graph*>(this)->GetNode(coord));
 }
 
-const Graph::Node* AI::Graph::GetNode(const Coord & coord) const
+const Graph::Node* Graph::GetNode(const Coord & coord) const
 {
 	if (coord.x < 0 || coord.y < 0 || coord.x >= mColumns || coord.y >= mRows)
 	{

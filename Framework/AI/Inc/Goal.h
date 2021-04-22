@@ -1,6 +1,6 @@
 #pragma once
 
-namespace AI
+namespace Omega::AI
 {
 	template <class AgentType>
 	class Goal

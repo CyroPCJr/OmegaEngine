@@ -2,9 +2,9 @@
 
 #include "SteeringBehavior.h"
 
-namespace AI
+namespace Omega::AI
 {
-	class ArriveBehaviour :public AI::SteeringBehavior
+	class ArriveBehaviour :public SteeringBehavior
 	{
 	public:
 		virtual ~ArriveBehaviour() = default;

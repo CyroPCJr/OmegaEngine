@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "Dijkstras.h"
 
-using namespace AI;
+using namespace Omega::AI;
 
 void Dijkstras::Reset(const Graph& graph)
 {
@@ -19,7 +19,7 @@ void Dijkstras::Reset(const Graph& graph)
 	closed.resize(totalResize);
 }
 
-Path AI::Dijkstras::Search(const Graph& graph, const Coord& start, const Coord& end,
+Path Dijkstras::Search(const Graph& graph, const Coord& start, const Coord& end,
 	std::function<bool(Coord)> isBlocked,
 	std::function<float(Coord, Coord)> getCost)
 {

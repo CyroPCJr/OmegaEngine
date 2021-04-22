@@ -4,7 +4,7 @@
 #include "GoalComposite.h"
 #include "Strategy.h"
 
-namespace AI
+namespace Omega::AI
 {
 	template <class AgentType>
 	class DecisionModule

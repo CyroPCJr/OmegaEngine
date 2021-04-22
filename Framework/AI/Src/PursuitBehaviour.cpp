@@ -2,11 +2,11 @@
 #include "PursuitBehaviour.h"
 #include "Agent.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Graphics;
 using namespace Omega::Math;
 
-Vector2 PursuitBehaviour::Calculate(AI::Agent& agent)
+Vector2 PursuitBehaviour::Calculate(Agent& agent)
 {
 	if (!agent.threat)
 	{
@@ -27,13 +27,13 @@ Vector2 PursuitBehaviour::Calculate(AI::Agent& agent)
 	return mTargetDebug = Seek(agent, agent.threat->position + agent.threat->velocity * lookAheadTime);
 }
 
-void AI::PursuitBehaviour::ShowDebugDraw(const Agent& agent)
+void PursuitBehaviour::ShowDebugDraw(const Agent& agent)
 {
 	SimpleDraw::AddScreenLine(agent.position, agent.threat->position, Colors::Red);
 
 }
 
-float AI::PursuitBehaviour::TurnAroundTime(const AI::Agent& agent, const Vector2& targetPosition)
+float PursuitBehaviour::TurnAroundTime(const Agent& agent, const Vector2& targetPosition)
 {
 	Vector2 targetPos = Normalize(targetPosition - agent.position);
 	const float dot = Dot(agent.heading, targetPos);

@@ -2,7 +2,7 @@
 #include "FleeBehaviour.h"
 #include "Agent.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 
 Vector2 FleeBehaviour::Calculate(Agent& agent)
@@ -16,7 +16,7 @@ Vector2 FleeBehaviour::Calculate(Agent& agent)
 	return Fleeing(agent, agent.destination);
 }
 
-Vector2 AI::FleeBehaviour::Fleeing(Agent& agent, const Vector2& destination)
+Vector2 FleeBehaviour::Fleeing(Agent& agent, const Vector2& destination)
 {
 	Vector2 diseredVel = Normalize(agent.position - destination) * agent.maxSpeed;
 	return diseredVel - agent.velocity;

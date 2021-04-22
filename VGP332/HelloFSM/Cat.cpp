@@ -3,10 +3,11 @@
 using namespace FSM;
 using namespace Omega::Input;
 using namespace Omega::Graphics;
+using namespace Omega::AI;
 
 void Cat::Load()
 {
-	mStateMachine = std::make_unique <AI::StateMachine<Cat>>(*this);
+	mStateMachine = std::make_unique <StateMachine<Cat>>(*this);
 	mStateMachine->AddState<IdleState>("Idle");
 	mStateMachine->AddState<WalkState>("Walk");
 }

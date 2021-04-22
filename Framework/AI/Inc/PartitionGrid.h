@@ -1,6 +1,6 @@
 #pragma once
 
-namespace AI
+namespace Omega::AI
 {
 	template <class T>
 	class PartitionGrid

@@ -2,7 +2,7 @@
 
 #include "Graph.h"
 
-namespace AI
+namespace Omega::AI
 {
 	class BFS
 	{

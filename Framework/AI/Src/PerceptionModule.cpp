@@ -2,7 +2,7 @@
 #include "PerceptionModule.h"
 #include "Agent.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Core;
 
 PerceptionModule::PerceptionModule(Agent & agent, ImportanceCalculator importanceCalculator)

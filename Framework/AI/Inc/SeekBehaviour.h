@@ -2,9 +2,9 @@
 
 #include "SteeringBehavior.h"
 
-namespace AI
+namespace Omega::AI
 {
-	class SeekBehaviour :public AI::SteeringBehavior
+	class SeekBehaviour :public SteeringBehavior
 	{
 	public:
 		virtual ~SeekBehaviour() = default;

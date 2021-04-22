@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "AIWorld.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 using namespace Omega::Graphics;
 
@@ -81,12 +81,12 @@ void AIWorld::UnRegisterEntity(Entity* entity)
 	}
 }
 
-void AI::AIWorld::AddObstacles(const Circle& obstacles)
+void AIWorld::AddObstacles(const Circle& obstacles)
 {
 	mObstacles.push_back(obstacles);
 }
 
-void AI::AIWorld::AddWalls(const LineSegment& walls)
+void AIWorld::AddWalls(const LineSegment& walls)
 {
 	mWalls.push_back(walls);
 }
@@ -101,7 +101,7 @@ AgentList AIWorld::GetNeighborhood(const Circle& range, uint32_t typeId)
 	return GetElements<Agent>(mPartitionGrid, range, mSettings.partitionGridSize, typeId);
 }
 
-bool AI::AIWorld::HasLineOfSight(const Vector2& start, const Vector2& end) const
+bool AIWorld::HasLineOfSight(const Vector2& start, const Vector2& end) const
 {
 	LineSegment line{ start,end };
 	for (auto& wall : mWalls)
@@ -122,7 +122,7 @@ bool AI::AIWorld::HasLineOfSight(const Vector2& start, const Vector2& end) const
 	return true;
 }
 
-void AI::AIWorld::DebugDraw() const
+void AIWorld::DebugDraw() const
 {
 	for (auto& obstacle : mObstacles)
 	{

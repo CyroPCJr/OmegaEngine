@@ -1,7 +1,7 @@
 #pragma once
 #include "MemoryRecord.h"
 
-namespace AI
+namespace Omega::AI
 {
 	class Agent;
 

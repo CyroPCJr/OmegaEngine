@@ -1,6 +1,6 @@
 #pragma once
 
-namespace AI
+namespace Omega::AI
 {
 	using Property = std::variant<int, float, Omega::Math::Vector2>;
 

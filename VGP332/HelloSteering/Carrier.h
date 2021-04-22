@@ -4,7 +4,7 @@
 
 namespace Steering
 {
-	class Carrier : public AI::Agent
+	class Carrier : public Omega::AI::Agent
 	{
 	public:
 
@@ -15,7 +15,7 @@ namespace Steering
 			ObstacleAvoidance
 		};
 
-		Carrier(AI::AIWorld& world) noexcept;
+		Carrier(Omega::AI::AIWorld& world) noexcept;
 		~Carrier() override = default;
 
 		void Load();
@@ -29,7 +29,7 @@ namespace Steering
 
 		bool isDebugShowDraw = true;
 	private:
-		std::unique_ptr<AI::SteeringModule> mSteeringModule = nullptr;
+		std::unique_ptr<Omega::AI::SteeringModule> mSteeringModule = nullptr;
 		std::array<Omega::Graphics::TextureId, 32> mTexturesIds;
 		float mSlowRadius = 100.0f;
 	};

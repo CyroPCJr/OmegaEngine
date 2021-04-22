@@ -20,10 +20,10 @@ namespace FSM
 
 	private:
 		std::string mMessage;
-		std::unique_ptr<AI::StateMachine<Cat>> mStateMachine;
+		std::unique_ptr<Omega::AI::StateMachine<Cat>> mStateMachine;
 	};
 
-	class IdleState : public AI::State<Cat>
+	class IdleState : public Omega::AI::State<Cat>
 	{
 	public:
 		void Enter(Cat& agent) override;
@@ -33,7 +33,7 @@ namespace FSM
 		float currentTime = 0.0f;
 	};
 
-	class WalkState : public AI::State<Cat>
+	class WalkState : public Omega::AI::State<Cat>
 	{
 	public:
 		void Enter(Cat& agent) override;

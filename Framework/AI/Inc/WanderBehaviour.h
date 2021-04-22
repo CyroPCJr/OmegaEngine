@@ -2,9 +2,9 @@
 
 #include "SeekBehaviour.h"
 
-namespace AI
+namespace Omega::AI
 {
-	class WanderBehaviour :public AI::SeekBehaviour
+	class WanderBehaviour :public SeekBehaviour
 	{
 	public:
 		virtual ~WanderBehaviour() = default;

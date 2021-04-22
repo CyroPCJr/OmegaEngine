@@ -3,7 +3,7 @@
 #include "MemoryRecord.h"
 #include "Sensor.h"
 
-namespace AI
+namespace Omega::AI
 {
 	class Agent;
 

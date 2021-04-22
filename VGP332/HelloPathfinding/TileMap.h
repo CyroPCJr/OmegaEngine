@@ -41,9 +41,9 @@ private:
 
 	struct SettingsData
 	{
-		AI::Coord coordStart = { 0,0 };
-		AI::Coord coordEnd = { 0,0 };
-		AI::Path path; // hold the path
+		Omega::AI::Coord coordStart = { 0,0 };
+		Omega::AI::Coord coordEnd = { 0,0 };
+		Omega::AI::Path path; // hold the path
 		Types types;
 
 		int AStarType = 0;
@@ -51,14 +51,14 @@ private:
 
 	SettingsData mSettingData;
 
-	AI::Graph mGraph;
+	Omega::AI::Graph mGraph;
 
-	AI::BFS mBFS;
-	AI::DFS mDFS;
-	AI::Dijkstras mDijkstras;
-	AI::AStar mAStar;
+	Omega::AI::BFS mBFS;
+	Omega::AI::DFS mDFS;
+	Omega::AI::Dijkstras mDijkstras;
+	Omega::AI::AStar mAStar;
 	
-	std::vector<AI::Graph::Node> mNodes;
+	std::vector<Omega::AI::Graph::Node> mNodes;
 
 	std::array<std::size_t, 6> mTextureIds;
 	std::size_t mCircle;

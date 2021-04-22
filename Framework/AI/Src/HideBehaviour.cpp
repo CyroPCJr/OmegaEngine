@@ -3,7 +3,7 @@
 #include "Agent.h"
 #include "AIWorld.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 using namespace Omega::Graphics;
 
@@ -55,7 +55,7 @@ Vector2 HideBehaviour::Calculate(Agent& agent)
 	return Arrive(agent, agent.destination);
 }
 
-void AI::HideBehaviour::ShowDebugDraw(const Agent& agent)
+void HideBehaviour::ShowDebugDraw(const Agent& agent)
 {
 	SimpleDraw::AddScreenLine(agent.position, mClosestObstacle, Colors::Blue);
 	SimpleDraw::AddScreenLine(agent.position, agent.destination, Colors::Green);

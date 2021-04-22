@@ -1,8 +1,7 @@
 #include "Precompiled.h"
 #include "BFS.h"
 
-using namespace AI;
-
+using namespace Omega::AI;
 
 void BFS::Reset()
 {

@@ -2,7 +2,7 @@
 
 #include "Goal.h"
 
-namespace AI
+namespace Omega::AI
 {
 	template <class AgentType>
 	class Strategy

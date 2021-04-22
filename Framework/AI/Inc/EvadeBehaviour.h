@@ -2,9 +2,9 @@
 
 #include "FleeBehaviour.h"
 
-namespace AI
+namespace Omega::AI
 {
-	class EvadeBehaviour :public AI::FleeBehaviour
+	class EvadeBehaviour :public FleeBehaviour
 	{
 	public:
 		virtual ~EvadeBehaviour() = default;

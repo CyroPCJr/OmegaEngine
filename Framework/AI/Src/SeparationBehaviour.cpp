@@ -2,7 +2,7 @@
 #include "SeparationBehaviour.h"	
 #include "Agent.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 
 Vector2 SeparationBehaviour::Calculate(Agent& agent)

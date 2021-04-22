@@ -5,17 +5,17 @@ using namespace Steering;
 using namespace Omega::Graphics;
 using namespace Omega::Math;
 using namespace Omega::Input;
-
+using namespace Omega::AI;
 namespace
 {
 	float width = 0.0f;
 	float height = 0.0f;
 }
 
-Carrier::Carrier(AI::AIWorld& world) noexcept
+Carrier::Carrier(AIWorld& world) noexcept
 	: Agent(world, UnitType::Carrier)
 {
-	mSteeringModule = std::make_unique<AI::SteeringModule>(*this);
+	mSteeringModule = std::make_unique<SteeringModule>(*this);
 }
 
 void Carrier::Load()
@@ -36,9 +36,9 @@ void Carrier::Load()
 	maxSpeed = 200.0f;
 
 	// Steerin Behaviours
-	mSteeringModule->AddBehavior<AI::SeekBehaviour>("Seek")->SetActive(true);
-	mSteeringModule->AddBehavior<AI::ArriveBehaviour>("Arrive")->SetActive(false);
-	mSteeringModule->AddBehavior<AI::ObstacleAvoidance>("AvoidanceObstacle")->SetActive(false);
+	mSteeringModule->AddBehavior<SeekBehaviour>("Seek")->SetActive(true);
+	mSteeringModule->AddBehavior<ArriveBehaviour>("Arrive")->SetActive(false);
+	mSteeringModule->AddBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(false);
 }
 
 void Carrier::Unload()
@@ -99,17 +99,17 @@ void Carrier::SwitchBehaviour(const Behaviours& behaviours, bool active) const
 	switch (behaviours)
 	{
 	case Carrier::Behaviours::Seek:
-		mSteeringModule->GetBehavior<AI::SeekBehaviour>("Seek")->SetActive(active);
+		mSteeringModule->GetBehavior<SeekBehaviour>("Seek")->SetActive(active);
 		break;
 	case Carrier::Behaviours::Arrive:
-		mSteeringModule->GetBehavior<AI::ArriveBehaviour>("Arrive")->SetActive(active);
-		mSteeringModule->GetBehavior<AI::ArriveBehaviour>("Arrive")->SetSlowRadius(mSlowRadius);
+		mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive")->SetActive(active);
+		mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive")->SetSlowRadius(mSlowRadius);
 		break;
 	case Carrier::Behaviours::ObstacleAvoidance:
-		mSteeringModule->GetBehavior<AI::ObstacleAvoidance>("AvoidanceObstacle")->SetActive(active);
+		mSteeringModule->GetBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(active);
 		break;
 	default:
-		mSteeringModule->GetBehavior<AI::ArriveBehaviour>("Arrive")->SetActive(active);
+		mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive")->SetActive(active);
 		break;
 	}
 

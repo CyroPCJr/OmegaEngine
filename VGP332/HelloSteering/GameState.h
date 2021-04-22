@@ -27,7 +27,7 @@ namespace Steering
 		std::unique_ptr<Carrier> mCarrier = nullptr;
 
 		const size_t maxInterceptor = 10;
-		AI::AIWorld::Settings mSettings;
-		AI::AIWorld mAIWorld;
+		Omega::AI::AIWorld::Settings mSettings;
+		Omega::AI::AIWorld mAIWorld;
 	};
 }

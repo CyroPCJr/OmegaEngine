@@ -2,7 +2,7 @@
 #include "AStar.h"
 #include <algorithm>
 
-using namespace AI;
+using namespace Omega::AI;
 
 void AStar::Reset(const Graph& graph)
 {

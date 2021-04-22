@@ -6,7 +6,7 @@ using namespace Steering;
 using namespace Omega;
 using namespace Omega::Math;
 using namespace Omega::Graphics;
-using namespace AI;
+using namespace Omega::AI;
 
 void GameState::Initialize()
 {

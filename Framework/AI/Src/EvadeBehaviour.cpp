@@ -2,7 +2,7 @@
 #include "EvadeBehaviour.h"
 #include "Agent.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 using namespace Omega::Graphics;
 

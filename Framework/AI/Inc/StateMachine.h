@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace AI
+namespace Omega::AI
 {
 	template<class AgentType>
 	class StateMachine

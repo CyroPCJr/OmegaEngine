@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "SteeringModule.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 
 SteeringModule::SteeringModule(Agent& agent)

@@ -3,7 +3,7 @@
 
 #include "AIWorld.h"
 
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Math;
 
 Entity::Entity(AIWorld & world, uint32_t typeId)
@@ -18,7 +18,7 @@ Entity::~Entity()
 	world.UnRegisterEntity(this);
 }
 
-Matrix3 AI::Entity::LocalToWorld() const
+Matrix3 Entity::LocalToWorld() const
 {
 	auto f = Normalize(heading);
 	auto s = PerpendicularRH(f);

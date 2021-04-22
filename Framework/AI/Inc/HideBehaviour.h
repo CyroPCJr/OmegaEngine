@@ -2,9 +2,9 @@
 
 #include "ArriveBehaviour.h"
 
-namespace AI
+namespace Omega::AI
 {
-	class HideBehaviour :public AI::ArriveBehaviour
+	class HideBehaviour :public ArriveBehaviour
 	{
 	public:
 		virtual ~HideBehaviour() = default;

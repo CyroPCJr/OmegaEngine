@@ -2,7 +2,7 @@
 
 #include "Graph.h"
 
-namespace AI
+namespace Omega::AI
 {
 	enum class HeuristicType
 	{

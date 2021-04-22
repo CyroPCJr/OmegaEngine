@@ -2,9 +2,7 @@
 #include "WanderBehaviour.h"
 #include "Agent.h"
 
-//#include <XEngine.h>
-
-using namespace AI;
+using namespace Omega::AI;
 using namespace Omega::Graphics;
 using namespace Omega::Math;
 
@@ -23,7 +21,7 @@ Vector2 WanderBehaviour::Calculate(Agent& agent)
 	return Seek(agent, mCircleJitter);
 }
 
-void AI::WanderBehaviour::ShowDebugDraw(const Agent& agent)
+void WanderBehaviour::ShowDebugDraw(const Agent& agent)
 {
 	// Create circle ahead toward the agent
 	SimpleDraw::AddScreenCircle(mCircleProjection, mSettings.radius, Colors::BlueViolet);

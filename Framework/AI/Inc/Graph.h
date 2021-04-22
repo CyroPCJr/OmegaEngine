@@ -2,7 +2,7 @@
 
 #include "Common.h"
 
-namespace AI
+namespace Omega::AI
 {
 	struct Coord
 	{

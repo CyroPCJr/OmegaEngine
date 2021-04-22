@@ -5,7 +5,7 @@ using namespace Steering;
 using namespace Omega;
 using namespace Omega::Graphics;
 using namespace Omega::Math;
-using namespace AI;
+using namespace Omega::AI;
 
 namespace
 {

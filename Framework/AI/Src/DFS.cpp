@@ -1,7 +1,7 @@
 #include "Precompiled.h"
 #include "DFS.h"
 
-using namespace AI;
+using namespace Omega::AI;
 
 void DFS::Reset()
 {

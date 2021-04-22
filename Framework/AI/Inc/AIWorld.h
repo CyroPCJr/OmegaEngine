@@ -3,7 +3,7 @@
 #include "Agent.h"
 #include "PartitionGrid.h"
 
-namespace AI
+namespace Omega::AI
 {
 	
 	class AIWorld

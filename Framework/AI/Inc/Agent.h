@@ -2,7 +2,7 @@
 
 #include "Entity.h"
 
-namespace AI
+namespace Omega::AI
 {
 	
 	class Agent;

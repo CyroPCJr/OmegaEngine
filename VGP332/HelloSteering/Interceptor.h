@@ -6,7 +6,7 @@ namespace Steering
 {
 	
 
-	class Interceptor : public AI::Agent
+	class Interceptor : public Omega::AI::Agent
 	{
 	public:
 		enum class Behaviours
@@ -24,7 +24,7 @@ namespace Steering
 		};
 
 
-		Interceptor(AI::AIWorld& world) noexcept;
+		Interceptor(Omega::AI::AIWorld& world) noexcept;
 		~Interceptor() override = default;
 
 		void Load();
@@ -39,7 +39,7 @@ namespace Steering
 
 	private:
 
-		std::unique_ptr<AI::SteeringModule> mSteeringModule = nullptr;
+		std::unique_ptr<Omega::AI::SteeringModule> mSteeringModule = nullptr;
 
 		std::array<Omega::Graphics::TextureId, 32> mTexturesIds;
 

@@ -2,9 +2,9 @@
 
 #include "SeekBehaviour.h"
 
-namespace AI
+namespace Omega::AI
 {
-	class SeparationBehaviour :public AI::SeekBehaviour
+	class SeparationBehaviour :public SeekBehaviour
 	{
 	public:
 		virtual ~SeparationBehaviour() = default;
