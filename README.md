@@ -63,18 +63,18 @@ To use Dear ImGui API calls, it is necessary to include the header in .cpp files
 
 #### Graphics
 * Animation: 
- * Implemented support to save and load animation keyframe using Assimp API once is extract model.
- * Implemented play animation once the file is loaded.
- * Implemented support to draw Skeletal using `SimpleDraw` with Debug UI (Dear ImGui).
-* Implemented Camera witch allow to move around and oriented into the world view.
-* Material: Support `Textures`, `Colors`,`LightTypes`, `Material` and `Sampler`.
+  * Implemented support to save and load animation keyframe using Assimp API once is extract model.
+  * Implemented play animation once the file is loaded.
+  * Implemented support to draw Skeletal using `SimpleDraw` with Debug UI (Dear ImGui).
+  * Implemented Camera witch allow to move around and oriented into the world view.
+  * Material: Support `Textures`, `Colors`,`LightTypes`, `Material` and `Sampler`.
 * Mesh:
- * Implemented `MeshBuilder` withc allowed to rendere differents shapres such as: `Cube`,`Plane`, `Sphere`, `Quads` and `Cylinder`.
- * Implemented `VertexTypes` to cache information from `MeshBuilder`.
- * Implemented `SimpleDraw` using for visual debuging.
+  * Implemented `MeshBuilder` withc allowed to rendere differents shapres such as: `Cube`,`Plane`, `Sphere`, `Quads` and `Cylinder`.
+  * Implemented `VertexTypes` to cache information from `MeshBuilder`.
+  * Implemented `SimpleDraw` using for visual debuging.
 * Renderer:
- * Implemented `TexturesManager` to load, assign and render the textures using Direct3D as render pipeline.
- * Implemente `SpriteRendererManager` support to draw fonts and load 2D textures with position and scale.
+  * Implemented `TexturesManager` to load, assign and render the textures using Direct3D as render pipeline.
+  * Implemente `SpriteRendererManager` support to draw fonts and load 2D textures with position and scale.
 
 #### Math
 * Linear Algebra: Vector2, Vector3, Vector4, Matrix3, Matrix4, Quaternion and Perlin Noise.
