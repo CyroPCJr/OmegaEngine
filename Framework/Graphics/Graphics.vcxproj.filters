@@ -159,6 +159,9 @@
     <ClInclude Include="Inc\TextureTypes.h">
       <Filter>Inc\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\RasterizerState.h">
+      <Filter>Inc\RenderState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -249,6 +252,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\SpriteRendererManager.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RasterizerState.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

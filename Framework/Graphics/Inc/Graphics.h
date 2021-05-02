@@ -8,6 +8,7 @@
 #include "RenderTarget.h"
 #include "ObjLoader.h"
 #include "ConstantBuffer.h"
+#include "RasterizerState.h"
 
 // Camera
 #include "Camera.h"
