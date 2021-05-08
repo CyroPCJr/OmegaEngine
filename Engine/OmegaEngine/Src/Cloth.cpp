@@ -5,92 +5,58 @@ using namespace Omega;
 using namespace Omega::Graphics;
 using namespace Omega::Math;
 using namespace Omega::Physics;
+using namespace Omega::Core;
 
-void Cloth::Initialize(const std::filesystem::path& texturePath, uint32_t width, uint32_t height)
+void Cloth::Initialize(const Settings& settings)
 {
-	PhysicsWorld::Settings settings;
-	settings.gravity = { 0.0f, -9.8f, 0.0f };
-	settings.timeStep = 1.0f / 60.0f;
-	settings.drag = 0.3f;
-	settings.iterations = 1;
-	mPhysicsWorld.Initilize(settings);
+	mSettings = settings;
+	PhysicsWorld::Settings physicsSettings;
+	physicsSettings.gravity = { 0.0f, -9.8f, 0.0f };
+	physicsSettings.timeStep = 1.0f / 60.0f;
+	physicsSettings.drag = 0.3f;
+	physicsSettings.iterations = 1;
+	mPhysicsWorld.Initilize(physicsSettings);
 
-	mWidth = width;
-	mHeight = height;
-	mMeshPlane = MeshBuilder::CreatePlanePX(width, height);
+	mMeshPlane = MeshBuilder::CreatePlanePX(mSettings.width, mSettings.height);
 	mMeshBuffer.Initialize(mMeshPlane, true);
-	std::filesystem::path doTexturingShaderPath = L"../../Assets/Shaders/DoTexturing.fx";
+
+	const std::filesystem::path doTexturingShaderPath = L"../../Assets/Shaders/DoTexturing.fx";
 	mVertexShader.Initialize(doTexturingShaderPath, VertexPX::Format);
 	mPixelShader.Initialize(doTexturingShaderPath);
-
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Border);
-	mTexture.Initialize(texturePath);
+	mTexture.Initialize(mSettings.path);
 
 	mConstantBuffer.Initialize(sizeof(Matrix4));
+	mRasterizer.Initialize(RasterizerState::CullMode::None, RasterizerState::FillMode::Solid);
+
+	InitializeParticles();
 }
 
 void Cloth::Render(const Camera& camera)
 {
-	if (!mIsUseCloth) return;
-
-	//auto world = Math::Matrix4::Identity;
-	auto view = camera.GetViewMatrix();
-	auto projection = camera.GetPerspectiveMatrix();
-
-	mConstantBuffer.BindVS();
-	mVertexShader.Bind();
-	mPixelShader.Bind();
-	mSampler.BindPS();
-	mTexture.BindPS();
-
-	auto matrixViewProjection = Transpose(view * projection);
-	mConstantBuffer.Update(&matrixViewProjection);
-	mMeshBuffer.Update(mMeshPlane.vertices.data(), static_cast<uint32_t>(mMeshPlane.vertices.size()));
-	mMeshBuffer.Draw();
-}
-
-void Cloth::ShowCloth(const Omega::Math::Vector3& position)
-{
-	mIsUseCloth = true;
-	Math::Vector3 offset = { -0.5f * mWidth + position.x, 0.5f * mHeight + position.y, 0.0f };
-	mParticles.clear();
-	mPhysicsWorld.Clear(true);
-	for (uint32_t y = 0; y < mHeight; y++)
+	if (!mShowCloth) return;
+	if (mShowTexture)
 	{
-		for (uint32_t x = 0; x < mWidth; x++)
-		{
-			mParticles.push_back(new Particle());
-			mParticles.back()->SetPosition({ offset.x + static_cast<float>(x), offset.y - static_cast<float>(y) , offset.z });
-			mParticles.back()->SetVelocity({ Random::RandomFloat(-0.05f,0.01f) ,Random::RandomFloat(-0.1f,0.5f),Random::RandomFloat(-0.05f,0.05f) });
-			mParticles.back()->radius = 0.1f;
-			mParticles.back()->bounce = 0.3f;
-			mPhysicsWorld.AddParticle(mParticles.back());
-		}
+		auto view = camera.GetViewMatrix();
+		auto projection = camera.GetPerspectiveMatrix();
+
+		mConstantBuffer.BindVS();
+		mVertexShader.Bind();
+		mPixelShader.Bind();
+		mSampler.BindPS();
+		mTexture.BindPS();
+
+		auto matrixViewProjection = Transpose(view * projection);
+		mConstantBuffer.Update(&matrixViewProjection);
+		mMeshBuffer.Update(mMeshPlane.vertices.data(), static_cast<uint32_t>(mMeshPlane.vertices.size()));
+
+		mRasterizer.Set();
+		mMeshBuffer.Draw();
+		mRasterizer.Clear();
 	}
-
-	for (uint32_t y = 0; y < mHeight; y++)
+	else
 	{
-		for (uint32_t x = 0; x < mWidth; x++)
-		{
-			//if (y == 0 && (x == 0 || x == static_cast<int>(mWidth * 0.5f) || x == mWidth - 1))
-			if (y == 0 || x == mWidth) // now fixed the particles all in the top position
-			{
-				auto c1 = new Fixed(mParticles[GetIndex(x, y, mWidth)]); // fixed
-				mPhysicsWorld.AddConstraint(c1);
-			}
-
-			if (x + 1 < mWidth)
-			{
-				auto c1 = new Spring(mParticles[GetIndex(x, y, mWidth)], mParticles[GetIndex(x + 1, y, mWidth)]);
-				mPhysicsWorld.AddConstraint(c1);
-			}
-
-			if (y + 1 < mHeight)
-			{
-				auto c2 = new Spring(mParticles[GetIndex(x, y, mWidth)], mParticles[GetIndex(x, y + 1, mWidth)]);
-				mPhysicsWorld.AddConstraint(c2);
-			}
-		}
+		mPhysicsWorld.DebugDraw();
 	}
 }
 
@@ -98,11 +64,11 @@ void Cloth::Update(float deltaTime)
 {
 	mPhysicsWorld.Update(deltaTime);
 
-	if (mIsUseCloth)
+	if (mShowCloth)
 	{
-		for (size_t i = 0; i < mParticles.size(); ++i)
+		for (size_t i = 0; i < mPhysicsWorld.GetParticles().size(); ++i)
 		{
-			mMeshPlane.vertices[i].position = mParticles[i]->position;
+			mMeshPlane.vertices[i].position = mPhysicsWorld.GetParticles()[i]->position;
 		}
 	}
 }
@@ -115,4 +81,62 @@ void Cloth::Terminate()
 	mPixelShader.Terminate();
 	mVertexShader.Terminate();
 	mMeshBuffer.Terminate();
+	mRasterizer.Terminate();
+}
+
+void Cloth::InitializeParticles()
+{
+	Math::Vector3 offset = { -0.5f * mSettings.width + mSettings.startPosition.x, 0.5f * mSettings.height + mSettings.startPosition.y, 0.0f };
+	mParticles.clear();
+	mPhysicsWorld.Clear(true);
+	for (uint32_t y = 0; y < mSettings.height; y++)
+	{
+		for (uint32_t x = 0; x < mSettings.width; x++)
+		{
+			auto particle = std::make_unique<Particle>();
+			particle->SetPosition({ offset.x + static_cast<float>(x), offset.y - static_cast<float>(y) , offset.z });
+			particle->SetVelocity(Random::RandomVector3({ -0.05f, -0.01f, -0.05f }, { 0.01f, 0.5f, 0.05f }));
+			particle->radius = 0.1f;
+			particle->bounce = 0.3f;
+			mPhysicsWorld.AddParticle(particle);
+
+
+			//BCK
+			/*mParticles.push_back(new Particle());
+			mParticles.back()->SetPosition({ offset.x + static_cast<float>(x), offset.y - static_cast<float>(y) , offset.z });
+			mParticles.back()->SetVelocity({ Random::RandomFloat(-0.05f,0.01f) ,Random::RandomFloat(-0.1f,0.5f),Random::RandomFloat(-0.05f,0.05f) });
+			mParticles.back()->radius = 0.1f;
+			mParticles.back()->bounce = 0.3f;
+			mPhysicsWorld.AddParticle(mParticles.back());*/
+		}
+	}
+
+
+	for (uint32_t y = 0; y < mSettings.height; y++)
+	{
+		for (uint32_t x = 0; x < mSettings.width; x++)
+		{
+			//if (y == 0 && (x == 0 || x == static_cast<int>(mWidth * 0.5f) || x == mWidth - 1))
+			if (y == 0 || x == mSettings.width) // now fixed the particles all in the top position
+			{
+				//auto c1 = new Fixed(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get()); // fixed
+				std::unique_ptr<Constraint> c1 = std::make_unique<Fixed>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get());
+				mPhysicsWorld.AddConstraint(c1);
+			}
+
+			if (x + 1 < mSettings.width)
+			{
+				//auto c1 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
+				std::unique_ptr<Constraint> c1 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
+				mPhysicsWorld.AddConstraint(c1);
+			}
+
+			if (y + 1 < mSettings.height)
+			{
+				//auto c2 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
+				std::unique_ptr<Constraint> c2 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
+				mPhysicsWorld.AddConstraint(c2);
+			}
+		}
+	}
 }

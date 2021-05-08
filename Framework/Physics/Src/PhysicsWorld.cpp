@@ -3,8 +3,11 @@
 
 using namespace Omega;
 using namespace Omega::Math;
+using namespace Omega::Graphics;
 using namespace Omega::Physics;
 
+//TODO: Olhar sobre Arena Allocator
+//Reference: https://rosettacode.org/wiki/Arena_storage_pool#C.2B.2B
 
 void PhysicsWorld::Initilize(const Settings& settings)
 {
@@ -26,25 +29,25 @@ void PhysicsWorld::Update(float deltaTime)
 
 void PhysicsWorld::DebugDraw() const
 {
-	for (auto p : mParticles)
+	for (const auto& p : mParticles)
 	{
-		Graphics::SimpleDraw::AddSphere(p->position, p->radius, 4, 5, Graphics::Colors::Cyan);
+		SimpleDraw::AddSphere(p->position, p->radius, 4, 5, Colors::Cyan);
 	}
 
-	for (auto c : mConstraints)
+	for (const auto& c : mConstraints)
 	{
 		c->DebugDraw();
 	}
 
-	for (auto& obb : mOBBs)
+	for (const auto& obb : mOBBs)
 	{
-		Graphics::SimpleDraw::AddOBB(obb, Graphics::Colors::Red);
+		SimpleDraw::AddOBB(obb, Colors::Red);
 	}
 }
 
-void PhysicsWorld::AddParticle(Particle* p)
+void PhysicsWorld::AddParticle(std::unique_ptr<Particle>& p)
 {
-	mParticles.push_back(p);
+	mParticles.push_back(std::move(p));
 }
 
 void PhysicsWorld::AddStaticOBB(const Math::OBB& obb)
@@ -52,9 +55,9 @@ void PhysicsWorld::AddStaticOBB(const Math::OBB& obb)
 	mOBBs.push_back(obb);
 }
 
-void PhysicsWorld::AddConstraint(Constraint* c)
+void PhysicsWorld::AddConstraint(std::unique_ptr<Constraint>& c)
 {
-	mConstraints.push_back(c);
+	mConstraints.push_back(std::move(c));
 }
 
 void PhysicsWorld::AddStaticPlane(const Math::Plane& plane)
@@ -64,15 +67,24 @@ void PhysicsWorld::AddStaticPlane(const Math::Plane& plane)
 
 void PhysicsWorld::Clear(bool onlyDynamic)
 {
-	for (auto p : mParticles)
+	/*for (auto p : mParticles)
 	{
 		delete p;
+	}*/
+
+	for (auto& p : mParticles)
+	{
+		p.reset();	
 	}
 	mParticles.clear();
 
-	for (auto c : mConstraints)
+	/*for (auto c : mConstraints)
 	{
 		delete c;
+	}*/
+	for (auto& c : mConstraints)
+	{
+		c.reset();
 	}
 	mConstraints.clear();
 
@@ -85,7 +97,7 @@ void PhysicsWorld::Clear(bool onlyDynamic)
 
 void PhysicsWorld::AccumulatedForces()
 {
-	for (auto p : mParticles)
+	for (auto& p : mParticles)
 	{
 		p->acceleration = mSettings.gravity;
 	}
@@ -106,7 +118,7 @@ void PhysicsWorld::SatisfyConstraints()
 {
 	for (int n = 0; n < mSettings.iterations; ++n)
 	{
-		for (auto c : mConstraints)
+		for (const auto& c : mConstraints)
 		{
 			c->Apply();
 		}
@@ -114,7 +126,7 @@ void PhysicsWorld::SatisfyConstraints()
 
 	for (const auto& plane : mPlanes)
 	{
-		for (auto& p : mParticles)
+		for (const auto& p : mParticles)
 		{
 			if (Math::Dot(p->position, plane.n) <= plane.d &&
 				Math::Dot(p->lastPosition, plane.n) > plane.d)
@@ -131,7 +143,7 @@ void PhysicsWorld::SatisfyConstraints()
 
 	for (const auto& obb : mOBBs)
 	{
-		for (auto& p : mParticles)
+		for (const auto& p : mParticles)
 		{
 			if (IsContained(p->position, obb))
 			{

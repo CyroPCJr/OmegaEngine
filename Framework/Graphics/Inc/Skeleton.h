@@ -12,6 +12,8 @@ namespace Omega::Graphics
 		std::vector<std::unique_ptr<Bone>> bones;
 	};
 
+
+	Bone* FindBone(const Skeleton& skeleton, const char* boneName);
 	void DrawSkeleton(Bone* skeleton, const std::vector<Math::Matrix4>& boneMatrices);
 	void DrawSkeleton(Bone* skeleton, const std::vector<Math::Matrix4>& boneMatrices, const Math::Vector3& modelPosition);
 	void DrawSkeleton(const Skeleton& skeleton, const std::vector<Math::Matrix4>& boneMatrices, const Math::Vector3& modelPosition);

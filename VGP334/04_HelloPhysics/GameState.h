@@ -13,6 +13,12 @@ public:
 	void DebugUI() override;
 private:
 
+	void UseRawParticles(int count);
+	void UseStickParticles(int count);
+	void UseTetrahedronParticles(int count);
+	void UseCubeParticles(int count);
+	void UseBallAndChains(int count);
+
 	Omega::Graphics::Camera mCamera;
 	Omega::Physics::PhysicsWorld mPhysicsWorld;
 

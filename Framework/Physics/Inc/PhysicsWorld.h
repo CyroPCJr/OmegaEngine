@@ -23,8 +23,8 @@ namespace Omega::Physics
 		void DebugDraw() const;
 
 		// For simulation
-		void AddParticle(Particle* p);
-		void AddConstraint(Constraint* c);
+		void AddParticle(std::unique_ptr<Particle>& p);
+		void AddConstraint(std::unique_ptr<Constraint>& c);
 
 		// For enviroment
 		void AddStaticPlane(const Math::Plane& plane);
@@ -40,9 +40,14 @@ namespace Omega::Physics
 		void SatisfyConstraints();
 
 		//TODO: change to unique_ptr
-		//TODO create pooling system to save memory
-		std::vector<Particle*> mParticles;
-		std::vector<Constraint*> mConstraints;
+		//TODO: create pooling system to save memory
+		//possible references: 
+		// https://stackoverflow.com/questions/27827923/c-object-pool-that-provides-items-as-smart-pointers-that-are-returned-to-pool
+		// https://sourcemaking.com/design_patterns/object_pool/cpp/1
+		// https://gameprogrammingpatterns.com/object-pool.html
+
+		std::vector<std::unique_ptr<Particle>> mParticles;
+		std::vector<std::unique_ptr<Constraint>> mConstraints; 
 		std::vector<Math::Plane> mPlanes;
 		std::vector<Math::OBB> mOBBs;
 

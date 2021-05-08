@@ -3,30 +3,38 @@
 
 namespace Omega
 {
-	class Cloth
+	class Cloth final
 	{
 	public:
 
-		Cloth() = default;
-		~Cloth() = default;
+		struct Settings
+		{
+			Omega::Math::Vector3 startPosition = Omega::Math::Vector3::Zero;
+			size_t width = 20;
+			size_t height = 20;
+			const char* path;
+		};
 
-		void Initialize(const std::filesystem::path& texturePath, uint32_t width = 20, uint32_t height = 20);
+		void Initialize(const Settings& settings);
+
 		void Render(const Omega::Graphics::Camera& camera);
 
-		void ShowCloth(const Omega::Math::Vector3& position);
+		//void SetPosition(const Omega::Math::Vector3& position);
 
 		void Update(float deltaTime);
 		void Terminate();
 
-		void IsUseCloth(bool use) { mIsUseCloth = use; }
+		inline void SetShowCloth(bool show) { mShowCloth = show; }
+		inline void SetShowTextureCloth(bool showTexture) { mShowTexture = showTexture; }
 
 	private:
+		void InitializeParticles();
 
-		int GetIndex(int x, int y, int column) { return (y * column) + x; }
+		inline int GetIndex(int x, int y, int column) { return (y * column) + x; }
 
-		uint32_t mWidth = 0;
-		uint32_t mHeight = 0;
-		bool mIsUseCloth = false;
+		Settings mSettings;
+		bool mShowCloth = false;
+		bool mShowTexture = false;
 
 		Omega::Graphics::MeshPX mMeshPlane;
 		Omega::Graphics::MeshBuffer mMeshBuffer;
@@ -36,8 +44,10 @@ namespace Omega
 		Omega::Graphics::Sampler mSampler;
 		Omega::Graphics::ConstantBuffer mConstantBuffer;
 
+		Omega::Graphics::RasterizerState mRasterizer;
+
 		Omega::Physics::PhysicsWorld mPhysicsWorld;
-		std::vector<Omega::Physics::Particle*> mParticles;
+		std::vector<std::unique_ptr<Omega::Physics::Particle>> mParticles;
 	};
 
 }

@@ -9,5 +9,7 @@ namespace Omega::Math::Random
 	Omega::Math::Vector2 RandomVector2(const Omega::Math::Vector2& min, const Omega::Math::Vector2& max);
 
 	Omega::Math::Vector2 RandomUnitCircle();
+
+	Omega::Math::Vector3 RandomVector3(const Omega::Math::Vector3& min, const Omega::Math::Vector3& max);
 	
 }

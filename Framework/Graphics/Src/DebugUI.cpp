@@ -96,6 +96,7 @@ void DebugUI::StaticInitialize(HWND window, bool docking, bool multiViewport)
 
 void DebugUI::StaticTerminate()
 {
+	// Restore original window's procedure
 	sWindowMessageHandler.Unhook();
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
@@ -109,15 +110,20 @@ void DebugUI::SetTheme(DebugUI::Theme theme)
 		case Theme::Classic:
 		{
 			ImGui::StyleColorsClassic();
+			break;
 		}
 		case Theme::Dark:
 		{
 			ImGui::StyleColorsDark();
+			break;
 		}
 		case Theme::Light:
 		{
 			ImGui::StyleColorsLight();
+			break;
 		}
+		default:
+			break;
 	}
 }
 

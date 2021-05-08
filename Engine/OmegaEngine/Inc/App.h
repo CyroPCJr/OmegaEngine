@@ -30,11 +30,8 @@ namespace Omega
 
 		void Run(AppConfig appConfig);
 		void Quit() { mRunning = false; }
-
-		bool OpenFileDialog(char fileName[MAX_PATH], const char* title, const char* filter);
-		bool SaveFileDialog(char fileName[MAX_PATH], const char* title, const char* filter);
+		
 		float GetTime();
-
 
 	private:
 		AppConfig mAppConfig;

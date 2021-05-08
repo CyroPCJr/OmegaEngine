@@ -15,6 +15,18 @@ namespace
 	}
 }
 
+Bone* Omega::Graphics::FindBone(const Skeleton& skeleton, const char* boneName)
+{
+	for (auto& bones : skeleton.bones)
+	{
+		if (bones->name == boneName)
+		{
+			return bones.get();
+		}
+	}
+	return nullptr;
+}
+
 void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>& boneMatrices)
 {
 	if (!bone)

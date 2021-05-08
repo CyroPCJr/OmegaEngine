@@ -553,8 +553,13 @@ void SimpleDraw::AddSphere(const Math::Vector3& position, float radius, int ring
 
 void SimpleDraw::AddGroundPlane(float size, const Color& color)
 {
+	AddGroundPlane(size, 1.0f, color);
+}
+
+void SimpleDraw::AddGroundPlane(float size, float sizeCell, const Color& color)
+{
 	const float halfSize = size * 0.5f;
-	for (float i = -halfSize; i <= halfSize; i += 1.0f)
+	for (float i = -halfSize; i <= halfSize; i += sizeCell)
 	{
 		sInstance->AddLine({ i, 0.0f, -halfSize }, { i, 0.0f, halfSize }, color);
 		sInstance->AddLine({ halfSize, 0.0f,  -i }, { -halfSize, 0.0f, -i }, color);
