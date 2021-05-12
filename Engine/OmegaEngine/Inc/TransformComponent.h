@@ -8,6 +8,9 @@ namespace Omega
 	{
 	public:
 		META_CLASS_DECLARE
+		
+		// TODO : Ver como eh q usa isso nos videos do Peter
+		//SET_COMPONENT_ID(1)
 
 		void Initialize() override;
 		void Terminate() override;

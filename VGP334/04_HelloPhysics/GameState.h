@@ -12,6 +12,7 @@ public:
 	void Render() override;
 	void DebugUI() override;
 private:
+	void InitializeParticles(int maxParticles);
 
 	void UseRawParticles(int count);
 	void UseStickParticles(int count);

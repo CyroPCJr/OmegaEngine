@@ -40,6 +40,7 @@ void GameState::Initialize()
 	mClothCanadaFlag.Initialize(clothSettings);
 
 	mVecFrames.reserve(mMaxFrameSize);
+	InitializeParticles(1000); //Just for experiment
 }
 
 void GameState::Terminate()
@@ -116,7 +117,7 @@ void GameState::DebugUI()
 
 	if (ImGui::Button("Particles!"))
 	{
-		UseRawParticles(100);
+		UseRawParticles(1500);
 	}
 
 	if (ImGui::Button("Stick!"))
@@ -157,12 +158,24 @@ void GameState::DebugUI()
 	ImGui::End();
 }
 
+void GameState::InitializeParticles(int maxParticles)
+{
+	mPhysicsWorld.Clear(true);
+	for (int i = 0; i != maxParticles; ++i)
+	{
+		auto p = std::make_unique<Particle>();
+		mPhysicsWorld.AddParticle(p);
+	}
+}
+
 void GameState::UseRawParticles(int count)
 {
 	mClothBrazilFlag.SetShowCloth(false);
 	mClothCanadaFlag.SetShowCloth(false);
-	mPhysicsWorld.Clear(true);
-	for (int i = 0; i < count; ++i)
+	//mPhysicsWorld.Clear(true);
+	const auto& particlesList = mPhysicsWorld.GetParticles();
+	const size_t particleCount = particlesList.size();
+	for (int i = 0; i != count; ++i)
 	{
 		//Just for backup
 		/*auto p = new Particle();
@@ -172,13 +185,20 @@ void GameState::UseRawParticles(int count)
 		p->radius = 0.1f;
 		p->bounce = 0.3f;*/
 
-		auto p = std::make_unique<Particle>();
+		/*auto p = std::make_unique<Particle>();
 		p->SetPosition({ 0.0f, 5.0f, 0.0f });
 
 		p->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f) , Random::RandomFloat(-0.05f, 0.05f) });
 		p->radius = 0.1f;
 		p->bounce = 0.3f;
-		mPhysicsWorld.AddParticle(p);
+		mPhysicsWorld.AddParticle(p);*/
+		auto& particle = particlesList[i % particleCount];
+		particle->SetPosition({ 0.0f, 5.0f, 0.0f });
+
+		particle->SetVelocity(Random::RandomVector3({ -0.05f, 0.1f, -0.05f }, { 0.05f, 0.4f, 0.05f }));
+		particle->radius = 0.1f;
+		particle->bounce = 0.3f;
+
 	}
 }
 

@@ -17,6 +17,13 @@ namespace
 
 Bone* Omega::Graphics::FindBone(const Skeleton& skeleton, const char* boneName)
 {
+	//TODO: Try to test this aproach
+	/*auto find = std::find_if(skeleton.bones.begin(), skeleton.bones.end(), [&boneName](const std::string& name) 
+	{  
+		return name == boneName;
+	});
+	return find->get();*/
+
 	for (auto& bones : skeleton.bones)
 	{
 		if (bones->name == boneName)
@@ -54,12 +61,29 @@ void Omega::Graphics::DrawSkeleton(Bone* bone, const std::vector<Math::Matrix4>&
 		return;
 	}*/
 
-	auto currentPosition = GetTranslation(boneMatrices[bone->index]);
+	//bck
+	/*auto currentPosition = GetTranslation(boneMatrices[bone->index]);
 	for (auto& child : bone->children)
 	{
 		auto childPos = GetTranslation(boneMatrices[child->index]);
 		SimpleDraw::AddSphere(currentPosition + modelPosition, 1.0f, 2, 2, Colors::DarkCyan);
 		SimpleDraw::AddLine(currentPosition + modelPosition, childPos + modelPosition, Colors::Red);
+		DrawSkeleton(child, boneMatrices, modelPosition);
+	}*/
+
+	if (bone->parent)
+	{
+		auto& firstMatrix = boneMatrices[bone->index];
+		auto& parentMatrix = boneMatrices[bone->parent->index];
+		auto position = GetTranslation(firstMatrix);
+		auto parentPosition = GetTranslation(parentMatrix);
+		
+		SimpleDraw::AddSphere(position + modelPosition, 1.0f, 2, 2, Colors::DarkCyan);
+		SimpleDraw::AddLine(parentPosition + modelPosition, position + modelPosition, Colors::Red);
+	}
+
+	for (const auto& child : bone->children)
+	{
 		DrawSkeleton(child, boneMatrices, modelPosition);
 	}
 

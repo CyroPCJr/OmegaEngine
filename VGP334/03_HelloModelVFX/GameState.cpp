@@ -435,7 +435,7 @@ void GameState::DrawScene()
 	}
 	else
 	{
-		DrawSkeleton(mModel.skeleton, mAnimator.GetBoneMatrices(), mModelStartPosition);
+		DrawSkeleton(mModel.skeleton.root, mAnimator.GetBoneMatrices(), mModelStartPosition);
 	}
 
 	// Model 2
@@ -463,7 +463,7 @@ void GameState::DrawScene()
 	}
 	else
 	{
-		DrawSkeleton(mModel2.skeleton, mAnimatorModel2.GetBoneMatrices(), mModel2_StartPosition);
+		DrawSkeleton(mModel2.skeleton.root, mAnimatorModel2.GetBoneMatrices(), mModel2_StartPosition);
 	}
 
 	// Model 3
@@ -490,7 +490,7 @@ void GameState::DrawScene()
 	}
 	else
 	{
-		DrawSkeleton(mModel3.skeleton, mAnimatorModel3.GetBoneMatrices(), mModel3_StartPosition);
+		DrawSkeleton(mModel3.skeleton.root, mAnimatorModel3.GetBoneMatrices(), mModel3_StartPosition);
 	}
 
 	mTerrain.SetDirectionalLight(mDirectionalLight);

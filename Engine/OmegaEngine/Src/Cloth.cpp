@@ -7,6 +7,8 @@ using namespace Omega::Math;
 using namespace Omega::Physics;
 using namespace Omega::Core;
 
+
+
 void Cloth::Initialize(const Settings& settings)
 {
 	mSettings = settings;
