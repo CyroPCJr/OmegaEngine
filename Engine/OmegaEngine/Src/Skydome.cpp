@@ -17,7 +17,6 @@ void Skydome::Initialize(const std::filesystem::path& texturePath)
 	mSamplers.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
 	mSkyDomeTexture.Initialize(rootImages / texturePath);
 	mConstantBufferSkyDome.Initialize(sizeof(Matrix4));
-
 }
 
 void Skydome::SetSize(float radius, int rings, int slices)
@@ -32,7 +31,7 @@ void Skydome::Render(const Camera& camera)
 	auto matProj = camera.GetPerspectiveMatrix();
 
 	auto skyDomePos = Matrix4::Translation(mSkyDomePos);
-	auto transposeSkyDome = Transpose(skyDomePos * matView * matProj);;
+	auto transposeSkyDome = Transpose(skyDomePos * matView * matProj);
 
 	mConstantBufferSkyDome.BindVS();
 	mConstantBufferSkyDome.BindPS();

@@ -47,7 +47,7 @@ Path Dijkstras::Search(const Graph& graph, const Coord& start, const Coord& end,
 			auto currentNode = graph.GetNode(current);
 			if (currentNode)
 			{
-				for (auto neighbor : currentNode->neighbors)
+				for (auto& neighbor : currentNode->neighbors)
 				{
 					// if the neightbor is blocked, skip it
 					int neighborIndex = graph.GetIndex(neighbor);

@@ -17,7 +17,7 @@ GameObject* GameObjectFactory::Create(GameObjectAllocator& allocator, std::files
 		FILE* file = nullptr;
 		fopen_s(&file, templateFileName.u8string().c_str(), "r");
 
-		char readBuffer[65536];
+		char readBuffer[65536]{};
 		FileReadStream is(file, readBuffer, sizeof(readBuffer));
 		
 		Document document;

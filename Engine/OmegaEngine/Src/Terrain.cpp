@@ -1,6 +1,8 @@
 #include "Precompiled.h"
 #include "Terrain.h"
 
+#include <ImGui\Inc\imgui.h>
+
 using namespace Omega;
 
 void Terrain::Initialize(uint32_t numRows, uint32_t numCols, float cellSize)
@@ -71,7 +73,8 @@ void Terrain::SetDirectionalLight(const Graphics::DirectionalLight& light)
 
 void Terrain::Render(const Graphics::Camera& camera)
 {
-	auto world = Math::Matrix4::Identity;
+	//auto world = Math::Matrix4::Identity;
+	auto world = Math::Matrix4::Translation(mTerrainPosition);
 	auto view = camera.GetViewMatrix();
 	auto projection = camera.GetPerspectiveMatrix();
 
@@ -93,7 +96,18 @@ void Terrain::Render(const Graphics::Camera& camera)
 
 void Terrain::DrawEditorUI()
 {
+	const int max = 500.0f;
 
+	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::SliderFloat("Position X", &mTerrainPosition.x, 0.0f, max);
+	ImGui::SliderFloat("Position Y ", &mTerrainPosition.y, 0.0f, max);
+	ImGui::SliderFloat("Position Z", &mTerrainPosition.z, 0.0f, max);
+	ImGui::End();
+}
+
+void Terrain::SetPosition(const Math::Vector3& newPos)
+{
+	mTerrainPosition = newPos;
 }
 
 void Terrain::GenerateIndices()

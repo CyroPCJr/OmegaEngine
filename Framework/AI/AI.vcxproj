@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -188,6 +188,7 @@
     <ClInclude Include="Inc\SteeringBehavior.h" />
     <ClInclude Include="Inc\SteeringModule.h" />
     <ClInclude Include="Inc\Strategy.h" />
+    <ClInclude Include="Inc\VisualSensor.h" />
     <ClInclude Include="Inc\WanderBehaviour.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
@@ -207,6 +208,7 @@
     <ClCompile Include="Src\Graph.cpp" />
     <ClCompile Include="Src\HideBehaviour.cpp" />
     <ClCompile Include="src\Interpose.cpp" />
+    <ClCompile Include="src\MemoryRecord.cpp" />
     <ClCompile Include="Src\ObstacleAvoidance.cpp" />
     <ClCompile Include="Src\PerceptionModule.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">
@@ -219,6 +221,7 @@
     <ClCompile Include="Src\PursuitBehaviour.cpp" />
     <ClCompile Include="Src\SeparationBehaviour.cpp" />
     <ClCompile Include="Src\SteeringModule.cpp" />
+    <ClCompile Include="Src\VisualSensor.cpp" />
     <ClCompile Include="Src\WanderBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>

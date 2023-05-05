@@ -11,14 +11,14 @@ using namespace Omega::Core;
 void TileMap::Load()
 {
 	auto renderer = SpriteRendererManager::Get();
-
-	mTextureIds[0] = renderer->LoadTexture("grass.png");
-	mTextureIds[1] = renderer->LoadTexture("stone.png");
-	mTextureIds[2] = renderer->LoadTexture("tree0.png");
-	mTextureIds[3] = renderer->LoadTexture("tree1.png");
-	mTextureIds[4] = renderer->LoadTexture("tree2.png");
-	mTextureIds[5] = renderer->LoadTexture("tree3.png");
-	mCircle = renderer->LoadTexture("bullet2.png");
+	
+	mTextureIds[0] = renderer->LoadTexture("Sprites/grass.png");
+	mTextureIds[1] = renderer->LoadTexture("Sprites/stone.png");
+	mTextureIds[2] = renderer->LoadTexture("Sprites/tree0.png");
+	mTextureIds[3] = renderer->LoadTexture("Sprites/tree1.png");
+	mTextureIds[4] = renderer->LoadTexture("Sprites/tree2.png");
+	mTextureIds[5] = renderer->LoadTexture("Sprites/tree3.png");
+	mCircle = renderer->LoadTexture("Sprites/bullet2.png");
 
 	mColumns = 25;
 	mRows = 20;

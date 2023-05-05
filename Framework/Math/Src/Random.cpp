@@ -33,7 +33,7 @@ Vector2 Random::RandomUnitCircle()
 	return Normalize({ radius * cosf(angle), radius * sinf(angle) });
 }
 
-Vector3 Random::RandomVector3(const Omega::Math::Vector3& min, const Omega::Math::Vector3& max)
+Vector3 Random::RandomVector3(const Vector3& min, const Vector3& max)
 {
 	return { RandomFloat(min.x, max.x), RandomFloat(min.y, max.y), RandomFloat(min.z, max.z) };
 }

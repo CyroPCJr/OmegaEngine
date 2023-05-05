@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6cfdf1f0-6104-4aac-a461-c80822dd3300}</ProjectGuid>
-    <RootNamespace>HelloPathfinding</RootNamespace>
+    <ProjectGuid>{3c606088-9466-4664-9db7-5f69d801a116}</ProjectGuid>
+    <RootNamespace>HelloPerception</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -59,23 +59,23 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VSProps\Omega.props" />
     <Import Project="..\..\External\FW1FontWrapper_1_1\VSProps\FW1FontWrapper_1_1_Link.props" />
+    <Import Project="..\..\VSProps\Omega.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VSProps\Omega.props" />
     <Import Project="..\..\External\FW1FontWrapper_1_1\VSProps\FW1FontWrapper_1_1_Link.props" />
+    <Import Project="..\..\VSProps\Omega.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VSProps\Omega.props" />
     <Import Project="..\..\External\FW1FontWrapper_1_1\VSProps\FW1FontWrapper_1_1_Link.props" />
+    <Import Project="..\..\VSProps\Omega.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\VSProps\Omega.props" />
     <Import Project="..\..\External\FW1FontWrapper_1_1\VSProps\FW1FontWrapper_1_1_Link.props" />
+    <Import Project="..\..\VSProps\Omega.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -152,13 +152,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Carrier.cpp" />
     <ClCompile Include="GameState.cpp" />
-    <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Carrier.h" />
     <ClInclude Include="GameState.h" />
-    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="UnitTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -117,6 +117,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloPathfinding", "VGP332\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloSteering", "VGP332\HelloSteering\HelloSteering.vcxproj", "{C1904A68-A0C6-470A-B57E-5AA051951DCA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloPerception", "VGP332\HelloPerception\HelloPerception.vcxproj", "{3C606088-9466-4664-9DB7-5F69D801A116}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -413,6 +415,14 @@ Global
 		{C1904A68-A0C6-470A-B57E-5AA051951DCA}.Release|x64.Build.0 = Release|x64
 		{C1904A68-A0C6-470A-B57E-5AA051951DCA}.Release|x86.ActiveCfg = Release|Win32
 		{C1904A68-A0C6-470A-B57E-5AA051951DCA}.Release|x86.Build.0 = Release|Win32
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Debug|x64.ActiveCfg = Debug|x64
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Debug|x64.Build.0 = Debug|x64
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Debug|x86.ActiveCfg = Debug|Win32
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Debug|x86.Build.0 = Debug|Win32
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Release|x64.ActiveCfg = Release|x64
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Release|x64.Build.0 = Release|x64
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Release|x86.ActiveCfg = Release|Win32
+		{3C606088-9466-4664-9DB7-5F69D801A116}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -455,6 +465,7 @@ Global
 		{FB063F5C-4257-4F5D-ABFC-55399470611C} = {95A2E71E-3EAA-43E6-BCFF-2D21533A633C}
 		{6CFDF1F0-6104-4AAC-A461-C80822DD3300} = {95A2E71E-3EAA-43E6-BCFF-2D21533A633C}
 		{C1904A68-A0C6-470A-B57E-5AA051951DCA} = {95A2E71E-3EAA-43E6-BCFF-2D21533A633C}
+		{3C606088-9466-4664-9DB7-5F69D801A116} = {95A2E71E-3EAA-43E6-BCFF-2D21533A633C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38C2384C-B47D-4FAC-8347-46C3A4049A14}

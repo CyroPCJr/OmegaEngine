@@ -7,9 +7,10 @@ using namespace Omega::Math;
 
 Vector2 FleeBehaviour::Calculate(Agent& agent)
 {
-	const float panicDistance = 10.0f * 10.0f;
-	if (float distance = Magnitude(agent.position - agent.destination); 
-		distance == 0.0f || distance > panicDistance)
+	//TODO: fixed that later
+	const float panicDistance = 100.0f * 100.0f;
+	if (const float distance = Magnitude(agent.position - agent.destination); 
+		distance > panicDistance)
 	{
 		return Vector2::Zero;
 	}

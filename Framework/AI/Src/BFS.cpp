@@ -12,7 +12,7 @@ void BFS::Reset()
 	closed.clear();
 }
 
-Path BFS::Search(const Graph & graph, const Coord & start, const Coord & end, std::function<bool(Coord)> isBlocked)
+Path BFS::Search(const Graph& graph, const Coord& start, const Coord& end, std::function<bool(Coord)> isBlocked)
 {
 	Reset();
 
@@ -41,9 +41,9 @@ Path BFS::Search(const Graph & graph, const Coord & start, const Coord & end, st
 		{
 			auto currentNode = graph.GetNode(current);
 
-			if (currentNode) 
+			if (currentNode)
 			{
-				for (auto neighbor : currentNode->neighbors)
+				for (auto& neighbor : currentNode->neighbors)
 				{
 					int neighborIndex = graph.GetIndex(neighbor);
 					if (!opened[neighborIndex] && !isBlocked(neighbor))
@@ -54,7 +54,7 @@ Path BFS::Search(const Graph & graph, const Coord & start, const Coord & end, st
 					}
 				}
 			}
-			
+
 		}
 		//- close node;
 		closedList.push_back(current);
@@ -73,7 +73,7 @@ Path BFS::Search(const Graph & graph, const Coord & start, const Coord & end, st
 		}
 
 		path.reserve(trace.size());
-		for (auto node : trace)
+		for (auto& node : trace)
 		{
 			path.push_back(node);
 		}

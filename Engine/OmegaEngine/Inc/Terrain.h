@@ -15,6 +15,8 @@ namespace Omega
 
 		void Render(const Graphics::Camera& camera);
 		void DrawEditorUI();
+
+		void SetPosition(const Math::Vector3& newPos);
 	private:
 		void GenerateIndices();
 		void GenerateVertices();
@@ -27,6 +29,8 @@ namespace Omega
 			float padding; // to memory alignment
 			Graphics::DirectionalLight directionalLight;
 		};
+
+		Math::Vector3 mTerrainPosition = Math::Vector3::Zero;
 
 		Graphics::TypedConstantBuffer<ConstantData> mConstantBuffer;
 		Graphics::VertexShader mTerrainVertexShader;

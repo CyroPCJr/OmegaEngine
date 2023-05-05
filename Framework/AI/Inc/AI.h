@@ -42,6 +42,7 @@
 #include "MemoryRecord.h"
 #include "PerceptionModule.h"
 #include "Sensor.h"
+#include "VisualSensor.h"
 
 // Decisions Behaviours
 #include "DecisionModule.h"

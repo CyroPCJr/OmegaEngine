@@ -120,6 +120,7 @@ void GameState::Initialize()
 
 	// Load terrain 
 	mTerrain.Initialize(1200, 1200, 1.0f);
+	//mTerrain.SetPosition({ 0.0f, 250.0f,0.0f });
 	mTerrain.SetHeightScale(30.0f);
 
 	mSkydome.Initialize("hdri_sky.jpg");
@@ -297,6 +298,8 @@ void GameState::Render()
 
 void GameState::DebugUI()
 {
+	mTerrain.DrawEditorUI();
+
 	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -440,7 +443,7 @@ void GameState::DrawScene()
 
 	// Model 2
 	matWorld = Matrix4::Translation(mModel2_StartPosition);
-	
+
 	transformData.world = Transpose(matWorld);
 	transformData.wvp = Transpose(matWorld * matView * matProj);
 	transformData.viewPosition = mActiveCamera->GetPosition();
