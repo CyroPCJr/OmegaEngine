@@ -7,7 +7,7 @@
 #include <assimp/Importer.hpp>  // C++ importer interface
 #include <assimp/scene.h>		// Ouput data structure
 #include <assimp/postprocess.h> // Post processing flags
-#include <cstdio>
+#include <iostream>
 
 using namespace Omega::Graphics;
 using namespace Omega::Math;
@@ -22,7 +22,7 @@ struct Arguments
 	bool animOnly = false;
 };
 
-std::optional<Arguments> ParseArgs(int argc, char* argv[])
+std::optional<Arguments> ParseArgs(int argc, char* argv[]) noexcept
 {
 	// We need at least 3 arguments.
 	if (argc < 3)
@@ -51,39 +51,39 @@ std::optional<Arguments> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-void PrintUsage()
+void PrintUsage() noexcept
 {
-	printf_s("== ModelImporter Help ==\n\n"
+	std::cout << "== ModelImporter Help ==\n\n"
 		"Usage:\n"
 		"	ModelImporter.exe [Options] <InputFile> <OutputFile>\n\n"
 		"Options:\n"
-		"	-s	Scale applied to the model.\n");
+		"	-s	Scale applied to the model.\n";
 }
 
-inline Color Convert(const aiColor3D& c)
+inline Color Convert(const aiColor3D& c) noexcept
 {
 	return { c.r, c.g, c.b, 1.0f };
 }
 
-inline Vector3 Convert(const aiVector3D& v)
+inline Vector3 Convert(const aiVector3D& v) noexcept
 {
 	return { v.x, v.y, v.z };
 }
 
-inline Quaternion Convert(const aiQuaternion& q)
+inline Quaternion Convert(const aiQuaternion& q) noexcept
 {
 	return { q.x, q.y, q.z, q.w };
 }
 
-inline Matrix4 Convert(const aiMatrix4x4& m)
+inline Matrix4 Convert(const aiMatrix4x4& m) noexcept
 {
 	Matrix4 mat = *(reinterpret_cast<const Matrix4*>(&m));
 	return Transpose(mat);
 }
 
-void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, const std::string& filePath)
+void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, std::string_view filePath) noexcept
 {
-	printf_s("Extracting embedded texture...\n");
+	std::cout << "Extracting embedded texture...\n";
 
 	std::string fullFileName = args.outputFileName;
 	fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
@@ -91,13 +91,18 @@ void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, cons
 
 	FILE* file = nullptr;
 	fopen_s(&file, fullFileName.c_str(), "wb");
+	if (file == NULL)
+	{
+		std::cout << __FUNCTION__ << " Error to open file\n";
+		exit(1);
+	}
 	size_t written = fwrite(texture.pcData, 1, texture.mWidth, file);
 	OMEGAASSERT(written == texture.mWidth, "Error: Failed to extract embedded texture!");
 	fclose(file);
 }
 
 std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
-	aiTextureType textureType, const Arguments& args, const std::string& suffix)
+	aiTextureType textureType, const Arguments& args, std::string_view suffix)
 {
 	std::filesystem::path textureName;
 
@@ -119,14 +124,14 @@ std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
 
 				ExportEmbeddedTexture(*embeddedTexture, args, fileName);
 
-				printf_s("Exporting embedded texture to %s\n", fileName.c_str());
+				std::cout << "Exporting embedded texture to " << fileName.c_str() << '\n';
 				textureName = fileName;
 			}
 			else
 			{
 				std::filesystem::path filePath = texturePath.C_Str();
 				std::string fileName = filePath.filename().u8string();
-				printf_s("Adding texture %s\n", fileName.c_str());
+				std::cout << "Adding texture " << fileName.c_str() << '\n';
 				textureName = fileName;
 			}
 		}
@@ -141,9 +146,10 @@ int TryAddBone(const aiBone* inputBone, Skeleton& skeleton, BoneIndexLookup& bon
 	std::string name = inputBone->mName.C_Str();
 	OMEGAASSERT(!name.empty(), "Error: inputBone has no name!");
 
-	auto iter = boneIndexLookup.find(name);
-	if (iter != boneIndexLookup.end())
+	if (auto iter = boneIndexLookup.find(name); iter != boneIndexLookup.end())
+	{
 		return iter->second;
+	}
 
 	// Add a new bone in the skeleton for this
 	auto& newBone = skeleton.bones.emplace_back(std::make_unique<Bone>());
@@ -162,8 +168,7 @@ Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, B
 	Bone* bone = nullptr;
 
 	std::string name = sceneNode.mName.C_Str();
-	auto iter = boneIndexLookup.find(name);
-	if (iter != boneIndexLookup.end())
+	if (auto iter = boneIndexLookup.find(name); iter != boneIndexLookup.end())
 	{
 		// Bone already exists
 		bone = skeleton.bones[iter->second].get();
@@ -175,9 +180,13 @@ Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, B
 		bone->index = static_cast<int>(skeleton.bones.size()) - 1;
 		bone->offsetTransform = Matrix4::Identity;
 		if (name.empty())
+		{
 			bone->name = "NoName" + std::to_string(bone->index);
+		}
 		else
+		{
 			bone->name = std::move(name);
+		}
 
 		// Cache the bone index
 		boneIndexLookup.emplace(bone->name, bone->index);
@@ -202,10 +211,15 @@ void SaveModel(const Arguments& args, Model& model)
 {
 	// Reference
 	//https://www.programiz.com/c-programming/c-file-input-output
-	printf_s("Saving model: %s...\n", args.outputFileName);
+	std::cout << "Saving model: " << args.outputFileName << " ... \n";
 
 	FILE* file = nullptr;
 	fopen_s(&file, args.outputFileName, "w");
+	if (file == NULL)
+	{
+		std::cout << __FUNCTION__ << " Error to open file!\n";
+		exit(1);
+	}
 
 	const uint32_t meshCount = static_cast<uint32_t>(model.meshData.size());
 	fprintf_s(file, "MeshCount: %d\n", meshCount);
@@ -217,14 +231,16 @@ void SaveModel(const Arguments& args, Model& model)
 	}
 	fclose(file);
 
-	// For homework, save out model.materialData as well ...
-	// if diffuseMapName is empty  string, write <none>
 	FILE* fileMaterial = nullptr;
 	std::filesystem::path fileName = args.outputFileName;
 	fileName.replace_extension("materialData");
-	printf_s("Saving material data: %s...\n", fileName.u8string().c_str());
+	std::cout << "Saving material data: " << fileName.u8string().c_str() << " ... \n";
 	fopen_s(&fileMaterial, fileName.u8string().c_str(), "w");
-
+	if (fileMaterial == NULL)
+	{
+		std::cout << __FUNCTION__ " Error to open file!\n";
+		exit(1);
+	}
 	//fopen_s(&fileMaterial, args.outputFileName, "w");
 
 	const uint32_t materialCount = static_cast<uint32_t>(model.materialData.size());
@@ -245,10 +261,15 @@ void SaveSkeleton(const Arguments& args, const Skeleton& skeleton)
 	std::filesystem::path path = args.outputFileName;
 	path.replace_extension("skeleton");
 
-	printf_s("Saving skeleton: %s...\n", path.u8string().c_str());
+	std::cout << "Saving skeleton: " << path.u8string().c_str() << " ...\n";
 
 	FILE* file = nullptr;
 	fopen_s(&file, path.u8string().c_str(), "w");
+	if (file == NULL)
+	{
+		std::cout << __FUNCTION__ << " Error to open file!\n";
+		exit(1);
+	}
 
 	SkeletonIO::Write(file, skeleton);
 
@@ -260,20 +281,25 @@ void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet)
 	std::filesystem::path path = args.outputFileName;
 	path.replace_extension("animset");
 
-	printf_s("Saving animations: %s... \n", path.u8string().c_str());
+	std::cout << "Saving animations: " << path.u8string().c_str() << " ... \n";
 
 	FILE* file = nullptr;
 	fopen_s(&file, path.u8string().c_str(), "w");
-
+	if (file == NULL)
+	{
+		std::cout << __FUNCTION__ << " Error to open file!\n";
+		exit(1);
+	}
 	const uint32_t clipCount = static_cast<uint32_t>(animationSet.clips.size());
 	fprintf_s(file, "ClipCount: %d\n", clipCount);
-	for (uint32_t i = 0; i < clipCount; ++i)
+
+	for (const auto& animation : animationSet.clips)
 	{
-		fprintf_s(file, "Name: %s\n", animationSet.clips[i]->name.c_str());
-		fprintf_s(file, "Duration: %f\n", animationSet.clips[i]->duration);
-		fprintf_s(file, "TickPerSecond: %f\n", animationSet.clips[i]->tickPerSecond);
-		fprintf_s(file, "BoneAnimationCount: %d\n", static_cast<uint32_t>(animationSet.clips[i]->boneAnimations.size()));
-		AnimationIO::Write(file, *animationSet.clips[i]);
+		fprintf_s(file, "Name: %s\n", animation->name.c_str());
+		fprintf_s(file, "Duration: %f\n", animation->duration);
+		fprintf_s(file, "TickPerSecond: %f\n", animation->tickPerSecond);
+		fprintf_s(file, "BoneAnimationCount: %d\n", static_cast<uint32_t>(animation->boneAnimations.size()));
+		AnimationIO::Write(file, *animation);
 	}
 
 	fclose(file);
@@ -294,14 +320,13 @@ int main(int argc, char* argv[])
 	// Create an instance of the importer class to do the parsing for us.
 	Assimp::Importer importer;
 
-
 	// Try to import the model into a scene.
 	const aiScene* scene = importer.ReadFile(args.inputFileName,
 		aiProcessPreset_TargetRealtime_Quality | aiProcess_ConvertToLeftHanded);
 
 	if (!scene)
 	{
-		printf_s("Error: %s\n", importer.GetErrorString());
+		std::cout << "Error: " << importer.GetErrorString() << '\n';
 		return -1;
 	}
 	// scene
@@ -323,7 +348,7 @@ int main(int argc, char* argv[])
 
 	if (scene->HasMeshes())
 	{
-		printf("Reading mesh data...\n");
+		std::cout << "Reading mesh data...\n";
 
 		const uint32_t numMeshes = scene->mNumMeshes;
 		model.meshData.resize(numMeshes);
@@ -335,11 +360,11 @@ int main(int argc, char* argv[])
 			const uint32_t numFaces = inputMesh->mNumFaces;
 			const uint32_t numIndices = numFaces * 3;
 
-			printf_s("Reading material index...\n");
+			std::cout << "Reading material index...\n";
 
 			model.meshData[meshIndex].materialIndex = inputMesh->mMaterialIndex;
 
-			printf_s("Reading vertices...\n");
+			std::cout << "Reading vertices...\n";
 
 			std::vector<BoneVertex> vertices;
 			vertices.reserve(numVertices);
@@ -358,7 +383,7 @@ int main(int argc, char* argv[])
 				vertex.texcoord = texCoords ? Vector2(texCoords[i].x, texCoords[i].y) : 0.0f;
 			}
 
-			printf_s("Reading indices...\n");
+			std::cout << "Reading indices...\n";
 
 			std::vector<uint32_t> indices;
 			indices.reserve(numIndices);
@@ -366,14 +391,15 @@ int main(int argc, char* argv[])
 			const aiFace* faces = inputMesh->mFaces;
 			for (uint32_t i = 0; i < numFaces; ++i)
 			{
-				indices.push_back(faces[i].mIndices[0]);
-				indices.push_back(faces[i].mIndices[1]);
-				indices.push_back(faces[i].mIndices[2]);
+				auto& facess = faces[i];
+				indices.push_back(facess.mIndices[0]);
+				indices.push_back(facess.mIndices[1]);
+				indices.push_back(facess.mIndices[2]);
 			}
 
 			if (inputMesh->HasBones())
 			{
-				printf_s("Reading bones weights...\n");
+				std::cout << "Reading bones weights...\n";
 
 				std::vector<int> numWeights(vertices.size(), 0);
 
@@ -411,7 +437,7 @@ int main(int argc, char* argv[])
 	// Look for material data.
 	if (scene->HasMaterials())
 	{
-		printf_s("Reading materials...\n");
+		std::cout << "Reading materials...\n";
 		const uint32_t numMaterials = scene->mNumMaterials;
 		model.materialData.resize(numMaterials);
 
@@ -440,14 +466,14 @@ int main(int argc, char* argv[])
 	// Check if we have skeleton information.
 	if (!model.skeleton.bones.empty())
 	{
-		printf_s("Building skeleton...\n");
+		std::cout << "Building skeleton...\n";
 		BuildSkeleton(*scene->mRootNode, nullptr, model.skeleton, boneIndexLookup);
 	}
 
 	// Look for animation data.
 	if (scene->HasAnimations())
 	{
-		printf_s("Reading animations...\n");
+		std::cout << "Reading animations...\n";
 		for (uint32_t animIndex = 0; animIndex < scene->mNumAnimations; ++animIndex)
 		{
 			const aiAnimation* inputAnim = scene->mAnimations[animIndex];
@@ -464,7 +490,7 @@ int main(int argc, char* argv[])
 			animClip->duration = static_cast<float>(inputAnim->mDuration);
 			animClip->tickPerSecond = static_cast<float>(inputAnim->mTicksPerSecond);
 
-			printf_s("Reading bone animatons for %s ...\n", animClip->name.c_str());
+			std::cout << "Reading bone animatons for \n" << animClip->name.c_str() << " ...\n";
 
 			// Make sure we have the same number of slots for animationClip as the bones in the
 			// skeleton. This allows us to undex the animationClip using the bone index directly.
@@ -507,6 +533,6 @@ int main(int argc, char* argv[])
 	SaveSkeleton(args, model.skeleton);	// ../../Assets/Models/<name>.model
 	SaveAnimationSet(args, model.animationSet);
 
-	printf_s("All done!\n");
+	std::cout << "All done!\n";
 	return 0;
 }
