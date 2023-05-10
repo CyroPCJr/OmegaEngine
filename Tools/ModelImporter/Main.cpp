@@ -83,7 +83,7 @@ inline Matrix4 Convert(const aiMatrix4x4& m) noexcept
 
 void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, std::string_view filePath) noexcept
 {
-	LOG("Extracting embedded texture...\n");
+	std::cout << "Extracting embedded texture...\n";
 
 	std::string fullFileName = args.outputFileName;
 	fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
@@ -212,11 +212,7 @@ void SaveModel(const Arguments& args, Model& model) noexcept
 
 	FILE* file = nullptr;
 	fopen_s(&file, args.outputFileName, "w");
-	if (file == NULL)
-	{
-		std::cout << __FUNCTION__ << " Error to open file!\n";
-		exit(1);
-	}
+	OMEGAASSERT(file != NULL, "Error to open file! %s", __FUNCTION__);
 
 	const uint32_t meshCount = static_cast<uint32_t>(model.meshData.size());
 	fprintf_s(file, "MeshCount: %d\n", meshCount);
@@ -262,11 +258,7 @@ void SaveSkeleton(const Arguments& args, const Skeleton& skeleton) noexcept
 
 	FILE* file = nullptr;
 	fopen_s(&file, path.u8string().c_str(), "w");
-	if (file == NULL)
-	{
-		std::cout << __FUNCTION__ << " Error to open file!\n";
-		exit(1);
-	}
+	OMEGAASSERT(file != NULL, "Error to open file! %s", __FUNCTION__);
 
 	SkeletonIO::Write(file, skeleton);
 
@@ -282,11 +274,7 @@ void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet) n
 
 	FILE* file = nullptr;
 	fopen_s(&file, path.u8string().c_str(), "w");
-	if (file == NULL)
-	{
-		std::cout << __FUNCTION__ << " Error to open file!\n";
-		exit(1);
-	}
+	OMEGAASSERT(file != NULL, "Error to open file! %s", __FUNCTION__);
 	const uint32_t clipCount = static_cast<uint32_t>(animationSet.clips.size());
 	fprintf_s(file, "ClipCount: %d\n", clipCount);
 
