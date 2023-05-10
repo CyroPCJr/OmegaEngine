@@ -12,7 +12,7 @@
 using namespace Omega::Graphics;
 using namespace Omega::Math;
 
-using BoneIndexLookup = std::map<std::string, int>; // Used to lookup bone by name
+using BoneIndexLookup = std::map<std::string_view, int>; // Used to lookup bone by name
 
 struct Arguments
 {
@@ -91,18 +91,15 @@ void ExportEmbeddedTexture(const aiTexture& texture, const Arguments& args, std:
 
 	FILE* file = nullptr;
 	fopen_s(&file, fullFileName.c_str(), "wb");
-	if (file == NULL)
-	{
-		std::cout << __FUNCTION__ << " Error to open file\n";
-		exit(1);
-	}
+	OMEGAASSERT(file != NULL, "Error to open file! %s", __FUNCTION__);
+
 	size_t written = fwrite(texture.pcData, 1, texture.mWidth, file);
 	OMEGAASSERT(written == texture.mWidth, "Error: Failed to extract embedded texture!");
 	fclose(file);
 }
 
 std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
-	aiTextureType textureType, const Arguments& args, std::string_view suffix)
+	aiTextureType textureType, const Arguments& args, std::string_view suffix) noexcept
 {
 	std::filesystem::path textureName;
 
@@ -141,9 +138,9 @@ std::string FindTexture(const aiScene& scene, const aiMaterial& inputMaterial,
 
 // Check if inputBone exists in skeleton, if so just return the index.
 // Otherwise, add it to the skeleton. The aiBone must have a name!
-int TryAddBone(const aiBone* inputBone, Skeleton& skeleton, BoneIndexLookup& boneIndexLookup)
+int TryAddBone(const aiBone* inputBone, Skeleton& skeleton, BoneIndexLookup& boneIndexLookup) noexcept
 {
-	std::string name = inputBone->mName.C_Str();
+	std::string_view name = inputBone->mName.C_Str();
 	OMEGAASSERT(!name.empty(), "Error: inputBone has no name!");
 
 	if (auto iter = boneIndexLookup.find(name); iter != boneIndexLookup.end())
@@ -163,11 +160,11 @@ int TryAddBone(const aiBone* inputBone, Skeleton& skeleton, BoneIndexLookup& bon
 }
 
 // Recursively walk the aiScene tree and add/link bones to our skeleton as we find them.
-Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, BoneIndexLookup& boneIndexLookup)
+Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, BoneIndexLookup& boneIndexLookup) noexcept
 {
 	Bone* bone = nullptr;
 
-	std::string name = sceneNode.mName.C_Str();
+	std::string_view name = sceneNode.mName.C_Str();
 	if (auto iter = boneIndexLookup.find(name); iter != boneIndexLookup.end())
 	{
 		// Bone already exists
@@ -207,7 +204,7 @@ Bone* BuildSkeleton(const aiNode& sceneNode, Bone* parent, Skeleton& skeleton, B
 	return bone;
 }
 
-void SaveModel(const Arguments& args, Model& model)
+void SaveModel(const Arguments& args, Model& model) noexcept
 {
 	// Reference
 	//https://www.programiz.com/c-programming/c-file-input-output
@@ -215,11 +212,7 @@ void SaveModel(const Arguments& args, Model& model)
 
 	FILE* file = nullptr;
 	fopen_s(&file, args.outputFileName, "w");
-	if (file == NULL)
-	{
-		std::cout << __FUNCTION__ << " Error to open file!\n";
-		exit(1);
-	}
+	OMEGAASSERT(file != NULL, "Error to open file! %s", __FUNCTION__);
 
 	const uint32_t meshCount = static_cast<uint32_t>(model.meshData.size());
 	fprintf_s(file, "MeshCount: %d\n", meshCount);
@@ -256,7 +249,7 @@ void SaveModel(const Arguments& args, Model& model)
 	fclose(fileMaterial);
 }
 
-void SaveSkeleton(const Arguments& args, const Skeleton& skeleton)
+void SaveSkeleton(const Arguments& args, const Skeleton& skeleton) noexcept
 {
 	std::filesystem::path path = args.outputFileName;
 	path.replace_extension("skeleton");
@@ -265,18 +258,14 @@ void SaveSkeleton(const Arguments& args, const Skeleton& skeleton)
 
 	FILE* file = nullptr;
 	fopen_s(&file, path.u8string().c_str(), "w");
-	if (file == NULL)
-	{
-		std::cout << __FUNCTION__ << " Error to open file!\n";
-		exit(1);
-	}
+	OMEGAASSERT(file != NULL, "Error to open file! %s", __FUNCTION__);
 
 	SkeletonIO::Write(file, skeleton);
 
 	fclose(file);
 }
 
-void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet)
+void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet) noexcept
 {
 	std::filesystem::path path = args.outputFileName;
 	path.replace_extension("animset");
@@ -285,11 +274,7 @@ void SaveAnimationSet(const Arguments& args, const AnimationSet& animationSet)
 
 	FILE* file = nullptr;
 	fopen_s(&file, path.u8string().c_str(), "w");
-	if (file == NULL)
-	{
-		std::cout << __FUNCTION__ << " Error to open file!\n";
-		exit(1);
-	}
+	OMEGAASSERT(file != NULL, "Error to open file! %s", __FUNCTION__);
 	const uint32_t clipCount = static_cast<uint32_t>(animationSet.clips.size());
 	fprintf_s(file, "ClipCount: %d\n", clipCount);
 
