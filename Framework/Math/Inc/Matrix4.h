@@ -1,6 +1,6 @@
 #pragma once
-// const for PI
-constexpr float M_PI = 3.14159265358979323846264338327950288f;
+// reference: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4201?view=msvc-170
+#pragma warning(disable : 4201)
 
 namespace Omega::Math
 {
@@ -10,14 +10,14 @@ namespace Omega::Math
 	{
 		union
 		{
-			struct  // row + collum subscripts
+			struct // row + collum subscripts
 			{
 				float _11, _12, _13, _14;
 				float _21, _22, _23, _24;
 				float _31, _32, _33, _34;
 				float _41, _42, _43, _44;
 			};
-			std::array<float, 16>v;
+			std::array<float, 16> v;
 		};
 
 
@@ -102,7 +102,7 @@ namespace Omega::Math
 
 		inline Matrix4 operator*=(const Matrix4& m)
 		{
-			Matrix4 aux;
+			Matrix4 aux{};
 			aux._11 = (_11 * m._11) + (_12 * m._21) + (_13 * m._31) + (_14 * m._41);
 			aux._12 = (_11 * m._12) + (_12 * m._22) + (_13 * m._32) + (_14 * m._42);
 			aux._13 = (_11 * m._13) + (_12 * m._23) + (_13 * m._33) + (_14 * m._43);
@@ -130,12 +130,12 @@ namespace Omega::Math
 			return *this;
 		}
 
-		constexpr Matrix4 operator*(const float v)
+		constexpr Matrix4 operator*(const float p)
 		{
-			_11 *= v; _12 *= v; _13 *= v; _14 *= v;
-			_21 *= v; _22 *= v; _23 *= v; _24 *= v;
-			_31 *= v; _32 *= v; _33 *= v; _34 *= v;
-			_41 *= v; _42 *= v; _43 *= v; _44 *= v;
+			_11 *= p; _12 *= p; _13 *= p; _14 *= p;
+			_21 *= p; _22 *= p; _23 *= p; _24 *= p;
+			_31 *= p; _32 *= p; _33 *= p; _34 *= p;
+			_41 *= p; _42 *= p; _43 *= p; _44 *= p;
 			return *this;
 		}
 
@@ -235,7 +235,7 @@ namespace Omega::Math
 		*/
 		static float rad2deg(float rad)
 		{
-			return rad * (180.f / M_PI);
+			return rad * Constants::RadToDeg;
 		}
 
 		static Matrix4 RotationX(float radian)

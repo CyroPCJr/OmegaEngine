@@ -8,25 +8,25 @@ const Vector2 Vector2::One{ 1.0f, 1.0f };
 const Vector2 Vector2::XAxis{ 1.0f, 0.0f };
 const Vector2 Vector2::YAxis{ 0.0f, 1.0f };
 
-const Vector3 Vector3::Zero{ 0.0f };
-const Vector3 Vector3::One{ 1.0f };
-const Vector3 Vector3::XAxis{ 1.0f, 0.0f,0.0f };
-const Vector3 Vector3::YAxis{ 0.0f, 1.0f,0.0f };
-const Vector3 Vector3::ZAxis{ 0.0f, 0.0f,1.0f };
+constexpr Vector3 Vector3::Zero{ 0.0f };
+constexpr Vector3 Vector3::One{ 1.0f };
+constexpr Vector3 Vector3::XAxis{ 1.0f, 0.0f,0.0f };
+constexpr Vector3 Vector3::YAxis{ 0.0f, 1.0f,0.0f };
+constexpr Vector3 Vector3::ZAxis{ 0.0f, 0.0f,1.0f };
 
-const Matrix3 Matrix3::Identity{ 1.0f, 0.0f, 0.0f,
+constexpr Matrix3 Matrix3::Identity{ 1.0f, 0.0f, 0.0f,
 								 0.0f, 1.0f, 0.0f,
 								 0.0f, 0.0f, 1.0f };
-const Matrix3 Matrix3::Zero{ 0.0f };
+constexpr Matrix3 Matrix3::Zero{ 0.0f };
 
-const Matrix4 Matrix4::Identity{ 1.0f, 0.0f, 0.0f, 0.0f,
+constexpr Matrix4 Matrix4::Identity{ 1.0f, 0.0f, 0.0f, 0.0f,
 								 0.0f, 1.0f, 0.0f, 0.0f,
 								 0.0f, 0.0f, 1.0f, 0.0f,
 								 0.0f, 0.0f, 0.0f, 1.0f };
-const Matrix4 Matrix4::Zero{ 0.0f };
+constexpr Matrix4 Matrix4::Zero{ 0.0f };
 
-const Quaternion Quaternion::Zero{ 0.0f , 0.0f, 0.0f ,0.0f };
-const Quaternion Quaternion::Identity{ 0.0f , 0.0f, 0.0f ,1.0f };
+constexpr Quaternion Quaternion::Zero{ 0.0f , 0.0f, 0.0f ,0.0f };
+constexpr Quaternion Quaternion::Identity{ 0.0f , 0.0f, 0.0f ,1.0f };
 
 
 Matrix4 Matrix4::RotationAxis(const Vector3& axis, float rad)
@@ -84,7 +84,6 @@ Matrix4 Matrix4::Transform(const Vector3& translation, const Quaternion& rotatio
 	transform._42 = translation.y;
 	transform._43 = translation.z;
 	return transform;
-
 }
 
 Quaternion Quaternion::RotationAxis(const Vector3& axis, float rad)
@@ -153,17 +152,17 @@ Quaternion Quaternion::RotationLook(const Vector3& direction, const Vector3& up)
 		orth.x,	orth.y, orth.z, 0.0f,
 		right.x, right.y, right.z, 0.0f,
 		forward.x, forward.y, forward.z, 0.0f,
-		0.0f,0
+		0.0f, 0.0f
 	};
 	return RotationMatrix(m);
 }
 
-Quaternion Quaternion::RotationFromTo(Vector3 from, Vector3 to)
+Quaternion Quaternion::RotationFromTo(Vector3& from, Vector3& to)
 {
 	from = Normalize(from);
 	to = Normalize(to);
 
-	float cosTheta = Dot(from, to);
+	const float cosTheta = Dot(from, to);
 	Vector3 rotationAxis;
 	if (cosTheta >= 1.0f) // If dot == 1, vectors are the same
 	{
@@ -176,7 +175,7 @@ Quaternion Quaternion::RotationFromTo(Vector3 from, Vector3 to)
 		// So guess one; any will do as long as it's perpendicular to start
 		rotationAxis = Cross(Vector3::ZAxis, from);
 
-		if (Magnitude(rotationAxis) < 0.01)
+		if (Magnitude(rotationAxis) < 0.01f)
 		{
 			// bad luck, they were parallel, try again!
 			rotationAxis = Cross(Vector3::XAxis, from);
@@ -289,8 +288,8 @@ bool Omega::Math::Intersect(const Ray& ray, const Plane& plane, float& distance)
 
 bool Omega::Math::IsContained(const Vector3& point, const AABB& aabb)
 {
-	auto min = aabb.Min();
-	auto max = aabb.Max();
+	const auto min = aabb.Min();
+	const auto max = aabb.Max();
 	if ((point.x < min.x) || (point.x > max.x) ||
 		(point.y < min.y) || (point.y > max.y) ||
 		(point.z < min.z) || (point.y > max.z))
