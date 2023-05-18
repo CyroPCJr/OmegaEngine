@@ -161,7 +161,7 @@ namespace MathTest
 
 		TEST_METHOD(TestFromFromTo)
 		{
-			Quaternion q0 = Quaternion::RotationFromTo({ 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f });
+			Quaternion q0 = Quaternion::RotationFromTo(Vector3{ 0.0f, 0.0f, 1.0f }, Vector3{ 1.0f, 1.0f, 1.0f });
 
 			Assert::AreEqual(q0.x, -0.325057596f, tolerance);
 			Assert::AreEqual(q0.y, 0.325057596f, tolerance);

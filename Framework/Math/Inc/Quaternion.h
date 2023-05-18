@@ -1,4 +1,6 @@
 #pragma once
+// reference: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4201?view=msvc-170
+#pragma warning(disable : 4201)
 
 namespace Omega::Math
 {
@@ -16,6 +18,7 @@ namespace Omega::Math
 
 		constexpr Quaternion() noexcept : x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
 		constexpr Quaternion(float t_x, float t_y, float t_z, float t_w) noexcept : x(t_x), y(t_y), z(t_z), w(t_w) {}
+		constexpr Quaternion(const Vector3& vec, float t_w) noexcept : x(vec.x), y(vec.y), z(vec.z), w(t_w) {}
 
 		const static Quaternion Zero;
 		const static Quaternion Identity;
@@ -23,7 +26,7 @@ namespace Omega::Math
 		static Quaternion RotationAxis(const Vector3& axis, float rad);
 		static Quaternion RotationMatrix(const Matrix4& matrix);
 		static Quaternion RotationLook(const Vector3& direction, const Vector3& up = Vector3::YAxis);
-		static Quaternion RotationFromTo(Vector3 from, Vector3 to);
+		static Quaternion RotationFromTo(Vector3& from, Vector3& to);
 
 #pragma region operator overloading
 

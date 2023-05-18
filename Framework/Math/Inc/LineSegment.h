@@ -7,8 +7,7 @@ namespace Omega::Math
 		Vector2 from = Vector2::Zero;
 		Vector2 to = Vector2::Zero;
 
-		LineSegment() :to(), from() {}
-		LineSegment(float x0, float y0, float x1, float y1) : to(), from() {}
-		LineSegment(Vector2 v0, Vector2 v1) : to(v0), from(v1) {}
+		constexpr LineSegment() noexcept :to(), from() {}
+		constexpr LineSegment(Vector2 v0, Vector2 v1) noexcept : to(v0), from(v1) {}
 	};
 }

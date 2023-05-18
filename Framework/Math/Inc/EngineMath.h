@@ -114,7 +114,7 @@ namespace Omega::Math
 
 	inline Vector2 Normalize(const Vector2& v)
 	{
-		if (const float lenght = Magnitude(v); 
+		if (const float lenght = Magnitude(v);
 			lenght > 0.0f)
 		{
 			const float invNorm = 1.0f / lenght;
@@ -131,7 +131,7 @@ namespace Omega::Math
 	inline Vector2 Truncate(const Vector2& v, float max)
 	{
 		const float lenght = Magnitude(v);
-		if (const float i = (lenght != 0.0f) ? max / lenght : 0.0f; 
+		if (const float i = (lenght != 0.0f) ? max / lenght : 0.0f;
 			i < 1.0f)
 		{
 			return v * i;
@@ -176,8 +176,7 @@ namespace Omega::Math
 
 	inline Vector3 Normalize(const Vector3& v)
 	{
-		const float lenght = Magnitude(v);
-		if (lenght > 0.0f)
+		if (const float lenght = Magnitude(v); lenght > 0.0f)
 		{
 			const float invNorm = 1.0f / lenght;
 			return { v * invNorm };
@@ -243,10 +242,10 @@ namespace Omega::Math
 
 	constexpr float Determinant(const Matrix4& m)
 	{
-		float cofactor1 = m._11 * ((m._22 * ((m._33 * m._44) - (m._34 * m._43))) - ((m._23 * ((m._32 * m._44) - (m._34 * m._42)))) + ((m._24 * ((m._32 * m._43) - (m._33 * m._42)))));
-		float cofactor2 = m._12 * ((m._21 * ((m._33 * m._44) - (m._34 * m._43))) - ((m._23 * ((m._31 * m._44) - (m._34 * m._41)))) + ((m._24 * ((m._31 * m._43) - (m._33 * m._41)))));
-		float cofactor3 = m._13 * ((m._21 * ((m._32 * m._44) - (m._34 * m._42))) - ((m._22 * ((m._31 * m._44) - (m._34 * m._41)))) + ((m._24 * ((m._31 * m._42) - (m._32 * m._41)))));
-		float cofactor4 = m._14 * ((m._21 * ((m._32 * m._43) - (m._33 * m._42))) - ((m._22 * ((m._31 * m._43) - (m._33 * m._41)))) + ((m._23 * ((m._31 * m._42) - (m._32 * m._41)))));
+		const float cofactor1 = m._11 * ((m._22 * ((m._33 * m._44) - (m._34 * m._43))) - ((m._23 * ((m._32 * m._44) - (m._34 * m._42)))) + ((m._24 * ((m._32 * m._43) - (m._33 * m._42)))));
+		const float cofactor2 = m._12 * ((m._21 * ((m._33 * m._44) - (m._34 * m._43))) - ((m._23 * ((m._31 * m._44) - (m._34 * m._41)))) + ((m._24 * ((m._31 * m._43) - (m._33 * m._41)))));
+		const float cofactor3 = m._13 * ((m._21 * ((m._32 * m._44) - (m._34 * m._42))) - ((m._22 * ((m._31 * m._44) - (m._34 * m._41)))) + ((m._24 * ((m._31 * m._42) - (m._32 * m._41)))));
+		const float cofactor4 = m._14 * ((m._21 * ((m._32 * m._43) - (m._33 * m._42))) - ((m._22 * ((m._31 * m._43) - (m._33 * m._41)))) + ((m._23 * ((m._31 * m._42) - (m._32 * m._41)))));
 		float det = cofactor1 - cofactor2 + cofactor3 - cofactor4;
 		return det;
 	}
@@ -345,7 +344,7 @@ namespace Omega::Math
 	inline Quaternion Normalize(const Quaternion& q)
 	{
 		const float length = Magnitude(q);
-		OMEGAASSERT(length != 0, "[Quaternion] Length cannot be zero.");
+		OMEGAASSERT(length != 0.0f, "[Quaternion] Length cannot be zero.");
 		if (length == 1.0f)
 		{
 			return q;

@@ -1,4 +1,6 @@
 #pragma once
+// reference: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4201?view=msvc-170
+#pragma warning(disable : 4201)
 
 namespace Omega::Math
 {
