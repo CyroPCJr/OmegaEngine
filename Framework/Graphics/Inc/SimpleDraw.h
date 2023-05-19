@@ -17,8 +17,8 @@ namespace Omega::Graphics::SimpleDraw
 	void AddBox(float length, const Color& color);
 	void AddSphere(const Math::Vector3& position, float radius, int rings, int slices, const Color& color);
 	void AddGroundPlane(float size, const Color& color = Colors::DarkGray);
-	void AddGroundPlane(float size, float sizeCell, const Color& color = Colors::DarkGray);
-	void AddBone(const Math::Matrix4& transform, const Color& color, bool fill);
+	void AddBone(const Math::Matrix4& transform, const Color& color);
+	void AddBone(const Math::Vector3& base, const Math::Vector3& direction, const Color& color, float radius, bool fill);
 	void AddTransform(const Math::Matrix4& transform);
 	void AddOBB(const Math::OBB& obb, const Color& color);
 	void AddAABB(const Math::AABB& aabb, const Color& color);
