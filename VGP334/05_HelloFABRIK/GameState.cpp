@@ -106,8 +106,6 @@ void GameState::DebugUI()
 	ImGui::Begin("Physics", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	DrawCounterFramesUI(true);
 	ImGui::End();
-
-	
 }
 
 void GameState::DrawCounterFramesUI(bool active)
