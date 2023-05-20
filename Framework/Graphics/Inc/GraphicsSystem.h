@@ -27,10 +27,11 @@ namespace Omega::Graphics {
 		void ToggleFullscreen();
 		void Resize(uint32_t width, uint32_t height);
 
+
 		void ResetRenderTarget();
 		void ResetViewport();
 
-		void SetClearColor(Color clearColor) { mClearColor = clearColor; }
+		void SetClearColor(const Color& clearColor) { mClearColor = clearColor; }
 		void SetVSync(bool vSync) { mVSync = vSync ? 1 : 0; }
 
 		uint32_t GetBackBufferWidth() const;
@@ -47,6 +48,8 @@ namespace Omega::Graphics {
 
 		friend ID3D11Device* GetDevice();
 		friend ID3D11DeviceContext* GetContext();
+
+		void SetupRenderTargetView();
 
 		// memory device pointer
 		ID3D11Device* mD3DDevice = nullptr;

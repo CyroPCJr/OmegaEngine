@@ -15,9 +15,9 @@ namespace Omega::Graphics
 	class ModelLoader
 	{
 	public :
-		static void LoadModel(std::filesystem::path fileName, Model& model);
-		static void LoadSkeleton(std::filesystem::path fileName, Skeleton& model);
-		static void LoadAnimationSet(std::filesystem::path fileName, AnimationSet& animationSet);
+		static void LoadModel(const std::filesystem::path& fileName, Model& model);
+		static void LoadSkeleton(const std::filesystem::path& fileName, Skeleton& model);
+		static void LoadAnimationSet(const std::filesystem::path& fileName, AnimationSet& animationSet);
 	};
 
 	class Model

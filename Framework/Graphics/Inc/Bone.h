@@ -7,7 +7,7 @@ namespace Omega::Graphics
 	struct Bone
 	{
 		std::string name;
-		int index;
+		int index = 0;
 
 		Bone* parent = nullptr;
 		int parentIndex = -1;
@@ -15,8 +15,8 @@ namespace Omega::Graphics
 		std::vector<Bone*> children;
 		std::vector<int> childIndices;
 
-		Math::Matrix4 toParentTransform;
-		Math::Matrix4 offsetTransform;
+		Math::Matrix4 toParentTransform = Math::Matrix4::Identity;
+		Math::Matrix4 offsetTransform = Math::Matrix4::Identity;
 	};
 
 }
