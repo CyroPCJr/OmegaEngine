@@ -13,7 +13,7 @@ namespace Omega::Graphics
 		int parentIndex = -1;
 
 		std::vector<Bone*> children;
-		std::vector<int> childIndices;
+		std::vector<uint32_t> childIndices;
 
 		Math::Matrix4 toParentTransform = Math::Matrix4::Identity;
 		Math::Matrix4 offsetTransform = Math::Matrix4::Identity;

@@ -46,28 +46,8 @@ void RenderTarget::Initialize(uint32_t width, uint32_t height, Format fomat)
 	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
-
-	auto device = GetDevice();
-	ID3D11Texture2D* texture = nullptr;
-	HRESULT hr = device->CreateTexture2D(&desc, nullptr, &texture);
-	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create render texture.");
-
-	hr = device->CreateShaderResourceView(texture, nullptr, &mShaderResourceView);
-	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create shader resource view.");
 	
-	hr = device->CreateRenderTargetView(texture, nullptr, &mRenderTargetView);
-	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create render target view.");
-
-	desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-	hr = device->CreateTexture2D(&desc, nullptr, &texture);
-	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create depth stencil texture.");
-
-	hr = device->CreateDepthStencilView(texture, nullptr, &mDepthStencilView);
-	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create depth stencil view.");
-	SafeRelease(texture);
-
+	SetDeviceInitialize(&desc);
 	mViewPort.TopLeftX = 0.0f;
 	mViewPort.TopLeftY = 0.0f;
 	mViewPort.Width = static_cast<float>(width);
@@ -109,4 +89,28 @@ void RenderTarget::UnBindPS(uint32_t slot)
 {
 	static ID3D11ShaderResourceView* dummy = nullptr;
 	GetContext()->PSSetShaderResources(slot, 1, &dummy);
+}
+
+void RenderTarget::SetDeviceInitialize(D3D11_TEXTURE2D_DESC* desc)
+{
+	auto device = GetDevice();
+	ID3D11Texture2D* texture = nullptr;
+	HRESULT hr = device->CreateTexture2D(desc, nullptr, &texture);
+	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create render texture.");
+
+	hr = device->CreateShaderResourceView(texture, nullptr, &mShaderResourceView);
+	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create shader resource view.");
+
+	hr = device->CreateRenderTargetView(texture, nullptr, &mRenderTargetView);
+	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create render target view.");
+
+	desc->Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	desc->BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	hr = device->CreateTexture2D(desc, nullptr, &texture);
+	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create depth stencil texture.");
+
+	hr = device->CreateDepthStencilView(texture, nullptr, &mDepthStencilView);
+	OMEGAASSERT(SUCCEEDED(hr), "[RenderTarget] Failed to create depth stencil view.");
+	SafeRelease(texture);
 }

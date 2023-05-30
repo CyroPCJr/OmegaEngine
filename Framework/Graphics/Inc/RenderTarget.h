@@ -33,6 +33,8 @@ namespace Omega::Graphics
 		void* GetShaderResourceView() const { return mShaderResourceView; };
 
 	private:
+		void SetDeviceInitialize(D3D11_TEXTURE2D_DESC* desc);
+
 		ID3D11ShaderResourceView* mShaderResourceView = nullptr;
 		ID3D11RenderTargetView* mRenderTargetView = nullptr;
 		ID3D11DepthStencilView* mDepthStencilView = nullptr;

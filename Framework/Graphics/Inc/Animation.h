@@ -20,8 +20,8 @@ namespace Omega::Graphics
 		friend class AnimationBuilder;
 		friend class AnimationIO;
 
-		PositionKeys mPositionKeys;
 		RotationKeys mRotationKeys;
+		PositionKeys mPositionKeys;
 		ScaleKeys mScaleKeys;
 
 		bool mLooping = false;

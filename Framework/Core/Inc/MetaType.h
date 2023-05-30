@@ -28,6 +28,8 @@ namespace Omega::Core::Meta
 			size_t size,
 			DeserializeFunc deserialize = nullptr);
 
+		virtual ~MetaType() = default;
+
 		Category GetCategory() const { return mCategory; }
 		const char* GetName() const { return mName.c_str(); }
 		size_t GetSize() const { return mSize; }
@@ -35,9 +37,9 @@ namespace Omega::Core::Meta
 		virtual void Deserialize(void* instance, const rapidjson::Value& jsonValue) const;
 
 	private:
+		const DeserializeFunc mDeserialize;
 		const Category mCategory;
 		const std::string mName;
 		const size_t mSize;
-		const DeserializeFunc mDeserialize;
 	};
 }

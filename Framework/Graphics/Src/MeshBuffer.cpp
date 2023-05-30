@@ -14,7 +14,7 @@ void MeshBuffer::Initialize(const void* vertices, int vertexSize, int vertexCoun
 
 	// size in memory bytes
 	D3D11_BUFFER_DESC bufferDesc{};
-	bufferDesc.ByteWidth = vertexCount * mVertexSize;
+	bufferDesc.ByteWidth = static_cast<size_t>(vertexCount * mVertexSize);
 	bufferDesc.Usage = dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = dynamic ? D3D11_CPU_ACCESS_WRITE : 0; // Use CPU

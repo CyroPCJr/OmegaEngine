@@ -43,8 +43,8 @@ namespace Omega::Math
 		{
 			int h = hash & 15;
 			// Convert lower 4 bits of hash into 12 gradient directions
-			float u = (h < 8.0f) ? x : y;
-			float v = (h < 4.0f) ? y : (h == 12.0f || h == 14.0f) ? x : z;
+			float u = (h < 8) ? x : y;
+			float v = (h < 4) ? y : (h == 12 || h == 14) ? x : z;
 			return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 		}
 
