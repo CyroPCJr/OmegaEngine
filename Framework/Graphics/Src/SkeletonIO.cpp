@@ -45,12 +45,13 @@ void SkeletonIO::Write(FILE* file, const Skeleton& skeleton)
 
 void SkeletonIO::Read(FILE* file, Skeleton& skeleton)
 {
+	//TODO: Test this function...
 	uint32_t skeletonCount = static_cast<uint32_t>(skeleton.bones.size());
 	for (size_t i = 0; i < skeletonCount; ++i)
 	{
 		auto bone = std::make_unique<Bone>();
-		char name[128];
-		fscanf_s(file, "%s\n", &name, static_cast<uint32_t>(sizeof(name)));
+		char name[128]{};
+		fscanf_s(file, "%s\n", &name, sizeof(name));
 		bone->name = name;
 		fscanf_s(file, "Index: %d\n", &bone->index);
 		fscanf_s(file, "Parent Index: %d\n", &bone->parentIndex);
@@ -58,7 +59,7 @@ void SkeletonIO::Read(FILE* file, Skeleton& skeleton)
 		ReadMatrix(file, bone->offsetTransform);
 		uint32_t childCount = 0;
 		fscanf_s(file, "ChildCount: %d\n", &childCount);
-		for (uint32_t i = 0; i < childCount; ++i)
+		for (uint32_t j = 0; j < childCount; ++j)
 		{
 			uint32_t idx = 0;
 			fscanf_s(file, "Child index: %d\n", &idx);

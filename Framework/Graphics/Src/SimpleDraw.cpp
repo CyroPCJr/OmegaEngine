@@ -20,7 +20,7 @@ namespace Omega::Graphics
 	{
 	public:
 
-		void Initialize(uint32_t maxVertexCount)
+		void Initialize(unsigned int maxVertexCount)
 		{
 			mVertexShader.Initialize("../../Assets/Shaders/SimpleDraw.fx", VertexPC::Format);
 			mPixelShader.Initialize("../../Assets/Shaders/SimpleDraw.fx");
@@ -71,47 +71,47 @@ namespace Omega::Graphics
 
 		void AddBox(float length, const Color& color)
 		{
-			AddLine(Math::Vector3{ -length, -length , -length }, Math::Vector3{ length, -length , -length }, color);
-			AddLine(Math::Vector3{ -length, -length , -length }, Math::Vector3{ -length, length , -length }, color);
-			AddLine(Math::Vector3{ -length, -length , -length }, Math::Vector3{ -length, -length , length }, color);
-			AddLine(Math::Vector3{ -length, length , -length }, Math::Vector3{ length, length , -length }, color);
-			AddLine(Math::Vector3{ -length, length , -length }, Math::Vector3{ -length, length , length }, color);
-			AddLine(Math::Vector3{ length, length , -length }, Math::Vector3{ length, length , length }, color);
-			AddLine(Math::Vector3{ length, length , length }, Math::Vector3{ -length, length , length }, color);
-			AddLine(Math::Vector3{ length, length , -length }, Math::Vector3{ length, -length , -length }, color);
-			AddLine(Math::Vector3{ length, -length , -length }, Math::Vector3{ length, -length , length }, color);
-			AddLine(Math::Vector3{ length, length , length }, Math::Vector3{ -length, length , length }, color);
-			AddLine(Math::Vector3{ length, length , length }, Math::Vector3{ length, -length , length }, color);
-			AddLine(Math::Vector3{ length, -length , length }, Math::Vector3{ -length, -length , length }, color);
-			AddLine(Math::Vector3{ -length, -length , length }, Math::Vector3{ -length, length , length }, color);
+			AddLine(Math::Vector3{ -length, -length, -length }, Math::Vector3{ length, -length, -length }, color);
+			AddLine(Math::Vector3{ -length, -length, -length }, Math::Vector3{ -length, length, -length }, color);
+			AddLine(Math::Vector3{ -length, -length, -length }, Math::Vector3{ -length, -length, length }, color);
+			AddLine(Math::Vector3{ -length, length, -length }, Math::Vector3{ length, length, -length }, color);
+			AddLine(Math::Vector3{ -length, length, -length }, Math::Vector3{ -length, length, length }, color);
+			AddLine(Math::Vector3{ length, length, -length }, Math::Vector3{ length, length, length }, color);
+			AddLine(Math::Vector3{ length, length, length }, Math::Vector3{ -length, length, length }, color);
+			AddLine(Math::Vector3{ length, length, -length }, Math::Vector3{ length, -length, -length }, color);
+			AddLine(Math::Vector3{ length, -length, -length }, Math::Vector3{ length, -length, length }, color);
+			AddLine(Math::Vector3{ length, length, length }, Math::Vector3{ -length, length, length }, color);
+			AddLine(Math::Vector3{ length, length, length }, Math::Vector3{ length, -length, length }, color);
+			AddLine(Math::Vector3{ length, -length, length }, Math::Vector3{ -length, -length, length }, color);
+			AddLine(Math::Vector3{ -length, -length, length }, Math::Vector3{ -length, length, length }, color);
 		}
 
-		void AddSphere(const Math::Vector3& position, float radius, int rings, int slices, const Color& color)
+		void AddSphere(const Math::Vector3& position, float radius, unsigned int rings, unsigned int slices, const Color& color)
 		{
 			const float x = position.x;
 			const float y = position.y;
 			const float z = position.z;
 
-			const uint32_t kSlices = Math::Max<uint32_t>(3u, slices);
-			const uint32_t kRings = Math::Max<uint32_t>(2u, rings);
-			const uint32_t kLines = (4 * kSlices * kRings) - (2 * kSlices);
+			const unsigned int kSlices = Max(3u, slices);
+			const unsigned int kRings = Max(2u, rings);
+			const unsigned int kLines = (4u * kSlices * kRings) - (2u * kSlices);
 
 			// Check if we have enough space
 			if (mVertexCount + kLines <= mMaxVertexCount)
 			{
 				// Add lines
-				const float kTheta = Math::Constants::Pi / (float)kRings;
-				const float kPhi = Math::Constants::TwoPi / (float)kSlices;
-				for (uint32_t j = 0; j < kSlices; ++j)
+				const float kTheta = Math::Constants::Pi / static_cast<float>(kRings);
+				const float kPhi = Math::Constants::TwoPi / static_cast<float>(kSlices);
+				for (unsigned int j = 0; j < kSlices; ++j)
 				{
-					for (uint32_t i = 0; i < kRings; ++i)
+					for (unsigned int i = 0; i < kRings; ++i)
 					{
-						const float a = i * kTheta;
+						const float a = static_cast<float>(i) * kTheta;
 						const float b = a + kTheta;
 						const float ay = radius * cosf(a);
 						const float by = radius * cosf(b);
 
-						const float theta = j * kPhi;
+						const float theta = static_cast<float>(j) * kPhi;
 						const float phi = theta + kPhi;
 
 						const float ar = sqrt(radius * radius - ay * ay);
@@ -142,6 +142,73 @@ namespace Omega::Graphics
 			}
 		}
 
+		void AddGroundPlane(float size, float sizeCell, const Color& color)
+		{
+			const float halfSize = size * 0.5f;
+			for (float i = -halfSize; i <= halfSize; i += sizeCell)
+			{
+				AddLine({ i, 0.0f, -halfSize }, { i, 0.0f, halfSize }, color);
+				AddLine({ halfSize, 0.0f,  -i }, { -halfSize, 0.0f, -i }, color);
+			}
+		}
+
+		void AddBone(const Math::Matrix4& transform, const Color& color)
+		{
+			Math::Vector3 right = Math::GetRight(transform);
+			Math::Vector3 up = Math::GetUp(transform);
+			Math::Vector3 left = Math::GetLook(transform);
+			Math::Vector3 position = Math::GetTranslation(transform);
+
+			auto base = position;
+			auto direction = right - position;
+			constexpr int sectors = 4;
+			auto side = Math::Normalize(Math::Cross(position, direction)) * 1.0f;
+			float angle = 0.0f;
+			constexpr float angleStep = Math::Constants::TwoPi / sectors;
+
+			for (int i = 0; i < sectors; ++i)
+			{
+				auto matRot0 = Math::Matrix4::RotationAxis(direction, angle);
+				auto matRot1 = Math::Matrix4::RotationAxis(direction, angle + angleStep);
+				auto v0 = Math::TransformNormal(side, matRot0);
+				auto v1 = Math::TransformNormal(side, matRot1);
+				AddLine(position + v0, position + direction, color);
+				AddLine(position + v0, position + v1, color);
+				angle += angleStep;
+			}
+		}
+
+		void AddBone(const Math::Vector3& base, const Math::Vector3& direction, float radius, const Color& color, bool fill)
+		{
+			constexpr int sectors = 4;
+			auto side = Math::Normalize(Math::Cross(base, direction)) * radius;
+			float angle = 0.0f;
+			constexpr float angleStep = Math::Constants::TwoPi / sectors;
+
+			const auto oppDirection = -Normalize(direction) * radius;
+
+			for (int i = 0; i < sectors; ++i)
+			{
+				const auto matRot0 = Math::Matrix4::RotationAxis(direction, angle);
+				const auto matRot1 = Math::Matrix4::RotationAxis(direction, angle + angleStep);
+				const auto v0 = Math::TransformNormal(side, matRot0);
+				const auto v1 = Math::TransformNormal(side, matRot1);
+				const auto tempBase = base + v0;
+				if (!fill)
+				{
+					AddLine(tempBase, base + direction, color);
+					AddLine(tempBase, base + oppDirection, color);
+					AddLine(tempBase, base + v1, color);
+				}
+				else
+				{
+					AddFace(tempBase, base + v1, base + direction, color);
+					AddFace(tempBase, base + oppDirection, base + v1, color);
+				}
+				angle += angleStep;
+			}
+		}
+
 		void AddTransform(const Math::Matrix4& transform)
 		{
 			Math::Vector3 right = Math::GetRight(transform);
@@ -151,15 +218,6 @@ namespace Omega::Graphics
 			AddLine(position, position + right, Colors::Red);
 			AddLine(position, position + up, Colors::Green);
 			AddLine(position, position + forward, Colors::Blue);
-
-			/*auto r = Math::GetRight(transform);
-			auto u = Math::GetUp(transform);
-			auto l = Math::GetLook(transform);
-			auto p = Math::GetTranslation(transform);
-
-			AddLine(p, p + r, Colors::Red);
-			AddLine(p, p + u, Colors::Green);
-			AddLine(p, p + l, Colors::Blue);*/
 		}
 
 		void AddOBB(const Math::OBB& obb, const Color& color)
@@ -237,13 +295,13 @@ namespace Omega::Graphics
 
 		void AddCylinder(const Math::Vector3& base, const Math::Vector3& direction, float height, float radius, const Color& color, bool fill = false)
 		{
-			int slices = 16;
-			int rings = 16;
-			float increment = Math::Constants::TwoPi / static_cast<float>(slices);
-			float ringRatio = 1.0f / rings;
+			const int slices = 16;
+			const int rings = 16;
+			const float increment = Math::Constants::TwoPi / static_cast<float>(slices);
+			const float ringRatio = 1.0f / static_cast<float>(rings);
 			std::vector<Math::Vector3> list;
 
-			Math::Vector3 d = Math::Normalize(direction);
+			const Math::Vector3& d = Math::Normalize(direction);
 			float angle = acosf(Math::Dot(d, Math::Vector3::YAxis));
 			Math::Vector3 rotationAxis = Math::Cross(Math::Vector3::YAxis, d);
 			Math::Matrix4 rotationMatrix = Math::Matrix4::RotationAxis(rotationAxis, angle);
@@ -253,7 +311,7 @@ namespace Omega::Graphics
 				for (float theta = 0; theta <= Math::Constants::TwoPi; theta += increment)
 				{
 					Math::Vector3 vec = Math::TransformNormal(
-						Math::Vector3{ sinf(theta) * radius , height * y * ringRatio , cosf(theta) * radius }, rotationMatrix) + base;
+						Math::Vector3{ sinf(theta)* radius, height* static_cast<float>(y)* ringRatio, cosf(theta)* radius }, rotationMatrix) + base;
 					list.push_back(vec);
 				}
 			}
@@ -271,7 +329,7 @@ namespace Omega::Graphics
 						if (y == 0 || y == rings)
 						{
 							Math::Vector3 centerVec =
-								Math::TransformNormal(Math::Vector3{ 0.f, height * y * ringRatio , 0.0f }, rotationMatrix) + base;
+								Math::TransformNormal(Math::Vector3{ 0.f, height* y* ringRatio, 0.0f }, rotationMatrix) + base;
 							AddLine(list[y * sectorCount + x], centerVec, color);
 						}
 					}
@@ -282,13 +340,13 @@ namespace Omega::Graphics
 						if (y == 0)
 						{
 							Math::Vector3 centerVec =
-								Math::TransformNormal(Math::Vector3{ 0.0f , height * y * ringRatio , 0.0f }, rotationMatrix) + base;
+								Math::TransformNormal(Math::Vector3{ 0.0f, height* y* ringRatio, 0.0f }, rotationMatrix) + base;
 							AddFace(list[y * sectorCount + x], centerVec, list[y * sectorCount + x + 1], color);
 						}
 						else if (y == rings)
 						{
 							Math::Vector3 centerVec =
-								Math::TransformNormal(Math::Vector3{ 0.0f, height * y * ringRatio , 0.0f }, rotationMatrix) + base;
+								Math::TransformNormal(Math::Vector3{ 0.0f, height* y* ringRatio, 0.0f }, rotationMatrix) + base;
 							AddFace(list[y * sectorCount + x], list[y * sectorCount + x + 1], centerVec, color);
 						}
 					}
@@ -339,7 +397,7 @@ namespace Omega::Graphics
 
 			for (float theta = 0; theta <= Math::Constants::TwoPi; theta += thetaIncrement)
 			{
-				Math::Vector3 vec3 = Math::TransformNormal(Math::Vector3{ radius * cosf(theta), 0.0f , radius * sinf(theta) }, rotationMatrix) + base;
+				Math::Vector3 vec3 = Math::TransformNormal(Math::Vector3{ radius* cosf(theta), 0.0f, radius* sinf(theta) }, rotationMatrix) + base;
 				list.push_back(vec3);
 			}
 
@@ -353,12 +411,12 @@ namespace Omega::Graphics
 				if (!fill)
 				{
 					AddLine(list[i], list[i + 1], color);
-					Math::Vector3 heightVec = Math::TransformNormal(Math::Vector3{ 0.0f , height , 0.0f }, rotationMatrix) + base;
+					Math::Vector3 heightVec = Math::TransformNormal(Math::Vector3{ 0.0f, height, 0.0f }, rotationMatrix) + base;
 					AddLine(list[i], heightVec, color);
 				}
 				else
 				{
-					Math::Vector3 heightVec = Math::TransformNormal(Math::Vector3{ 0.0f , height , 0.0f }, rotationMatrix) + base;
+					Math::Vector3 heightVec = Math::TransformNormal(Math::Vector3{ 0.0f, height, 0.0f }, rotationMatrix) + base;
 					AddFace(list[i], heightVec, list[i + 1], color);
 					AddFace(list[i], list[i + 1], heightVec, color);
 				}
@@ -381,16 +439,16 @@ namespace Omega::Graphics
 		void AddScreenCircle(const Vector2& center, float radius, const Color& color)
 		{
 			if (m2DVertexCount + 32 >= mMaxVertexCount) return;
-			const int slices = 16;
-			float thetaIncrement = Math::Constants::TwoPi / slices;
+			constexpr int slices = 16;
+			constexpr float thetaIncrement = Math::Constants::TwoPi / slices;
 
 			vector<Vector2> list;
-			for (float theta = 0; theta <= Math::Constants::TwoPi; theta += thetaIncrement)
+			for (float theta = 0.0f; theta <= Math::Constants::TwoPi; theta += thetaIncrement)
 			{
-				list.push_back(Math::Vector2{ radius * cosf(theta),radius * sinf(theta) } + center);
+				list.push_back(Math::Vector2{ radius* cosf(theta), radius* sinf(theta) } + center);
 			}
 
-			for (size_t i = 0; i < list.size() - 1; ++i)
+			for (size_t i = 0, totalSize = list.size() - 1; i < totalSize; ++i)
 			{
 				AddScreenLine(list[i], list[i + 1], color);
 			}
@@ -401,10 +459,10 @@ namespace Omega::Graphics
 			// Check if we have enough space
 			if (m2DVertexCount + 8 <= mMaxVertexCount)
 			{
-				float l = rect.left;
-				float t = rect.top;
-				float r = rect.right;
-				float b = rect.bottom;
+				const float l = rect.left;
+				const float t = rect.top;
+				const float r = rect.right;
+				const float b = rect.bottom;
 
 				// Add lines
 
@@ -428,9 +486,9 @@ namespace Omega::Graphics
 		{
 			if (m2DVertexCount + 32 <= mMaxVertexCount)
 			{
-				float x = center.x;
-				float y = center.y;
-				float r = radius;
+				const float x = center.x;
+				const float y = center.y;
+				const float r = radius;
 
 				// Add line
 				const float kAngle = (toAngle - fromAngle) / 16.0f;
@@ -477,10 +535,10 @@ namespace Omega::Graphics
 			const uint32_t h = system->GetBackBufferHeight();
 			Math::Matrix4 screenToNDC
 			{
-				2.0f / w,  0.0f,       0.0f,  0.0f,
-				0.0f,     -2.0f / h,   0.0f,  0.0f,
-				0.0f,      0.0f,       1.0f,  0.0f,
-			   -1.0f,      1.0f,       0.0f,  1.0f
+				2.0f / w, 0.0f, 0.0f, 0.0f,
+					0.0f, -2.0f / h, 0.0f, 0.0f,
+					0.0f, 0.0f, 1.0f, 0.0f,
+					-1.0f, 1.0f, 0.0f, 1.0f
 			};
 			auto transposeNDC = Math::Transpose(screenToNDC); // moved to local variable
 			mConstantBuffer.Update(&transposeNDC);
@@ -553,52 +611,18 @@ void SimpleDraw::AddSphere(const Math::Vector3& position, float radius, int ring
 
 void SimpleDraw::AddGroundPlane(float size, const Color& color)
 {
-	AddGroundPlane(size, 1.0f, color);
+	sInstance->AddGroundPlane(size, 1.0f, color);
 }
 
-void SimpleDraw::AddGroundPlane(float size, float sizeCell, const Color& color)
+void SimpleDraw::AddBone(const Math::Matrix4& transform, const Color& color)
 {
-	const float halfSize = size * 0.5f;
-	for (float i = -halfSize; i <= halfSize; i += sizeCell)
-	{
-		sInstance->AddLine({ i, 0.0f, -halfSize }, { i, 0.0f, halfSize }, color);
-		sInstance->AddLine({ halfSize, 0.0f,  -i }, { -halfSize, 0.0f, -i }, color);
-	}
+	OMEGAASSERT(false, "Implementation is incorrect.");
+	sInstance->AddBone(transform, color);
 }
 
-void SimpleDraw::AddBone(const Math::Matrix4& transform, const Color& color, bool fill)
+void SimpleDraw::AddBone(const Math::Vector3& position, const Math::Vector3& direction, const Color& color, float radius, bool fill)
 {
-	/*auto r = Math::GetRight(transform);
-	auto u = Math::GetUp(transform);
-	auto l = Math::GetLook(transform);
-	auto p = Math::GetTranslation(transform);
-	AddSphere(p, 0.5f, 5, 6, Colors::BlueViolet);
-	sInstance->AddLine(p, p + r * 0.1f, Colors::Red);
-	sInstance->AddLine(p, p + u * 0.1f, Colors::Green);
-	sInstance->AddLine(p, p + l * 0.1f, Colors::Blue);*/
-
-	Math::Vector3 r = Math::GetRight(transform);
-	Math::Vector3 u = Math::GetUp(transform);
-	Math::Vector3 l = Math::GetLook(transform);
-	Math::Vector3 p = Math::GetTranslation(transform);
-
-	auto base = p;
-	auto direction = r - p;
-	constexpr int sectors = 4;
-	auto side = Math::Normalize(Math::Cross(p, direction)) * 1.0f;
-	auto angle = 0.0f;
-	auto angleStep = Math::Constants::TwoPi / sectors;
-
-	for (int i = 0; i < sectors; ++i)
-	{
-		auto matRot0 = Math::Matrix4::RotationAxis(direction, angle);
-		auto matRot1 = Math::Matrix4::RotationAxis(direction, angle + angleStep);
-		auto v0 = Math::TransformNormal(side, matRot0);
-		auto v1 = Math::TransformNormal(side, matRot1);
-		AddLine(base + v0, base + direction, color);
-		AddLine(base + v0, base + v1, color);
-		angle += angleStep;
-	}
+	sInstance->AddBone(position, direction, radius, color, fill);
 }
 
 void SimpleDraw::AddTransform(const Math::Matrix4& transform)

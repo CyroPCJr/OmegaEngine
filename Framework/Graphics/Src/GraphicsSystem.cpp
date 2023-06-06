@@ -30,6 +30,19 @@ LRESULT CALLBACK GraphicsSystem::GraphicsSystemMessageHandler(HWND window, UINT 
 	return sWindowMessageHandler.ForwardMessage(window, message, wParam, lParam);
 }
 
+void Omega::Graphics::GraphicsSystem::SetupRenderTargetView()
+{
+	HRESULT hr;
+	// Create a render target view
+	ID3D11Texture2D* backBuffer = nullptr;
+	hr = mSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+	OMEGAASSERT(SUCCEEDED(hr), "[GraphicsSystem] Failed to access swap chain buffer.");
+
+	hr = mD3DDevice->CreateRenderTargetView(backBuffer, nullptr, &mRenderTargetView);
+	SafeRelease(backBuffer);
+	OMEGAASSERT(SUCCEEDED(hr), "[GraphicsSystem] Failed to create render target view.");
+}
+
 void GraphicsSystem::StaticInitialize(HWND window, bool fullscreen)
 {
 	OMEGAASSERT(sGraphicsSystem == nullptr, "[GraphicsSystem] System already initialized!");
@@ -157,17 +170,7 @@ void GraphicsSystem::Resize(uint32_t width, uint32_t height)
 		// Cache swap chain description
 		mSwapChain->GetDesc(&mSwapChainDesc);
 	}
-
-	// Create a render target view
-	ID3D11Texture2D* backBuffer = nullptr;
-	hr = mSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-	//hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-	OMEGAASSERT(SUCCEEDED(hr), "[GraphicsSystem] Failed to access swap chain buffer.");
-
-	hr = mD3DDevice->CreateRenderTargetView(backBuffer, nullptr, &mRenderTargetView);
-	SafeRelease(backBuffer);
-	OMEGAASSERT(SUCCEEDED(hr), "[GraphicsSystem] Failed to create render target view.");
-
+	SetupRenderTargetView();
 	// Create depth stencil texture
 	D3D11_TEXTURE2D_DESC descDepth = {};
 	descDepth.Width = GetBackBufferWidth();

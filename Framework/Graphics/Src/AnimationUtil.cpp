@@ -19,15 +19,15 @@ void AnimationUtil::RunFABRIK(std::vector<Omega::Math::Vector3>& points, const O
 	RunFABRIK(points, target, lengths, maxIteration, errorThreshold);
 }
 
-void AnimationUtil::RunFABRIK(std::vector<Vector3>& points, const Vector3& target, std::vector<float>& lengths, int maxIteration, float errorThreshold)
+void AnimationUtil::RunFABRIK(std::vector<Vector3>& points, const Vector3& target, const std::vector<float>& lengths, int maxIteration, float errorThreshold)
 {
 	OMEGAASSERT(points.size() >= 2, "Not enought points to run FABRIK!");
-	const int pointSize = static_cast<int>(points.size());
+	size_t pointSize = points.size();
 	// Record the orgin
 	Vector3 origin = points.front();
 
 	// Loop until we are close enought, or have used all iteration
-	for (int i = 0; i < maxIteration; ++i)
+	for (size_t i = 0; i < maxIteration; ++i)
 	{
 		if (MagnitudeSqr(points.back() - target) < Sqr(errorThreshold))
 		{
@@ -35,18 +35,18 @@ void AnimationUtil::RunFABRIK(std::vector<Vector3>& points, const Vector3& targe
 		}
 		// Run forward pass
 		points.back() = target;
-		for (int i = pointSize - 2; i >= 0; --i)
+		for (size_t j = pointSize - 2; j > 0; --j)
 		{
-			Vector3 direction = Normalize(points[i + 1] - points[i]);
-			points[i] = points[i + 1] - (direction * lengths[i]);
+			Vector3 direction = Normalize(points[j + 1] - points[j]);
+			points[j] = points[j + 1] - (direction * lengths[j]);
 		}
 
 		// Run backward pass
 		points.front() = origin;
-		for (int i = 0; i + 1 < pointSize; ++i)
+		for (size_t k = 0; k + 1 < pointSize; ++k)
 		{
-			Vector3 direction = Normalize(points[i + 1] - points[i]);
-			points[i + 1] = points[i] + (direction * lengths[i]);
+			Vector3 direction = Normalize(points[k + 1] - points[k]);
+			points[k + 1] = points[k] + (direction * lengths[k]);
 		}
 	}
 }

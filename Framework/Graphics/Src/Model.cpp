@@ -7,16 +7,16 @@
 
 using namespace Omega::Graphics;
 
-void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
+void ModelLoader::LoadModel(const std::filesystem::path& fileName, Model& model)
 {
-	fileName.replace_extension("model");
+	auto path = fileName;
 
 	FILE* file = nullptr;
-	fopen_s(&file, fileName.u8string().c_str(), "r");
+	fopen_s(&file, path.replace_extension("model").u8string().c_str(), "r");
+	OMEGAASSERT(file != NULL, "[%s] Error to open file!", __FUNCTION__);
 
 	uint32_t numMeshes = 0;
 	fscanf_s(file, "MeshCount: %d\n", &numMeshes);
-
 	model.meshData.resize(numMeshes);
 	for (uint32_t i = 0; i < numMeshes; ++i)
 	{
@@ -26,9 +26,8 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 
 	fclose(file);
 
-	fileName.replace_extension("materialData");
-	fopen_s(&file, fileName.u8string().c_str(), "r");
-
+	fopen_s(&file, path.replace_extension("materialData").u8string().c_str(), "r");
+	OMEGAASSERT(file != NULL, "[%s] Error to open file!", __FUNCTION__);
 	uint32_t numMaterial = 0;
 	fscanf_s(file, "MaterialCount: %d\n", &numMaterial);
 
@@ -39,7 +38,7 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 		// Reference:
 		// https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/c4473?view=vs-2019
 		char name[128]{};
-		fscanf_s(file, "DiffuseMapName %s\n", &name, static_cast<uint32_t>(sizeof(name)));
+		fscanf_s(file, "DiffuseMapName %s\n", &name, sizeof(name));
 		model.materialData[i].diffuseMapName = name;
 		MeshIO::Read(file, model.materialData[i].material);
 	}
@@ -63,11 +62,13 @@ void ModelLoader::LoadModel(std::filesystem::path fileName, Model& model)
 	}
 }
 
-void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleton)
+void ModelLoader::LoadSkeleton(const std::filesystem::path& fileName, Skeleton& skeleton)
 {
-	fileName.replace_extension("skeleton");
+	auto path = fileName;
+	
 	FILE* file = nullptr;
-	fopen_s(&file, fileName.u8string().c_str(), "r");
+	fopen_s(&file, path.replace_extension("skeleton").u8string().c_str(), "r");
+	OMEGAASSERT(file != NULL, "[%s] Error to open file!", __FUNCTION__);
 	uint32_t numBones = 0;
 	fscanf_s(file, "BonesCount: %d\n", &numBones);
 	skeleton.bones.resize(numBones);
@@ -92,13 +93,13 @@ void ModelLoader::LoadSkeleton(std::filesystem::path fileName, Skeleton& skeleto
 
 }
 
-void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet& animationSet)
+void ModelLoader::LoadAnimationSet(const std::filesystem::path& fileName, AnimationSet& animationSet)
 {
-	fileName.replace_extension("animset");
+	auto path = fileName;
 
 	FILE* file = nullptr;
-	int fileErr = fopen_s(&file, fileName.u8string().c_str(), "r");
-	OMEGAASSERT(fileErr == 0, "[Model] File not found.");
+	fopen_s(&file, path.replace_extension("animset").u8string().c_str(), "r");
+	OMEGAASSERT(file != NULL, "[%s] Error to open file", __FUNCTION__);
 
 	uint32_t numClipCount = 0;
 
@@ -109,7 +110,7 @@ void ModelLoader::LoadAnimationSet(std::filesystem::path fileName, AnimationSet&
 	{
 		auto clip = std::make_unique<AnimationClip>();
 		char name[20];
-		fscanf_s(file, "Name: %s\n", &name, static_cast<uint32_t>(sizeof(name)));
+		fscanf_s(file, "Name: %s\n", &name, sizeof(name));
 		clip->name = name;
 		fscanf_s(file, "Duration: %f\n", &clip->duration);
 		fscanf_s(file, "TickPerSecond: %f\n", &clip->tickPerSecond);

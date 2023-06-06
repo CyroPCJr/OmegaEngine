@@ -46,14 +46,14 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint
 	const int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 	const int winWidth = (rc.right - rc.left);
 	const int winHeight = (rc.bottom - rc.top);
-	const int posX = (screenWidth - winWidth) / 2;    // * 0.5 or >> 1 (bitwise operation) for faster calculation
-	const int posY = (screenHeight - winHeight) / 2;  // * 0.5 or >> 1 (bitwise operation) for faster calculation
+	const int posX = (screenWidth - winWidth) >> 1;
+	const int posY = (screenHeight - winHeight) >> 1;
 
 	// Create Window
 	mWindow = CreateWindowA(appName, appName, WS_OVERLAPPEDWINDOW, posX, posY, winWidth, winHeight, nullptr, nullptr, instance, nullptr);
 
 	ShowWindow(mWindow, SW_SHOWNORMAL);
-	SetCursorPos(screenHeight / 2, screenHeight / 2);
+	SetCursorPos(screenHeight >> 1, screenHeight >> 1);
 	mActive = (mWindow != nullptr);
 }
 

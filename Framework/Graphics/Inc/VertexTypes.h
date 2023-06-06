@@ -30,7 +30,8 @@ namespace Omega::Graphics
 	{
 		VERTEX_FORMAT(VE_Position | VE_TextCoord);
 		Math::Vector3 position;
-		float u, v;
+		float u = 0.0f;
+		float v = 0.0f;
 	};
 
 	// Position and Normal

@@ -11,7 +11,7 @@ namespace Omega::Graphics
 		void Terminate();
 
 		void ComputeBindPose();
-		void PlayAnimation(int index);
+		void PlayAnimation(size_t index);
 
 		void StopAnimation(bool stop);
 		void SetTime(float time);
@@ -29,7 +29,7 @@ namespace Omega::Graphics
 		float mMaxDuration = 0.0f;
 		float mTimer = 0.0f;
 		float mCurrentTimer = 0.0f;
-		int mClipIndex = 0;
+		size_t mClipIndex = 0;
 		bool mShowSkeleton = false;
 
 		std::vector<Omega::Math::Matrix4> mBoneMatrices;

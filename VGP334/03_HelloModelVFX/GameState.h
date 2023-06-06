@@ -5,6 +5,7 @@
 class GameState : public Omega::AppState
 {
 public:
+	
 	void Initialize() override;
 	void Terminate() override;
 

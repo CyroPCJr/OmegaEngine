@@ -5,6 +5,7 @@ namespace Omega
 	class AppState
 	{
 	public:
+
 		virtual void Initialize() {}
 		virtual void Terminate() {}
 

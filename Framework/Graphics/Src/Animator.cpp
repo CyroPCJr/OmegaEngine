@@ -25,9 +25,9 @@ void Animator::ComputeBindPose()
 	UpdateBindPose(mModel->skeleton.root, mBoneMatrices, false);
 }
 
-void Animator::PlayAnimation(int index)
+void Animator::PlayAnimation(size_t index)
 {
-	OMEGAASSERT(index < static_cast<int>(mModel->animationSet.clips.size()), "[Animator] Invalid index.");
+	OMEGAASSERT(index < mModel->animationSet.clips.size(), "[Animator] Invalid index.");
 	mClipIndex = index;
 }
 
