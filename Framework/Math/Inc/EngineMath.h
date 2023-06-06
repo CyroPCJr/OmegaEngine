@@ -186,7 +186,14 @@ namespace Omega::Math
 			return { v };
 		}
 		///OMEGAASSERT(lenght != 0, "Length cannot be zero.");
+	}
 
+	constexpr Vector3 TriangleNormal(const Vector3& v1, const Vector3& v2, const Vector3& v3)
+	{
+		Vector3 edge1 = v2 - v1;
+		Vector3 edge2 = v3 - v1;
+		Vector3 normal = Cross(edge1, edge2);
+		return normal;
 	}
 
 #pragma endregion

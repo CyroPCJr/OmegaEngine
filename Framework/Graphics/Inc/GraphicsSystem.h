@@ -32,7 +32,7 @@ namespace Omega::Graphics {
 		void ResetViewport();
 
 		void SetClearColor(const Color& clearColor) { mClearColor = clearColor; }
-		void SetVSync(bool vSync) { mVSync = vSync ? 1 : 0; }
+		void SetVSync(bool vSync) { mVSync = vSync ? 1u : 0u; }
 
 		uint32_t GetBackBufferWidth() const;
 		uint32_t GetBackBufferHeight() const;

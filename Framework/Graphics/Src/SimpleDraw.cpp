@@ -20,7 +20,7 @@ namespace Omega::Graphics
 	{
 	public:
 
-		void Initialize(uint32_t maxVertexCount)
+		void Initialize(unsigned int maxVertexCount)
 		{
 			mVertexShader.Initialize("../../Assets/Shaders/SimpleDraw.fx", VertexPC::Format);
 			mPixelShader.Initialize("../../Assets/Shaders/SimpleDraw.fx");
@@ -86,32 +86,32 @@ namespace Omega::Graphics
 			AddLine(Math::Vector3{ -length, -length, length }, Math::Vector3{ -length, length, length }, color);
 		}
 
-		void AddSphere(const Math::Vector3& position, float radius, int rings, int slices, const Color& color)
+		void AddSphere(const Math::Vector3& position, float radius, unsigned int rings, unsigned int slices, const Color& color)
 		{
 			const float x = position.x;
 			const float y = position.y;
 			const float z = position.z;
 
-			const uint32_t kSlices = Math::Max<uint32_t>(3u, slices);
-			const uint32_t kRings = Math::Max<uint32_t>(2u, rings);
-			const uint32_t kLines = (4 * kSlices * kRings) - (2 * kSlices);
+			const unsigned int kSlices = Max(3u, slices);
+			const unsigned int kRings = Max(2u, rings);
+			const unsigned int kLines = (4u * kSlices * kRings) - (2u * kSlices);
 
 			// Check if we have enough space
 			if (mVertexCount + kLines <= mMaxVertexCount)
 			{
 				// Add lines
-				const float kTheta = Math::Constants::Pi / (float)kRings;
-				const float kPhi = Math::Constants::TwoPi / (float)kSlices;
-				for (uint32_t j = 0; j < kSlices; ++j)
+				const float kTheta = Math::Constants::Pi / static_cast<float>(kRings);
+				const float kPhi = Math::Constants::TwoPi / static_cast<float>(kSlices);
+				for (unsigned int j = 0; j < kSlices; ++j)
 				{
-					for (uint32_t i = 0; i < kRings; ++i)
+					for (unsigned int i = 0; i < kRings; ++i)
 					{
-						const float a = i * kTheta;
+						const float a = static_cast<float>(i) * kTheta;
 						const float b = a + kTheta;
 						const float ay = radius * cosf(a);
 						const float by = radius * cosf(b);
 
-						const float theta = j * kPhi;
+						const float theta = static_cast<float>(j) * kPhi;
 						const float phi = theta + kPhi;
 
 						const float ar = sqrt(radius * radius - ay * ay);
@@ -295,13 +295,13 @@ namespace Omega::Graphics
 
 		void AddCylinder(const Math::Vector3& base, const Math::Vector3& direction, float height, float radius, const Color& color, bool fill = false)
 		{
-			int slices = 16;
-			int rings = 16;
-			float increment = Math::Constants::TwoPi / static_cast<float>(slices);
-			float ringRatio = 1.0f / rings;
+			const int slices = 16;
+			const int rings = 16;
+			const float increment = Math::Constants::TwoPi / static_cast<float>(slices);
+			const float ringRatio = 1.0f / static_cast<float>(rings);
 			std::vector<Math::Vector3> list;
 
-			Math::Vector3 d = Math::Normalize(direction);
+			const Math::Vector3& d = Math::Normalize(direction);
 			float angle = acosf(Math::Dot(d, Math::Vector3::YAxis));
 			Math::Vector3 rotationAxis = Math::Cross(Math::Vector3::YAxis, d);
 			Math::Matrix4 rotationMatrix = Math::Matrix4::RotationAxis(rotationAxis, angle);
@@ -311,7 +311,7 @@ namespace Omega::Graphics
 				for (float theta = 0; theta <= Math::Constants::TwoPi; theta += increment)
 				{
 					Math::Vector3 vec = Math::TransformNormal(
-						Math::Vector3{ sinf(theta)* radius, height* y* ringRatio, cosf(theta)* radius }, rotationMatrix) + base;
+						Math::Vector3{ sinf(theta)* radius, height* static_cast<float>(y)* ringRatio, cosf(theta)* radius }, rotationMatrix) + base;
 					list.push_back(vec);
 				}
 			}

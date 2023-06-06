@@ -87,7 +87,7 @@ MeshPX MeshBuilder::CreatePlanePX(int row, int col)
 {
 	OMEGAASSERT((row > 1 && col > 1), "[PlanePX] To create plane, width and height should be more than 1.");
 	MeshPX mesh;
-	Math::Vector3 offset = { row * -0.5f, col * -0.5f ,0.0f };
+	Math::Vector3 offset = { static_cast<float>(row) * -0.5f, static_cast<float>(col) * -0.5f ,0.0f };
 	for (int y = 0; y < col; ++y)
 	{
 		for (int x = 0; x < row; ++x)
@@ -109,13 +109,13 @@ MeshPX MeshBuilder::CreatePlanePX(int row, int col)
 				//		 |			   |
 				//		0|-------------|1
 
-				mesh.indices.push_back(y * row + x);
-				mesh.indices.push_back((y + 1) * row + x + 1);
-				mesh.indices.push_back((y + 1) * row + x);
+				mesh.indices.push_back(static_cast<size_t>(y * row + x));
+				mesh.indices.push_back(static_cast<size_t>((y + 1) * row + x + 1));
+				mesh.indices.push_back(static_cast<size_t>((y + 1) * row + x));
 
-				mesh.indices.push_back(y * row + x);
-				mesh.indices.push_back(y * row + x + 1);
-				mesh.indices.push_back((y + 1) * row + x + 1);
+				mesh.indices.push_back(static_cast<size_t>(y * row + x));
+				mesh.indices.push_back(static_cast<size_t>(y * row + x + 1));
+				mesh.indices.push_back(static_cast<size_t>((y + 1) * row + x + 1));
 			}
 
 		}
@@ -126,12 +126,14 @@ MeshPX MeshBuilder::CreatePlanePX(int row, int col)
 
 MeshPX MeshBuilder::CreateCylinderPX(float radius, int rings, int slices)
 {
+
+
 	MeshPX mesh;
 	const float height = 3.0f;
-	const float heightStep = height / (rings - 1);
-	const float angleStep = Math::Constants::TwoPi / slices;
-	const float uStep = 1.0f / slices;
-	const float vStep = 1.0f / (rings - 1);
+	const float heightStep = height / static_cast<float>(rings - 1);
+	const float angleStep = Math::Constants::TwoPi / static_cast<float>(slices);
+	const float uStep = 1.0f / static_cast<float>(slices);
+	const float vStep = 1.0f / static_cast<float>((rings - 1));
 
 	for (int j = 0; j <= slices; ++j)
 	{
@@ -157,7 +159,7 @@ MeshPX MeshBuilder::CreateCylinderPX(float radius, int rings, int slices)
 
 	for (int i = 0; i + 1 < rings + 2; ++i)
 	{
-		for (int j = 0; j < slices; ++j)
+		for (unsigned int j = 0; j < slices; ++j)
 		{
 			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
 			mesh.indices.push_back((j + 0) + ((i + 1) * (slices + 1)));
@@ -311,9 +313,8 @@ MeshPN MeshBuilder::CreateSpherePN(float radius, int rings, int slices, bool isS
 Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace)
 {
 	Mesh mesh;
-
-	const float phiSteps = (Constants::Pi / rings);
-	const float thetaSteps = (Constants::TwoPi / slices);
+	const float phiSteps = (Constants::Pi / static_cast<float>(rings));
+	const float thetaSteps = (Constants::TwoPi / static_cast<float>(slices));
 	for (float phi = 0; phi < Constants::Pi; phi += phiSteps)
 	{
 		for (float theta = 0.0f; theta < Constants::TwoPi; theta += thetaSteps)
@@ -411,10 +412,10 @@ Mesh MeshBuilder::CreatePlane(float size, uint32_t row, uint32_t column)
 void MeshBuilder::ComputeNormals(Mesh& mesh)
 {
 	std::vector<Math::Vector3> vecNormals{};
-	const int indiceSize = static_cast<int>(mesh.indices.size());
-	const int vertexSize = static_cast<int>(mesh.vertices.size());
+	const size_t indiceSize = mesh.indices.size();
+	const size_t vertexSize = mesh.vertices.size();
 	vecNormals.resize(vertexSize);
-	for (int i = 0; i < indiceSize; i += 3)
+	for (size_t i = 0; i < indiceSize; i += 3)
 	{
 		uint32_t idx_0 = mesh.GetIndices(i + 0);
 		uint32_t idx_1 = mesh.GetIndices(i + 1);
@@ -431,7 +432,7 @@ void MeshBuilder::ComputeNormals(Mesh& mesh)
 		vecNormals[idx_2] += crossNormalized;
 	}
 
-	for (int i = 0; i < vertexSize; ++i)
+	for (size_t i = 0; i < vertexSize; ++i)
 	{
 		mesh.vertices[i].normal = vecNormals[i];
 	}

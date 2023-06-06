@@ -110,7 +110,7 @@ void ObjLoader::Load(const std::filesystem::path& filePath, float scale, Mesh& m
 	// Reconstruct vertices
 	std::vector<Vertex> vertices;
 	vertices.reserve(positionIndices.size());
-	for (size_t i = 0; i < positionIndices.size(); ++i)
+	for (size_t i = 0, size = positionIndices.size(); i < size; ++i)
 	{
 		Vertex vertex;
 		vertex.position = positions[positionIndices[i] - 1];
@@ -121,7 +121,7 @@ void ObjLoader::Load(const std::filesystem::path& filePath, float scale, Mesh& m
 
 	std::vector<uint32_t> indices;
 	indices.resize(vertices.size());
-	std::iota(indices.begin(), indices.end(), 0); // fill 0,1,2,3...
+	std::iota(indices.begin(), indices.end(), 0u); // fill 0,1,2,3...
 
 	mesh.vertices = std::move(vertices);
 	mesh.indices = std::move(indices);

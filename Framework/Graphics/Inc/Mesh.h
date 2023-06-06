@@ -10,12 +10,12 @@ namespace Omega::Graphics
 		std::vector<VertexTypes> vertices;
 		std::vector<uint32_t> indices;
 
-		constexpr VertexTypes& GetVertex(int index) 
+		constexpr VertexTypes& GetVertex(uint32_t index) 
 		{
 			return vertices[index];
 		}
 
-		constexpr uint32_t GetIndices(int index) const
+		constexpr uint32_t GetIndices(uint32_t index) const
 		{
 			return indices[index];
 		}

@@ -7,8 +7,11 @@ namespace Omega::Graphics
 	{
 	public:
 		Math::Vector3 GetPosition(float time) const;
+		Math::Vector3 GetPositionOptimized(float time) const;
 		Math::Quaternion GetRotation(float time) const;
+		Math::Quaternion GetRotationOptimized(float time) const;
 		Math::Vector3 GetScale(float time) const;
+		Math::Vector3 GetScaleOptimized(float time) const;
 		Math::Matrix4 GetTransform(float time) const;
 
 		//TODO: make use it this function
@@ -28,4 +31,6 @@ namespace Omega::Graphics
 	};
 
 	using Animations = std::vector<std::unique_ptr<Animation>>;
+
 }
+
