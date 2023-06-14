@@ -147,7 +147,6 @@ void GameState::DebugUI()
 	ImGui::RadioButton("Texture", &e, 1);
 	if (ImGui::Button("Show!"))
 	{
-		mPhysicsWorld.Clear(true);
 		mClothBrazilFlag.SetShowCloth(true);
 		mClothCanadaFlag.SetShowCloth(true);
 		mClothBrazilFlag.SetShowTextureCloth(e);

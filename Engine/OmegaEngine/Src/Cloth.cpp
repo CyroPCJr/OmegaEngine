@@ -14,7 +14,6 @@ void Cloth::Initialize(const Settings& settings)
 	mSettings = settings;
 	PhysicsWorld::Settings physicsSettings;
 	physicsSettings.gravity = { 0.0f, -9.8f, 0.0f };
-	physicsSettings.timeStep = 1.0f / 60.0f;
 	physicsSettings.drag = 0.3f;
 	physicsSettings.iterations = 1;
 	mPhysicsWorld.Initilize(physicsSettings);
