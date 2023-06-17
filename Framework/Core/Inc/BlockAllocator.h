@@ -6,8 +6,8 @@ namespace Omega::Core
 	class BlockAllocator
 	{
 	public:
-		BlockAllocator(size_t blockSize, size_t capacity);
-		~BlockAllocator();
+		BlockAllocator(size_t blockSize, size_t capacity) noexcept;
+		virtual ~BlockAllocator();
 
 		BlockAllocator(const BlockAllocator&) = delete;
 		BlockAllocator& operator=(const BlockAllocator&) = delete;

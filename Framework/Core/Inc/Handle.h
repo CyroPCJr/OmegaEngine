@@ -11,11 +11,10 @@ namespace Omega::Core
 	class Handle
 	{
 	public:
-		Handle()
+		Handle() noexcept
 			: mIndex(0),  // slot 0 will be unused, in other word handle at 0 is an invalidate handle
-			mGeneration(0)
+			mGeneration(0) 
 		{}
-
 
 		bool IsValid() const
 		{
