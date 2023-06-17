@@ -8,7 +8,7 @@ namespace Omega::Core
 	class TypedAllocator : private BlockAllocator
 	{
 	public:
-		TypedAllocator(size_t capacity)
+		TypedAllocator(size_t capacity) noexcept
 			: BlockAllocator(sizeof(DataType), capacity)
 		{}
 

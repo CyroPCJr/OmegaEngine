@@ -14,9 +14,9 @@ namespace Omega::Core
 	public:
 		using HandleType = Handle<DataType>;
 
-		HandlePool(size_t capacity)
+		HandlePool(size_t capacity) noexcept
 		{
-			OMEGAASSERT(capacity > 0, "[HandlePool] -- Invalid capacity.");
+			OMEGAASSERT(capacity > 0, "[%s] -- Invalid capacity.", __FUNCTION__);
 			// allocate capacity + 1 entries (we dont use slot 0)
 			// add freeslots to mFreeSlots (excluding 0)
 			mEntries.resize(capacity + 1);
@@ -25,25 +25,25 @@ namespace Omega::Core
 			{
 				mFreeSlots.push_back(i);
 			}
-			OMEGAASSERT(HandleType::sPool == nullptr, "[HandlePool] -- Cannot have more than one pool of this type!");
+			OMEGAASSERT(HandleType::sPool == nullptr, "[%s] -- Cannot have more than one pool of this type!", __FUNCTION__);
 			HandleType::sPool = this;
 		}
 
 		~HandlePool()
 		{
-			OMEGAASSERT(HandleType::sPool == this, "[HandlePool] -- Something is wrong ...");
+			OMEGAASSERT(HandleType::sPool == this, "[%s] -- Something is wrong ...", __FUNCTION__);
 			HandleType::sPool = nullptr;
 		}
 
 		HandleType Register(DataType* instance)
 		{
-			OMEGAASSERT(instance != nullptr, "[HandlePool] -- Invalid instance.");
-			OMEGAASSERT(!mFreeSlots.empty(), "[HandlePool] -- No more free slots available.");
+			OMEGAASSERT(instance != nullptr, "[%s] -- Invalid instance.", __FUNCTION__);
+			OMEGAASSERT(!mFreeSlots.empty(), "[%s] -- No more free slots available.", __FUNCTION__);
 
 			// Get the next free slots
 			// Set entry instance pointer
 			// Return a handle to this entry (set index and generation)
-			size_t key = mFreeSlots.back();
+			const size_t key = mFreeSlots.back();
 			mFreeSlots.pop_back();
 
 			mEntries[key].instance = std::move(instance);
@@ -55,7 +55,7 @@ namespace Omega::Core
 			return handle;
 		}
 
-		void Unregister(HandleType handle)
+		void Unregister(const HandleType& handle)
 		{
 			// Skip is handle is invalid
 			// Find the entry and increment the generation ( this invalidade all existing handles to this slot)
@@ -70,20 +70,19 @@ namespace Omega::Core
 		{
 			// Loop thought all entries and increment generation ( invalidates all existing handles)
 			// Re-add all slot indices to mFreeSlots
-			const size_t size = mEntries.size();
-			for (size_t i = 0; i < size; ++i)
+			for (size_t i = 0, size = mEntries.size() ; i < size; ++i)
 			{
 				mEntries[i].generation++;
 				mFreeSlots.push_back(i + 1);
 			}
 		}
 
-		bool IsValid(HandleType handle) const
+		bool IsValid(const HandleType& handle) const
 		{
 			return handle != HandleType() && mEntries[handle.mIndex].generation == handle.mGeneration;
 		}
 
-		DataType* Get(HandleType handle)
+		DataType* Get(const HandleType& handle)
 		{
 			return IsValid(handle) ? mEntries[handle.mIndex].instance : nullptr;
 		}

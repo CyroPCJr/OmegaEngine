@@ -25,8 +25,8 @@ namespace CoreTest
 			int a, b;
 			Foo() : a(42), b(7) {};
 			Foo(int i, int j) : a(i), b(j) {}
-			Foo(Bar b) : a(12), b(34) {}
-			Foo(std::string str) : a(12), b(34) {}
+			Foo(Bar) : a(12), b(34) {}
+			Foo(std::string) : a(12), b(34) {}
 			~Foo() { a = 0xFeeeFeee, b = 0xdeadbeef; }
 		};
 

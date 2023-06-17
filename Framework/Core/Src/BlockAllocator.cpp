@@ -5,12 +5,12 @@
 using namespace Omega;
 using namespace Omega::Core;
 
-BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity)
+BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity) noexcept
 	: mData(nullptr)
 	, mBlockSize(blockSize)
 	, mCapacity(capacity)
 {
-	OMEGAASSERT(capacity > 0, "[BlockAllocator] Invalid capacity.");
+	OMEGAASSERT(capacity > 0, "[%s] Invalid capacity.", __FUNCTION__);
 	mFreeSlots.reserve(capacity);
 	mData = malloc(blockSize * capacity);
 	for (size_t i = 0; i < capacity; ++i)

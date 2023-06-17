@@ -40,7 +40,7 @@ bool Omega::Core::OpenFileDialog(char fileName[MAX_PATH], const char* title, con
 					if (SUCCEEDED(hr))
 					{
 						// convert wide-character to char
-						wcstombs_s(&outSize, fileName, MAX_PATH, pszFilePath, lstrlenW(pszFilePath));
+						wcstombs_s(&outSize, fileName, MAX_PATH, pszFilePath, static_cast<size_t>(lstrlenW(pszFilePath)));
 						CoTaskMemFree(pszFilePath);
 						result = true;
 					}
@@ -94,7 +94,7 @@ bool Omega::Core::SaveFileDialog(char fileName[MAX_PATH], const char* title, con
 						// Display the file name to the user.
 						if (SUCCEEDED(hr))
 						{
-							wcstombs_s(&outSize, fileName, MAX_PATH, pszFilePath, lstrlenW(pszFilePath));
+							wcstombs_s(&outSize, fileName, MAX_PATH, pszFilePath, static_cast<size_t>(lstrlenW(pszFilePath)));
 							CoTaskMemFree(pszFilePath);
 							result = true;
 						}
