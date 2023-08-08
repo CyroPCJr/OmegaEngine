@@ -81,7 +81,7 @@ Path AStar::Search(const Graph& graph,
 						// check if (cost + heuristic) < (g[i] + h[i])
 						// insert
 						auto it = openList.begin();
-						for (auto end = openList.end(); it != end; ++it)
+						for (auto itEnd = openList.end(); it != itEnd; ++it)
 						{
 							int index = graph.GetIndex({ it->x, it->y });
 							if ((cost + heuristic) < (g[index] + h[index]))
@@ -102,7 +102,7 @@ Path AStar::Search(const Graph& graph,
 						g[neighborIndex] = cost;
 
 						auto it = openList.begin();
-						for (auto end = openList.end(); it != end; ++it)
+						for (auto itEnd = openList.end(); it != itEnd; ++it)
 						{
 							int index = graph.GetIndex({ it->x, it->y });
 							if ((cost + heuristic) < (g[index] + h[index]))
@@ -135,7 +135,7 @@ Path AStar::Search(const Graph& graph,
 		}
 
 		path.reserve(trace.size());
-		for (auto node : trace)
+		for (auto& node : trace)
 		{
 			path.push_back(node);
 		}

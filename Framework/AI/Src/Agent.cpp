@@ -3,6 +3,6 @@
 
 using namespace Omega::AI;
 
-Agent::Agent(AIWorld & world, uint32_t typeId)
+Agent::Agent(AIWorld & world, uint32_t typeId) noexcept
 	: Entity(world, typeId)
 {}

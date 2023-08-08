@@ -12,13 +12,13 @@ namespace Omega::AI
 	public:
 		using StateType = State<AgentType>;
 
-		explicit StateMachine(AgentType& agent) 
+		explicit StateMachine(const AgentType& agent) noexcept
 			: mAgent(agent) 
 		{}
 
 		
 		template<class NewStateType>
-		void AddState(std::string name)
+		void AddState(std::string_view name)
 		{
 			// SFINAE
 			/*
@@ -38,7 +38,7 @@ namespace Omega::AI
 			mCurrentState->Update(mAgent, deltaTime);
 		}
 
-		void ChangeState(std::string stateName)
+		void ChangeState(std::string_view stateName)
 		{
 			auto iter = mStates.find(stateName);
 			if (iter == mStates.end())
@@ -53,7 +53,7 @@ namespace Omega::AI
 
 
 	private:
-		using StateMap = std::unordered_map<std::string, std::unique_ptr<StateType>>;
+		using StateMap = std::unordered_map<std::string_view, std::unique_ptr<StateType>>;
 
 		AgentType& mAgent;
 		StateType* mCurrentState = nullptr;

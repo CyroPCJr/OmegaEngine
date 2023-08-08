@@ -7,7 +7,7 @@ namespace Omega::AI
 	class EvadeBehaviour :public FleeBehaviour
 	{
 	public:
-		virtual ~EvadeBehaviour() = default;
+		~EvadeBehaviour() = default;
 
 		Omega::Math::Vector2 Calculate(AI::Agent& agent) override;
 

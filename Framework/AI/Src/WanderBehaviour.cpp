@@ -21,7 +21,7 @@ Vector2 WanderBehaviour::Calculate(Agent& agent)
 	return Seek(agent, mCircleJitter);
 }
 
-void WanderBehaviour::ShowDebugDraw(const Agent& agent)
+void WanderBehaviour::ShowDebugDraw([[maybe_unused]] const Agent& agent)
 {
 	// Create circle ahead toward the agent
 	SimpleDraw::AddScreenCircle(mCircleProjection, mSettings.radius, Colors::BlueViolet);

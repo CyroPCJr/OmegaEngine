@@ -11,7 +11,7 @@ namespace Omega::AI
 	class Agent: public AI::Entity
 	{
 	public:
-		Agent(AIWorld& world, uint32_t typeId);
+		Agent(AIWorld& world, uint32_t typeId) noexcept;
 		~Agent() override = default;
 
 		Agent* threat = nullptr;

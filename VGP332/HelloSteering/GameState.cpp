@@ -209,11 +209,11 @@ void GameState::GeneralDebugUI()
 			mCarrier->SwitchBehaviour(Carrier::Behaviours::Arrive, arriveDebug);
 		}
 		
-		static float radius = 0.0f;
+		static float slowRadius = 0.0f;
 		if (arriveDebug)
 		{
-			ImGui::SliderFloat("SlowRadius###radius", &radius, 0.0f, 250.0f);
-			mCarrier->SetSlowRadius(radius);
+			ImGui::SliderFloat("SlowRadius###radius", &slowRadius, 0.0f, 250.0f);
+			mCarrier->SetSlowRadius(slowRadius);
 		}
 		
 		if (static bool avoidDebug = false;

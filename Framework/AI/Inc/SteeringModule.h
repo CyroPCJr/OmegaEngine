@@ -10,14 +10,14 @@ namespace Omega::AI
 		explicit SteeringModule(Agent& agent);
 
 		template <class BehaviorType>
-		BehaviorType* AddBehavior(std::string name)
+		BehaviorType* AddBehavior(const std::string_view name)
 		{
 			auto[iter, success] = mBehaviors.try_emplace(std::move(name), std::make_unique<BehaviorType>());
 			return success ? static_cast<BehaviorType*>(iter->second.get()) : nullptr;
 		}
 
 		template <class BehaviorType>
-		BehaviorType* GetBehavior(const std::string& name)
+		BehaviorType* GetBehavior(const std::string_view name)
 		{
 			auto iter = mBehaviors.find(name);
 			return iter != mBehaviors.end() ? static_cast<BehaviorType*>(iter->second.get()) : nullptr;
@@ -27,7 +27,7 @@ namespace Omega::AI
 		void ShowDebugDraw() const;
 
 	private:
-		using BehaviorMap = std::unordered_map<std::string, std::unique_ptr<SteeringBehavior>>;
+		using BehaviorMap = std::unordered_map<std::string_view, std::unique_ptr<SteeringBehavior>>;
 
 		Agent& mAgent;
 		BehaviorMap mBehaviors;

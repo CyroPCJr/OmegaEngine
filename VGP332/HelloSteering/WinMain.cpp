@@ -1,7 +1,7 @@
 #include "GameState.h"
 
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
-	_In_ PSTR szCmdLine, _In_ int iCmdShow)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE,
+	_In_ PSTR, _In_ int)
 {
 	Omega::App app;
 	app.AddState<Steering::GameState>("GameState");

@@ -13,7 +13,7 @@ namespace Omega::AI
 		virtual ~SteeringBehavior() = default;
 
 		virtual Omega::Math::Vector2 Calculate(Agent& agent) = 0;
-		virtual void ShowDebugDraw(const Agent& agent) {};
+		virtual void ShowDebugDraw(const Agent&) {};
 
 		inline void SetActive(bool active) { mActive = active; }
 		inline bool IsActive() const { return mActive; }
