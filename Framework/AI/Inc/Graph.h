@@ -46,7 +46,7 @@ namespace Omega::AI
 
 		int GetColumns() const;
 		int GetRows() const;
-		std::vector<Node> GetListNode() const { return mNodes; }
+		const std::vector<Node>& GetListNode() const { return mNodes; }
 		const int GetNodeSize() const { return static_cast<int>(mNodes.size()); }
 
 		int GetIndex(const Coord& coord) const;

@@ -70,7 +70,7 @@ Path Dijkstras::Search(const Graph& graph, const Coord& start, const Coord& end,
 						// check if cost < g[i]
 						// insert
 						auto it = openList.begin();
-						for (auto end = openList.end(); it != end; ++it)
+						for (auto itEnd = openList.end(); it != itEnd; ++it)
 						{
 							int index = graph.GetIndex({ it->x, it->y });
 							if (cost < g[index])
@@ -89,7 +89,7 @@ Path Dijkstras::Search(const Graph& graph, const Coord& start, const Coord& end,
 						// update g
 						// remove and re insert using new g to sort
 						auto it = openList.begin();
-						for (auto end = openList.end(); it != end; ++it)
+						for (auto itEnd = openList.end(); it != itEnd; ++it)
 						{
 							int index = graph.GetIndex({ it->x, it->y });
 							if (cost < g[index])

@@ -18,19 +18,19 @@ namespace
 	)
 	{
 		std::vector<Element*> elements;
-		int minX = static_cast<int>((range.center.x - range.radius) / cellSize);
-		int maxX = static_cast<int>((range.center.x + range.radius) / cellSize);
-		int minY = static_cast<int>((range.center.y - range.radius) / cellSize);
-		int maxY = static_cast<int>((range.center.y + range.radius) / cellSize);
+		unsigned int minX = static_cast<unsigned int>((range.center.x - range.radius) / cellSize);
+		unsigned int maxX = static_cast<unsigned int>((range.center.x + range.radius) / cellSize);
+		unsigned int minY = static_cast<unsigned int>((range.center.y - range.radius) / cellSize);
+		unsigned int maxY = static_cast<unsigned int>((range.center.y + range.radius) / cellSize);
 
-		minX = Max(minX, 0);
+		minX = Max(minX, 0u);
 		maxX = Min(maxX, grid.GetColumns() - 1);
-		minY = Max(minY, 0);
+		minY = Max(minY, 0u);
 		maxY = Min(maxY, grid.GetRows() - 1);
 
-		for (int y = minY; y <= maxY; ++y)
+		for (size_t y = minY; y <= maxY; ++y)
 		{
-			for (int x = minX; x <= maxX; ++x)
+			for (size_t x = minX; x <= maxX; ++x)
 			{
 				auto& cell = grid.GetCell(x, y);
 				for (auto& element : cell)
@@ -134,14 +134,14 @@ void AIWorld::DebugDraw() const
 		SimpleDraw::AddScreenLine(wall.from, wall.to, Colors::Cyan);
 	}
 
-	for (int i = 0; i < mPartitionGrid.GetColumns(); ++i)
+	for (size_t i = 0; i < mPartitionGrid.GetColumns(); ++i)
 	{
 		Vector2 from = { static_cast<float>(i) * mSettings.partitionGridSize, 0.0f};
 		Vector2 to = { static_cast<float>(i) * mSettings.partitionGridSize, mSettings.worldSize.y};
 		SimpleDraw::AddScreenLine(from, to, Colors::White);
 	}
 
-	for (int i = 0; i < mPartitionGrid.GetRows(); ++i)
+	for (size_t i = 0; i < mPartitionGrid.GetRows(); ++i)
 	{
 		Vector2 from = { 0.0f, static_cast<float>(i) * mSettings.partitionGridSize };
 		Vector2 to = { mSettings.worldSize.x, static_cast<float>(i) * mSettings.partitionGridSize };

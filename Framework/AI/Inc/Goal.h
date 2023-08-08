@@ -8,8 +8,8 @@ namespace Omega::AI
 	public:
 		enum class Status { Inactive, Active, Completed, Failed };
 
-		Goal(AgentType& agent)
-			: mAgent(agent)
+		Goal(const AgentType& agent) noexcept
+			: mAgent(agent) 
 		{}
 
 		virtual ~Goal() = default;

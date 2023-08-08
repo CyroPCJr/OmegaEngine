@@ -22,8 +22,8 @@ namespace Omega::AI
 			std::function<float(Coord, Coord)> getCost,
 			std::function<float(Coord, Coord)> getHeuristic);
 
-		std::list<Coord> GetClosedList() const { return closedList; }
-		std::vector<Coord> GetParentList() const { return parent; }
+		const std::list<Coord>& GetClosedList() const { return closedList; }
+		const std::vector<Coord>& GetParentList() const { return parent; }
 
 		float EstimateCoord(const Coord& begin, const Coord& dest, const HeuristicType& heuristic = HeuristicType::Euclidian);
 		

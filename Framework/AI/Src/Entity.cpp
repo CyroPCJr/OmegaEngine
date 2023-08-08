@@ -6,7 +6,7 @@
 using namespace Omega::AI;
 using namespace Omega::Math;
 
-Entity::Entity(AIWorld & world, uint32_t typeId)
+Entity::Entity(AIWorld & world, uint32_t typeId) noexcept
 	: world(world)
 	, mUniqueId((static_cast<uint64_t>(typeId) << 32) | world.GetNextId())
 {

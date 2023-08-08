@@ -10,7 +10,7 @@ namespace Omega::AI
 	public:
 		using Status = Goal<AgentType>::Status;
 
-		GoalComposite(AgentType& agent)
+		GoalComposite(AgentType& agent) noexcept
 			: Goal<AgentType>(agent)
 		{}
 

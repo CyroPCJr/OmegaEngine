@@ -20,7 +20,7 @@ Vector2 SeparationBehaviour::Calculate(Agent& agent)
 		{
 			const auto separationDirection = neighborToAgent / distanceToAgent;
 			const auto separationForce = agent.maxSpeed * (1.0f - Min(distanceToAgent, 100.0f) / 100.0f);
-			totalForce += separationDirection * separationDirection;
+			totalForce += separationDirection * separationForce;
 		}
 	}
 	return totalForce;

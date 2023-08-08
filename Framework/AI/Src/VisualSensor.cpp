@@ -8,10 +8,10 @@
 using namespace Omega::AI;
 using namespace Omega::Core;
 
-void VisualSensor::Update(Agent& agent, MemoryRecords& memory, float deltaTime)
+void VisualSensor::Update(Agent& agent, MemoryRecords& memory, [[maybe_unused]] float deltaTime)
 {
-	const auto neighbor = agent.world.GetNeighborhood({ agent.position, agent.radius }, agent.GetTypeId());
-	for (const auto& neighbor : neighbor)
+	const auto neighbors = agent.world.GetNeighborhood({ agent.position, agent.radius }, agent.GetTypeId());
+	for (const auto& neighbor : neighbors)
 	{
 
 		if (Math::Distance(neighbor->position, agent.position) > viewRange)

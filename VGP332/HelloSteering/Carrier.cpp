@@ -102,8 +102,11 @@ void Carrier::SwitchBehaviour(const Behaviours& behaviours, bool active) const
 		mSteeringModule->GetBehavior<SeekBehaviour>("Seek")->SetActive(active);
 		break;
 	case Carrier::Behaviours::Arrive:
-		mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive")->SetActive(active);
-		mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive")->SetSlowRadius(mSlowRadius);
+		if (const auto& behaviour = mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive"))
+		{
+			behaviour->SetActive(active);
+			behaviour->SetSlowRadius(Entity::radius);
+		}
 		break;
 	case Carrier::Behaviours::ObstacleAvoidance:
 		mSteeringModule->GetBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(active);

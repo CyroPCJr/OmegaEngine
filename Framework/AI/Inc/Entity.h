@@ -10,7 +10,7 @@ namespace Omega::AI
 	class Entity
 	{
 	public:
-		Entity(AIWorld& world, uint32_t typeId);
+		Entity(AIWorld& world, uint32_t typeId) noexcept;
 		virtual ~Entity();
 
 		Entity(const Entity&) = delete;
@@ -20,8 +20,8 @@ namespace Omega::AI
 
 		Omega::Math::Matrix3 LocalToWorld() const;
 
-		const uint32_t GetTypeId() const { return mUniqueId >> 32; }
-		const uint64_t GetUniqueId() const { return mUniqueId; }
+		uint32_t GetTypeId() const { return mUniqueId >> 32u; }
+		uint64_t GetUniqueId() const { return mUniqueId; }
 
 		AIWorld& world;
 		Omega::Math::Vector2 position = Omega::Math::Vector2::Zero;
@@ -29,7 +29,7 @@ namespace Omega::AI
 		float radius = 1.0f;
 
 	private:
-		const uint64_t mUniqueId = 0;
+		const uint64_t mUniqueId = 0u;
 	};
 
 }

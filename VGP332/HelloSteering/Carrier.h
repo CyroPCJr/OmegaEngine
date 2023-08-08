@@ -25,13 +25,12 @@ namespace Steering
 		void Render();
 
 		void SwitchBehaviour(const Behaviours& behaviours, bool active = true) const;
-		void SetSlowRadius(float radius) { mSlowRadius = radius; }
+		void SetSlowRadius(float slowRadius) { Entity::radius = slowRadius; }
 
 		bool isDebugShowDraw = true;
 	private:
 		std::unique_ptr<Omega::AI::SteeringModule> mSteeringModule = nullptr;
 		std::array<Omega::Graphics::TextureId, 32> mTexturesIds;
-		float mSlowRadius = 100.0f;
 	};
 
 }

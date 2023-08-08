@@ -8,7 +8,7 @@ namespace Omega::AI
 	public:
 		using Cell = std::vector<T*>;
 
-		void Resize(int columns, int rows)
+		void Resize(const unsigned int columns, const unsigned int rows)
 		{
 			mCells.resize(columns * rows);
 			mColumns = columns;
@@ -24,16 +24,16 @@ namespace Omega::AI
 			}
 		}
 
-		Cell& GetCell(int column, int row) { return mCells[column + (row * mColumns)]; }
-		const Cell& GetCell(int column, int row) const { return mCells[column + (row * mColumns)]; }
+		Cell& GetCell(const unsigned  column, const unsigned  row) { return mCells[column + (row * mColumns)]; }
+		const Cell& GetCell(const unsigned  column, const unsigned  row) const { return mCells[column + (row * mColumns)]; }
 
-		int GetColumns() const { return mColumns; }
-		int GetRows() const { return mRows; }
+		const unsigned  GetColumns() const { return mColumns; }
+		const unsigned  GetRows() const { return mRows; }
 
 	private:
 		std::vector<Cell> mCells;
-		int mColumns;
-		int mRows;
+		unsigned int mColumns;
+		unsigned int mRows;
 	};
 
 }
