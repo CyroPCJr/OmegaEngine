@@ -96,7 +96,7 @@ void Terrain::Render(const Graphics::Camera& camera)
 
 void Terrain::DrawEditorUI()
 {
-	const int max = 500.0f;
+	constexpr float max = 500.0f;
 
 	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::SliderFloat("Position X", &mTerrainPosition.x, 0.0f, max);
