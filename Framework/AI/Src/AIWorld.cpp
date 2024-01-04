@@ -154,3 +154,12 @@ uint32_t AIWorld::GetNextId()
 	OMEGAASSERT(mNextId < UINT32_MAX, "Run out of ids!");
 	return mNextId++;
 }
+
+void AIWorld::WrapAround(Vector2& position) const
+{
+	const int width = static_cast<int>(mSettings.worldSize.x);
+	const int height = static_cast<int>(mSettings.worldSize.y);
+
+	position.x = ((static_cast<int>(position.x) % width + width)) % width;
+	position.y = ((static_cast<int>(position.y) % height + height)) % height;
+}

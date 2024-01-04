@@ -39,6 +39,8 @@ namespace Omega::AI
 
 		Settings GetSettings() const { return mSettings; }
 
+		void WrapAround(Omega::Math::Vector2& position) const;
+
 		uint32_t GetNextId();
 
 	private:

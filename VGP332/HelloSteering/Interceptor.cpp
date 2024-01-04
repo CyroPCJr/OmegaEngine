@@ -22,7 +22,7 @@ Interceptor::Interceptor(AIWorld& world) noexcept
 void Interceptor::Load()
 {
 	// Load images
-	for (size_t i = 0; i < mTexturesIds.size(); ++i)
+	for (size_t i = 0, total = mTexturesIds.size(); i < total; ++i)
 	{
 		char name[128];
 		sprintf_s(name, "Sprites/interceptor_%02zu.png", i + 1);
@@ -33,7 +33,7 @@ void Interceptor::Load()
 	width = worldSize.worldSize.x;
 	height = worldSize.worldSize.y;
 	maxSpeed = 200.0f;
-
+	boundingRadius = 16.f;
 	// Group Behaviours
 	mSteeringModule->AddBehavior<AI::AlignmentBehaviour>("Alignment");
 	mSteeringModule->AddBehavior<AI::CohesionBehaviour>("Cohesion");
@@ -80,27 +80,12 @@ void Interceptor::Update(float deltaTime)
 		heading = Normalize(velocity);
 	}
 
+	world.WrapAround(position);
 	// show debug draw
 	if (isDebugShowDraw)
 	{
 		mSteeringModule->ShowDebugDraw();
-	}
-
-	if (position.x < 0.0f) // left border
-	{
-		position.x += width;
-	}
-	if (position.x >= width) // right border
-	{
-		position.x -= width;
-	}
-	if (position.y < 0.0f) // botton border
-	{
-		position.y += height;
-	}
-	if (position.y >= height) // top border
-	{
-		position.y -= height;
+		SimpleDraw::AddScreenCircle({ position , boundingRadius }, Colors::Aquamarine);
 	}
 }
 
@@ -129,7 +114,7 @@ void Interceptor::SwitchBehaviour(const Behaviours& behaviours, bool active) con
 		mSteeringModule->GetBehavior<AI::EvadeBehaviour>("Evade")->SetActive(active);
 		break;
 	case Interceptor::Behaviours::Flee:
-		mSteeringModule->GetBehavior<AI::FleeBehaviour>("Cohesion")->SetActive(active);
+		mSteeringModule->GetBehavior<AI::FleeBehaviour>("Flee")->SetActive(active);
 		break;
 	case Interceptor::Behaviours::Hide:
 		mSteeringModule->GetBehavior<AI::HideBehaviour>("Hide")->SetActive(active);

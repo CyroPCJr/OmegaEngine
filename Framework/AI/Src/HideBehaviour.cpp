@@ -27,7 +27,7 @@ Vector2 HideBehaviour::Calculate(Agent& agent)
 	}
 	// Access the world throught the agent
 	const auto& obstList = agent.world.GetObstacles();
-	if (obstList.size() <= 0)
+	if (obstList.size() <= 0u)
 	{
 		return Vector2::Zero;
 	}

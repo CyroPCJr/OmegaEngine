@@ -11,7 +11,7 @@ Vector2 ArriveBehaviour::Calculate(Agent& agent)
 	return Arrive(agent, agent.destination);
 }
 
-Vector2 ArriveBehaviour::Arrive(const Agent& agent, const Omega::Math::Vector2& destination)
+Vector2 ArriveBehaviour::Arrive(const Agent& agent, const Omega::Math::Vector2& destination) const
 {
 	Vector2 desiredVelocity = destination - agent.position;
 	const float distance = Magnitude(desiredVelocity);

@@ -14,5 +14,5 @@ Vector2 AlignmentBehaviour::Calculate(Agent& agent)
 	}
 	averageHeading /= agent.neighbors.size() + 1.0f;
 	averageHeading -= agent.heading;
-	return averageHeading;
+	return averageHeading * 50.0f;
 }

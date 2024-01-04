@@ -21,19 +21,20 @@ Carrier::Carrier(AIWorld& world) noexcept
 void Carrier::Load()
 {
 	// Load images
-	for (size_t i = 0; i < mTexturesIds.size(); ++i)
+	for (size_t i = 0, total = mTexturesIds.size(); i < total; ++i)
 	{
 		char name[128];
 		sprintf_s(name, "Sprites/carrier_%02zu.png", i + 1);
 		mTexturesIds[i] = SpriteRendererManager::Get()->LoadTexture(name);
 	}
-
+	
 	// Initial settings
 	auto worldSize = world.GetSettings();
 	width = worldSize.worldSize.x;
 	height = worldSize.worldSize.y;
 	position = { width * 0.5f, height * 0.5f };
 	maxSpeed = 200.0f;
+	boundingRadius = 64.f;
 
 	// Steerin Behaviours
 	mSteeringModule->AddBehavior<SeekBehaviour>("Seek")->SetActive(true);
@@ -62,28 +63,14 @@ void Carrier::Update(float deltaTime)
 		heading = Normalize(velocity);
 	}
 
+	world.WrapAround(position);
+	
 	// show debug draw
 	if (isDebugShowDraw)
 	{
 		mSteeringModule->ShowDebugDraw();
-	}
-
-	if (position.x < 0.0f) // left border
-	{
-		position.x += width;
-	}
-	if (position.x >= width) // right border
-	{
-		position.x -= width;
-	}
-	if (position.y < 0.0f) // botton border
-	{
-		position.y += height;
-	}
-	if (position.y >= height) // top border
-	{
-		position.y -= height;
-	}
+		SimpleDraw::AddScreenCircle({ position , boundingRadius }, Colors::Aquamarine);
+	}	
 }
 
 void Carrier::Render()

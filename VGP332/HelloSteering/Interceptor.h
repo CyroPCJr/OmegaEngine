@@ -4,7 +4,6 @@
 
 namespace Steering
 {
-	
 
 	class Interceptor : public Omega::AI::Agent
 	{
@@ -41,7 +40,7 @@ namespace Steering
 
 		std::unique_ptr<Omega::AI::SteeringModule> mSteeringModule = nullptr;
 
-		std::array<Omega::Graphics::TextureId, 32> mTexturesIds;
+		std::array<Omega::Graphics::TextureId, 32> mTexturesIds{0};
 
 		/*float mWidth = 0.0f;
 		float mHeight = 0.0f;*/
