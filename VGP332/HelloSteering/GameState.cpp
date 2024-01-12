@@ -221,6 +221,12 @@ void GameState::GeneralDebugUI()
 		{
 			mCarrier->SwitchBehaviour(Carrier::Behaviours::ObstacleAvoidance, avoidDebug);
 		}
+
+		if (static bool wallAvoidanceDebug = false;
+			ImGui::Checkbox("Wall Avoidance", &wallAvoidanceDebug))
+		{
+			mCarrier->SwitchBehaviour(Carrier::Behaviours::WallAvoidance, wallAvoidanceDebug);
+		}
 		
 	}
 	ImGui::EndGroup();

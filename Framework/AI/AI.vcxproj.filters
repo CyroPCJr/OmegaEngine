@@ -153,6 +153,9 @@
     <ClInclude Include="Inc\VisualSensor.h">
       <Filter>Inc\Perception</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\WallAvoidanceBehaviour.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -229,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="Src\VisualSensor.cpp">
       <Filter>Src\Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\WallAvoidanceBehaviour.cpp">
+      <Filter>Src\Steering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

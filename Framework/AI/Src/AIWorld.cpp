@@ -134,18 +134,13 @@ void AIWorld::DebugDraw() const
 		SimpleDraw::AddScreenLine(wall.from, wall.to, Colors::Cyan);
 	}
 
-	for (size_t i = 0; i < mPartitionGrid.GetColumns(); ++i)
+	for (size_t i = 0, size = mPartitionGrid.Size(); i < size; ++i)
 	{
-		Vector2 from = { static_cast<float>(i) * mSettings.partitionGridSize, 0.0f};
-		Vector2 to = { static_cast<float>(i) * mSettings.partitionGridSize, mSettings.worldSize.y};
-		SimpleDraw::AddScreenLine(from, to, Colors::White);
-	}
+		const float row = static_cast<float>(i % mPartitionGrid.GetRows());
+		const float col = static_cast<float>(i % mPartitionGrid.GetColumns());
 
-	for (size_t i = 0; i < mPartitionGrid.GetRows(); ++i)
-	{
-		Vector2 from = { 0.0f, static_cast<float>(i) * mSettings.partitionGridSize };
-		Vector2 to = { mSettings.worldSize.x, static_cast<float>(i) * mSettings.partitionGridSize };
-		SimpleDraw::AddScreenLine(from, to, Colors::White);
+		Rect rectangule(col * size, row * size, (col + 1.0f) * size, (row + 1.0f) * size);
+		SimpleDraw::AddScreenRect(rectangule, Colors::DarkOrange);
 	}
 }
 
@@ -160,6 +155,6 @@ void AIWorld::WrapAround(Vector2& position) const
 	const int width = static_cast<int>(mSettings.worldSize.x);
 	const int height = static_cast<int>(mSettings.worldSize.y);
 
-	position.x = ((static_cast<int>(position.x) % width + width)) % width;
-	position.y = ((static_cast<int>(position.y) % height + height)) % height;
+	position.x = static_cast<float>(((static_cast<int>(position.x) % width + width)) % width);
+	position.y = static_cast<float>(((static_cast<int>(position.y) % height + height)) % height);
 }

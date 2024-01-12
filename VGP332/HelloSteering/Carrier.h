@@ -12,7 +12,8 @@ namespace Steering
 		{
 			Seek,
 			Arrive,
-			ObstacleAvoidance
+			ObstacleAvoidance,
+			WallAvoidance,
 		};
 
 		Carrier(Omega::AI::AIWorld& world) noexcept;

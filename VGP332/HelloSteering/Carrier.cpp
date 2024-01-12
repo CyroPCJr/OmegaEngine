@@ -40,6 +40,7 @@ void Carrier::Load()
 	mSteeringModule->AddBehavior<SeekBehaviour>("Seek")->SetActive(true);
 	mSteeringModule->AddBehavior<ArriveBehaviour>("Arrive")->SetActive(false);
 	mSteeringModule->AddBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(false);
+	mSteeringModule->AddBehavior<WallAvoidanceBehaviour>("WallAvoidance")->SetActive(false);
 }
 
 void Carrier::Unload()
@@ -97,6 +98,9 @@ void Carrier::SwitchBehaviour(const Behaviours& behaviours, bool active) const
 		break;
 	case Carrier::Behaviours::ObstacleAvoidance:
 		mSteeringModule->GetBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(active);
+		break;
+	case Carrier::Behaviours::WallAvoidance:
+		mSteeringModule->GetBehavior<ObstacleAvoidance>("WallAvoidance")->SetActive(active);
 		break;
 	default:
 		mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive")->SetActive(active);

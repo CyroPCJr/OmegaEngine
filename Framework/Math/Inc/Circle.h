@@ -7,6 +7,7 @@ namespace Omega::Math
 		Vector2 center = Vector2::Zero;
 		float radius = 1.0f;
 
+		constexpr Circle() noexcept : center(), radius(radius) {}
 		constexpr Circle(const Vector2& center, float radius) noexcept : center(center), radius(radius) {}
 		constexpr Circle(float x, float y, float radius) noexcept : center(x, y), radius(radius) {}
 		

@@ -189,6 +189,7 @@
     <ClInclude Include="Inc\SteeringModule.h" />
     <ClInclude Include="Inc\Strategy.h" />
     <ClInclude Include="Inc\VisualSensor.h" />
+    <ClInclude Include="Inc\WallAvoidanceBehaviour.h" />
     <ClInclude Include="Inc\WanderBehaviour.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
@@ -222,6 +223,7 @@
     <ClCompile Include="Src\SeparationBehaviour.cpp" />
     <ClCompile Include="Src\SteeringModule.cpp" />
     <ClCompile Include="Src\VisualSensor.cpp" />
+    <ClCompile Include="Src\WallAvoidanceBehaviour.cpp" />
     <ClCompile Include="Src\WanderBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
