@@ -27,8 +27,9 @@ namespace Omega::AI
 		Cell& GetCell(const unsigned  column, const unsigned  row) { return mCells[column + (row * mColumns)]; }
 		const Cell& GetCell(const unsigned  column, const unsigned  row) const { return mCells[column + (row * mColumns)]; }
 
-		const unsigned  GetColumns() const { return mColumns; }
-		const unsigned  GetRows() const { return mRows; }
+		const unsigned GetColumns() const { return mColumns; }
+		const unsigned GetRows() const { return mRows; }
+		const unsigned Size() const { return mCells.size(); }
 
 	private:
 		std::vector<Cell> mCells;

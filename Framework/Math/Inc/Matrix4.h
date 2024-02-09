@@ -230,13 +230,7 @@ namespace Omega::Math
 			return translation;
 		}
 
-		/*
-			convert radian to degree
-		*/
-		static float rad2deg(float rad)
-		{
-			return rad * Constants::RadToDeg;
-		}
+		
 
 		static Matrix4 RotationX(float radian)
 		{

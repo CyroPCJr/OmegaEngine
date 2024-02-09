@@ -73,8 +73,8 @@ void AIWorld::RegisterEntity(Entity* entity)
 
 void AIWorld::UnRegisterEntity(Entity* entity)
 {
-	auto iter = std::find(mEntityList.begin(), mEntityList.end(), entity);
-	if (iter != mEntityList.end())
+	if (auto iter = std::find(mEntityList.begin(), mEntityList.end(), entity);
+		iter != mEntityList.end())
 	{
 		std::iter_swap(iter, mEntityList.end() - 1);
 		mEntityList.pop_back();
@@ -91,6 +91,11 @@ void AIWorld::AddWalls(const LineSegment& walls)
 	mWalls.push_back(walls);
 }
 
+void AIWorld::AddPaths(const Paths& paths)
+{
+	mPaths = paths;
+}
+
 EntitieList AIWorld::GetEntities(const Circle& range, uint32_t typeId)
 {
 	return GetElements<Entity>(mPartitionGrid, range, mSettings.partitionGridSize, typeId);
@@ -104,7 +109,7 @@ AgentList AIWorld::GetNeighborhood(const Circle& range, uint32_t typeId)
 bool AIWorld::HasLineOfSight(const Vector2& start, const Vector2& end) const
 {
 	LineSegment line{ start,end };
-	for (auto& wall : mWalls)
+	for (const auto& wall : mWalls)
 	{
 		// mean not touch any things
 		if (Intersect(line, wall))
@@ -112,7 +117,7 @@ bool AIWorld::HasLineOfSight(const Vector2& start, const Vector2& end) const
 			return false;
 		}
 	}
-	for (auto& obstacle : mObstacles)
+	for (const auto& obstacle : mObstacles)
 	{
 		if (Intersect(line, obstacle))
 		{
@@ -124,33 +129,43 @@ bool AIWorld::HasLineOfSight(const Vector2& start, const Vector2& end) const
 
 void AIWorld::DebugDraw() const
 {
-	for (auto& obstacle : mObstacles)
+	for (const auto& obstacle : mObstacles)
 	{
 		SimpleDraw::AddScreenCircle(obstacle.center, obstacle.radius, Colors::Cyan);
 	}
 
-	for (auto& wall : mWalls)
+	for (const auto& wall : mWalls)
 	{
 		SimpleDraw::AddScreenLine(wall.from, wall.to, Colors::Cyan);
 	}
 
-	for (size_t i = 0; i < mPartitionGrid.GetColumns(); ++i)
+	for (size_t i = 0, size = mPartitionGrid.Size(); i < size; ++i)
 	{
-		Vector2 from = { static_cast<float>(i) * mSettings.partitionGridSize, 0.0f};
-		Vector2 to = { static_cast<float>(i) * mSettings.partitionGridSize, mSettings.worldSize.y};
-		SimpleDraw::AddScreenLine(from, to, Colors::White);
+		const float row = static_cast<float>(i % mPartitionGrid.GetRows());
+		const float col = static_cast<float>(i % mPartitionGrid.GetColumns());
+
+		Rect rectangule(col * size, row * size, (col + 1.0f) * size, (row + 1.0f) * size);
+		SimpleDraw::AddScreenRect(rectangule, Colors::DarkOrange);
 	}
 
-	for (size_t i = 0; i < mPartitionGrid.GetRows(); ++i)
+	for (size_t i = 0, size = mPaths.size(); i < size; ++i)
 	{
-		Vector2 from = { 0.0f, static_cast<float>(i) * mSettings.partitionGridSize };
-		Vector2 to = { mSettings.worldSize.x, static_cast<float>(i) * mSettings.partitionGridSize };
-		SimpleDraw::AddScreenLine(from, to, Colors::White);
+		SimpleDraw::AddScreenLine(mPaths[i], mPaths[(i + 1) % size] , Colors::Gray);
 	}
+
 }
 
 uint32_t AIWorld::GetNextId()
 {
 	OMEGAASSERT(mNextId < UINT32_MAX, "Run out of ids!");
 	return mNextId++;
+}
+
+void AIWorld::WrapAround(Vector2& position) const
+{
+	const int width = static_cast<int>(mSettings.worldSize.x);
+	const int height = static_cast<int>(mSettings.worldSize.y);
+
+	position.x = static_cast<float>(((static_cast<int>(position.x) % width + width)) % width);
+	position.y = static_cast<float>(((static_cast<int>(position.y) % height + height)) % height);
 }

@@ -428,7 +428,7 @@ namespace Omega::Graphics
 
 		void AddScreenLine(const Vector2& v0, const Vector2& v1, const Color& color)
 		{
-			if (m2DVertexCount + 2 < mMaxVertexCount)
+			if (m2DVertexCount + 2u < mMaxVertexCount)
 			{
 				m2DLineVertices[m2DVertexCount++] = VertexPC{ Vector3(v0.x, v0.y, 0.0f), color };
 				m2DLineVertices[m2DVertexCount++] = VertexPC{ Vector3(v1.x, v1.y, 0.0f), color };
@@ -438,7 +438,7 @@ namespace Omega::Graphics
 
 		void AddScreenCircle(const Vector2& center, float radius, const Color& color)
 		{
-			if (m2DVertexCount + 32 >= mMaxVertexCount) return;
+			if (m2DVertexCount + 32u >= mMaxVertexCount) return;
 			constexpr int slices = 16;
 			constexpr float thetaIncrement = Math::Constants::TwoPi / slices;
 

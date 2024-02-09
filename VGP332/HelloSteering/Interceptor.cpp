@@ -13,7 +13,7 @@ namespace
 	float height = 0.0f;
 }
 
-Interceptor::Interceptor(AIWorld& world) noexcept
+Interceptor::Interceptor(AIWorld& world)
 	: Agent(world, UnitType::Interceptor)
 {
 	mSteeringModule = std::make_unique<SteeringModule>(*this);
@@ -21,19 +21,22 @@ Interceptor::Interceptor(AIWorld& world) noexcept
 
 void Interceptor::Load()
 {
-	// Load images
-	for (size_t i = 0; i < mTexturesIds.size(); ++i)
 	{
-		char name[128];
-		sprintf_s(name, "Sprites/interceptor_%02zu.png", i + 1);
-		mTexturesIds[i] = SpriteRendererManager::Get()->LoadTexture(name);
+		// Load images
+		const size_t total = mTexturesIds.size();
+		for (size_t i = 0; i < total; ++i)
+		{
+			char name[128];
+			sprintf_s(name, "Sprites/interceptor_%02zu.png", i + 1);
+			mTexturesIds.at(i) = SpriteRendererManager::Get()->LoadTexture(name);
+		}
 	}
 	// Initial settings
-	auto worldSize = world.GetSettings();
+	const auto& worldSize = world.GetSettings();
 	width = worldSize.worldSize.x;
 	height = worldSize.worldSize.y;
 	maxSpeed = 200.0f;
-
+	boundingRadius = 16.f;
 	// Group Behaviours
 	mSteeringModule->AddBehavior<AI::AlignmentBehaviour>("Alignment");
 	mSteeringModule->AddBehavior<AI::CohesionBehaviour>("Cohesion");
@@ -53,7 +56,7 @@ void Interceptor::Load()
 	mSteeringModule->GetBehavior<AI::WanderBehaviour>("Wandering")->SetActive(true);
 }
 
-void Interceptor::Unload()
+void Interceptor::Unload() noexcept
 {
 	mSteeringModule.reset();
 }
@@ -65,13 +68,13 @@ void Interceptor::Update(float deltaTime)
 	// The reason that std::remove_if return type is flagged with [[no_discard]]
 	[[maybe_unused]] auto notUsed = std::remove_if(neighbors.begin(), neighbors.end(),
 		[this](auto neighbor)
-	{
-		return this == neighbor;
-	});
+		{
+			return this == neighbor;
+		});
 
 	destination = threat->position;
-	auto force = mSteeringModule->Calculate();
-	auto acceleration = (force / mass);
+	const auto force = mSteeringModule->Calculate();
+	const auto acceleration = (force / mass);
 	velocity += acceleration * deltaTime;
 	velocity = Truncate(velocity, maxSpeed);
 	position += velocity * deltaTime;
@@ -80,27 +83,12 @@ void Interceptor::Update(float deltaTime)
 		heading = Normalize(velocity);
 	}
 
+	world.WrapAround(position);
 	// show debug draw
 	if (isDebugShowDraw)
 	{
 		mSteeringModule->ShowDebugDraw();
-	}
-
-	if (position.x < 0.0f) // left border
-	{
-		position.x += width;
-	}
-	if (position.x >= width) // right border
-	{
-		position.x -= width;
-	}
-	if (position.y < 0.0f) // botton border
-	{
-		position.y += height;
-	}
-	if (position.y >= height) // top border
-	{
-		position.y -= height;
+		SimpleDraw::AddScreenCircle({ position , boundingRadius }, Colors::Aquamarine);
 	}
 }
 
@@ -108,8 +96,8 @@ void Interceptor::Render()
 {
 	const float angle = atan2(-heading.x, heading.y) + Math::Constants::Pi;
 	const size_t numFrames = mTexturesIds.size();
-	size_t index = static_cast<size_t>(angle / Math::Constants::TwoPi * numFrames);
-	SpriteRendererManager::Get()->DrawSprite(mTexturesIds[index], position);
+	const size_t index = static_cast<int>(angle / Math::Constants::TwoPi * numFrames) % numFrames;
+	SpriteRendererManager::Get()->DrawSprite(mTexturesIds.at(index), position);
 }
 
 void Interceptor::SwitchBehaviour(const Behaviours& behaviours, bool active) const
@@ -129,7 +117,7 @@ void Interceptor::SwitchBehaviour(const Behaviours& behaviours, bool active) con
 		mSteeringModule->GetBehavior<AI::EvadeBehaviour>("Evade")->SetActive(active);
 		break;
 	case Interceptor::Behaviours::Flee:
-		mSteeringModule->GetBehavior<AI::FleeBehaviour>("Cohesion")->SetActive(active);
+		mSteeringModule->GetBehavior<AI::FleeBehaviour>("Flee")->SetActive(active);
 		break;
 	case Interceptor::Behaviours::Hide:
 		mSteeringModule->GetBehavior<AI::HideBehaviour>("Hide")->SetActive(active);

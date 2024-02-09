@@ -17,7 +17,7 @@ namespace Omega::AI
 		};
 
 		Omega::Math::Vector2 Calculate(Agent& agent) override;
-		void SetSettings(const Settings& settings) { mSettings = settings; }
+		void SetSettings(const Settings& settings) noexcept { mSettings = settings; }
 
 		void ShowDebugDraw([[maybe_unused]] const Agent& agent) override;
 	private:

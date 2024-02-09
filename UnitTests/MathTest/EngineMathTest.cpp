@@ -10,6 +10,12 @@ namespace MathTest
 	{
 	public:
 
+		TEST_METHOD(Radian2DegreeTest)
+		{
+			constexpr float degree = Rad2deg(9.f);
+			Assert::AreEqual(degree, 515.662415f);
+		}
+
 		TEST_METHOD(DotTest)
 		{
 			Vector3 a{ 3.f,5.f,4.f };

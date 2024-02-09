@@ -1,4 +1,5 @@
 #pragma once
+
 #include "EngineMath.h"
 
 namespace Omega::Math::Random
@@ -11,5 +12,4 @@ namespace Omega::Math::Random
 	Omega::Math::Vector2 RandomUnitCircle();
 
 	Omega::Math::Vector3 RandomVector3(const Omega::Math::Vector3& min, const Omega::Math::Vector3& max);
-	
 }

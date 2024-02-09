@@ -12,7 +12,7 @@ namespace Omega::AI
 	{
 	public:
 		Agent(AIWorld& world, uint32_t typeId) noexcept;
-		~Agent() override = default;
+		virtual ~Agent() override = default;
 
 		Agent* threat = nullptr;
 		AgentList neighbors;
@@ -20,6 +20,7 @@ namespace Omega::AI
 		Omega::Math::Vector2 destination = Omega::Math::Vector2::YAxis;
 		float maxSpeed = 1.0f;
 		float mass = 1.0f;
+		float boundingRadius = 32.0f;
 	};
 
 }

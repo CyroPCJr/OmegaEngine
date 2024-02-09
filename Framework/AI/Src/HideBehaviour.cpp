@@ -9,7 +9,7 @@ using namespace Omega::Graphics;
 
 namespace
 {
-	inline Vector2 GetHidingPosition(const Vector2& obstaclePos, const float radius,
+	Vector2 GetHidingPosition(const Vector2& obstaclePos, const float radius,
 		const Vector2& targetPos)
 	{
 		const float distanceFromBoundary = 30.0f;
@@ -27,7 +27,7 @@ Vector2 HideBehaviour::Calculate(Agent& agent)
 	}
 	// Access the world throught the agent
 	const auto& obstList = agent.world.GetObstacles();
-	if (obstList.size() <= 0)
+	if (obstList.size() <= 0u)
 	{
 		return Vector2::Zero;
 	}

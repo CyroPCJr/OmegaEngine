@@ -10,12 +10,6 @@ namespace MathTest
 	{
 	public:
 
-		TEST_METHOD(Radian2DegreeTest)
-		{
-			const float degree = Matrix4::rad2deg(9.f);
-			Assert::AreEqual(degree, 515.661987f);
-		}
-
 		TEST_METHOD(IdentityMatrixTest)
 		{
 			Matrix4 ide = Matrix4::Identity;

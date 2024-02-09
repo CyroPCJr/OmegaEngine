@@ -3,10 +3,10 @@
 
 using namespace Omega::Math;
 
-const Vector2 Vector2::Zero{ 0.0f, 0.0f };
-const Vector2 Vector2::One{ 1.0f, 1.0f };
-const Vector2 Vector2::XAxis{ 1.0f, 0.0f };
-const Vector2 Vector2::YAxis{ 0.0f, 1.0f };
+constexpr Vector2 Vector2::Zero{ 0.0f, 0.0f };
+constexpr Vector2 Vector2::One{ 1.0f, 1.0f };
+constexpr Vector2 Vector2::XAxis{ 1.0f, 0.0f };
+constexpr Vector2 Vector2::YAxis{ 0.0f, 1.0f };
 
 constexpr Vector3 Vector3::Zero{ 0.0f };
 constexpr Vector3 Vector3::One{ 1.0f };
@@ -341,11 +341,12 @@ bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point
 	uint32_t numIntersections = 0;
 	for (uint32_t i = 0; i < 6; ++i)
 	{
-		const float d = Dot(org, planes[i].n);
-		if (d > planes[i].d)
+		Plane pl = planes[i];
+		const float d = Dot(org, pl.n);
+		if (d > pl.d)
 		{
 			float distance = 0.0f;
-			if (Intersect(localRay, planes[i], distance) && distance >= 0.0f)
+			if (Intersect(localRay, pl, distance) && distance >= 0.0f)
 			{
 				Vector3 pt = org + (dir * distance);
 				if (abs(pt.x) <= obb.extend.x + 0.01f &&
@@ -353,7 +354,7 @@ bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point
 					abs(pt.z) <= obb.extend.z + 0.01f)
 				{
 					point = pt;
-					normal = planes[i].n;
+					normal = pl.n;
 					++numIntersections;
 				}
 			}
@@ -379,14 +380,14 @@ bool Omega::Math::PointInRect(const Vector2& point, const Rect& rect)
 bool Omega::Math::PointInCircle(const Vector2& point, const Circle& circle)
 {
 	const float distance = DistanceSqr(point, circle.center);
-	return distance < circle.radius* circle.radius;
+	return distance < circle.radius * circle.radius;
 }
 
 bool Omega::Math::Intersect(const LineSegment& a, const LineSegment& b)
 {
 	float ua = ((a.to.x - a.from.x) * (b.from.y - a.from.y)) - ((a.to.y - a.from.y) * (b.from.x - a.from.x));
 	float ub = ((b.to.x - b.from.x) * (b.from.y - a.from.y)) - ((b.to.y - b.from.y) * (b.from.x - a.from.x));
-	float denom = ((a.to.y - a.from.y) * (b.to.x - b.from.x)) - ((a.to.x - a.from.x) * (b.to.y - b.from.y));
+	const float denom = ((a.to.y - a.from.y) * (b.to.x - b.from.x)) - ((a.to.x - a.from.x) * (b.to.y - b.from.y));
 
 	// First check for special cases
 	if (denom == 0.0f)
@@ -413,12 +414,71 @@ bool Omega::Math::Intersect(const LineSegment& a, const LineSegment& b)
 
 	return true;
 }
+bool Omega::Math::Intersect(const LineSegment& a, const LineSegment& b, Vector2& intersectPoint)
+{
+	float ua = ((a.to.x - a.from.x) * (b.from.y - a.from.y)) - ((a.to.y - a.from.y) * (b.from.x - a.from.x));
+	float ub = ((b.to.x - b.from.x) * (b.from.y - a.from.y)) - ((b.to.y - b.from.y) * (b.from.x - a.from.x));
+	const float denom = ((a.to.y - a.from.y) * (b.to.x - b.from.x)) - ((a.to.x - a.from.x) * (b.to.y - b.from.y));
+
+	// First check for special cases
+	if (denom == 0.0f)
+	{
+		if (ua == 0.0f && ub == 0.0f)
+		{
+			// The line segments are the same
+			return true;
+		}
+		else
+		{
+			// The line segments are parallel
+			return false;
+		}
+	}
+
+	ua /= denom;
+	ub /= denom;
+
+	if (ua < 0.0f || ua > 1.0f || ub < 0.0f || ub > 1.0f)
+	{
+		return false;
+	}
+	intersectPoint = b.from + (b.from - b.to) * -ua;
+	return true;
+}
+
+bool Omega::Math::Intersect(const Vector2& a, const Vector2& b, const Vector2& c, const Vector2& d, float& dist, Vector2& point)
+{
+	const float rTop = (a.y - c.y) * (d.x - c.x) - (a.x - c.x) * (d.y - c.y);
+	const float rBot = (b.x - a.x) * (d.y - c.y) - (b.y - a.y) * (d.x - c.x);
+
+	const float sTop = (a.y - c.y) * (b.x - a.x) - (a.x - c.x) * (b.y - a.y);
+	const float sBot = (b.x - a.x) * (d.y - c.y) - (b.y - a.y) * (d.x - c.x);
+
+	if ((rBot == 0.0f) || (sBot == 0.0f))
+	{
+		//lines are parallel
+		return false;
+	}
+
+	const float r = rTop / rBot;
+	const float s = sTop / sBot;
+
+	if ((r > 0.0f) && (r < 1.0f) && (s > 0.0f) && (s < 1.0f))
+	{
+		dist = Distance(a, b) * r;
+		point = a + r * (b - a);
+		return true;
+	}
+
+	dist = 0.0f;
+	return false;
+}
 
 bool Omega::Math::Intersect(const Circle& c0, const Circle& c1)
 {
 	const float combinedRadius = c0.radius + c1.radius;
 	const float distanceSquared = DistanceSqr(c0.center, c1.center);
-	return distanceSquared < combinedRadius* combinedRadius;
+	return distanceSquared < combinedRadius * combinedRadius;
 }
 
 bool Omega::Math::Intersect(const Rect& r0, const Rect& r1)
@@ -483,3 +543,14 @@ bool Omega::Math::Intersect(const Rect& r, const Circle& c)
 	return !(distance > c.radius);
 }
 
+bool Omega::Math::Intersect(const LineSegment& line, const Vector2& point)
+{
+	const float cross = (line.from.x - line.to.x) * (point.y - line.to.y) - (point.x - line.to.x) * (line.from.y - line.to.y);
+
+	// Check if the point lies on the line defined by line
+	return Abs(cross) < Constants::Epsilon &&
+		point.x >= Min(line.from.x, line.to.x) &&
+		point.x <= Max(line.from.x, line.to.x) &&
+		point.y >= Min(line.from.y, line.to.y) &&
+		point.y <= Max(line.from.y, line.to.y); // Adjust epsilon for comparison precision
+}

@@ -159,7 +159,7 @@ MeshPX MeshBuilder::CreateCylinderPX(float radius, int rings, int slices)
 
 	for (int i = 0; i + 1 < rings + 2; ++i)
 	{
-		for (unsigned int j = 0; j < slices; ++j)
+		for (int j = 0; j < slices; ++j)
 		{
 			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
 			mesh.indices.push_back((j + 0) + ((i + 1) * (slices + 1)));

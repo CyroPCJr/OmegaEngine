@@ -153,6 +153,15 @@
     <ClInclude Include="Inc\VisualSensor.h">
       <Filter>Inc\Perception</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\WallAvoidanceBehaviour.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\PathFollowing.h">
+      <Filter>Inc\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\PathFollowingBehaviour.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -229,6 +238,15 @@
     </ClCompile>
     <ClCompile Include="Src\VisualSensor.cpp">
       <Filter>Src\Perception</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\WallAvoidanceBehaviour.cpp">
+      <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\PathFollowing.cpp">
+      <Filter>Src\Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\PathFollowingBehaviour.cpp">
+      <Filter>Src\Steering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

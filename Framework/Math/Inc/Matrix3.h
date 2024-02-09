@@ -32,7 +32,7 @@ namespace Omega::Math
 		static Matrix3 Scaling(float sx, float sy) { return { sx, 0.0f, 0.0f, 0.0f, sy, 0.0f, 0.0f, 0.0f, 1.0f }; }
 		static Matrix3 Scaling(const Vector2& s) { return { s.x, 0.0f, 0.0f, 0.0f, s.y, 0.0f, 0.0f, 0.0f, 1.0f }; }
 
-		Matrix3 operator-() const
+		constexpr Matrix3 operator-() const
 		{
 			return {
 				-_11, -_12, -_13,
@@ -40,7 +40,7 @@ namespace Omega::Math
 				-_31, -_32, -_33 };
 		}
 
-		Matrix3 operator+(const Matrix3& rhs) const
+		constexpr Matrix3 operator+(const Matrix3& rhs) const
 		{
 			return {
 				_11 + rhs._11, _12 + rhs._12, _13 + rhs._13,
@@ -48,7 +48,7 @@ namespace Omega::Math
 				_31 + rhs._31, _32 + rhs._32, _33 + rhs._33 };
 		}
 
-		Matrix3 operator-(const Matrix3& rhs) const
+		constexpr Matrix3 operator-(const Matrix3& rhs) const
 		{
 			return {
 				_11 - rhs._11, _12 - rhs._12, _13 - rhs._13,
@@ -56,7 +56,7 @@ namespace Omega::Math
 				_31 - rhs._31, _32 - rhs._32, _33 - rhs._33 };
 		}
 
-		Matrix3 operator*(const Matrix3& rhs) const
+		constexpr Matrix3 operator*(const Matrix3& rhs) const
 		{
 			return {
 				(_11 * rhs._11) + (_12 * rhs._21) + (_13 * rhs._31),
@@ -72,7 +72,7 @@ namespace Omega::Math
 				(_31 * rhs._13) + (_32 * rhs._23) + (_33 * rhs._33) };
 		}
 
-		Matrix3 operator*(float s) const
+		constexpr Matrix3 operator*(float s) const
 		{
 			return {
 				_11 * s, _12 * s, _13 * s,
@@ -80,7 +80,7 @@ namespace Omega::Math
 				_31 * s, _32 * s, _33 * s };
 		}
 
-		Matrix3 operator/(float s) const
+		constexpr Matrix3 operator/(float s) const
 		{
 			return {
 				_11 / s, _12 / s, _13 / s,
@@ -88,7 +88,7 @@ namespace Omega::Math
 				_31 / s, _32 / s, _33 / s };
 		}
 
-		Matrix3 operator+=(const Matrix3& rhs)
+		constexpr Matrix3 operator+=(const Matrix3& rhs)
 		{
 			_11 += rhs._11; _12 += rhs._12; _13 += rhs._13;
 			_21 += rhs._21; _22 += rhs._22; _23 += rhs._23;

@@ -4,17 +4,21 @@
 
 using namespace Omega::AI;
 using namespace Omega::Math;
+using namespace Omega::Graphics;
 
 Vector2 FleeBehaviour::Calculate(Agent& agent)
-{
-	//TODO: fixed that later
-	const float panicDistance = 100.0f * 100.0f;
-	if (const float distance = Magnitude(agent.position - agent.destination); 
-		distance > panicDistance)
+{	
+	if (const float distance = DistanceSqr(agent.position, agent.destination); distance > mPanicDistance)
 	{
 		return Vector2::Zero;
 	}
 	return Fleeing(agent, agent.destination);
+}
+
+void FleeBehaviour::ShowDebugDraw(const Agent& agent)
+{
+	SimpleDraw::AddScreenCircle({ agent.position, mPanicDistance }, Colors::BlueViolet);
+	SimpleDraw::AddScreenLine(agent.position, agent.destination, Colors::Green);
 }
 
 Vector2 FleeBehaviour::Fleeing(Agent& agent, const Vector2& destination)

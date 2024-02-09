@@ -12,7 +12,7 @@ namespace
 	float height = 0.0f;
 }
 
-Carrier::Carrier(AIWorld& world) noexcept
+Carrier::Carrier(AIWorld& world)
 	: Agent(world, UnitType::Carrier)
 {
 	mSteeringModule = std::make_unique<SteeringModule>(*this);
@@ -21,27 +21,33 @@ Carrier::Carrier(AIWorld& world) noexcept
 void Carrier::Load()
 {
 	// Load images
-	for (size_t i = 0; i < mTexturesIds.size(); ++i)
 	{
-		char name[128];
-		sprintf_s(name, "Sprites/carrier_%02zu.png", i + 1);
-		mTexturesIds[i] = SpriteRendererManager::Get()->LoadTexture(name);
+		const size_t total = mTexturesIds.size();
+		for (size_t i = 0; i < total; ++i)
+		{
+			char name[128];
+			sprintf_s(name, "Sprites/carrier_%02zu.png", i + 1u);
+			mTexturesIds.at(i) = SpriteRendererManager::Get()->LoadTexture(name);
+		}
 	}
-
+	
 	// Initial settings
-	auto worldSize = world.GetSettings();
+	const auto& worldSize = world.GetSettings();
 	width = worldSize.worldSize.x;
 	height = worldSize.worldSize.y;
 	position = { width * 0.5f, height * 0.5f };
 	maxSpeed = 200.0f;
+	boundingRadius = 64.f;
 
 	// Steerin Behaviours
-	mSteeringModule->AddBehavior<SeekBehaviour>("Seek")->SetActive(true);
-	mSteeringModule->AddBehavior<ArriveBehaviour>("Arrive")->SetActive(false);
-	mSteeringModule->AddBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(false);
+	mSteeringModule->AddBehavior<SeekBehaviour>("Seek")->SetActive(false);
+	mSteeringModule->AddBehavior<ArriveBehaviour>("Arrive");
+	mSteeringModule->AddBehavior<ObstacleAvoidance>("AvoidanceObstacle");
+	mSteeringModule->AddBehavior<WallAvoidanceBehaviour>("WallAvoidance"); 
+	mSteeringModule->AddBehavior<PathFollowingBehaviour>("PathFollowing");
 }
 
-void Carrier::Unload()
+void Carrier::Unload() noexcept
 {
 	mTexturesIds = { 0 };
 	mSteeringModule.reset();
@@ -49,11 +55,11 @@ void Carrier::Unload()
 
 void Carrier::Update(float deltaTime)
 {
-	destination = { static_cast<float>(InputSystem::Get()->GetMouseScreenX()),
-				   static_cast<float>(InputSystem::Get()->GetMouseScreenY()) };
+	/*destination = { static_cast<float>(InputSystem::Get()->GetMouseScreenX()),
+				   static_cast<float>(InputSystem::Get()->GetMouseScreenY()) };*/
 
-	auto force = mSteeringModule->Calculate();
-	auto acceleration = (force / mass);
+	const auto force = mSteeringModule->Calculate();
+	const auto acceleration = (force / mass);
 	velocity += acceleration * deltaTime;
 	velocity = Truncate(velocity, maxSpeed);
 	position += velocity * deltaTime;
@@ -62,36 +68,22 @@ void Carrier::Update(float deltaTime)
 		heading = Normalize(velocity);
 	}
 
+	world.WrapAround(position);
+	
 	// show debug draw
 	if (isDebugShowDraw)
 	{
 		mSteeringModule->ShowDebugDraw();
-	}
-
-	if (position.x < 0.0f) // left border
-	{
-		position.x += width;
-	}
-	if (position.x >= width) // right border
-	{
-		position.x -= width;
-	}
-	if (position.y < 0.0f) // botton border
-	{
-		position.y += height;
-	}
-	if (position.y >= height) // top border
-	{
-		position.y -= height;
-	}
+		SimpleDraw::AddScreenCircle({ position , boundingRadius }, Colors::Aquamarine);
+	}	
 }
 
 void Carrier::Render()
 {
 	const float angle = atan2(-heading.x, heading.y) + Constants::Pi;
 	const size_t numFrames = mTexturesIds.size();
-	size_t index = static_cast<size_t>(angle / Constants::TwoPi * numFrames);
-	SpriteRendererManager::Get()->DrawSprite(mTexturesIds[index], position);
+	const size_t index = static_cast<int>(angle / Constants::TwoPi * numFrames) % numFrames;
+	SpriteRendererManager::Get()->DrawSprite(mTexturesIds.at(index), position);
 }
 
 void Carrier::SwitchBehaviour(const Behaviours& behaviours, bool active) const
@@ -110,6 +102,16 @@ void Carrier::SwitchBehaviour(const Behaviours& behaviours, bool active) const
 		break;
 	case Carrier::Behaviours::ObstacleAvoidance:
 		mSteeringModule->GetBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(active);
+		break;
+	case Carrier::Behaviours::WallAvoidance:
+		mSteeringModule->GetBehavior<ObstacleAvoidance>("WallAvoidance")->SetActive(active);
+		break;
+	case Carrier::Behaviours::PathFollowing:
+		if (const auto& behaviour = mSteeringModule->GetBehavior<PathFollowingBehaviour>("PathFollowing"))
+		{
+			behaviour->SetActive(active);
+			behaviour->SetPaths(world.GetPaths());
+		}		
 		break;
 	default:
 		mSteeringModule->GetBehavior<ArriveBehaviour>("Arrive")->SetActive(active);

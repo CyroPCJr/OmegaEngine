@@ -9,7 +9,7 @@ namespace Omega::Math
 		float y = 0.0f;
 		float z = 0.0f;
 
-		constexpr Vector3() noexcept : Vector3(0.0f) {};
+		constexpr Vector3() noexcept = default;
 		constexpr Vector3(float f) noexcept : Vector3(f, f, f) {};
 		constexpr Vector3(float x, float y, float z) noexcept : x(x), y(y), z(z) {};
 
