@@ -115,7 +115,7 @@ namespace Omega::Math
 		return Magnitude(v1 - v2);
 	}
 
-	constexpr float DistanceSqr(const Vector2& v1, const Vector2& v2)
+	inline float DistanceSqr(const Vector2& v1, const Vector2& v2)
 	{
 		return MagnitudeSqr(v1 - v2);
 	}
@@ -161,6 +161,17 @@ namespace Omega::Math
 	{
 		const Vector2 vecTemp = Normalize(v1 - v2);
 		return { -vecTemp.y, vecTemp.x };
+	}
+
+	constexpr Vector2 Project(const Vector2& v1, const Vector2& v2)
+	{
+		return v2 * (Dot(v1, v2) / Dot(v2, v2));
+	}
+
+
+	constexpr Vector2 Reflect(const Vector2& v, const Vector2& normal)
+	{
+		return v - (normal * Dot(v, normal) * 2.0f);
 	}
 
 #pragma endregion
@@ -215,12 +226,22 @@ namespace Omega::Math
 
 	constexpr Vector3 TriangleNormal(const Vector3& v1, const Vector3& v2, const Vector3& v3)
 	{
-		Vector3 edge1 = v2 - v1;
-		Vector3 edge2 = v3 - v1;
+		const Vector3 edge1 = v2 - v1;
+		const Vector3 edge2 = v3 - v1;
 		Vector3 normal = Cross(edge1, edge2);
 		return normal;
 	}
-	
+
+	constexpr Vector3 Project(const Vector3& v1, const Vector3& v2)
+	{
+		return v2 * (Dot(v1, v2) / Dot(v2, v2));
+	}
+
+	constexpr Vector3 Reflect(const Vector3& v, const Vector3& normal)
+	{
+		return v - (normal * Dot(v, normal) * 2.0f);
+	}
+
 #pragma endregion
 
 
@@ -282,7 +303,7 @@ namespace Omega::Math
 		return det;
 	}
 
-	inline Matrix3 Inverse(const Matrix3& m)
+	constexpr Matrix3 Inverse(const Matrix3& m)
 	{
 		const float det = Determinant(m);
 		const float inverseDet = 1.0f / det;
@@ -290,7 +311,7 @@ namespace Omega::Math
 		return matrix.Adjoint(m) * inverseDet;
 	}
 
-	inline Matrix4 Inverse(const Matrix4& m)
+	constexpr Matrix4 Inverse(const Matrix4& m)
 	{
 		const float det = Determinant(m);
 		const float inverseDet = 1.0f / det;
@@ -434,7 +455,7 @@ namespace Omega::Math
 	bool PointInCircle(const Vector2& point, const Circle& circle);
 
 	bool Intersect(const LineSegment& a, const LineSegment& b);
-	bool Intersect(const LineSegment& a, const LineSegment& b, Vector2&  intersectPoint);
+	bool Intersect(const LineSegment& a, const LineSegment& b, Vector2& intersectPoint);
 	bool Intersect(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D, float& dist, Vector2& point);
 
 	bool Intersect(const Circle& c0, const Circle& c1);
@@ -445,6 +466,7 @@ namespace Omega::Math
 
 	bool Intersect(const Circle& c, const Rect& r);
 	bool Intersect(const Rect& r, const Circle& c);
+	bool Intersect(const LineSegment& line, const Vector2& point);
 
 #pragma endregion
 

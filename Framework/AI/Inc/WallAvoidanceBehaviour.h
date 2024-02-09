@@ -14,15 +14,13 @@ namespace Omega::AI
 
 		void ShowDebugDraw(const Agent& agent) override;
 
-		void setDetectionFeelerLength(float length) { mDetectionFeelerLength = length; }
+		void setDetectionFeelerLength(float length) noexcept { mDetectionFeelerLength = length; }
 
 	private:
 		void CreateFeelers(const Agent& agent);
 
-		float mDetectionFeelerLength = 100.0f;
-
 		std::array<Omega::Math::Vector2, 3> mFeelers{0};
-
+		float mDetectionFeelerLength = 100.0f;
 	};
 
 }

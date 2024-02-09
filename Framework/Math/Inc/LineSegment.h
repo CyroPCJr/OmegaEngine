@@ -10,6 +10,5 @@ namespace Omega::Math
 		constexpr LineSegment() noexcept = default;
 		constexpr LineSegment(float fromX, float fromY, float toX, float toY) noexcept :from(fromX, fromY), to(toX, toY) {}
 		constexpr LineSegment(const Vector2& v0, const Vector2& v1) noexcept : from(v0), to(v1) {}
-
 	};
 }

@@ -5,7 +5,6 @@
 
 namespace Omega::AI
 {
-	
 	class AIWorld
 	{
 	public:
@@ -17,6 +16,7 @@ namespace Omega::AI
 
 		using Obstacles = std::vector<Omega::Math::Circle>;
 		using Walls = std::vector<Omega::Math::LineSegment>;
+		using Paths = std::vector<Omega::Math::Vector2>;
 
 		void Initialize(const Settings& settings);
 		void Update();
@@ -26,12 +26,14 @@ namespace Omega::AI
 
 		void AddObstacles(const Omega::Math::Circle& obstacles);
 		void AddWalls(const Omega::Math::LineSegment& walls);
+		void AddPaths(const Paths& paths);
 
 		EntitieList GetEntities(const Omega::Math::Circle& range, uint32_t typeId);
 		AgentList GetNeighborhood(const Omega::Math::Circle& range, uint32_t typeId);
 
-		const Obstacles& GetObstacles() const { return mObstacles; }
-		const Walls& GetWalls() const { return mWalls; }
+		inline const Obstacles& GetObstacles() const { return mObstacles; }
+		inline const Walls& GetWalls() const { return mWalls; }
+		inline const Paths& GetPaths() const { return mPaths; }
 
 		bool HasLineOfSight(const Omega::Math::Vector2& start, const Omega::Math::Vector2& end) const;
 
@@ -44,12 +46,13 @@ namespace Omega::AI
 		uint32_t GetNextId();
 
 	private:
-		Settings mSettings;
 		EntitieList mEntityList;
+		Settings mSettings;
 		Obstacles mObstacles;
 		Walls mWalls;
+		Paths mPaths;
 		PartitionGrid<Entity> mPartitionGrid;
 
 		uint32_t mNextId = 0;
 	};
-}	
+}

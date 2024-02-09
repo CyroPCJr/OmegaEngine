@@ -4,7 +4,6 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-
 namespace
 {
 	std::unique_ptr<GraphicsSystem> sGraphicsSystem;
@@ -156,7 +155,7 @@ void GraphicsSystem::ToggleFullscreen()
 
 void GraphicsSystem::Resize(uint32_t width, uint32_t height)
 {
-	mImmediateContext->OMSetRenderTargets(0, nullptr, nullptr);
+	mImmediateContext->OMSetRenderTargets(0u, nullptr, nullptr);
 
 	SafeRelease(mRenderTargetView);
 	SafeRelease(mDepthStencilView);
@@ -203,8 +202,8 @@ void GraphicsSystem::Resize(uint32_t width, uint32_t height)
 	mViewport.Height = static_cast<float>(GetBackBufferHeight());
 	mViewport.MinDepth = 0.0f;
 	mViewport.MaxDepth = 1.0f;
-	mViewport.TopLeftX = 0;
-	mViewport.TopLeftY = 0;
+	mViewport.TopLeftX = 0.0f;
+	mViewport.TopLeftY = 0.0f;
 	mImmediateContext->RSSetViewports(1, &mViewport);
 }
 

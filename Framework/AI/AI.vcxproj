@@ -178,6 +178,8 @@
     <ClInclude Include="Inc\MemoryRecord.h" />
     <ClInclude Include="Inc\ObstacleAvoidance.h" />
     <ClInclude Include="Inc\PartitionGrid.h" />
+    <ClInclude Include="Inc\PathFollowing.h" />
+    <ClInclude Include="Inc\PathFollowingBehaviour.h" />
     <ClInclude Include="Inc\PerceptionModule.h" />
     <ClInclude Include="Inc\PursuitBehaviour.h" />
     <ClInclude Include="Inc\SeekBehaviour.h" />
@@ -211,6 +213,8 @@
     <ClCompile Include="src\Interpose.cpp" />
     <ClCompile Include="src\MemoryRecord.cpp" />
     <ClCompile Include="Src\ObstacleAvoidance.cpp" />
+    <ClCompile Include="Src\PathFollowing.cpp" />
+    <ClCompile Include="Src\PathFollowingBehaviour.cpp" />
     <ClCompile Include="Src\PerceptionModule.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

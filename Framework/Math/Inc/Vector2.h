@@ -38,7 +38,6 @@ namespace Omega::Math
 		constexpr Vector2& operator*=(const Vector2& v) { x *= v.x;  y *= v.y; return *this; }
 		constexpr Vector2& operator/=(const float v) { x /= v; y /= v; return *this; }
 		constexpr Vector2& operator/=(const Vector2& v) { x /= v.x; y /= v.y; return *this; }
-		constexpr Vector2& operator=(const Vector2& v) { x = v.x; y = v.y; return *this; }
 		constexpr Vector2& operator=(const float f) { x = f; y = f; return *this; }
 
 		// Comparison operators

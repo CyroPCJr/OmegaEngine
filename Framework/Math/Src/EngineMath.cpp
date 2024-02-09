@@ -3,10 +3,10 @@
 
 using namespace Omega::Math;
 
-const Vector2 Vector2::Zero{ 0.0f, 0.0f };
-const Vector2 Vector2::One{ 1.0f, 1.0f };
-const Vector2 Vector2::XAxis{ 1.0f, 0.0f };
-const Vector2 Vector2::YAxis{ 0.0f, 1.0f };
+constexpr Vector2 Vector2::Zero{ 0.0f, 0.0f };
+constexpr Vector2 Vector2::One{ 1.0f, 1.0f };
+constexpr Vector2 Vector2::XAxis{ 1.0f, 0.0f };
+constexpr Vector2 Vector2::YAxis{ 0.0f, 1.0f };
 
 constexpr Vector3 Vector3::Zero{ 0.0f };
 constexpr Vector3 Vector3::One{ 1.0f };
@@ -341,11 +341,12 @@ bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point
 	uint32_t numIntersections = 0;
 	for (uint32_t i = 0; i < 6; ++i)
 	{
-		const float d = Dot(org, planes[i].n);
-		if (d > planes[i].d)
+		Plane pl = planes[i];
+		const float d = Dot(org, pl.n);
+		if (d > pl.d)
 		{
 			float distance = 0.0f;
-			if (Intersect(localRay, planes[i], distance) && distance >= 0.0f)
+			if (Intersect(localRay, pl, distance) && distance >= 0.0f)
 			{
 				Vector3 pt = org + (dir * distance);
 				if (abs(pt.x) <= obb.extend.x + 0.01f &&
@@ -353,7 +354,7 @@ bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point
 					abs(pt.z) <= obb.extend.z + 0.01f)
 				{
 					point = pt;
-					normal = planes[i].n;
+					normal = pl.n;
 					++numIntersections;
 				}
 			}
@@ -386,7 +387,7 @@ bool Omega::Math::Intersect(const LineSegment& a, const LineSegment& b)
 {
 	float ua = ((a.to.x - a.from.x) * (b.from.y - a.from.y)) - ((a.to.y - a.from.y) * (b.from.x - a.from.x));
 	float ub = ((b.to.x - b.from.x) * (b.from.y - a.from.y)) - ((b.to.y - b.from.y) * (b.from.x - a.from.x));
-	float denom = ((a.to.y - a.from.y) * (b.to.x - b.from.x)) - ((a.to.x - a.from.x) * (b.to.y - b.from.y));
+	const float denom = ((a.to.y - a.from.y) * (b.to.x - b.from.x)) - ((a.to.x - a.from.x) * (b.to.y - b.from.y));
 
 	// First check for special cases
 	if (denom == 0.0f)
@@ -468,7 +469,7 @@ bool Omega::Math::Intersect(const Vector2& a, const Vector2& b, const Vector2& c
 		point = a + r * (b - a);
 		return true;
 	}
-	
+
 	dist = 0.0f;
 	return false;
 }
@@ -540,4 +541,16 @@ bool Omega::Math::Intersect(const Rect& r, const Circle& c)
 
 	const float distance = Distance(closestPoint, c.center);
 	return !(distance > c.radius);
+}
+
+bool Omega::Math::Intersect(const LineSegment& line, const Vector2& point)
+{
+	const float cross = (line.from.x - line.to.x) * (point.y - line.to.y) - (point.x - line.to.x) * (line.from.y - line.to.y);
+
+	// Check if the point lies on the line defined by line
+	return Abs(cross) < Constants::Epsilon &&
+		point.x >= Min(line.from.x, line.to.x) &&
+		point.x <= Max(line.from.x, line.to.x) &&
+		point.y >= Min(line.from.y, line.to.y) &&
+		point.y <= Max(line.from.y, line.to.y); // Adjust epsilon for comparison precision
 }

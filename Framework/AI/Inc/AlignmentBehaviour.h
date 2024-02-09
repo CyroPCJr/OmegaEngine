@@ -10,6 +10,8 @@ namespace Omega::AI
 		virtual ~AlignmentBehaviour() = default;
 
 		Omega::Math::Vector2 Calculate(AI::Agent& agent) override;
+
+		void ShowDebugDraw(const Agent& agent) override;
 	};
 
 }

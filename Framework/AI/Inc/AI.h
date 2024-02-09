@@ -22,6 +22,7 @@
 #include "ObstacleAvoidance.h"
 #include "WallAvoidanceBehaviour.h"
 #include "Interpose.h"
+#include "PathFollowingBehaviour.h"
 
 // Steering Group Behaviours
 #include "SeparationBehaviour.h"

@@ -70,11 +70,18 @@ void GameState::SettingInit()
 	mSettings.worldSize = { static_cast<float>(GraphicsSystem::Get()->GetBackBufferWidth()),
 		static_cast<float>(GraphicsSystem::Get()->GetBackBufferHeight()) };
 	mAIWorld.Initialize(mSettings);
-	mAIWorld.AddObstacles({ { 300.0f,300.0f }, 100.0f });
+	/*mAIWorld.AddObstacles({ { 300.0f,300.0f }, 100.0f });
 	mAIWorld.AddObstacles({ { 1000.0f,200.0f }, 80.0f });
 	mAIWorld.AddObstacles({ { 500.0f, 100.0f }, 20.0f });
 
-	mAIWorld.AddWalls({ { 1000.0f, 50.f }, { 150.0f,100.0f } });
+	mAIWorld.AddWalls({ { 1000.0f, 50.f }, { 150.0f,100.0f } });*/
+
+	std::vector<Vector2> paths;
+	paths.push_back({ 300.0f, 500.0f });
+	paths.push_back({ paths.back().y, 100.0f });
+	paths.push_back({ paths.back().y, 50.0f });
+	paths.push_back({ paths.back().y, 150.0f });
+	mAIWorld.AddPaths(paths);
 }
 
 void GameState::GeneralDebugUI()
@@ -208,14 +215,14 @@ void GameState::GeneralDebugUI()
 		{
 			mCarrier->SwitchBehaviour(Carrier::Behaviours::Arrive, arriveDebug);
 		}
-		
+
 		static float slowRadius = 0.0f;
 		if (arriveDebug)
 		{
 			ImGui::SliderFloat("SlowRadius###radius", &slowRadius, 0.0f, 250.0f);
 			mCarrier->SetSlowRadius(slowRadius);
 		}
-		
+
 		if (static bool avoidDebug = false;
 			ImGui::Checkbox("Obstacel Avoidance", &avoidDebug))
 		{
@@ -227,7 +234,13 @@ void GameState::GeneralDebugUI()
 		{
 			mCarrier->SwitchBehaviour(Carrier::Behaviours::WallAvoidance, wallAvoidanceDebug);
 		}
-		
+
+		if (static bool pathFollowingDebug = false;
+			ImGui::Checkbox("Path Following", &pathFollowingDebug))
+		{
+			mCarrier->SwitchBehaviour(Carrier::Behaviours::PathFollowing, pathFollowingDebug);
+		}
+
 	}
 	ImGui::EndGroup();
 	ImGui::End();

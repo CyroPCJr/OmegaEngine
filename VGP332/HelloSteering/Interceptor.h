@@ -5,7 +5,7 @@
 namespace Steering
 {
 
-	class Interceptor : public Omega::AI::Agent
+	class Interceptor final: public Omega::AI::Agent
 	{
 	public:
 		enum class Behaviours
@@ -23,11 +23,11 @@ namespace Steering
 		};
 
 
-		Interceptor(Omega::AI::AIWorld& world) noexcept;
+		Interceptor(Omega::AI::AIWorld& world);
 		~Interceptor() override = default;
 
 		void Load();
-		void Unload();
+		void Unload() noexcept;
 
 		void Update(float deltaTime);
 		void Render();

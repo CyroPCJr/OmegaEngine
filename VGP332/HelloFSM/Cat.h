@@ -4,9 +4,11 @@
 
 namespace FSM
 {
-	class Cat
+	class Cat : public Omega::AI::Agent
 	{
 	public:
+
+		~Cat() override = default;
 		void Load();
 		void UnLoad();
 

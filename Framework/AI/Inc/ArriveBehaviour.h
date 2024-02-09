@@ -13,7 +13,7 @@ namespace Omega::AI
 		Omega::Math::Vector2 Arrive(const AI::Agent& agent, const Omega::Math::Vector2& destination) const;
 
 		void ShowDebugDraw(const Agent& agent) override;
-		inline void SetSlowRadius(float radius) { mSlowRadius = radius; }
+		void SetSlowRadius(float radius) noexcept { mSlowRadius = radius; }
 	private:
 		float mSlowRadius = 100.0f;
 	};
