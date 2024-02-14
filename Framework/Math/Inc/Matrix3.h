@@ -20,17 +20,17 @@ namespace Omega::Math
 		const static Matrix3 Identity;
 		const static Matrix3 Zero;
 
-		static Matrix3 Translation(float x, float y) { return { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, 1.0f }; }
-		static Matrix3 Translation(const Vector2& v) { return { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, v.x, v.y, 1.0f }; }
-		static Matrix3 Rotation(float rad)
+		constexpr static Matrix3 Translation(float x, float y) noexcept { return { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, 1.0f }; }
+		constexpr static Matrix3 Translation(const Vector2& v) noexcept { return { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, v.x, v.y, 1.0f }; }
+		static Matrix3 Rotation(float rad) noexcept
 		{
 			const float cos = cosf(rad);
 			const float sin = sinf(rad);
 			return { cos, sin, 0.0f, -sin, cos, 0.0f, 0.0f, 0.0f, 1.0f };
 		}
-		static Matrix3 Scaling(float s) { return { s, 0.0f, 0.0f, 0.0f, s, 0.0f, 0.0f, 0.0f, 1.0f }; }
-		static Matrix3 Scaling(float sx, float sy) { return { sx, 0.0f, 0.0f, 0.0f, sy, 0.0f, 0.0f, 0.0f, 1.0f }; }
-		static Matrix3 Scaling(const Vector2& s) { return { s.x, 0.0f, 0.0f, 0.0f, s.y, 0.0f, 0.0f, 0.0f, 1.0f }; }
+		constexpr static Matrix3 Scaling(float s) noexcept { return { s, 0.0f, 0.0f, 0.0f, s, 0.0f, 0.0f, 0.0f, 1.0f }; }
+		constexpr static Matrix3 Scaling(float sx, float sy) noexcept { return { sx, 0.0f, 0.0f, 0.0f, sy, 0.0f, 0.0f, 0.0f, 1.0f }; }
+		constexpr static Matrix3 Scaling(const Vector2& s) noexcept { return { s.x, 0.0f, 0.0f, 0.0f, s.y, 0.0f, 0.0f, 0.0f, 1.0f }; }
 
 		constexpr Matrix3 operator-() const
 		{

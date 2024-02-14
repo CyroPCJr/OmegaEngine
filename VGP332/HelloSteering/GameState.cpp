@@ -17,12 +17,12 @@ void GameState::Initialize()
 
 	for (size_t i = 0; i < maxInterceptor; ++i)
 	{
-		auto interceptor = mInterceptorList.emplace_back(std::make_unique<Interceptor>(mAIWorld)).get();
+		const auto& interceptor = mInterceptorList.emplace_back(std::make_unique<Interceptor>(mAIWorld));
 		interceptor->Load();
 		interceptor->position = { Random::RandomFloat(0, mSettings.worldSize.x), Random::RandomFloat(0, mSettings.worldSize.y) };
 		interceptor->threat = mCarrier.get();
 	}
-
+//	OMEGAASSERT(false, "asd");
 }
 
 void GameState::Terminate()
@@ -70,11 +70,11 @@ void GameState::SettingInit()
 	mSettings.worldSize = { static_cast<float>(GraphicsSystem::Get()->GetBackBufferWidth()),
 		static_cast<float>(GraphicsSystem::Get()->GetBackBufferHeight()) };
 	mAIWorld.Initialize(mSettings);
-	/*mAIWorld.AddObstacles({ { 300.0f,300.0f }, 100.0f });
+	mAIWorld.AddObstacles({ { 300.0f,300.0f }, 100.0f });
 	mAIWorld.AddObstacles({ { 1000.0f,200.0f }, 80.0f });
 	mAIWorld.AddObstacles({ { 500.0f, 100.0f }, 20.0f });
 
-	mAIWorld.AddWalls({ { 1000.0f, 50.f }, { 150.0f,100.0f } });*/
+	mAIWorld.AddWalls({ { 1000.0f, 50.f }, { 150.0f,100.0f } });
 
 	std::vector<Vector2> paths;
 	paths.push_back({ 300.0f, 500.0f });

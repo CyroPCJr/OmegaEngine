@@ -30,9 +30,9 @@ namespace Omega::Core::Meta
 
 		virtual ~MetaType() = default;
 
-		Category GetCategory() const { return mCategory; }
-		const char* GetName() const { return mName.c_str(); }
-		size_t GetSize() const { return mSize; }
+		Category GetCategory() const noexcept { return mCategory; }
+		const char* GetName() const noexcept { return mName.c_str(); }
+		size_t GetSize() const noexcept { return mSize; }
 
 		virtual void Deserialize(void* instance, const rapidjson::Value& jsonValue) const;
 

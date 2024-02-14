@@ -12,9 +12,9 @@ namespace Omega::Core::Meta
 
 		void* GetFieldInstance(void* classInstance) const;
 
-		const MetaType* GetMetaType() const { return mType; }
-		const char* GetName() const { return mName.c_str(); }
-		size_t GetOffset() const { return mOffset; }
+		const MetaType* GetMetaType() const noexcept { return mType; }
+		const char* GetName() const noexcept { return mName.c_str(); }
+		size_t GetOffset() const noexcept { return mOffset; }
 
 	private:
 		const MetaType* mType;
