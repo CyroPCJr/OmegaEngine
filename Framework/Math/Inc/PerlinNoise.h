@@ -41,10 +41,10 @@ namespace Omega::Math
 
 		constexpr float gradient(int hash, float x, float y, float z) const
 		{
-			int h = hash & 15;
+			const int h = hash & 15;
 			// Convert lower 4 bits of hash into 12 gradient directions
-			float u = (h < 8) ? x : y;
-			float v = (h < 4) ? y : (h == 12 || h == 14) ? x : z;
+			const float u = (h < 8) ? x : y;
+			const float v = (h < 4) ? y : (h == 12 || h == 14) ? x : z;
 			return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 		}
 

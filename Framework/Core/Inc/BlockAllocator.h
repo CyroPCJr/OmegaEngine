@@ -18,13 +18,13 @@ namespace Omega::Core
 		void* Allocate();
 		void Free(void* ptr);
 
-		size_t GetCapacity() const { return mCapacity; }
+		size_t GetCapacity() const noexcept { return mCapacity; }
 
 	protected:
+		std::vector<size_t> mFreeSlots;
 		void* mData;
 		size_t mBlockSize;
 		size_t mCapacity;
-		std::vector<size_t> mFreeSlots;
 	};
 
 }

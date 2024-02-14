@@ -9,7 +9,7 @@ namespace Omega::Core::Meta
 	public:
 		MetaArray(const MetaType* element);
 
-		const MetaType* GetElementType() const { return mElementType; }
+		const MetaType* GetElementType() const noexcept { return mElementType; }
 
 	private:
 		const MetaType* const mElementType;

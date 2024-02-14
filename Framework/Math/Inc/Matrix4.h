@@ -4,6 +4,7 @@
 
 namespace Omega::Math
 {
+	struct Vector3;
 	struct Quaternion;
 
 	struct Matrix4
@@ -20,39 +21,38 @@ namespace Omega::Math
 			std::array<float, 16> v;
 		};
 
-
 		const static Matrix4 Identity;
 		const static Matrix4 Zero;
 
 		static Matrix4 RotationAxis(const Vector3& axis, float rad);
-		static Matrix4 RotationQuaternion(const Quaternion& q);
-		static Matrix4 Transform(const Vector3& translation, const Quaternion& rotation, const Vector3& scale);
+		static Matrix4 RotationQuaternion(const Quaternion& q) noexcept;
+		static Matrix4 Transform(const Vector3& translation, const Quaternion& rotation, const Vector3& scale) noexcept;
 
 #pragma region operator overload
 
-		constexpr Matrix4& operator=(const Matrix4& m)
-		{
-			_11 = m._11;
-			_12 = m._12;
-			_13 = m._13;
-			_14 = m._14;
+		//constexpr Matrix4& operator=(const Matrix4& m)
+		//{
+		//	_11 = m._11;
+		//	_12 = m._12;
+		//	_13 = m._13;
+		//	_14 = m._14;
 
-			_21 = m._21;
-			_22 = m._22;
-			_23 = m._23;
-			_24 = m._24;
+		//	_21 = m._21;
+		//	_22 = m._22;
+		//	_23 = m._23;
+		//	_24 = m._24;
 
-			_31 = m._31;
-			_32 = m._32;
-			_33 = m._33;
-			_34 = m._34;
+		//	_31 = m._31;
+		//	_32 = m._32;
+		//	_33 = m._33;
+		//	_34 = m._34;
 
-			_41 = m._41;
-			_42 = m._42;
-			_43 = m._43;
-			_44 = m._44;
-			return *this;
-		}
+		//	_41 = m._41;
+		//	_42 = m._42;
+		//	_43 = m._43;
+		//	_44 = m._44;
+		//	return *this;
+		//}
 
 		constexpr bool operator==(const Matrix4& m) const
 		{
@@ -74,7 +74,7 @@ namespace Omega::Math
 				(_44 == m._44);
 		}
 
-		inline Matrix4 operator*(const Matrix4& m)
+		constexpr Matrix4 operator*(const Matrix4& m) noexcept
 		{
 			Matrix4 aux{};
 			aux._11 = (_11 * m._11) + (_12 * m._21) + (_13 * m._31) + (_14 * m._41);
@@ -100,7 +100,7 @@ namespace Omega::Math
 			return aux;
 		}
 
-		inline Matrix4 operator*=(const Matrix4& m)
+		inline Matrix4 operator*=(const Matrix4& m) noexcept
 		{
 			Matrix4 aux{};
 			aux._11 = (_11 * m._11) + (_12 * m._21) + (_13 * m._31) + (_14 * m._41);
@@ -139,7 +139,7 @@ namespace Omega::Math
 			return *this;
 		}
 
-		inline Matrix4 operator+(const Matrix4& m)
+		inline Matrix4 operator+(const Matrix4& m) noexcept
 		{
 			Matrix4 aux{};
 			aux._11 = (_11 + m._11); aux._12 = (_12 + m._12); aux._13 = (_13 + m._13); aux._14 = (_14 + m._14);
@@ -158,7 +158,7 @@ namespace Omega::Math
 			return *this;
 		}
 
-		inline Matrix4 operator-(const Matrix4& m)
+		inline Matrix4 operator-(const Matrix4& m) noexcept
 		{
 			Matrix4 aux{};
 			aux._11 = (_11 - m._11); aux._12 = (_12 - m._12); aux._13 = (_13 - m._13); aux._14 = (_14 - m._14);
@@ -221,7 +221,7 @@ namespace Omega::Math
 				(_43 == 0.f);
 		}
 
-		static Matrix4 Translation(const Vector3& d)
+		static constexpr Matrix4 Translation(const Vector3& d) noexcept
 		{
 			Matrix4 translation = Identity;
 			translation._41 = d.x;
@@ -230,9 +230,7 @@ namespace Omega::Math
 			return translation;
 		}
 
-		
-
-		static Matrix4 RotationX(float radian)
+		static Matrix4 RotationX(float radian) noexcept
 		{
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
@@ -242,7 +240,7 @@ namespace Omega::Math
 			return rotX;
 		}
 
-		static Matrix4 RotationY(float radian)
+		static Matrix4 RotationY(float radian) noexcept
 		{
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
@@ -252,7 +250,7 @@ namespace Omega::Math
 			return rotY;
 		}
 
-		static Matrix4 RotationZ(float radian)
+		static Matrix4 RotationZ(float radian) noexcept
 		{
 			const float cos = cosf(radian);
 			const float sin = sinf(radian);
@@ -262,7 +260,7 @@ namespace Omega::Math
 			return rotZ;
 		}
 
-		static Matrix4 Scaling(float scale)
+		static constexpr Matrix4 Scaling(float scale) noexcept
 		{
 			// scaling diagonal
 			Matrix4 sca = Identity;
@@ -272,7 +270,7 @@ namespace Omega::Math
 			return sca;
 		}
 
-		static Matrix4 Scaling(const Vector3& v)
+		static constexpr Matrix4 Scaling(const Vector3& v) noexcept
 		{
 			Matrix4 m = Identity;
 			m._11 *= v.x;
@@ -281,6 +279,5 @@ namespace Omega::Math
 			return m;
 		}
 
-		
 	};
 }

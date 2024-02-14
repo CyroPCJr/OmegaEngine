@@ -44,9 +44,9 @@ PerlinNoise::PerlinNoise(const uint32_t seed)
 float PerlinNoise::Noise(float x, float y, float z)
 {
 	// Find the unit cube that contains the point
-	int cubeX = static_cast<int>(floorf(x)) & 255;
-	int cubeY = static_cast<int>(floorf(y)) & 255;
-	int cubeZ = static_cast<int>(floorf(z)) & 255;
+	const int cubeX = static_cast<int>(floorf(x)) & 255;
+	const int cubeY = static_cast<int>(floorf(y)) & 255;
+	const int cubeZ = static_cast<int>(floorf(z)) & 255;
 
 	// Find relative x, y,z of point in cube
 	x -= floorf(x);

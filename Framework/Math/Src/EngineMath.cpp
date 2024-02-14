@@ -35,7 +35,7 @@ Matrix4 Matrix4::RotationAxis(const Vector3& axis, float rad)
 	const float sin = sinf(rad);
 	const float oneMinusCos = (1.0f - cos);
 	Matrix4 rot = Identity;
-	Vector3 axisNormalied = Normalize(axis);
+	const Vector3 axisNormalied = Normalize(axis);
 
 	rot._11 = (axisNormalied.x * axisNormalied.x) * oneMinusCos + cos;
 	rot._12 = (axisNormalied.x * axisNormalied.y) * oneMinusCos + (axisNormalied.z * sin);
@@ -51,7 +51,7 @@ Matrix4 Matrix4::RotationAxis(const Vector3& axis, float rad)
 	return rot;
 }
 
-Matrix4 Matrix4::RotationQuaternion(const Quaternion& q)
+Matrix4 Matrix4::RotationQuaternion(const Quaternion& q) noexcept
 {
 	return
 	{
@@ -74,7 +74,7 @@ Matrix4 Matrix4::RotationQuaternion(const Quaternion& q)
 	};
 }
 
-Matrix4 Matrix4::Transform(const Vector3& translation, const Quaternion& rotation, const Vector3& scale)
+Matrix4 Matrix4::Transform(const Vector3& translation, const Quaternion& rotation, const Vector3& scale) noexcept
 {
 	Math::Matrix4 transform = Math::Matrix4::RotationQuaternion(rotation);
 	transform._11 *= scale.x;
@@ -101,7 +101,7 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& m)
 	https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 	*/
 
-	Matrix4 matrix = Transpose(m);
+	const Matrix4 matrix = Transpose(m);
 
 	const float trace = matrix._11 + matrix._22 + matrix._33;
 	if (trace > 0.0f)
@@ -144,10 +144,10 @@ Quaternion Quaternion::RotationMatrix(const Matrix4& m)
 
 Quaternion Quaternion::RotationLook(const Vector3& direction, const Vector3& up)
 {
-	Vector3 forward = Normalize(direction);
-	Vector3 orth = Normalize(Cross(up, forward)); // real up
-	Vector3 right = Cross(forward, orth);
-	Matrix4 m
+	const Vector3 forward = Normalize(direction);
+	const Vector3 orth = Normalize(Cross(up, forward)); // real up
+	const Vector3 right = Cross(forward, orth);
+	const Matrix4 m
 	{
 		orth.x,	orth.y, orth.z, 0.0f,
 		right.x, right.y, right.z, 0.0f,
@@ -197,8 +197,8 @@ Quaternion Quaternion::RotationFromTo(Vector3& from, Vector3& to)
 
 Quaternion Omega::Math::SlerpUnclamped(const Quaternion& from, const Quaternion& to, float time)
 {
-	float n1;
-	float n2;
+	float n1 = 0.0f;
+	float n2 = 0.0f;
 	float n3 = Dot(from, to);
 	bool flag = false;
 
@@ -215,12 +215,12 @@ Quaternion Omega::Math::SlerpUnclamped(const Quaternion& from, const Quaternion&
 	}
 	else
 	{
-		float n4 = acosf(n3);
-		float n5 = 1.f / sinf(n4);
+		const float n4 = acosf(n3);
+		const float n5 = 1.f / sinf(n4);
 		n2 = sinf((1.f - time) * n4) * n5;
 		n1 = flag ? -sinf(time * n4) * n5 : sinf(time * n4) * n5;
 	}
-	Quaternion q = (from * n2) + (to * n1);
+	const Quaternion q = (from * n2) + (to * n1);
 	return Normalize(q);
 }
 
@@ -302,14 +302,10 @@ bool Omega::Math::IsContained(const Vector3& point, const AABB& aabb)
 bool Omega::Math::IsContained(const Vector3& point, const OBB& obb)
 {
 	// Compute the world-to-local matrices
-	Math::Matrix4 matTrans = Math::Matrix4::Translation(obb.center);
-	Math::Matrix4 matRot = Math::Matrix4::RotationQuaternion(obb.rot);
-	Math::Matrix4 matScale = Math::Matrix4::Scaling(obb.extend);
-	Math::Matrix4 toWorld = matScale * matRot * matTrans;
-	Math::Matrix4 toLocal = Inverse(toWorld);
+	const Math::Matrix4 toLocal = WorldToLocalMatrix(obb.center, obb.rot, obb.extend);
 
 	// Transform the point into the OBB's local space
-	Vector3 localPoint = TransformCoord(point, toLocal);
+	const Vector3 localPoint = TransformCoord(point, toLocal);
 
 	// Test against local AABB
 	return IsContained(localPoint, AABB{ Vector3::Zero, Vector3::One });
@@ -318,43 +314,38 @@ bool Omega::Math::IsContained(const Vector3& point, const OBB& obb)
 bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal)
 {
 	// Compute the local-to-world/world-to-local matrices
-	Matrix4 matTrans = Matrix4::Translation(obb.center);
-	Matrix4 matRot = Matrix4::RotationQuaternion(obb.rot);
-	Matrix4 matWorld = matRot * matTrans;
-	Matrix4 matWorldInv = Inverse(matWorld);
+	const Math::Matrix4 toLocal = WorldToLocalMatrix(obb.center, obb.rot);
 
 	// Transform the ray into the OBB's local space
-	Vector3 org = TransformCoord(ray.origin, matWorldInv);
-	Vector3 dir = TransformNormal(ray.direction, matWorldInv);
-	Ray localRay{ org, dir };
+	const Vector3 org = TransformCoord(ray.origin, toLocal);
+	const Vector3 dir = TransformNormal(ray.direction, toLocal);
+	const Ray localRay{ org, dir };
 
-	Plane planes[] =
-	{
-		{ {  0.0f,  0.0f, -1.0f }, obb.extend.z },
-		{ {  0.0f,  0.0f,  1.0f }, obb.extend.z },
-		{ {  0.0f, -1.0f,  0.0f }, obb.extend.y },
-		{ {  0.0f,  1.0f,  0.0f }, obb.extend.y },
-		{ { -1.0f,  0.0f,  0.0f }, obb.extend.x },
-		{ {  1.0f,  0.0f,  0.0f }, obb.extend.x }
-	};
+	std::vector<Plane> planes;
+	planes.reserve(6);
+	planes.emplace_back(Vector3{ 0.0f, 0.0f, -1.0f }, obb.extend.z);
+	planes.emplace_back(Vector3{ 0.0f, 0.0f, 1.0f }, obb.extend.z);
+	planes.emplace_back(Vector3{ 0.0f, -1.0f, 0.0f }, obb.extend.y);
+	planes.emplace_back(Vector3{ 0.0f, 1.0f, 0.0f }, obb.extend.y);
+	planes.emplace_back(Vector3{ -1.0f, 0.0f, 0.0f }, obb.extend.x);
+	planes.emplace_back(Vector3{ 1.0f, 0.0f, 0.0f }, obb.extend.x);
 
 	uint32_t numIntersections = 0;
-	for (uint32_t i = 0; i < 6; ++i)
+	for (const Plane& plane : planes)
 	{
-		Plane pl = planes[i];
-		const float d = Dot(org, pl.n);
-		if (d > pl.d)
+		if (const float d = Dot(org, plane.n); 
+			d > plane.d)
 		{
 			float distance = 0.0f;
-			if (Intersect(localRay, pl, distance) && distance >= 0.0f)
+			if (Intersect(localRay, plane, distance) && distance >= 0.0f)
 			{
 				Vector3 pt = org + (dir * distance);
-				if (abs(pt.x) <= obb.extend.x + 0.01f &&
-					abs(pt.y) <= obb.extend.y + 0.01f &&
-					abs(pt.z) <= obb.extend.z + 0.01f)
+				if (Abs(pt.x) <= obb.extend.x + 0.01f &&
+					Abs(pt.y) <= obb.extend.y + 0.01f &&
+					Abs(pt.z) <= obb.extend.z + 0.01f)
 				{
 					point = pt;
-					normal = pl.n;
+					normal = plane.n;
 					++numIntersections;
 				}
 			}
@@ -366,13 +357,13 @@ bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point
 		return false;
 	}
 
-	point = TransformCoord(point, matWorld);
-	normal = TransformNormal(normal, matWorld);
+	point = TransformCoord(point, toLocal);
+	normal = TransformNormal(normal, toLocal);
 	return true;
 
 }
 
-bool Omega::Math::PointInRect(const Vector2& point, const Rect& rect)
+bool Omega::Math::PointInRect(const Vector2& point, const Rect& rect) noexcept
 {
 	return !(point.x < rect.left || point.x > rect.right || point.y < rect.top || point.y > rect.bottom);
 }
@@ -383,7 +374,7 @@ bool Omega::Math::PointInCircle(const Vector2& point, const Circle& circle)
 	return distance < circle.radius * circle.radius;
 }
 
-bool Omega::Math::Intersect(const LineSegment& a, const LineSegment& b)
+bool Omega::Math::Intersect(const LineSegment& a, const LineSegment& b) noexcept
 {
 	float ua = ((a.to.x - a.from.x) * (b.from.y - a.from.y)) - ((a.to.y - a.from.y) * (b.from.x - a.from.x));
 	float ub = ((b.to.x - b.from.x) * (b.from.y - a.from.y)) - ((b.to.y - b.from.y) * (b.from.x - a.from.x));
@@ -481,22 +472,22 @@ bool Omega::Math::Intersect(const Circle& c0, const Circle& c1)
 	return distanceSquared < combinedRadius * combinedRadius;
 }
 
-bool Omega::Math::Intersect(const Rect& r0, const Rect& r1)
+bool Omega::Math::Intersect(const Rect& r0, const Rect& r1) noexcept
 {
 	return !(r0.right < r1.left || r0.left > r1.right || r0.bottom < r1.top || r0.top > r1.bottom);
 }
 
 bool Omega::Math::Intersect(const Circle& c, const LineSegment& l, Vector2* closestPoint)
 {
-	Vector2 startToCenter = c.center - l.from;
-	Vector2 startToEnd = l.to - l.from;
-	float len = Magnitude(startToEnd);
-	Vector2 dir = startToEnd / len;
+	const Vector2 startToCenter = c.center - l.from;
+	const Vector2 startToEnd = l.to - l.from;
+	const float len = Magnitude(startToEnd);
+	const Vector2 dir = startToEnd / len;
 
 	// Find the closest point to the line segment
-	const float projection = Dot(startToCenter, dir);
 	Vector2 point;
-	if (projection > len)
+	if (const float projection = Dot(startToCenter, dir);
+		projection > len)
 	{
 		point = l.to;
 	}

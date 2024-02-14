@@ -9,7 +9,7 @@ namespace Omega::Core::Meta
 	public:
 		MetaPointer(const MetaType* pointerType);
 
-		const MetaType* GetPointerType() const { return mPointerType; }
+		const MetaType* GetPointerType() const noexcept { return mPointerType; }
 	private:
 		const MetaType* const mPointerType;
 	};

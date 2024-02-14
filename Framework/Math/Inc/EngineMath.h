@@ -115,7 +115,7 @@ namespace Omega::Math
 		return Magnitude(v1 - v2);
 	}
 
-	inline float DistanceSqr(const Vector2& v1, const Vector2& v2)
+	constexpr float DistanceSqr(const Vector2& v1, const Vector2& v2)
 	{
 		return MagnitudeSqr(v1 - v2);
 	}
@@ -147,7 +147,7 @@ namespace Omega::Math
 		return v;
 	}
 
-	inline Vector2 Rotate(const Vector2& v, float rad)
+	inline Vector2 Rotate(const Vector2& v, float rad) noexcept
 	{
 		const float cosine = cos(rad);
 		const float sine = sin(rad);
@@ -299,7 +299,7 @@ namespace Omega::Math
 		const float cofactor2 = m._12 * ((m._21 * ((m._33 * m._44) - (m._34 * m._43))) - ((m._23 * ((m._31 * m._44) - (m._34 * m._41)))) + ((m._24 * ((m._31 * m._43) - (m._33 * m._41)))));
 		const float cofactor3 = m._13 * ((m._21 * ((m._32 * m._44) - (m._34 * m._42))) - ((m._22 * ((m._31 * m._44) - (m._34 * m._41)))) + ((m._24 * ((m._31 * m._42) - (m._32 * m._41)))));
 		const float cofactor4 = m._14 * ((m._21 * ((m._32 * m._43) - (m._33 * m._42))) - ((m._22 * ((m._31 * m._43) - (m._33 * m._41)))) + ((m._23 * ((m._31 * m._42) - (m._32 * m._41)))));
-		float det = cofactor1 - cofactor2 + cofactor3 - cofactor4;
+		const float det = cofactor1 - cofactor2 + cofactor3 - cofactor4;
 		return det;
 	}
 
@@ -317,6 +317,12 @@ namespace Omega::Math
 		const float inverseDet = 1.0f / det;
 		Matrix4 matrix{};
 		return matrix.Adjoint(m) * inverseDet;
+	}
+
+	constexpr Matrix4 WorldToLocalMatrix(const Vector3& position, const Quaternion& rotation, const Vector3& scale = Vector3::One)
+	{
+		const Matrix4 toWorld = Matrix4::Scaling(scale) * Matrix4::RotationQuaternion(rotation) * Matrix4::Translation(position);
+		return Inverse(toWorld);
 	}
 
 	constexpr Vector2 TransformCoord(const Vector2& v, const Matrix3& m)
@@ -451,15 +457,15 @@ namespace Omega::Math
 	bool IsContained(const Vector3& point, const OBB& obb);
 	bool GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal);
 
-	bool PointInRect(const Vector2& point, const Rect& rect);
+	bool PointInRect(const Vector2& point, const Rect& rect) noexcept;
 	bool PointInCircle(const Vector2& point, const Circle& circle);
 
-	bool Intersect(const LineSegment& a, const LineSegment& b);
+	bool Intersect(const LineSegment& a, const LineSegment& b) noexcept;
 	bool Intersect(const LineSegment& a, const LineSegment& b, Vector2& intersectPoint);
 	bool Intersect(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D, float& dist, Vector2& point);
 
 	bool Intersect(const Circle& c0, const Circle& c1);
-	bool Intersect(const Rect& r0, const Rect& r1);
+	bool Intersect(const Rect& r0, const Rect& r1) noexcept;
 
 	bool Intersect(const Circle& c, const LineSegment& l, Vector2* closestPoint = nullptr);
 	bool Intersect(const LineSegment& l, const Circle& c);

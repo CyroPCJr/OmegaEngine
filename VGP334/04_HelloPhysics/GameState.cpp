@@ -24,7 +24,7 @@ void GameState::Initialize()
 	settings.drag = 0.3f;
 	settings.iterations = 1;
 	mPhysicsWorld.Initilize(settings);
-	mPhysicsWorld.AddStaticPlane({ Vector3::YAxis, 0.0f });
+	mPhysicsWorld.AddStaticPlane(Plane{ Vector3::YAxis, 0.0f });
 	mPhysicsWorld.AddStaticOBB({ {5.0f, 4.0f, 0.0f}, { 4.0f, 0.5f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, 10.0f * Constants::DegToRad) });
 	mPhysicsWorld.AddStaticOBB({ { -5.0f, 8.f, 0.0f}, { 4.0f, 0.2f,5.0f }, Quaternion::RotationAxis(Vector3::ZAxis, -10.0f * Constants::DegToRad) });
 

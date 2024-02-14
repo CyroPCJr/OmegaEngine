@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Interceptor.h"
 #include "Carrier.h"
+#include "Interceptor.h"
 #include <OmegaEngine/Inc/Omega.h>
 
 namespace Steering
 {
 
-	class GameState : public Omega::AppState
+	class GameState final : public Omega::AppState
 	{
 	public:
 		void Initialize() override;
