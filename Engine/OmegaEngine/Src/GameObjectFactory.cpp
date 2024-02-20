@@ -7,7 +7,7 @@
 
 using namespace Omega;
 
-GameObject* GameObjectFactory::Create(GameObjectAllocator& allocator, std::filesystem::path templateFileName)
+GameObject* GameObjectFactory::Create(GameObjectAllocator& allocator, const std::filesystem::path& templateFileName)
 {
 	using namespace rapidjson;
 
@@ -29,7 +29,7 @@ GameObject* GameObjectFactory::Create(GameObjectAllocator& allocator, std::files
 			if (jsonObject.HasMember("Components") && jsonObject["Components"].IsObject())
 			{
 				auto components = jsonObject["Components"].GetObjectW();
-				for (auto& component: components)
+				for (const auto& component: components)
 				{
 					auto metaClass = Core::Meta::FindMetaClass(component.name.GetString());
 					auto newComponent = gameObject->AddComponent(metaClass);

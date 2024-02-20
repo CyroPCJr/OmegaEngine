@@ -12,21 +12,20 @@ void CameraService::Initialize()
 	mActiveCamera = AddCamera("Default");
 }
 
-Graphics::Camera* CameraService::AddCamera(const char* name)
+Graphics::Camera* CameraService::AddCamera(std::string_view name)
 {
 	return &mCameraMap[name];
 }
 
-Graphics::Camera* CameraService::FindCamera(const char* name)
+Graphics::Camera* CameraService::FindCamera(std::string_view name)
 {
 	auto iter = mCameraMap.find(name);
 	return (iter == mCameraMap.end()) ? nullptr : &(iter->second);
 }
 
-void CameraService::SetActiveCamera(const char* name)
+void CameraService::SetActiveCamera(std::string_view name)
 {
-	auto camera = FindCamera(name);
-	if (camera)
+	if (auto camera = FindCamera(name); camera)
 	{
 		mActiveCamera = camera;
 	}

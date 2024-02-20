@@ -20,7 +20,7 @@ namespace Omega::Math
 		const static Matrix3 Identity;
 		const static Matrix3 Zero;
 
-		constexpr static Matrix3 Translation(float x, float y) noexcept { return { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, 1.0f }; }
+		constexpr static Matrix3 Translation(float x, float y) noexcept { return { { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, 1.0f } }; }
 		constexpr static Matrix3 Translation(const Vector2& v) noexcept { return { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, v.x, v.y, 1.0f }; }
 		static Matrix3 Rotation(float rad) noexcept
 		{

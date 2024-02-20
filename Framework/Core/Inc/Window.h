@@ -2,22 +2,30 @@
 
 namespace Omega::Core
 {
-	class Window
+	class Window final
 	{
 	public:
-		Window() = default;
+		Window() noexcept = default;
+		// copy ctor
+		Window(const Window&) = delete;
+		// copy assignment
+		Window& operator=(const Window&) = delete;
+		// move ctor
+		Window(const Window&&) = delete;
+		// move assignment
+		Window& operator=(Window&&) = delete;
 
-		void Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height);
+		void Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height) noexcept;
 		void Terminate();
-		void ProcessMessage();
+		void ProcessMessage() noexcept;
 
-		HWND GetWindow() const { return mWindow; }
-		bool IsActive() const { return mActive; }
+		constexpr HWND GetWindow() const noexcept { return mWindow; }
+		constexpr bool IsActive() const { return mActive; }
 	private:
+		std::string_view mAppName;
 		HINSTANCE mInstance = nullptr;
 		HWND mWindow = nullptr;
-		std::string mAppName;
-
 		bool mActive = false;
+		char mPadding[3]{};
 	};
 }

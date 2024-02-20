@@ -10,6 +10,39 @@ namespace MathTest
 	{
 	public:
 
+
+		TEST_METHOD(LerpFloatTest)
+		{
+			constexpr float a{ 0.0f };
+			constexpr float b{ 10.0f };
+			constexpr float t{ 0.5f };
+			Assert::AreEqual(Lerp(a, b, t), 5.0f);
+		}
+
+		TEST_METHOD(LerpIntegerTest) {
+			constexpr int a{ 0 };
+			constexpr int b{ 10 };
+			constexpr float t{ 0.5f };
+			Assert::AreEqual(Lerp(a, b, t), 0);
+		}
+
+		TEST_METHOD(LerpVector3Test) {
+			const Vector3 a(0.0f, 0.0f, 0.0f);
+			const Vector3 b(1.0f, 1.0f, 1.0f);
+			constexpr float t{ 0.5f };
+			const Vector3& result = Lerp(a, b, t);
+			Assert::AreEqual(result.x, 0.5f);
+			Assert::AreEqual(result.y, 0.5f);
+			Assert::AreEqual(result.z, 0.5f);
+		}
+
+		TEST_METHOD(InverseLerpFloats) {
+			constexpr float a{ 0.0f };
+			constexpr float b{ 10.0f };
+			constexpr float time{ 5.0f };
+			Assert::AreEqual(InverseLerp(a, b, time), 0.5f);
+		}
+
 		TEST_METHOD(Radian2DegreeTest)
 		{
 			constexpr float degree = Rad2deg(9.f);
@@ -18,16 +51,16 @@ namespace MathTest
 
 		TEST_METHOD(DotTest)
 		{
-			Vector3 a{ 3.f,5.f,4.f };
-			Vector3 b{ 2.f,7.f,5.f };
+			const Vector3 a{ 3.f,5.f,4.f };
+			const Vector3 b{ 2.f,7.f,5.f };
 			const float res = Dot(a, b);
 			Assert::AreEqual(res, 61.f);
 		}
 
 		TEST_METHOD(CrossTest)
 		{
-			Vector3 a{ 3.0f, 5.0f, 4.0f };
-			Vector3 b{ 2.0f, 7.0f, 5.0f };
+			const Vector3 a{ 3.0f, 5.0f, 4.0f };
+			const Vector3 b{ 2.0f, 7.0f, 5.0f };
 			const Vector3 res = Cross(a, b);
 			Assert::AreEqual(res.x, -3.0f);
 			Assert::AreEqual(res.y, -7.0f);
@@ -36,21 +69,21 @@ namespace MathTest
 
 		TEST_METHOD(MagnitudeTest)
 		{
-			Vector3 a{ 2.f,5.f,4.f };
+			const Vector3 a{ 2.f,5.f,4.f };
 			const float mag = Magnitude(a);
 			Assert::AreEqual(mag, 6.70820379f);
 		}
 
 		TEST_METHOD(MagnitudeSqrTest)
 		{
-			Vector3 a{ 2.f,5.f,4.f };
+			const Vector3 a{ 2.f,5.f,4.f };
 			const float mag = MagnitudeSqr(a);
 			Assert::AreEqual(mag, 45.f);
 		}
 
 		TEST_METHOD(NormalizeTest)
 		{
-			Vector3 a{ 2.f,5.f,4.f };
+			const Vector3 a{ 2.f,5.f,4.f };
 			const Vector3 b = Normalize(a);
 			Assert::AreEqual(b.x, 0.29814240f);
 			Assert::AreEqual(b.y, 0.745356023f);
@@ -59,11 +92,11 @@ namespace MathTest
 
 		TEST_METHOD(TransposeTest)
 		{
-			Matrix4 originalMatrix = { 1.f, 2.f, 3.f, 4.f,
+			const Matrix4 originalMatrix = { 1.f, 2.f, 3.f, 4.f,
 									  5.f, 6.f, 7.f, 8.f,
 									  9.f, 10.f, 11.f, 12.f,
 									  13.f, 14.f, 15.f, 16.f };
-			Matrix4 matrixTransposed = Transpose(originalMatrix);
+			const Matrix4 matrixTransposed = Transpose(originalMatrix);
 			Assert::AreEqual(matrixTransposed._11, 1.f);
 			Assert::AreEqual(matrixTransposed._12, 5.f);
 			Assert::AreEqual(matrixTransposed._13, 9.f);
@@ -87,11 +120,11 @@ namespace MathTest
 
 		TEST_METHOD(DeterminantTest)
 		{
-			Matrix4 A{ 1.f, 0.f, 2.f, -1.f,
+			const Matrix4 matrix{ 1.f, 0.f, 2.f, -1.f,
 						3.f, 0.f, 0.f, 5.f,
 						2.f, 1.f, 4.f, -3.f,
 						1.f, 0.f, 5.f, 0.f };
-			const float det = Determinant(A);
+			const float det = Determinant(matrix);
 			Assert::AreEqual(det, 30.f);
 		}
 
@@ -110,7 +143,7 @@ namespace MathTest
 				193/846	23/282	1/846	-119/564
 				-40/423	4/141	-55/423	59/282
 			*/
-			Matrix4 matrix{ 3.f, 7.f, 3.f, 6.f,
+			const Matrix4 matrix{ 3.f, 7.f, 3.f, 6.f,
 							7.f, 1.f, 9.f, 9.f,
 							9.f, 8.f, 3.f, 6.f,
 							6.f, 8.f, 2.f, 10.f };

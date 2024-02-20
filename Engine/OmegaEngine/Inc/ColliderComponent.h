@@ -18,20 +18,20 @@ namespace Omega
 		void Render() override;
 		void DebugUI() override;
 
-		void EnableDebugUI(bool isActivated) { mIsDebugActivated = isActivated; }
+		void EnableDebugUI(bool isActivated) noexcept { mIsDebugActivated = isActivated; }
 
 		void SetAABB(const Math::AABB& aabb) { mAABB = aabb; }
 
-		Math::AABB GetAABB() const;
+		const Math::AABB& GetAABB() const;
 		Math::OBB GetOBB() const;
 		Math::Sphere GetSphere() const;
 
-
-		Math::Vector3 extend = Math::Vector3::One;
 		Math::Vector3 center = Math::Vector3::Zero;
-		Math::AABB mAABB;
+		Math::Vector3 extend = Math::Vector3::One;
 	private:
+		Math::AABB mAABB;
 		const TransformComponent* mTransformComponent = nullptr;
 		bool mIsDebugActivated = false;
+		char mPadding[3]{};
 	};
 }

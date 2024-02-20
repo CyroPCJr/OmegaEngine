@@ -3,14 +3,14 @@
 
 using namespace Omega::Core::Meta;
 
-MetaField::MetaField(const MetaType* type, 
-	const char* name, 
-	size_t offset) :
-	mType(type), mName(name) , mOffset(offset)
+MetaField::MetaField(const MetaType* type,
+	std::string_view name,
+	size_t offset) noexcept :
+	mType(type), mName(name), mOffset(offset)
 {
 }
 
-void* MetaField::GetFieldInstance(void* classInstance) const
+void* MetaField::GetFieldInstance(void* classInstance) const noexcept
 {
 	return static_cast<uint8_t*>(classInstance) + mOffset;
 }

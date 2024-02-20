@@ -5,7 +5,7 @@
 namespace Omega::Core
 {
 	template<class DataType>
-	class TypedAllocator : private BlockAllocator
+	class TypedAllocator final : private BlockAllocator
 	{
 	public:
 		TypedAllocator(size_t capacity) noexcept

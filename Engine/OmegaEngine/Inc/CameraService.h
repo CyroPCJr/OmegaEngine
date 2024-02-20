@@ -5,23 +5,23 @@
 namespace Omega
 {
 
-	class CameraService : public Service
+	class CameraService final: public Service
 	{
 	public:
 		META_CLASS_DECLARE;
 
 		void Initialize() override;
 
-		Graphics::Camera* AddCamera(const char* name);
-		Graphics::Camera* FindCamera(const char* name);
+		Graphics::Camera* AddCamera(std::string_view name);
+		Graphics::Camera* FindCamera(std::string_view name);
 
-		void SetActiveCamera(const char* name);
+		void SetActiveCamera(std::string_view name);
 
 		Graphics::Camera& GetActiveCamera();
 		const Graphics::Camera& GetActiveCamera() const;
 
 	private:
-		using CameraMap = std::map<std::string, Graphics::Camera>;
+		using CameraMap = std::map<std::string_view, Graphics::Camera>;
 		CameraMap mCameraMap;
 		Graphics::Camera* mActiveCamera = nullptr;
 	};

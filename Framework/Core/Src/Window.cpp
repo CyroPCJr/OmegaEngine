@@ -4,20 +4,20 @@
 using namespace Omega;
 using namespace Omega::Core;
 
-LRESULT CALLBACK WndProc(HWND handle, UINT message, WPARAM wparam, LPARAM lParam)
+namespace
 {
-	switch (message)
+	static LRESULT CALLBACK WndProc(HWND handle, UINT message, WPARAM wparam, LPARAM lParam) noexcept
 	{
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		return 0;
+		if (message == WM_DESTROY)
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
+		return DefWindowProcA(handle, message, wparam, lParam);
 	}
-	}
-	return DefWindowProcA(handle, message, wparam, lParam);
 }
 
-void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height)
+void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height) noexcept
 {
 	mInstance = instance;
 	mAppName = appName;
@@ -33,13 +33,14 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint
 	classInfo.hInstance = instance;
 	classInfo.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 	classInfo.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	classInfo.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	classInfo.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
 	classInfo.lpszClassName = appName;
 	classInfo.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
 	RegisterClassExA(&classInfo);
 
+
 	//  Compute the correct window dimension
-	RECT rc = { 0,0, static_cast<LONG>(width), static_cast<LONG>(height) };
+	RECT rc = { 0l,0l, {width}, {height} };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
 	const int screenWidth = GetSystemMetrics(SM_CXSCREEN);
@@ -60,13 +61,13 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint
 void Window::Terminate()
 {
 	DestroyWindow(mWindow);
-	UnregisterClassA(mAppName.c_str(), mInstance);
+	UnregisterClassA(std::string(mAppName).c_str(), mInstance);
 
 	mWindow = nullptr;
 	mInstance = nullptr;
 }
 
-void Core::Window::ProcessMessage()
+void Core::Window::ProcessMessage() noexcept
 {
 	MSG msg{};
 	while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))

@@ -4,21 +4,21 @@ namespace Omega::Core::Meta
 {
 	class MetaType;
 
-	class MetaField
+	class MetaField final
 	{
 	public:
 
-		MetaField(const MetaType* type, const char* name, size_t offset);
+		MetaField(const MetaType* type, std::string_view name, size_t offset) noexcept;
 
-		void* GetFieldInstance(void* classInstance) const;
+		void* GetFieldInstance(void* classInstance) const noexcept;
 
 		const MetaType* GetMetaType() const noexcept { return mType; }
-		const char* GetName() const noexcept { return mName.c_str(); }
-		size_t GetOffset() const noexcept { return mOffset; }
+		constexpr std::string_view GetName() const noexcept { return mName; }
+		constexpr size_t GetOffset() const noexcept { return mOffset; }
 
 	private:
 		const MetaType* mType;
-		const std::string mName;
+		const std::string_view mName;
 		const size_t mOffset;
 	};
 }

@@ -9,7 +9,7 @@ namespace Omega::Core::Meta
 	void Register(const MetaClass* metaClass);
 
 	// Look up meta class by name
-	const MetaClass* FindMetaClass(const char* className);
+	const MetaClass* FindMetaClass(std::string_view className);
 
 }
 

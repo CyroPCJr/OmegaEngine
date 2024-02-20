@@ -14,13 +14,13 @@ namespace MathTest
 
 		TEST_METHOD(TestConstructor)
 		{
-			Quaternion q0;
+			const Quaternion q0;
 			Assert::AreEqual(q0.x, 0.0f);
 			Assert::AreEqual(q0.y, 0.0f);
 			Assert::AreEqual(q0.z, 0.0f);
 			Assert::AreEqual(q0.w, 1.0f);
 
-			Quaternion q1(1.0f, 2.0f, 3.0f, 4.0f);
+			const Quaternion q1(1.0f, 2.0f, 3.0f, 4.0f);
 			Assert::AreEqual(q1.x, 1.0f);
 			Assert::AreEqual(q1.y, 2.0f);
 			Assert::AreEqual(q1.z, 3.0f);
@@ -29,13 +29,13 @@ namespace MathTest
 
 		TEST_METHOD(TestStatics)
 		{
-			Quaternion zero = Quaternion::Zero;
+			const Quaternion zero = Quaternion::Zero;
 			Assert::AreEqual(zero.x, 0.0f);
 			Assert::AreEqual(zero.y, 0.0f);
 			Assert::AreEqual(zero.z, 0.0f);
 			Assert::AreEqual(zero.w, 0.0f);
 
-			Quaternion identity = Quaternion::Identity;
+			const Quaternion identity = Quaternion::Identity;
 			Assert::AreEqual(identity.x, 0.0f);
 			Assert::AreEqual(identity.y, 0.0f);
 			Assert::AreEqual(identity.z, 0.0f);
@@ -44,8 +44,8 @@ namespace MathTest
 
 		TEST_METHOD(TestNegation)
 		{
-			Quaternion q0(1.0f, 2.0f, 3.0f, 4.0f);
-			Quaternion q1 = -q0;
+			const Quaternion q0(1.0f, 2.0f, 3.0f, 4.0f);
+			const Quaternion q1 = -q0;
 
 			Assert::AreEqual(q1.x, -1.0f);
 			Assert::AreEqual(q1.y, -2.0f);
@@ -55,9 +55,9 @@ namespace MathTest
 
 		TEST_METHOD(TestAddition)
 		{
-			Quaternion q0(1.0f, 1.0f, 1.0f, 1.5f);
-			Quaternion q1(1.0f, -1.0f, 0.0f, -0.5f);
-			Quaternion q2 = q0 + q1;
+			const Quaternion q0(1.0f, 1.0f, 1.0f, 1.5f);
+			const Quaternion q1(1.0f, -1.0f, 0.0f, -0.5f);
+			const Quaternion q2 = q0 + q1;
 
 			Assert::AreEqual(q2.x, 2.0f);
 			Assert::AreEqual(q2.y, 0.0f);
@@ -67,9 +67,9 @@ namespace MathTest
 
 		TEST_METHOD(TestSubtraction)
 		{
-			Quaternion q0(1.0f, 1.0f, 1.0f, 1.5f);
-			Quaternion q1(1.0f, -1.0f, 0.0f, -0.5f);
-			Quaternion q2 = q0 - q1;
+			const Quaternion q0(1.0f, 1.0f, 1.0f, 1.5f);
+			const Quaternion q1(1.0f, -1.0f, 0.0f, -0.5f);
+			const Quaternion q2 = q0 - q1;
 
 			Assert::AreEqual(q2.x, 0.0f);
 			Assert::AreEqual(q2.y, 2.0f);
@@ -79,8 +79,8 @@ namespace MathTest
 
 		TEST_METHOD(TestScalarMultiply)
 		{
-			Quaternion q0(1.0f, 2.0f, 3.0f, 4.0f);
-			Quaternion q1 = q0 * 0.5f;
+			const Quaternion q0(1.0f, 2.0f, 3.0f, 4.0f);
+			const Quaternion q1 = q0 * 0.5f;
 
 			Assert::AreEqual(q1.x, 0.5f);
 			Assert::AreEqual(q1.y, 1.0f);
@@ -90,9 +90,9 @@ namespace MathTest
 
 		TEST_METHOD(TestMultiply)
 		{
-			Quaternion q0(1.0f, 1.0f, 1.0f, 1.5f);
-			Quaternion q1(1.0f, -1.0f, 0.0f, -0.5f);
-			Quaternion q2 = q0 * q1;
+			const Quaternion q0(1.0f, 1.0f, 1.0f, 1.5f);
+			const Quaternion q1(1.0f, -1.0f, 0.0f, -0.5f);
+			const Quaternion q2 = q0 * q1;
 
 			Assert::AreEqual(q2.x, 2.0f);
 			Assert::AreEqual(q2.y, -1.0f);
@@ -103,7 +103,7 @@ namespace MathTest
 		TEST_METHOD(TestConjugate)
 		{
 			Quaternion q(1.0f, 1.0f, 1.0f, 1.5f);
-			Quaternion result = q.Conjugate();
+			const Quaternion result = q.Conjugate();
 
 			Assert::AreEqual(result.x, -1.0f);
 			Assert::AreEqual(result.y, -1.0f);
@@ -113,7 +113,7 @@ namespace MathTest
 
 		TEST_METHOD(TestFromAxisAngle)
 		{
-			Quaternion q0 = Quaternion::RotationAxis({ 1.0f, -1.0f, 2.0f }, 1.5f);
+			const Quaternion q0 = Quaternion::RotationAxis({ 1.0f, -1.0f, 2.0f }, 1.5f);
 
 			Assert::AreEqual(q0.x, 0.2782779f, tolerance);
 			Assert::AreEqual(q0.y, -0.2782779f, tolerance);
@@ -123,10 +123,10 @@ namespace MathTest
 
 		TEST_METHOD(TestFromMatrix)
 		{
-			Quaternion qx = Quaternion::RotationMatrix(Matrix4::RotationX(0.72f));
-			Quaternion qy = Quaternion::RotationMatrix(Matrix4::RotationY(0.84f));
-			Quaternion qz = Quaternion::RotationMatrix(Matrix4::RotationZ(0.96f));
-			Quaternion qa = Quaternion::RotationMatrix(Matrix4::RotationAxis({ 3.0f, -2.0f, 1.0f }, 0.44f));
+			const Quaternion qx = Quaternion::RotationMatrix(Matrix4::RotationX(0.72f));
+			const Quaternion qy = Quaternion::RotationMatrix(Matrix4::RotationY(0.84f));
+			const Quaternion qz = Quaternion::RotationMatrix(Matrix4::RotationZ(0.96f));
+			const Quaternion qa = Quaternion::RotationMatrix(Matrix4::RotationAxis({ 3.0f, -2.0f, 1.0f }, 0.44f));
 
 			Assert::AreEqual(qx.x, 0.3522742f, tolerance);
 			Assert::AreEqual(qx.y, 0.0f, tolerance);
@@ -151,7 +151,7 @@ namespace MathTest
 
 		TEST_METHOD(TestFromLook)
 		{
-			Quaternion q0 = Quaternion::RotationLook({ 1.0f, 1.0f, 1.0f });
+			const Quaternion q0 = Quaternion::RotationLook({ 1.0f, 1.0f, 1.0f });
 
 			Assert::AreEqual(q0.x, -0.279848129f, 0.000001f);
 			Assert::AreEqual(q0.y, 0.364705175f, 0.000001f);
@@ -161,7 +161,7 @@ namespace MathTest
 
 		TEST_METHOD(TestFromFromTo)
 		{
-			Quaternion q0 = Quaternion::RotationFromTo(Vector3{ 0.0f, 0.0f, 1.0f }, Vector3{ 1.0f, 1.0f, 1.0f });
+			const Quaternion q0 = Quaternion::RotationFromTo({ 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f });
 
 			Assert::AreEqual(q0.x, -0.325057596f, tolerance);
 			Assert::AreEqual(q0.y, 0.325057596f, tolerance);
@@ -171,8 +171,8 @@ namespace MathTest
 
 		TEST_METHOD(TestToMatrix)
 		{
-			Vector3 axis{ -1.0f, 1.0f, 1.0f };
-			float angle = 0.45f;
+			const Vector3 axis{ -1.0f, 1.0f, 1.0f };
+			constexpr float angle = 0.45f;
 			Matrix4 m0 = Matrix4::RotationQuaternion(Quaternion::RotationAxis(axis, angle));
 			Matrix4 m1 = Matrix4::RotationAxis(axis, angle);
 
@@ -196,16 +196,17 @@ namespace MathTest
 			Assert::AreEqual(m0._43, m1._43, tolerance);
 			Assert::AreEqual(m0._44, m1._44, tolerance);
 
-			for (size_t i = 0; i < std::size(m0.v); ++i)
+			constexpr size_t size = m0.v.size();
+			for (size_t i = 0 ; i < size; ++i)
 			{
-				Assert::AreEqual(m0.v[i], m1.v[i], tolerance);
+				Assert::AreEqual(m0.v.at(i), m1.v.at(i), tolerance);
 			}
 		}
 
 		TEST_METHOD(TestMagitude)
 		{
-			Quaternion q0(1.0f, 2.0f, 3.0f, 4.0f);
-			float magnitude = Magnitude(q0);
+			constexpr Quaternion q0(1.0f, 2.0f, 3.0f, 4.0f);
+			const float magnitude = Magnitude(q0);
 
 			Assert::AreEqual(magnitude, 5.47722578f, tolerance);
 		}

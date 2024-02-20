@@ -9,38 +9,42 @@ class Car
 {
 public:
 	META_CLASS_DECLARE
-
 public:
-	void Move() { mPosition += 1.0f; }
+	virtual ~Car() noexcept = default;
+	void Move() noexcept { mPosition += 1.0f; }
 protected:
-	float mPosition = 0.0f;
-	bool mAutomatic = true;
+	float mPosition{ 0.0f };
+	bool mAutomatic{ true };
+	char mPadding[3]{};
 };
 
-class Tesla : public Car
+class Tesla final : public Car
 {
 public:
 	META_CLASS_DECLARE
 		void Move() { mPosition += 10.f; }
 protected:
-	bool mGPS = true;
+	bool mGPS{ true };
+	char mPadding[3]{};
 };
 
 META_CLASS_BEGIN(Car)
-	META_FIELD_BEGIN
-		META_FIELD(mPosition, "Position")
-		META_FIELD(mAutomatic, "Automatic")
-	META_FIELD_END
+META_FIELD_BEGIN
+META_FIELD(mPosition, "Position")
+META_FIELD(mAutomatic, "Automatic")
+META_FIELD_END
 META_CLASS_END
 
 META_DERIVED_BEGIN(Tesla, Car)
-	META_FIELD_BEGIN
-		META_FIELD(mGPS, "GPS")
-	META_FIELD_END
+META_FIELD_BEGIN
+META_FIELD(mGPS, "GPS")
+META_FIELD_END
 META_CLASS_END
 
 namespace CoreTest
 {
+
+	using namespace std::literals::string_view_literals;
 	TEST_CLASS(MetaTest)
 	{
 	public:
@@ -49,7 +53,7 @@ namespace CoreTest
 		{
 			auto intType = Meta::GetMetaType<int>();
 			Assert::IsTrue(intType->GetCategory() == Meta::MetaType::Category::Primitive);
-			Assert::AreEqual(intType->GetName(), "Integer");
+			Assert::AreEqual(intType->GetName(), "Integer"sv);
 			Assert::AreEqual(intType->GetSize(), sizeof(int));
 		}
 
@@ -59,7 +63,7 @@ namespace CoreTest
 
 			auto metaType = Meta::GetMetaType<float*>();
 			Assert::IsTrue(metaType->GetCategory() == Meta::MetaType::Category::Pointer);
-			Assert::AreEqual(metaType->GetName(), "Pointer");
+			Assert::AreEqual(metaType->GetName(), "Pointer"sv);
 			Assert::AreEqual(metaType->GetSize(), sizeof(float*));
 
 			auto metaPointer = metaType->AsMetaPointer();
@@ -72,9 +76,9 @@ namespace CoreTest
 
 			auto metaType = Meta::GetMetaType<FloatVec>();
 			Assert::IsTrue(metaType->GetCategory() == Meta::MetaType::Category::Array);
-			Assert::AreEqual(metaType->GetName(), "Array");
+			Assert::AreEqual(metaType->GetName(), "Array"sv);
 			Assert::AreEqual(metaType->GetSize(), sizeof(FloatVec));
-		
+
 			auto metaArray = metaType->AsMetaArray();
 			Assert::IsTrue(metaArray->GetElementType() == Meta::GetMetaType<float>());
 		}
@@ -83,7 +87,7 @@ namespace CoreTest
 		{
 			auto metaType = Meta::GetMetaType<Car>();
 			Assert::IsTrue(metaType->GetCategory() == Meta::MetaType::Category::Class);
-			Assert::AreEqual(metaType->GetName(), "Car");
+			Assert::AreEqual(metaType->GetName(), "Car"sv);
 			Assert::AreEqual(metaType->GetSize(), sizeof(Car));
 
 			auto metaClass = Car::StaticGetMetaClass();
@@ -93,13 +97,13 @@ namespace CoreTest
 
 			auto metaField0 = metaClass->GetField(0);
 			Assert::IsTrue(metaField0->GetMetaType() == Meta::GetMetaType<float>());
-			Assert::AreEqual(metaField0->GetName(), "Position");
-			Assert::IsTrue(metaField0 == metaClass->FindField("Position"));
+			Assert::AreEqual(metaField0->GetName(), "Position"sv);
+			Assert::IsTrue(metaField0 == metaClass->FindField("Position"sv));
 
 			auto metaField1 = metaClass->GetField(1);
 			Assert::IsTrue(metaField1->GetMetaType() == Meta::GetMetaType<bool>());
-			Assert::AreEqual(metaField1->GetName(), "Automatic");
-			Assert::IsTrue(metaField1 == metaClass->FindField("Automatic"));
+			Assert::AreEqual(metaField1->GetName(), "Automatic"sv);
+			Assert::IsTrue(metaField1 == metaClass->FindField("Automatic"sv));
 		}
 
 		TEST_METHOD(TestMetaDerived)
@@ -110,18 +114,21 @@ namespace CoreTest
 
 			auto metaField0 = metaClass->GetField(0);
 			Assert::IsTrue(metaField0->GetMetaType() == Meta::GetMetaType<float>());
-			Assert::AreEqual(metaField0->GetName(), "Position");
-			Assert::IsTrue(metaField0 == metaClass->FindField("Position"));
+			std::string_view sv{ "Position"sv };
+			Assert::AreEqual(metaField0->GetName(), sv);
+			Assert::IsTrue(metaField0 == metaClass->FindField(sv));
 
 			auto metaField1 = metaClass->GetField(1);
+			sv = "Automatic"sv;
 			Assert::IsTrue(metaField1->GetMetaType() == Meta::GetMetaType<bool>());
-			Assert::AreEqual(metaField1->GetName(), "Automatic");
-			Assert::IsTrue(metaField1 == metaClass->FindField("Automatic"));
+			Assert::AreEqual(metaField1->GetName(), sv);
+			Assert::IsTrue(metaField1 == metaClass->FindField(sv));
 
 			auto metaField2 = metaClass->GetField(2);
+			sv = "GPS"sv;
 			Assert::IsTrue(metaField2->GetMetaType() == Meta::GetMetaType<bool>());
-			Assert::AreEqual(metaField2->GetName(), "GPS");
-			Assert::IsTrue(metaField2 == metaClass->FindField("GPS"));
+			Assert::AreEqual(metaField2->GetName(), sv);
+			Assert::IsTrue(metaField2 == metaClass->FindField(sv));
 		}
 
 	};

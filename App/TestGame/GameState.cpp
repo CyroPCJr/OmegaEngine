@@ -20,11 +20,14 @@ void GameState::Initialize()
 	camera.SetFarPlane(300.0f);
 	camera.SetPosition({ 0.0f, 10.0f, -30.0f });
 	camera.SetLookAt({ 0.0f, 0.0f, 0.0f });
-	
-	mWorld.Create("../../Assets/Templates/tallBox.json", "Cyro");
+
+	/*mWorld.Create("../../Assets/Templates/tallBox.json", "Cyro");
 	mWorld.Create("../../Assets/Templates/longBox.json", "Cyro");
-	mWorld.Create("../../Assets/Templates/fatBox.json", "Cyro");
-	/*mWorld.Create("../../Assets/Templates/test.json", "Test");*/
+	mWorld.Create("../../Assets/Templates/fatBox.json", "Cyro");*/
+	mWorld.Create({ "../../Assets/Templates/tallBox.json",
+		"../../Assets/Templates/longBox.json",
+		"../../Assets/Templates/fatBox.json" }, "Cyro");
+		//mWorld.Create("../../Assets/Templates/test.json", "Test");
 }
 
 void GameState::Terminate()
@@ -34,34 +37,37 @@ void GameState::Terminate()
 
 void GameState::Update(float deltaTime)
 {
-	auto inputSystem = InputSystem::Get();
+	const auto inputSystem = InputSystem::Get();
 
 	const float kMoveSpeed = inputSystem->IsKeyDown(KeyCode::LSHIFT) ? 100.0f : 10.0f;
-	const float kTurnSpeed = 1.0f;
+	constexpr float kTurnSpeed = 1.0f;
+	const float moveDelta = kMoveSpeed * deltaTime;
 
 	auto& camera = mCameraService->GetActiveCamera();
 
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
-		camera.Walk(kMoveSpeed * deltaTime);
+		camera.Walk(moveDelta);
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
-		camera.Walk(-kMoveSpeed * deltaTime);
+		camera.Walk(-moveDelta);
 	}
 	if (inputSystem->IsKeyDown(KeyCode::D))
 	{
-		camera.Strafe(kMoveSpeed * deltaTime);
+		camera.Strafe(moveDelta);
 	}
 	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
-		camera.Strafe(-kMoveSpeed * deltaTime);
+		camera.Strafe(-moveDelta);
 	}
 	if (inputSystem->IsMouseDown(MouseButton::RBUTTON))
 	{
-		camera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
-		camera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+		const float mouseXDelta = static_cast<float>(inputSystem->GetMouseMoveX()) * moveDelta;
+		const float mouseYDelta = static_cast<float>(inputSystem->GetMouseMoveY()) * moveDelta;
+		camera.Yaw(mouseXDelta);
+		camera.Pitch(mouseYDelta);
 	}
 
 	mWorld.Update(deltaTime);

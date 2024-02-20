@@ -157,12 +157,12 @@ Quaternion Quaternion::RotationLook(const Vector3& direction, const Vector3& up)
 	return RotationMatrix(m);
 }
 
-Quaternion Quaternion::RotationFromTo(Vector3& from, Vector3& to)
+Quaternion Quaternion::RotationFromTo(const Vector3& from, const Vector3& to)
 {
-	from = Normalize(from);
-	to = Normalize(to);
+	const Vector3 localFrom = Normalize(from);
+	const Vector3 localTo = Normalize(to);
 
-	const float cosTheta = Dot(from, to);
+	const float cosTheta = Dot(localFrom, localTo);
 	Vector3 rotationAxis;
 	if (cosTheta >= 1.0f) // If dot == 1, vectors are the same
 	{
@@ -173,18 +173,18 @@ Quaternion Quaternion::RotationFromTo(Vector3& from, Vector3& to)
 		// special case when vectors in opposite directions:
 		// there is no "ideal" rotation axis
 		// So guess one; any will do as long as it's perpendicular to start
-		rotationAxis = Cross(Vector3::ZAxis, from);
+		rotationAxis = Cross(Vector3::ZAxis, localFrom);
 
 		if (Magnitude(rotationAxis) < 0.01f)
 		{
 			// bad luck, they were parallel, try again!
-			rotationAxis = Cross(Vector3::XAxis, from);
+			rotationAxis = Cross(Vector3::XAxis, localFrom);
 		}
 		rotationAxis = Normalize(rotationAxis);
 		return Quaternion::RotationAxis(rotationAxis, 180.0f);
 	}
 
-	rotationAxis = Cross(from, to);
+	rotationAxis = Cross(localFrom, localTo);
 
 	const float s = sqrtf((1.0f + cosTheta) * 2.0f);
 	const float invs = 1.0f / s;

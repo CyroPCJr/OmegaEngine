@@ -100,7 +100,7 @@ namespace Omega::Math
 			return aux;
 		}
 
-		inline Matrix4 operator*=(const Matrix4& m) noexcept
+		constexpr Matrix4 operator*=(const Matrix4& m) noexcept
 		{
 			Matrix4 aux{};
 			aux._11 = (_11 * m._11) + (_12 * m._21) + (_13 * m._31) + (_14 * m._41);
@@ -139,7 +139,7 @@ namespace Omega::Math
 			return *this;
 		}
 
-		inline Matrix4 operator+(const Matrix4& m) noexcept
+		constexpr Matrix4 operator+(const Matrix4& m) noexcept
 		{
 			Matrix4 aux{};
 			aux._11 = (_11 + m._11); aux._12 = (_12 + m._12); aux._13 = (_13 + m._13); aux._14 = (_14 + m._14);
@@ -158,7 +158,7 @@ namespace Omega::Math
 			return *this;
 		}
 
-		inline Matrix4 operator-(const Matrix4& m) noexcept
+		constexpr Matrix4 operator-(const Matrix4& m) noexcept
 		{
 			Matrix4 aux{};
 			aux._11 = (_11 - m._11); aux._12 = (_12 - m._12); aux._13 = (_13 - m._13); aux._14 = (_14 - m._14);

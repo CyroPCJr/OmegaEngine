@@ -266,7 +266,7 @@ namespace Omega::Graphics
 		{
 			// Check if we have enough space
 
-			if (mVertexCount + 24 <= mMaxVertexCount)
+			if (mVertexCount + 24u <= mMaxVertexCount)
 			{
 				float minX = aabb.center.x - aabb.extend.x;
 				float minY = aabb.center.y - aabb.extend.y;

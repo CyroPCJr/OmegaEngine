@@ -1,16 +1,16 @@
 #include "Precompiled.h"
 #include "MetaClass.h"
+#include "MetaField.h"
 
 #include "DebugUtil.h"
-#include "MetaField.h"
 
 using namespace Omega::Core::Meta;
 
-MetaClass::MetaClass(const char* name,
+MetaClass::MetaClass(std::string_view name,
 	size_t size,
 	const MetaClass* parent,
 	std::vector<MetaField> fields,
-	CreateFunc create)
+	CreateFunc create) noexcept
 	: MetaType(MetaType::Category::Class, name, size)
 	, mParent(parent)
 	, mFields(std::move(fields))
@@ -18,16 +18,16 @@ MetaClass::MetaClass(const char* name,
 {
 }
 
-const MetaClass* MetaClass::GetParent() const
+const MetaClass* MetaClass::GetParent() const noexcept
 {
 	return mParent;
 }
 
-const MetaField* MetaClass::FindField(const char* name) const
+const MetaField* MetaClass::FindField(std::string_view name) const
 {
-	for (auto& field : mFields)
+	for (const auto& field : mFields)
 	{
-		if (strcmp(field.GetName(), name) == 0)
+		if (!field.GetName().compare(name))
 		{
 			return &field;
 		}
@@ -51,9 +51,10 @@ const MetaField* MetaClass::GetField(size_t index) const
 	return mFields.data() + (index - parentCount);
 }
 
-size_t MetaClass::GetFieldCount() const
+size_t MetaClass::GetFieldCount() const noexcept
 {
-	return mFields.size() + GetParentFieldCount();
+	const size_t size = mFields.size();
+	return size + GetParentFieldCount();
 }
 
 void* MetaClass::Create() const
@@ -64,15 +65,17 @@ void* MetaClass::Create() const
 
 void MetaClass::Deserialize(void* classInstance, const rapidjson::Value& jsonValue) const
 {
-	for (auto& member : jsonValue.GetObjectW())
+	for (const auto& member : jsonValue.GetObjectW())
 	{
-		auto metaField = FindField(member.name.GetString());
-		auto metaType = metaField->GetMetaType();
-		metaType->Deserialize(metaField->GetFieldInstance(classInstance), member.value);
+		if (const auto& metaField = FindField(member.name.GetString()); metaField)
+		{
+			auto metaType = metaField->GetMetaType();
+			metaType->Deserialize(metaField->GetFieldInstance(classInstance), member.value);
+		}
 	}
 }
 
-size_t MetaClass::GetParentFieldCount() const
+constexpr size_t MetaClass::GetParentFieldCount() const noexcept
 {
 	return mParent ? mParent->GetFieldCount() : 0u;
 }

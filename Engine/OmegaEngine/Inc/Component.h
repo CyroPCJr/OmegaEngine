@@ -30,8 +30,8 @@ namespace Omega
 		virtual void Render() {}
 		virtual void DebugUI() {}
 
-		GameObject& GetOwner() { return *mOwner; }
-		const GameObject& GetOwner() const { return *mOwner; }
+		GameObject& GetOwner() noexcept { return *mOwner; }
+		constexpr GameObject& GetOwner() const noexcept { return *mOwner; }
 
 	private:
 		friend class GameObject;

@@ -6,30 +6,39 @@ namespace Omega::Core::Meta
 {
 	class MetaField;
 
-	class MetaClass : public MetaType
+	class MetaClass final : public MetaType
 	{
 	public:
 		using CreateFunc = std::function<void* ()>;
 
-		MetaClass(const char* name, size_t size,
+		MetaClass(std::string_view name, size_t size,
 			const MetaClass* parent,
 			std::vector<MetaField> fields,
-			CreateFunc create);
+			CreateFunc create) noexcept;
 
-		const MetaClass* GetParent() const;
-		const MetaField* FindField(const char* name) const;
+		//copy constructor
+		MetaClass(const MetaClass&) = delete;
+		//copy assignment
+		MetaClass& operator=(const MetaClass&) = delete;
+		//move constructor
+		//MetaClass(MetaClass&&) = delete;
+		////move assigment
+		//MetaClass& operator=(MetaClass&&) = delete;
+
+		const MetaClass* GetParent() const noexcept;
+		const MetaField* FindField(std::string_view name) const;
 		const MetaField* GetField(size_t index) const;
-		size_t GetFieldCount() const;
+		size_t GetFieldCount() const noexcept;
 
 		void* Create() const;
 		void Deserialize(void* classInstance, const rapidjson::Value& jsonValue) const override;
 
 	private:
-		size_t GetParentFieldCount() const;
-
-		const MetaClass* mParent;
-		const std::vector<MetaField> mFields;
+		constexpr size_t GetParentFieldCount() const noexcept;
 
 		const CreateFunc mCreate;
+		const std::vector<MetaField> mFields;
+		const MetaClass* mParent;
+		int mPadding = 0;
 	};
 }
