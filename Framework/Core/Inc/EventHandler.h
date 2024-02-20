@@ -36,8 +36,8 @@ namespace Omega::Core
 	private:
 		static std::atomic_uint sNextHandlerId;
 
-		EventHandlerFunc mHandlerFunc;
 		EventHandlerId mHandlerId;
+		EventHandlerFunc mHandlerFunc;
 	};
 
 	template <class... Args>

@@ -6,6 +6,16 @@
 					"x": 5,
 					"y": 0,
 					"z": 0
+				},
+				"Rotation": {
+					"XDegree": 0,
+					"YDegree": 0,
+					"ZDegree": 0
+				},
+				"Scale": {
+				  "x": 0,
+				  "y": 0,
+				  "z": 0
 				}
 			},
 			"ColliderComponent": {

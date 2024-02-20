@@ -12,7 +12,7 @@ META_CLASS_END
 void GameObject::Initialize()
 {
 	OMEGAASSERT(!mInitialized, "[GameObject] -- Game object already initialized!");
-	for (auto& component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		component->Initialize();
 	}
@@ -21,7 +21,7 @@ void GameObject::Initialize()
 
 void GameObject::Terminate()
 {
-	for (auto& component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		component->Terminate();
 	}
@@ -29,7 +29,7 @@ void GameObject::Terminate()
 
 void GameObject::Update(float deltaTime) 
 {
-	for (auto& component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		component->Update(deltaTime);
 	}
@@ -37,7 +37,7 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Render() 
 {
-	for (auto& component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		component->Render();
 	}
@@ -45,7 +45,7 @@ void GameObject::Render()
 
 void GameObject::DebugUI() 
 {
-	for (auto& component : mComponents)
+	for (const auto& component : mComponents)
 	{
 		component->DebugUI();
 	}
@@ -55,6 +55,6 @@ Component* GameObject::AddComponent(const Core::Meta::MetaClass* metaClass)
 {
 	Component* newComponent = static_cast<Component*>(metaClass->Create());
 	newComponent->mOwner = this;
-	mComponents.emplace_back(std::unique_ptr<Component>(newComponent));
-	return newComponent;
+	mComponents.push_back(std::unique_ptr<Component>(newComponent));
+	return mComponents.back().get();
 }

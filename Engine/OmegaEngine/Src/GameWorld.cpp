@@ -8,7 +8,7 @@ void GameWorld::Initialize(size_t capacity)
 {
 	OMEGAASSERT(!mInitialized, "[GameWorld] -- World already initialized.");
 
-	for (auto& service : mServices)
+	for (const auto& service : mServices)
 	{
 		service->Initialize();
 	}
@@ -27,10 +27,10 @@ void GameWorld::Terminate()
 
 	// Destroy all active objects
 	mUpdating = true;
-	std::for_each(mUpdateList.begin(), mUpdateList.end(), [this](auto gameObject)
-	{
-		Destroy(gameObject->GetHandle());
-	});
+	std::for_each(mUpdateList.begin(), mUpdateList.end(), [this](const auto& gameObject)
+		{
+			Destroy(gameObject->GetHandle());
+		});
 	mUpdating = false;
 	mUpdateList.clear();
 
@@ -40,7 +40,7 @@ void GameWorld::Terminate()
 	mGameObjectAllocator.reset();
 	mGameObjectHandlePool.reset();
 
-	for (auto& service : mServices)
+	for (const auto& service : mServices)
 	{
 		service->Terminate();
 	}
@@ -48,7 +48,15 @@ void GameWorld::Terminate()
 	mInitialized = false;
 }
 
-GameObjectHandle GameWorld::Create(const std::filesystem::path& templateFileName, std::string name)
+void GameWorld::Create(std::initializer_list<std::filesystem::path> listTemplateFiles, std::string_view name)
+{
+	for (const std::filesystem::path& templatefiles : listTemplateFiles)
+	{
+		Create(templatefiles, name);
+	}
+}
+
+GameObjectHandle GameWorld::Create(const std::filesystem::path& templateFileName, std::string_view name)
 {
 	auto gameObject = GameObjectFactory::Create(*mGameObjectAllocator, templateFileName);
 	if (!gameObject)
@@ -58,24 +66,24 @@ GameObjectHandle GameWorld::Create(const std::filesystem::path& templateFileName
 	}
 
 	// Register with the handle pool
-	auto handle = mGameObjectHandlePool->Register(gameObject);
+	const auto handle = mGameObjectHandlePool->Register(gameObject);
 
 	// Initialize the game object
 	gameObject->mWorld = this;
-	gameObject->mName = std::move(name);
+	gameObject->mName = name;
 	gameObject->mHandle = handle;
 	gameObject->Initialize();
 
-	mUpdateList.push_back(gameObject);
+	mUpdateList.emplace_back(gameObject);
 	return handle;
 }
 
-GameObjectHandle GameWorld::Find(const std::string& name)
+GameObjectHandle GameWorld::Find(std::string_view name)
 {
-	auto iter = std::find_if(mUpdateList.begin(), mUpdateList.end(), [&name](auto gameObject)
-	{
-		return gameObject->GetName() == name;
-	});
+	auto iter = std::find_if(mUpdateList.begin(), mUpdateList.end(), [&name](auto& gameObject)
+		{
+			return gameObject->GetName() == name;
+		});
 
 	if (iter != mUpdateList.end())
 	{
@@ -97,7 +105,7 @@ void GameWorld::Destroy(GameObjectHandle handle)
 	// Check if we can destroy it now
 	if (mUpdating)
 	{
-		mDestroyList.push_back(gameObject);
+		mDestroyList.emplace_back(gameObject);
 	}
 	else
 	{
@@ -117,19 +125,18 @@ void GameWorld::Update(float deltaTime)
 	// Lock the update list
 	mUpdating = true;
 
-	for (auto& service : mServices)
+	for (const auto& service : mServices)
 	{
 		service->Update(deltaTime);
 	}
 
 	// Re-compute size in case new object
 	// list during iteration.
-	for (size_t i = 0; i < mUpdateList.size(); ++i)
+	for (const auto& gameObj : mUpdateList)
 	{
-		GameObject* gameObject = mUpdateList[i];
-		if (gameObject->GetHandle().IsValid())
+		if (gameObj->GetHandle().IsValid())
 		{
-			gameObject->Update(deltaTime);
+			gameObj->Update(deltaTime);
 		}
 	}
 	// Unlock the update list
@@ -141,12 +148,12 @@ void GameWorld::Update(float deltaTime)
 
 void GameWorld::Render()
 {
-	for (auto& service : mServices)
+	for (const auto& service : mServices)
 	{
 		service->Render();
 	}
 
-	for (auto gameObject : mUpdateList)
+	for (const auto& gameObject : mUpdateList)
 	{
 		gameObject->Render();
 	}
@@ -154,12 +161,12 @@ void GameWorld::Render()
 
 void GameWorld::DebugUI()
 {
-	for (auto& service : mServices)
+	for (const auto& service : mServices)
 	{
 		service->DebugUI();
 	}
 
-	for (auto gameObject : mUpdateList)
+	for (const auto& gameObject : mUpdateList)
 	{
 		gameObject->DebugUI();
 	}
@@ -170,11 +177,11 @@ void GameWorld::DestroyInternal(GameObject* gameObject)
 	OMEGAASSERT(!mUpdating, "[GameWorld] -- Cannot destroy game object during update.");
 
 	// If pointer is invalid, nothing to do so just exit
-	if (gameObject == nullptr) return;
+	if (!gameObject) return;
 
 	// First remove it from the update list
-	auto iter = std::find(mUpdateList.begin(), mUpdateList.end(), gameObject);
-	if (iter != mUpdateList.end())
+	if (const auto iter = std::find(mUpdateList.begin(), mUpdateList.end(), gameObject);
+		iter != mUpdateList.end())
 	{
 		mUpdateList.erase(iter);
 	}
@@ -188,7 +195,7 @@ void GameWorld::DestroyInternal(GameObject* gameObject)
 
 void GameWorld::ProcessDestroyList()
 {
-	for (auto gameObject : mDestroyList)
+	for (auto& gameObject : mDestroyList)
 	{
 		DestroyInternal(gameObject);
 	}

@@ -10,18 +10,19 @@ using namespace Omega::Core;
 using namespace Omega::Graphics;
 using namespace Omega::Input;
 
-void App::ChangeState(const std::string& name)
+void App::ChangeState(std::string_view name)
 {
-	if (auto iter = mAppState.find(name); iter != mAppState.end())
+	if (const auto& iter = mAppState.find(name); 
+		iter != mAppState.end())
 	{
 		mNextState = iter->second.get();
 	}
 }
 
-void App::Run(AppConfig appConfig)
+void App::Run(const AppConfig& appConfig)
 {
 	LOG("App -- Running ...");
-	mAppConfig = std::move(appConfig);
+	//mAppConfig = std::move(appConfig);
 
 	LOG("App -- Registering meta types ...");
 	Core::StaticMetaRegister();
@@ -34,9 +35,9 @@ void App::Run(AppConfig appConfig)
 	// Setup our application window
 	mWindow.Initialize(
 		GetModuleHandle(NULL),
-		mAppConfig.appName.c_str(),
-		mAppConfig.windowWidth,
-		mAppConfig.windowHeight);
+		std::string(appConfig.appName).c_str(),
+		appConfig.windowWidth,
+		appConfig.windowHeight);
 
 	// Initialize the input system
 	auto handle = mWindow.GetWindow();
@@ -59,7 +60,8 @@ void App::Run(AppConfig appConfig)
 	mCurrentState->Initialize();
 
 	mRunning = true;
-	auto graphicsSystem = GraphicsSystem::Get();
+	const auto& graphicsSystem = GraphicsSystem::Get();
+	const auto& inputSystem = InputSystem::Get();
 	while (mRunning)
 	{
 		mWindow.ProcessMessage();
@@ -75,8 +77,7 @@ void App::Run(AppConfig appConfig)
 			mCurrentState = std::exchange(mNextState, nullptr);
 			mCurrentState->Initialize();
 		}
-
-		auto inputSystem = InputSystem::Get();
+		
 		inputSystem->Update();
 
 		if (inputSystem->IsKeyPressed(KeyCode::ESCAPE))
@@ -85,7 +86,7 @@ void App::Run(AppConfig appConfig)
 			continue;
 		}
 
-		float deltaTime = TimeUtil::GetDeltaTime();
+		const float deltaTime = TimeUtil::GetDeltaTime();
 		mCurrentState->Update(deltaTime);
 
 		graphicsSystem->BeginRender();

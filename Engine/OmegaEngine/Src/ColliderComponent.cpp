@@ -10,15 +10,16 @@ using namespace Omega;
 using namespace Omega::Graphics;
 
 META_DERIVED_BEGIN(ColliderComponent, Component)
-	META_FIELD_BEGIN
-		META_FIELD(center, "Center")
-		META_FIELD(extend, "Extend")
-	META_FIELD_END
+META_FIELD_BEGIN
+META_FIELD(center, "Center")
+META_FIELD(extend, "Extend")
+META_FIELD_END
 META_CLASS_END
 
-void ColliderComponent::Initialize()
+void Omega::ColliderComponent::Initialize()
 {
 	mTransformComponent = GetOwner().GetComponent<TransformComponent>();
+	SetAABB({ mTransformComponent->position + center, extend });
 }
 
 void ColliderComponent::Terminate()
@@ -44,13 +45,11 @@ void ColliderComponent::DebugUI()
 		ImGui::Text("Scale");
 		ImGui::End();
 	}*/
-	auto aabb = GetAABB();
+	auto aabb = Math::AABB({ mTransformComponent->position + center, extend });
 	SimpleDraw::AddAABB(aabb, Colors::LightGreen);
 }
 
-Math::AABB ColliderComponent::GetAABB() const
+const Math::AABB& ColliderComponent::GetAABB() const
 {
-	auto translation = mTransformComponent->position;
-	// this is incorrect if we have orientation as well
-	return { translation + center, extend };
+	return mAABB;
 }

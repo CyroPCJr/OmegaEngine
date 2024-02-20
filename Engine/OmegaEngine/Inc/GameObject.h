@@ -1,4 +1,3 @@
-
 #pragma once
 
 namespace Omega
@@ -16,8 +15,10 @@ namespace Omega
 	public:
 		META_CLASS_DECLARE
 
-		GameObject() = default;
+		GameObject() noexcept = default;
+		//copy constructor
 		GameObject(const GameObject&) = delete;
+		//copy assigment
 		GameObject& operator=(const GameObject&) = delete;
 
 		void Initialize();
@@ -35,15 +36,15 @@ namespace Omega
 			static_assert(std::is_base_of_v<Component, ComponentType>,
 				"[GameObject] -- Cannot add type ComponentType which is not derived from Component.");
 			OMEGAASSERT(!mInitialized, "[GameObject] -- Cannot add new components once the game object is already initialized.");
-			auto& newComponent = mComponents.emplace_back(std::make_unique<ComponentType>());
+			auto& newComponent = mComponents.push_back(std::make_unique<ComponentType>());
 			newComponent->mOwner = this;
 			return static_cast<ComponentType*>(newComponent.get());
 		}
 
 		template <class ComponentType>
-		const ComponentType* GetComponent() const
+		constexpr const ComponentType* GetComponent() const
 		{
-			for (auto& component : mComponents)
+			for (const auto& component : mComponents)
 			{
 				if (component->GetMetaClass() == ComponentType::StaticGetMetaClass())
 				{
@@ -60,22 +61,23 @@ namespace Omega
 			return const_cast<ComponentType*>(constMe->GetComponent<ComponentType>());
 		}
 
-		GameWorld& GetWorld() { return *mWorld; }
-		const GameWorld& GetWorld() const { return *mWorld; }
+		constexpr GameWorld& GetWorld() noexcept { return *mWorld; }
+		constexpr const GameWorld& GetWorld() const noexcept { return *mWorld; }
 
-		void SetName(const char* name) { mName = name; }
-		std::string& GetName() { return mName; }
+		void SetName(std::string_view name) noexcept { mName = name; }
+		constexpr std::string_view GetName() const noexcept { return mName; }
 
-		GameObjectHandle GetHandle() const { return mHandle; }
+		GameObjectHandle GetHandle() const noexcept { return mHandle; }
 	private:
 		friend class GameWorld;
 
 		using Components = std::vector<std::unique_ptr<Component>>;
+		Components mComponents;
+		std::string_view mName = "NoName";
 
 		GameWorld* mWorld = nullptr;
-		std::string mName = "NoName";
 		GameObjectHandle mHandle;
-		Components mComponents;
 		bool mInitialized = false;
+		char padding[3]{};
 	};
 }

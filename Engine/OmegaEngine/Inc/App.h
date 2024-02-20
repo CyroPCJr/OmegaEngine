@@ -4,44 +4,48 @@
 
 namespace Omega
 {
-
+	//String view operatos reference
+	//https://learn.microsoft.com/en-us/cpp/standard-library/string-view-operators?view=msvc-170
+	using namespace std::literals::string_view_literals;
 	struct AppConfig
 	{
-		std::string appName = "Omega";
-		uint32_t windowWidth = 1280;
-		uint32_t windowHeight = 720;
+		std::string_view appName{ "Omega"sv };
+		uint32_t windowWidth = 1280u;
+		uint32_t windowHeight = 720u;
 	};
 
-	class App
+	class App final
 	{
 	public:
+		App() noexcept = default;
+		// copy ctor and assignment
+		App(const App&) = delete;
+		App& operator=(const App&) = delete;
 
 		template<class StateType>
-		void AddState(std::string name)
+		void AddState(std::string_view name)
 		{
 			static_assert(std::is_base_of_v<AppState, StateType>,
 				"[App] -- Cannot add type AppState which is not derived from StateType.");
 			// move semantic = ownership transfer, i.e pass the temporarily values to new owner. 
 			// could be represent as swallow copy
-			mAppState.emplace(std::move(name), std::make_unique<StateType>());
+			mAppState.emplace(name, std::make_unique<StateType>());
 		}
 
-		void ChangeState(const std::string& name);
+		void ChangeState(std::string_view name);
 
-		void Run(AppConfig appConfig);
-		void Quit() { mRunning = false; }
-		
+		void Run(const AppConfig& appConfig);
+		void Quit() noexcept { mRunning = false; }
+
 		float GetTime();
 
 	private:
-		AppConfig mAppConfig;
 		Core::Window mWindow;
-		bool mRunning = false;
-
-		std::map<std::string, std::unique_ptr<AppState>> mAppState;
+		std::map<std::string_view, std::unique_ptr<AppState>> mAppState;
 		AppState* mCurrentState = nullptr;
 		AppState* mNextState = nullptr;
-
+		bool mRunning = false;
+		char mPadding[3]{};
 	};
 
 }

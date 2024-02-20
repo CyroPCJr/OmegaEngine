@@ -5,7 +5,7 @@
 using namespace Omega;
 using namespace Omega::Core;
 
-BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity) noexcept
+BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity)
 	: mData(nullptr)
 	, mBlockSize(blockSize)
 	, mCapacity(capacity)
@@ -15,7 +15,7 @@ BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity) noexcept
 	mData = malloc(blockSize * capacity);
 	for (size_t i = 0; i < capacity; ++i)
 	{
-		mFreeSlots.push_back(i);
+		mFreeSlots.emplace_back(i);
 	}
 }
 
@@ -36,5 +36,5 @@ void* BlockAllocator::Allocate()
 void BlockAllocator::Free(void* ptr)
 {
 	auto giveBackSlot = sizeof(&ptr - &mData) / mBlockSize;
-	mFreeSlots.push_back(giveBackSlot);
+	mFreeSlots.emplace_back(giveBackSlot);
 }

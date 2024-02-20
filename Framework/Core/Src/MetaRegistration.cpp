@@ -6,25 +6,41 @@ namespace Omega::Core::Meta
 	template<>
 	void Deserialize<int>(void* instance, const rapidjson::Value& value)
 	{
-		*(int*)instance = value.GetInt();
+		if (instance)
+		{
+			//*(int*)instance = value.GetInt();
+			*static_cast<int*>(instance) = value.GetInt();
+		}
 	}
 
 	template<>
 	void Deserialize<float>(void* instance, const rapidjson::Value& value)
 	{
-		*(float*)instance = value.GetFloat();
+		if (instance)
+		{
+			//*(float*)instance = value.GetFloat();
+			*static_cast<float*>(instance) = value.GetFloat();
+		}
 	}
 
 	template<>
 	void Deserialize<bool>(void* instance, const rapidjson::Value& value)
 	{
-		*(bool*)instance = value.GetBool();
+		if (instance)
+		{
+			//*(bool*)instance = value.GetBool();
+			*static_cast<bool*>(instance) = value.GetBool();
+		}
 	}
 
 	template<>
-	void Deserialize<std::string>(void* instance, const rapidjson::Value& value)
+	void Deserialize<std::string_view>(void* instance, const rapidjson::Value& value)
 	{
-		*(std::string*)instance = value.GetString();
+		if (instance)
+		{
+			//*(std::string*)instance = value.GetString();
+			*static_cast<std::string_view*>(instance) = value.GetString();
+		}
 	}
 }
 
@@ -32,9 +48,9 @@ namespace Omega::Core::Meta
 META_TYPE_DEFINE(int, Integer)
 META_TYPE_DEFINE(float, Number)
 META_TYPE_DEFINE(bool, Boolean)
-META_TYPE_DEFINE(std::string, String)
+META_TYPE_DEFINE(std::string_view, String)
 
-void Omega::Core::StaticMetaRegister()
+void Omega::Core::StaticMetaRegister() noexcept
 {
 	// MetaClass registration here...
 	//e.g META_REGISTER(Foo);

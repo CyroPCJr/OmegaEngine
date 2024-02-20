@@ -6,7 +6,7 @@ namespace Omega::Core
 	class BlockAllocator
 	{
 	public:
-		BlockAllocator(size_t blockSize, size_t capacity) noexcept;
+		BlockAllocator(size_t blockSize, size_t capacity);
 		virtual ~BlockAllocator();
 
 		BlockAllocator(const BlockAllocator&) = delete;
@@ -18,7 +18,7 @@ namespace Omega::Core
 		void* Allocate();
 		void Free(void* ptr);
 
-		size_t GetCapacity() const noexcept { return mCapacity; }
+		constexpr size_t GetCapacity() const noexcept { return mCapacity; }
 
 	protected:
 		std::vector<size_t> mFreeSlots;

@@ -19,8 +19,8 @@ namespace Omega
 		virtual void Render() {}
 		virtual void DebugUI() {}
 
-		GameWorld& GetWorld() { return *mWorld; }
-		const GameWorld& GetWorld() const { return *mWorld; }
+		GameWorld& GetWorld() noexcept { return *mWorld; }
+		const GameWorld& GetWorld() const noexcept { return *mWorld; }
 
 	private:
 		friend class GameWorld;

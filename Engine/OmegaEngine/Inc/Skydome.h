@@ -3,11 +3,9 @@
 
 namespace Omega
 {
-	class Skydome
+	class Skydome final
 	{
 	public:
-		Skydome() = default;
-		~Skydome() = default;
 
 		void Initialize(const std::filesystem::path& texturePath);
 		void SetSize(float radius, int rings, int slices);

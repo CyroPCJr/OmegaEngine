@@ -14,7 +14,22 @@ namespace Omega::Core
 	public:
 		using HandleType = Handle<DataType>;
 
-		HandlePool(size_t capacity) noexcept
+		HandlePool() noexcept = default;
+
+		// copy ctor and assignment
+		HandlePool(const HandlePool&) = delete;
+		HandlePool& operator=(const HandlePool&) = delete;
+		//move constructor and assigment
+		HandlePool(HandlePool&&) = delete;
+		HandlePool& operator=(HandlePool&&) = delete;
+
+		~HandlePool()
+		{
+			OMEGAASSERT(HandleType::sPool == this, "[%s] -- Something is wrong ...", __FUNCTION__);
+			HandleType::sPool = nullptr;
+		}
+
+		HandlePool(size_t capacity)
 		{
 			OMEGAASSERT(capacity > 0, "[%s] -- Invalid capacity.", __FUNCTION__);
 			// allocate capacity + 1 entries (we dont use slot 0)
@@ -29,12 +44,6 @@ namespace Omega::Core
 			HandleType::sPool = this;
 		}
 
-		~HandlePool()
-		{
-			OMEGAASSERT(HandleType::sPool == this, "[%s] -- Something is wrong ...", __FUNCTION__);
-			HandleType::sPool = nullptr;
-		}
-
 		HandleType Register(DataType* instance)
 		{
 			OMEGAASSERT(instance != nullptr, "[%s] -- Invalid instance.", __FUNCTION__);
@@ -45,12 +54,12 @@ namespace Omega::Core
 			// Return a handle to this entry (set index and generation)
 			const size_t key = mFreeSlots.back();
 			mFreeSlots.pop_back();
-
-			mEntries[key].instance = std::move(instance);
+			Entry& entry = mEntries[key];
+			entry.instance = std::move(instance);
 
 			HandleType handle;
 			handle.mIndex = key;
-			handle.mGeneration = mEntries[key].generation;
+			handle.mGeneration = entry.generation;
 
 			return handle;
 		}

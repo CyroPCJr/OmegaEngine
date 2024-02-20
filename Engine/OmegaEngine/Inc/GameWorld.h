@@ -6,9 +6,13 @@ namespace Omega
 {
 	class Service;
 
-	class GameWorld
+	class GameWorld final
 	{
 	public:
+		GameWorld() = default;
+		GameWorld(const GameWorld&) = delete;
+		GameWorld& operator=(const GameWorld&) = delete;
+
 		void Initialize(size_t capacity);
 		void Terminate();
 
@@ -20,13 +24,13 @@ namespace Omega
 			OMEGAASSERT(!mInitialized, "[GameWorld] -- Cannot add service after world has already initialized.");
 			auto& newService = mServices.emplace_back(std::make_unique<ServiceType>());
 			newService->mWorld = this;
-			return static_cast<ServiceType*>(newService.get());
+			return dynamic_cast<ServiceType*>(newService.get());
 		}
 
 		template <class ServiceType>
 		const ServiceType* GetService() const
 		{
-			for (auto& service : mServices)
+			for (const auto& service : mServices)
 			{
 				if (service->GetMetaClass() == ServiceType::StaticGetMetaClass())
 				{
@@ -37,7 +41,7 @@ namespace Omega
 		}
 
 		template <class ServiceType>
-		ServiceType* GetService()
+		const ServiceType& GetService()
 		{
 			auto constMe = static_cast<const GameWorld*>(this);
 			return const_cast<ServiceType*>(constMe->GetComponent<ServiceType>());
@@ -52,8 +56,9 @@ namespace Omega
 			return static_cast<ServiceType*>(iter->get());
 		}
 
-		GameObjectHandle Create(const std::filesystem::path& templateFileName, std::string name);
-		GameObjectHandle Find(const std::string& name);
+		void Create(std::initializer_list<std::filesystem::path> listTemplateFiles, std::string_view name);
+		GameObjectHandle Create(const std::filesystem::path& templateFileName, std::string_view name);
+		GameObjectHandle Find(std::string_view name);
 		void Destroy(GameObjectHandle handle);
 
 		void Update(float deltaTime);
@@ -68,15 +73,14 @@ namespace Omega
 		using GameObjectList = std::vector<GameObject*>;
 
 		Services mServices;
-
-		std::unique_ptr<GameObjectAllocator> mGameObjectAllocator;
-		std::unique_ptr<GameObjectHandlePool> mGameObjectHandlePool;
-
 		GameObjectList mUpdateList;
 		GameObjectList mDestroyList;
 
+		std::unique_ptr<GameObjectAllocator> mGameObjectAllocator;
+		std::unique_ptr<GameObjectHandlePool> mGameObjectHandlePool;
 		bool mInitialized = false;
 		bool mUpdating = false;
+		char padding[2]{};
 	};
 
 }

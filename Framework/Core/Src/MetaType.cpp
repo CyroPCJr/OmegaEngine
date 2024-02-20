@@ -3,12 +3,11 @@
 #include "MetaArray.h"
 #include "MetaClass.h"
 #include "MetaPointer.h"
-
 #include "DebugUtil.h"
 
 using namespace Omega::Core::Meta;
 
-MetaType::MetaType(Category category, const char* name, size_t size, DeserializeFunc deserialize)
+MetaType::MetaType(Category category, std::string_view name, size_t size, DeserializeFunc deserialize) noexcept
 	: mCategory(category)
 	, mName(name)
 	, mSize(size)
@@ -18,23 +17,23 @@ MetaType::MetaType(Category category, const char* name, size_t size, Deserialize
 const MetaClass* MetaType::AsMetaClass() const
 {
 	OMEGAASSERT(mCategory == Category::Class, "[MetaType] -- MetaType is not a class type!");
-	return static_cast<const MetaClass*>(this);
+	return dynamic_cast<const MetaClass*>(this);
 }
 
 const MetaArray* MetaType::AsMetaArray() const
 {
 	OMEGAASSERT(mCategory == Category::Array, "[MetaType] -- MetaType is not an array type!");
-	return static_cast<const MetaArray*>(this);
+	return dynamic_cast<const MetaArray*>(this);
 }
 
 const MetaPointer* MetaType::AsMetaPointer() const
 {
 	OMEGAASSERT(mCategory == Category::Pointer, "[MetaType] -- MetaType is not a pointer type!");
-	return static_cast<const MetaPointer*>(this);
+	return dynamic_cast<const MetaPointer*>(this);
 }
 
 void MetaType::Deserialize(void* instance, const rapidjson::Value& jsonValue) const
 {
-	OMEGAASSERT(mDeserialize, "[MetaType] -- No deserialize callable registered for '%s'.", GetName());
+	OMEGAASSERT(mDeserialize, "[MetaType] -- No deserialize callable registered for '%s'.", std::string(GetName()).c_str());
 	mDeserialize(instance, jsonValue);
 }

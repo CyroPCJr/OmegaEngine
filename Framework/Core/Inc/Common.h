@@ -5,8 +5,8 @@
 
 // Win32 headers
 #include <objbase.h>
-#include <Windows.h>
 #include <shobjidl.h> // https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb776913(v=vs.85) 
+#include <Windows.h>
 
 // Standard headers
 #include <algorithm>
@@ -20,6 +20,7 @@
 #include <memory>
 #include <optional> 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <variant>
 #include <vector>

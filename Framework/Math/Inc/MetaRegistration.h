@@ -14,5 +14,5 @@ META_TYPE_DECLARE(Omega::Math::Quaternion);
 
 namespace Omega::Math
 {
-	void StaticMetaRegister();
+	void StaticMetaRegister() noexcept;
 }

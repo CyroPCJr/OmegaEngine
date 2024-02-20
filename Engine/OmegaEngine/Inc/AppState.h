@@ -5,7 +5,7 @@ namespace Omega
 	class AppState
 	{
 	public:
-		virtual ~AppState() = default;
+		virtual ~AppState() noexcept = default;
 
 		virtual void Initialize() {}
 		virtual void Terminate() {}

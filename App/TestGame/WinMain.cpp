@@ -1,8 +1,10 @@
 #include "GameState.h"
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-	Omega::MainApp().AddState<GameState>("TestGame");	
-	Omega::MainApp().Run({"Test Game", 1280,720});
+	constexpr Omega::AppConfig config{ "TestGame" };
+	Omega::App& app = Omega::MainApp();
+	app.AddState<GameState>(config.appName);
+	app.Run(config);
 	return 0;
 }

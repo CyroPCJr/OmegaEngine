@@ -15,7 +15,7 @@ namespace Omega::Core
 #if defined(_DEBUG)
 #define LOG(format, ...)\
 	BEGIN_MACRO\
-		char _buffer[4096];\
+		char _buffer[4096]{};\
 		const int _res = _snprintf_s(_buffer, std::size(_buffer), _TRUNCATE, "[%.3f]: "##format##"\n", Omega::Core::TimeUtil::GetTime(), __VA_ARGS__);\
 		OutputDebugStringA(_buffer);\
 		if (_res == -1)\

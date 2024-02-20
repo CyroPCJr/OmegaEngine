@@ -7,8 +7,8 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
-#include "Matrix4.h"
 #include "Matrix3.h"
+#include "Matrix4.h"
 #include "Quaternion.h"
 #include "Random.h"
 #include "PerlinNoise.h"
@@ -28,30 +28,43 @@
 namespace Omega::Math
 {
 	template<class T>
-	constexpr T Min(T a, T b)
+	constexpr T Min(const T& a, const T& b)
 	{
-		return (a < b) ? a : b;
+		return (a <= b) ? a : b;
 	}
 
 	template<class T>
-	constexpr T Max(T a, T b)
+	constexpr T Max(const T& a, const T& b)
 	{
-		return (a > b) ? a : b;
+		return (a >= b) ? a : b;
 	}
 
 	// Three way comparison
 	// ref: https://en.cppreference.com/w/cpp/algorithm/clamp
 
 	template<class T>
-	constexpr T Clamp(T value, T min, T max)
+	constexpr T Clamp(const T& value, const T& min, const T& max)
 	{
 		return Max(min, Min(max, value));
 	}
 
 	template<class T>
-	constexpr T Lerp(const T& a, const T& b, float t)
+	constexpr T Clamp01(const T& value)
 	{
-		return a + ((b - a) * t);
+		return Clamp(value, T{ 0 }, T{ 1 });
+	}
+
+	template<class T>
+	constexpr T Lerp(const T& a, const T& b, float time)
+	{
+		return a + ((b - a) * static_cast<T>(Clamp01(time)));
+	}
+
+	constexpr float InverseLerp(float a, float b, float time)
+	{
+		return (a != b) ?
+			Clamp01((time - a) / (b - a)) :
+			0.0f;
 	}
 
 	template<class T>
@@ -75,12 +88,23 @@ namespace Omega::Math
 		return rect.right <= rect.left || rect.bottom <= rect.top;
 	}
 
-	/*
-		convert radian to degree
-	*/
+	// Convert radian to degree
 	constexpr float Rad2deg(float rad)
 	{
 		return rad * Constants::RadToDeg;
+	}
+
+	// Loops the value t, so that it is never larger than length and never smaller than 0.
+	constexpr float Repeat(float t, float length)
+	{
+		return Clamp<float>(t - std::floorf(t / length) * length, 0.0f, length);
+	}
+
+	// PingPongs the value t, so that it is never larger than length and never smaller than 0.
+	constexpr float PingPong(float t, float length)
+	{
+		t = Repeat(t, length * 2.0f);
+		return length - Abs(t - length);
 	}
 
 #pragma region Vector 2
