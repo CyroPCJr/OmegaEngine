@@ -21,8 +21,8 @@ namespace Omega
 		const Graphics::Camera& GetActiveCamera() const;
 
 	private:
+		Graphics::Camera* mActiveCamera = nullptr;
 		using CameraMap = std::map<std::string_view, Graphics::Camera>;
 		CameraMap mCameraMap;
-		Graphics::Camera* mActiveCamera = nullptr;
 	};
 }

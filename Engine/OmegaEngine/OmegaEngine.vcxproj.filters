@@ -108,6 +108,9 @@
     <ClInclude Include="Inc\Skydome.h">
       <Filter>Inc\Skydome</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\ObjectPoolService.h">
+      <Filter>Inc\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Omega.cpp">

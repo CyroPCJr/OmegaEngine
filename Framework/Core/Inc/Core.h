@@ -9,6 +9,7 @@
 #include "Handle.h"
 #include "HandlePool.h"
 #include "TypedAllocator.h"
+#include "ObjectPool.h"
 
 // Meta headers
 #include "Meta.h"

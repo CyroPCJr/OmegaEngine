@@ -9,7 +9,7 @@ using namespace Omega::Physics;
 //TODO: Olhar sobre Arena Allocator
 //Reference: https://rosettacode.org/wiki/Arena_storage_pool#C.2B.2B
 
-void PhysicsWorld::Initilize(const Settings& settings)
+void PhysicsWorld::Initilize(const Settings& settings) noexcept
 {
 	mSettings = settings;
 }
@@ -21,7 +21,6 @@ void PhysicsWorld::Update(float deltaTime)
 	{
 		mTimer -= mSettings.timeStep;
 
-		AccumulatedForces();
 		Integrate();
 		SatisfyConstraints();
 	}
@@ -45,14 +44,51 @@ void PhysicsWorld::DebugDraw() const
 	}
 }
 
-void PhysicsWorld::AddParticle(std::unique_ptr<Particle>& p)
+void PhysicsWorld::InitializeParticles(size_t numParticles)
 {
-	mParticles.push_back(std::move(p));
+	Clear(true);
+	mParticles.reserve(numParticles);
+	const size_t total = mParticles.capacity();
+	for (size_t i{ 0 }; i < total; ++i)
+	{
+		auto particles = std::make_unique<Particle>();
+		AddParticle(particles);
+	}
+}
+
+void PhysicsWorld::AddParticle(const Particle& particle)
+{
+	mParticles.push_back(std::make_unique<Particle>(particle));
+}
+
+void PhysicsWorld::AddParticle(std::unique_ptr<Particle>& particle)
+{
+	mParticles.push_back(std::move(particle));
+}
+
+void PhysicsWorld::AddParticle(std::initializer_list<const Particle> listParticles)
+{
+	for (const auto& p : listParticles)
+	{
+		AddParticle(p);
+	}
 }
 
 void PhysicsWorld::AddStaticOBB(const Math::OBB& obb)
 {
-	mOBBs.push_back(obb);
+	mOBBs.emplace_back(obb);
+}
+
+void PhysicsWorld::AddSpring(Particle& particle1, Particle& particle2)
+{
+
+	std::unique_ptr<Constraint> spring = std::make_unique<Spring>(&particle1, &particle1);
+	mConstraints.push_back(std::move(spring));
+}
+
+void PhysicsWorld::AddSpring(std::unique_ptr<Constraint>& c)
+{
+	mConstraints.push_back(std::move(c));
 }
 
 void PhysicsWorld::AddConstraint(std::unique_ptr<Constraint>& c)
@@ -62,26 +98,22 @@ void PhysicsWorld::AddConstraint(std::unique_ptr<Constraint>& c)
 
 void PhysicsWorld::AddStaticPlane(const Math::Plane& plane)
 {
-	mPlanes.push_back(plane);
+	mPlanes.emplace_back(plane);
 }
 
-void PhysicsWorld::Clear(bool onlyDynamic)
+void PhysicsWorld::AddStaticPlane(std::initializer_list<Math::Plane> planes)
 {
-	/*for (auto p : mParticles)
-	{
-		delete p;
-	}*/
+	mPlanes.insert(mPlanes.end(), planes);
+}
 
+void PhysicsWorld::Clear(bool onlyDynamic) noexcept
+{
 	for (auto& p : mParticles)
 	{
-		p.reset();	
+		p.reset();
 	}
 	mParticles.clear();
 
-	/*for (auto c : mConstraints)
-	{
-		delete c;
-	}*/
 	for (auto& c : mConstraints)
 	{
 		c.reset();
@@ -95,20 +127,14 @@ void PhysicsWorld::Clear(bool onlyDynamic)
 	}
 }
 
-void PhysicsWorld::AccumulatedForces()
-{
-	for (auto& p : mParticles)
-	{
-		p->acceleration = mSettings.gravity;
-	}
-}
-
 void PhysicsWorld::Integrate()
 {
 	const float timeStepSqr = Math::Sqr(mSettings.timeStep);
 	for (auto& p : mParticles)
 	{
-		Math::Vector3 displacement = (p->position - p->lastPosition) + (p->acceleration * timeStepSqr);
+		// Accumulate Forces
+		p->acceleration = mSettings.gravity;
+		const Math::Vector3 displacement = (p->position - p->lastPosition) + (p->acceleration * timeStepSqr);
 		p->lastPosition = p->position;
 		p->position += displacement;
 	}
@@ -131,10 +157,10 @@ void PhysicsWorld::SatisfyConstraints()
 			if (Math::Dot(p->position, plane.n) <= plane.d &&
 				Math::Dot(p->lastPosition, plane.n) > plane.d)
 			{
-				auto velocity = p->position - p->lastPosition;
-				auto velocityPerpendicular = plane.n * Math::Dot(velocity, plane.n);
-				auto velocityParallel = velocity - velocityPerpendicular;
-				auto newVelocity = (velocityParallel * (1.0f - mSettings.drag)) - (velocityPerpendicular * p->bounce);
+				const auto velocity = p->position - p->lastPosition;
+				const auto velocityPerpendicular = plane.n * Math::Dot(velocity, plane.n);
+				const auto velocityParallel = velocity - velocityPerpendicular;
+				const auto newVelocity = (velocityParallel * (1.0f - mSettings.drag)) - (velocityPerpendicular * p->bounce);
 				p->SetPosition(p->position - velocityPerpendicular);
 				p->SetVelocity(newVelocity);
 			}
@@ -147,17 +173,18 @@ void PhysicsWorld::SatisfyConstraints()
 		{
 			if (IsContained(p->position, obb))
 			{
-				auto velocity = p->position - p->lastPosition;
-				auto direction = Normalize(velocity);
-				Ray ray{ p->lastPosition, direction };
+				const auto velocity = p->position - p->lastPosition;
+				const auto direction = Normalize(velocity);
+				const Ray ray{ p->lastPosition, direction };
 				Vector3 point, normal;
 				GetContactPoint(ray, obb, point, normal);
 
-				auto velocityPerpendicular = normal * Math::Dot(velocity, normal);
-				auto velocityParallel = velocity - velocityPerpendicular;
-				auto newVelocity = (velocityParallel * (1.0f - mSettings.drag)) - (velocityPerpendicular * p->bounce);
+				const auto velocityPerpendicular = normal * Math::Dot(velocity, normal);
+				const auto velocityParallel = velocity - velocityPerpendicular;
+				const auto newVelocity = (velocityParallel * (1.0f - mSettings.drag)) - (velocityPerpendicular * p->bounce);
 				p->SetPosition(p->position - velocityPerpendicular);
 				p->SetVelocity(newVelocity);
+
 			}
 		}
 	}

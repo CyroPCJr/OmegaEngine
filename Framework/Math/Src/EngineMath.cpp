@@ -321,19 +321,20 @@ bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point
 	const Vector3 dir = TransformNormal(ray.direction, toLocal);
 	const Ray localRay{ org, dir };
 
-	std::vector<Plane> planes;
-	planes.reserve(6);
-	planes.emplace_back(Vector3{ 0.0f, 0.0f, -1.0f }, obb.extend.z);
-	planes.emplace_back(Vector3{ 0.0f, 0.0f, 1.0f }, obb.extend.z);
-	planes.emplace_back(Vector3{ 0.0f, -1.0f, 0.0f }, obb.extend.y);
-	planes.emplace_back(Vector3{ 0.0f, 1.0f, 0.0f }, obb.extend.y);
-	planes.emplace_back(Vector3{ -1.0f, 0.0f, 0.0f }, obb.extend.x);
-	planes.emplace_back(Vector3{ 1.0f, 0.0f, 0.0f }, obb.extend.x);
+	std::vector<Plane> planes = {
+		{Vector3{ 0.0f, 0.0f, -1.0f }, obb.extend.z},
+		{Vector3{ 0.0f, 0.0f, 1.0f }, obb.extend.z},
+		{Vector3{ 0.0f, -1.0f, 0.0f }, obb.extend.y},
+		{Vector3{ 0.0f, 1.0f, 0.0f }, obb.extend.y},
+		{Vector3{ -1.0f, 0.0f, 0.0f }, obb.extend.x},
+		{Vector3{ 1.0f, 0.0f, 0.0f }, obb.extend.x}
+	};
+
 
 	uint32_t numIntersections = 0;
 	for (const Plane& plane : planes)
 	{
-		if (const float d = Dot(org, plane.n); 
+		if (const float d = Dot(org, plane.n);
 			d > plane.d)
 		{
 			float distance = 0.0f;

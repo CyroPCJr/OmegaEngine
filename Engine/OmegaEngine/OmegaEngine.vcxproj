@@ -161,6 +161,7 @@
     <ClInclude Include="Inc\GameObject.h" />
     <ClInclude Include="Inc\GameObjectFactory.h" />
     <ClInclude Include="Inc\GameWorld.h" />
+    <ClInclude Include="Inc\ObjectPoolService.h" />
     <ClInclude Include="Inc\Omega.h" />
     <ClInclude Include="Inc\Service.h" />
     <ClInclude Include="Inc\Skydome.h" />

@@ -107,6 +107,21 @@ namespace Omega::Math
 		return length - Abs(t - length);
 	}
 
+
+	/// <summary>
+	/// Inverse square root
+	/// </summary>
+	/// <param name="x"></param>
+	/// <returns></returns>
+	constexpr float fastReciprocal(float x) {
+		const float xhalf = 0.5f * x;
+		int i = *(int*)&x;            // Convert float to integer
+		i = 0x5f3759df - (i >> 1);     // Initial guess for Newton's method
+		x = *(float*)&i;               // Convert back to float
+		x = x * (1.5f - xhalf * x * x); // Newton's method iteration
+		return x;
+	}
+
 #pragma region Vector 2
 
 	constexpr Vector2 PerpendicularLH(const Vector2& v)

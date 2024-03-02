@@ -7,8 +7,6 @@ using namespace Omega::Math;
 using namespace Omega::Physics;
 using namespace Omega::Core;
 
-
-
 void Cloth::Initialize(const Settings& settings)
 {
 	mSettings = settings;
@@ -117,11 +115,14 @@ void Cloth::InitializeParticles()
 	{
 		for (uint32_t x = 0; x < mSettings.width; x++)
 		{
-			//if (y == 0 && (x == 0 || x == static_cast<int>(mWidth * 0.5f) || x == mWidth - 1))
+			const auto particle = mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get();
+
+			////if (y == 0 && (x == 0 || x == static_cast<int>(mWidth * 0.5f) || x == mWidth - 1))
 			if (y == 0 || x == mSettings.width) // now fixed the particles all in the top position
 			{
 				//auto c1 = new Fixed(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get()); // fixed
 				std::unique_ptr<Constraint> c1 = std::make_unique<Fixed>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get());
+				
 				mPhysicsWorld.AddConstraint(c1);
 			}
 
@@ -129,6 +130,8 @@ void Cloth::InitializeParticles()
 			{
 				//auto c1 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
 				std::unique_ptr<Constraint> c1 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
+				//auto nextParticle = mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get();
+				//std::unique_ptr<Constraint> c1 = std::make_unique<Spring>(particle, nextParticle);
 				mPhysicsWorld.AddConstraint(c1);
 			}
 
@@ -136,6 +139,8 @@ void Cloth::InitializeParticles()
 			{
 				//auto c2 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
 				std::unique_ptr<Constraint> c2 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
+				//auto nextParticle = mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get();
+				//std::unique_ptr<Constraint> c2 = std::make_unique<Spring>(particle, nextParticle);
 				mPhysicsWorld.AddConstraint(c2);
 			}
 		}

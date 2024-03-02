@@ -9,10 +9,10 @@ namespace Omega
 
 		struct Settings
 		{
+			std::filesystem::path path{};
 			Omega::Math::Vector3 startPosition = Omega::Math::Vector3::Zero;
-			size_t width = 20;
-			size_t height = 20;
-			const char* path;
+			size_t width{ 20 };
+			size_t height{ 20 };
 		};
 
 		void Initialize(const Settings& settings);
@@ -24,17 +24,15 @@ namespace Omega
 		void Update(float deltaTime);
 		void Terminate();
 
-		inline void SetShowCloth(bool show) { mShowCloth = show; }
-		inline void SetShowTextureCloth(bool showTexture) { mShowTexture = showTexture; }
+		void SetShowCloth(bool show) noexcept { mShowCloth = show; }
+		void SetShowTextureCloth(bool showTexture) noexcept { mShowTexture = showTexture; }
 
 	private:
 		void InitializeParticles();
 
-		inline int GetIndex(int x, int y, int column) { return (y * column) + x; }
+		constexpr int GetIndex(int x, int y, int column) noexcept { return (y * column) + x; }
 
 		Settings mSettings;
-		bool mShowCloth = false;
-		bool mShowTexture = false;
 
 		Omega::Graphics::MeshPX mMeshPlane;
 		Omega::Graphics::MeshBuffer mMeshBuffer;
@@ -48,6 +46,9 @@ namespace Omega
 
 		Omega::Physics::PhysicsWorld mPhysicsWorld;
 		std::vector<std::unique_ptr<Omega::Physics::Particle>> mParticles;
+
+		bool mShowCloth = false;
+		bool mShowTexture = false;
 	};
 
 }
