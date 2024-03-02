@@ -15,7 +15,7 @@ namespace Omega
 	public:
 		META_CLASS_DECLARE
 
-		GameObject() noexcept = default;
+			GameObject() noexcept = default;
 		//copy constructor
 		GameObject(const GameObject&) = delete;
 		//copy assigment
@@ -65,7 +65,7 @@ namespace Omega
 		constexpr const GameWorld& GetWorld() const noexcept { return *mWorld; }
 
 		void SetName(std::string_view name) noexcept { mName = name; }
-		constexpr std::string_view GetName() const noexcept { return mName; }
+		std::string_view GetName() const noexcept { return mName; }
 
 		GameObjectHandle GetHandle() const noexcept { return mHandle; }
 	private:
@@ -73,7 +73,7 @@ namespace Omega
 
 		using Components = std::vector<std::unique_ptr<Component>>;
 		Components mComponents;
-		std::string_view mName = "NoName";
+		std::string mName{ "NoName" };
 
 		GameWorld* mWorld = nullptr;
 		GameObjectHandle mHandle;

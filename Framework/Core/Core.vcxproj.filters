@@ -149,5 +149,8 @@
     <ClInclude Include="Inc\DialogBoxUtil.h">
       <Filter>Inc\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\ObjectPool.h">
+      <Filter>Inc\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

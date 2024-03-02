@@ -1,45 +1,46 @@
 #pragma once
 
-#include "Particle.h"
-
 namespace Omega::Physics
 {
+
+	struct Particle;
 
 	class Constraint
 	{
 	public:
-		virtual ~Constraint() = default;
+		Constraint() noexcept = default;
+		virtual ~Constraint() noexcept = default;
 
 		virtual void Apply() const = 0;
 		virtual void DebugDraw() const {}
 	};
 
-	class Fixed : public Constraint
+	class Fixed final : public Constraint
 	{
 	public:
-		Fixed(Particle* p);
-		Fixed(Particle* p, const Math::Vector3& position);
+		explicit Fixed(Particle* p) noexcept;
+		Fixed(Particle* p, const Math::Vector3& position) noexcept;
 
-		void Apply() const override;
+		void Apply() const noexcept override;
 		void DebugDraw() const override;
 
-		void SetPosition(const Math::Vector3& position);
+		void SetPosition(const Math::Vector3& position) noexcept;
 
-	protected:
+	private:
 		Particle* mParticle;
 		Math::Vector3 mPosition;
 	};
 
-	class Spring : public Constraint
+	class Spring final : public Constraint
 	{
 	public:
-		Spring(Particle* a, Particle* b, float restLength = 0.0f);
+		Spring(Particle* particleA, Particle* particleB, float restLength = 0.0f);
 
 		void Apply() const override;
 		void DebugDraw() const override;
-	protected:
+	private:
 		Particle* mParticleA;
 		Particle* mParticleB;
-		float mRestLength;
+		float mRestLength{ 0.0f };
 	};
 }

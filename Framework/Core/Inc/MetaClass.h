@@ -39,6 +39,6 @@ namespace Omega::Core::Meta
 		const CreateFunc mCreate;
 		const std::vector<MetaField> mFields;
 		const MetaClass* mParent;
-		int mPadding = 0;
+		const int mPadding{ 0 };
 	};
 }

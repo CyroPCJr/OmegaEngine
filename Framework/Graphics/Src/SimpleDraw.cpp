@@ -29,9 +29,9 @@ namespace Omega::Graphics
 			mLineVertices = make_unique<VertexPC[]>(maxVertexCount);
 			m2DLineVertices = make_unique<VertexPC[]>(maxVertexCount);
 			mFillVertices = make_unique<VertexPC[]>(static_cast<size_t>(maxVertexCount * 3));
-			mVertexCount = 0;
-			m2DVertexCount = 0;
-			mFillVertexCount = 0;
+			mVertexCount = 0u;
+			m2DVertexCount = 0u;
+			mFillVertexCount = 0u;
 			mMaxVertexCount = maxVertexCount;
 		}
 
@@ -45,7 +45,7 @@ namespace Omega::Graphics
 
 		void AddLine(const Math::Vector3& v0, const Math::Vector3& v1, const Color& color)
 		{
-			if (mVertexCount + 2 < mMaxVertexCount)
+			if (mVertexCount + 2u < mMaxVertexCount)
 			{
 				mLineVertices[mVertexCount++] = VertexPC{ v0,color };
 				mLineVertices[mVertexCount++] = VertexPC{ v1,color };
@@ -54,7 +54,7 @@ namespace Omega::Graphics
 
 		void AddFace(const Math::Vector3& v0, const  Math::Vector3& v1, const  Math::Vector3& v2, const Color& color)
 		{
-			if (mFillVertexCount + 3 < mFillVertexCount)
+			if (mFillVertexCount + 3u < mFillVertexCount)
 			{
 				mFillVertices[mFillVertexCount++] = VertexPC{ v0, color };
 				mFillVertices[mFillVertexCount++] = VertexPC{ v1, color };
@@ -554,19 +554,19 @@ namespace Omega::Graphics
 		}
 
 	private:
+		Matrix4 mTransform = Matrix4::Identity;
+
+		MeshBuffer mMeshBuffer;
 		VertexShader mVertexShader;
 		PixelShader mPixelShader;
 		ConstantBuffer mConstantBuffer;
-		MeshBuffer mMeshBuffer;
 		unique_ptr<VertexPC[]> mLineVertices;
 		unique_ptr<VertexPC[]> mFillVertices;
 		unique_ptr<VertexPC[]> m2DLineVertices;
-		uint32_t mVertexCount = 0;
-		uint32_t m2DVertexCount = 0;
-		uint32_t mMaxVertexCount = 0;
-		uint32_t mFillVertexCount = 0;
-
-		Matrix4 mTransform = Matrix4::Identity;
+		uint32_t mVertexCount{ 0 };
+		uint32_t m2DVertexCount{ 0 };
+		uint32_t mMaxVertexCount{ 0 };
+		uint32_t mFillVertexCount{ 0 };
 	};
 
 	unique_ptr<SimpleDrawImpl> sInstance{};

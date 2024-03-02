@@ -23,8 +23,6 @@ private:
 	Omega::Graphics::Camera mCamera;
 	Omega::Physics::PhysicsWorld mPhysicsWorld;
 
-	std::vector<Omega::Physics::Particle*> mParticles;
-
 	Omega::Graphics::MeshPX mMeshPlane;
 	Omega::Graphics::MeshBuffer mMeshBuffer;
 	Omega::Graphics::VertexShader mVertexShader;

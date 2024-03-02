@@ -52,32 +52,32 @@ void GameState::Terminate()
 
 void GameState::Update(float deltaTime)
 {
-	auto inputSystem = InputSystem::Get();
-
+	const auto inputSystem = InputSystem::Get();
 	const float kMoveSpeed = inputSystem->IsKeyDown(KeyCode::LSHIFT) ? 100.0f : 10.0f;
-	const float kTurnSpeed = 1.0f;
+	const float moveSpeedDelta = kMoveSpeed * deltaTime;
 
 	if (inputSystem->IsKeyDown(KeyCode::W))
 	{
-		mCamera.Walk(kMoveSpeed * deltaTime);
+		mCamera.Walk(moveSpeedDelta);
 	}
 
 	if (inputSystem->IsKeyDown(KeyCode::S))
 	{
-		mCamera.Walk(-kMoveSpeed * deltaTime);
+		mCamera.Walk(-moveSpeedDelta);
 	}
 	if (inputSystem->IsKeyDown(KeyCode::D))
 	{
-		mCamera.Strafe(kMoveSpeed * deltaTime);
+		mCamera.Strafe(moveSpeedDelta);
 	}
 	if (inputSystem->IsKeyDown(KeyCode::A))
 	{
-		mCamera.Strafe(-kMoveSpeed * deltaTime);
+		mCamera.Strafe(-moveSpeedDelta);
 	}
 	if (inputSystem->IsMouseDown(MouseButton::RBUTTON))
 	{
-		mCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
-		mCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+		constexpr float kTurnSpeed = 1.0f;
+		mCamera.Yaw(static_cast<float>(inputSystem->GetMouseMoveX()) * kTurnSpeed * deltaTime);
+		mCamera.Pitch(static_cast<float>(inputSystem->GetMouseMoveY()) * kTurnSpeed * deltaTime);
 	}
 	mPhysicsWorld.Update(deltaTime);
 	mClothBrazilFlag.Update(deltaTime);
@@ -162,8 +162,8 @@ void GameState::InitializeParticles(int maxParticles)
 	mPhysicsWorld.Clear(true);
 	for (int i = 0; i != maxParticles; ++i)
 	{
-		auto p = std::make_unique<Particle>();
-		mPhysicsWorld.AddParticle(p);
+		//auto p = std::make_unique<Particle>();
+		mPhysicsWorld.AddParticle(Particle());
 	}
 }
 
@@ -174,30 +174,20 @@ void GameState::UseRawParticles(int count)
 	//mPhysicsWorld.Clear(true);
 	const auto& particlesList = mPhysicsWorld.GetParticles();
 	const size_t particleCount = particlesList.size();
+
+	auto InitializeParticle = [&](Particle& particle, const Omega::Math::Vector3& position)
+		{
+			particle.SetPosition(position);
+			particle.SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
+			particle.radius = 0.1f;
+			particle.bounce = 0.3f;
+		};
+
 	for (int i = 0; i != count; ++i)
 	{
-		//Just for backup
-		/*auto p = new Particle();
-		p->SetPosition({ 0.0f, 5.0f, 0.0f });
-
-		p->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f) , Random::RandomFloat(-0.05f, 0.05f) });
-		p->radius = 0.1f;
-		p->bounce = 0.3f;*/
-
-		/*auto p = std::make_unique<Particle>();
-		p->SetPosition({ 0.0f, 5.0f, 0.0f });
-
-		p->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f) , Random::RandomFloat(-0.05f, 0.05f) });
-		p->radius = 0.1f;
-		p->bounce = 0.3f;
-		mPhysicsWorld.AddParticle(p);*/
 		auto& particle = particlesList[i % particleCount];
-		particle->SetPosition({ 0.0f, 5.0f, 0.0f });
 
-		particle->SetVelocity(Random::RandomVector3({ -0.05f, 0.1f, -0.05f }, { 0.05f, 0.4f, 0.05f }));
-		particle->radius = 0.1f;
-		particle->bounce = 0.3f;
-
+		InitializeParticle(*particle, { 0.0f, 5.0f, 0.0f });
 	}
 }
 
@@ -206,22 +196,22 @@ void GameState::UseStickParticles(int count)
 	mClothBrazilFlag.SetShowCloth(false);
 	mClothCanadaFlag.SetShowCloth(false);
 	mPhysicsWorld.Clear(true);
+
+	auto InitializeParticle = [&](Particle& particle, const Omega::Math::Vector3& position)
+		{
+			particle.SetPosition(position);
+			particle.SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
+			particle.radius = 0.1f;
+			particle.bounce = 0.3f;
+		};
+	
 	for (int i = 0; i < count; ++i)
 	{
-		auto p1 = std::make_unique<Particle>();
-		auto p2 = std::make_unique<Particle>();
+		std::unique_ptr<Particle> p1 = std::make_unique<Particle>();
+		std::unique_ptr<Particle> p2 = std::make_unique<Particle>();
 
-		/*auto p1 = new Particle();
-		auto p2 = new Particle();*/
-
-		p1->SetPosition({ 0.5f, 5.0f, 0.0f });
-		p1->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
-		p1->radius = 0.1f;
-		p1->bounce = 0.3f;
-		p2->SetPosition({ -0.5f, 5.0f, 0.0f });
-		p2->SetVelocity({ Random::RandomFloat(-0.05f, 0.05f), Random::RandomFloat(0.1f, 0.4f), Random::RandomFloat(-0.05f, 0.05f) });
-		p2->radius = 0.1f;
-		p2->bounce = 0.3f;
+		InitializeParticle(*p1, { 0.5f, 5.0f, 0.0f });
+		InitializeParticle(*p2, { -0.5f, 5.0f, 0.0f });
 		std::unique_ptr<Constraint> spring = std::make_unique<Spring>(p1.get(), p2.get());
 		mPhysicsWorld.AddConstraint(spring);
 		mPhysicsWorld.AddParticle(p1);

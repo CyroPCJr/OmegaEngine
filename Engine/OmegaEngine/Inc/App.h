@@ -6,10 +6,9 @@ namespace Omega
 {
 	//String view operatos reference
 	//https://learn.microsoft.com/en-us/cpp/standard-library/string-view-operators?view=msvc-170
-	using namespace std::literals::string_view_literals;
 	struct AppConfig
 	{
-		std::string_view appName{ "Omega"sv };
+		std::string appName{ "Omega" };
 		uint32_t windowWidth = 1280u;
 		uint32_t windowHeight = 720u;
 	};

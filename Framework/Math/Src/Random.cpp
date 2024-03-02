@@ -8,12 +8,7 @@ using namespace Omega::Math;
 namespace
 {
 	random_device randomDevice{};
-	mt19937 randomEngine{ randomDevice() };
-}
-
-int Random::RandomInt(int min, int max)
-{
-	return uniform_int_distribution<int>{ min, max }(randomEngine);
+	mt19937 randomEngine{ randomDevice()};
 }
 
 float Random::RandomFloat(float min, float max)
@@ -37,5 +32,3 @@ Vector3 Random::RandomVector3(const Vector3& min, const Vector3& max)
 {
 	return { RandomFloat(min.x, max.x), RandomFloat(min.y, max.y), RandomFloat(min.z, max.z) };
 }
-
-
