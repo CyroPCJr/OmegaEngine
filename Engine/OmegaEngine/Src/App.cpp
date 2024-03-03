@@ -45,7 +45,7 @@ void App::Run(const AppConfig& appConfig)
 
 	// Initialize the graphics system
 	GraphicsSystem::StaticInitialize(handle, false);
-	GraphicsSystem::Get()->SetClearColor(Colors::Black); // default background color
+	GraphicsSystem::Get()->get().SetClearColor(Colors::Black); // default background color
 	DebugUI::StaticInitialize(handle, false, true);
 	SimpleDraw::StaticInitialize(1024 * 1024);
 	SpriteRenderer::StaticInitialize();
@@ -60,12 +60,12 @@ void App::Run(const AppConfig& appConfig)
 	mCurrentState->Initialize();
 
 	mRunning = true;
-	const auto& graphicsSystem = GraphicsSystem::Get();
-	const auto& inputSystem = InputSystem::Get();
+	auto& graphicsSystem = GraphicsSystem::Get()->get();
+	auto& inputSystem = InputSystem::Get()->get();
 	while (mRunning)
 	{
 		mWindow.ProcessMessage();
-		if (!mWindow.IsActive())
+		if (!mWindow.IsActive() || inputSystem.IsKeyPressed(KeyCode::ESCAPE))
 		{
 			Quit();
 			continue;
@@ -78,18 +78,12 @@ void App::Run(const AppConfig& appConfig)
 			mCurrentState->Initialize();
 		}
 		
-		inputSystem->Update();
-
-		if (inputSystem->IsKeyPressed(KeyCode::ESCAPE))
-		{
-			Quit();
-			continue;
-		}
+		inputSystem.Update();
 
 		const float deltaTime = TimeUtil::GetDeltaTime();
 		mCurrentState->Update(deltaTime);
 
-		graphicsSystem->BeginRender();
+		graphicsSystem.BeginRender();
 
 		mCurrentState->Render();
 		SpriteRendererManager::Get()->Render();
@@ -98,7 +92,7 @@ void App::Run(const AppConfig& appConfig)
 		mCurrentState->DebugUI();
 		DebugUI::EndRender();
 
-		graphicsSystem->EndRender();
+		graphicsSystem.EndRender();
 
 		//OnGameLoop
 	}

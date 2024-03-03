@@ -2,7 +2,7 @@
 
 #include <OmegaEngine/Inc/Omega.h>
 
-class GameState : public Omega::AppState
+class GameState final: public Omega::AppState
 {
 public:
 	void Initialize() override;
@@ -15,13 +15,9 @@ public:
 	void DrawCounterFramesUI(bool active);
 
 private:
-	
-	Omega::Graphics::Camera mCamera;
-	Omega::Math::Vector3 mTarget;
+	Omega::CameraService mCameraService;
 	std::vector<Omega::Math::Vector3> mPoints;
-
-
-	// ImGui
-	std::vector<float> mVecFrames;
-	const size_t mMaxFrameSize = 100;
+	std::vector<float> mVecFrames; // ImGui
+	Omega::Math::Vector3 mTarget;
+	const size_t MAX_FRAME = 100u;
 };

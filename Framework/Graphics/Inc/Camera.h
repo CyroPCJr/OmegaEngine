@@ -5,7 +5,7 @@ namespace Omega::Graphics
 
 	// This camera assumes Yaxis as up direction You cannot
 	// look straight up nor straight down
-	class Camera
+	class Camera final
 	{
 	public:
 		void SetPosition(const Math::Vector3& position);
@@ -31,16 +31,16 @@ namespace Omega::Graphics
 
 		Math::Matrix4 GetViewMatrix() const;
 		Math::Matrix4 GetOrthoGraphiMatrix(float width, float height) const;
-		
-		Math::Matrix4 GetPerspectiveMatrix() const;	
+
+		Math::Matrix4 GetPerspectiveMatrix() const;
 
 	private:
 		Math::Vector3 mPosition = Math::Vector3::Zero;
 		Math::Vector3 mDirection = Math::Vector3::ZAxis;
 
-		float mFov = 60.0f * Math::Constants::DegToRad;
-		float mAspectRatio = 0.0f;
-		float mNearPlane = 1.0f;
-		float mFarPlane = 10000.0f;
+		float mFov{ 60.0f * Math::Constants::DegToRad };
+		float mAspectRatio{ 0.0f };
+		float mNearPlane{ 1.0f };
+		float mFarPlane{ 10000.0f };
 	};
 }

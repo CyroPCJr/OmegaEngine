@@ -82,7 +82,7 @@ void PhysicsWorld::AddStaticOBB(const Math::OBB& obb)
 void PhysicsWorld::AddSpring(Particle& particle1, Particle& particle2)
 {
 
-	std::unique_ptr<Constraint> spring = std::make_unique<Spring>(&particle1, &particle1);
+	std::unique_ptr<Constraint> spring = std::make_unique<Spring>(&particle1, &particle2);
 	mConstraints.push_back(std::move(spring));
 }
 

@@ -1,5 +1,7 @@
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
+#include "Colors.h"
+
 
 using namespace Omega;
 using namespace Omega::Graphics;
@@ -58,10 +60,14 @@ void GraphicsSystem::StaticTerminate()
 	}
 }
 
-GraphicsSystem* GraphicsSystem::Get()
+std::optional<std::reference_wrapper<GraphicsSystem>> GraphicsSystem::Get()
 {
 	OMEGAASSERT(sGraphicsSystem != nullptr, "[GraphicsSystem] No system registered.");
-	return sGraphicsSystem.get();
+	if (sGraphicsSystem)
+	{
+		return std::reference_wrapper<GraphicsSystem>(*sGraphicsSystem);
+	}
+	return std::nullopt;
 }
 
 GraphicsSystem::~GraphicsSystem()
@@ -73,8 +79,8 @@ void GraphicsSystem::Initialize(HWND window, bool fullscreen)
 {
 	RECT clientRect = {};
 	GetClientRect(window, &clientRect);
-	UINT width = (UINT)(clientRect.right - clientRect.left);
-	UINT height = (UINT)(clientRect.bottom - clientRect.top);
+	UINT width = static_cast<UINT>(clientRect.right - clientRect.left);
+	UINT height = static_cast<UINT>(clientRect.bottom - clientRect.top);
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferCount = 2;
@@ -136,14 +142,14 @@ void GraphicsSystem::Terminate()
 
 void GraphicsSystem::BeginRender()
 {
-	mImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	mImmediateContext->OMSetRenderTargets(1u, &mRenderTargetView, mDepthStencilView);
 	mImmediateContext->ClearRenderTargetView(mRenderTargetView, (FLOAT*)(&mClearColor));
 	mImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void GraphicsSystem::EndRender()
 {
-	mSwapChain->Present(mVSync, 0);
+	mSwapChain->Present(mVSync, 0u);
 }
 
 void GraphicsSystem::ToggleFullscreen()

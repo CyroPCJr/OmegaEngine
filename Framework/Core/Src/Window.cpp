@@ -17,7 +17,7 @@ namespace
 	}
 }
 
-void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height) noexcept
+void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height)
 {
 	mInstance = instance;
 	mAppName = appName;
@@ -58,10 +58,10 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint
 	mActive = (mWindow != nullptr);
 }
 
-void Window::Terminate()
+void Window::Terminate() noexcept
 {
 	DestroyWindow(mWindow);
-	UnregisterClassA(std::string(mAppName).c_str(), mInstance);
+	UnregisterClassA(mAppName.c_str(), mInstance);
 
 	mWindow = nullptr;
 	mInstance = nullptr;

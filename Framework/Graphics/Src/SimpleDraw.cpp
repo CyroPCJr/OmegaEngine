@@ -530,9 +530,9 @@ namespace Omega::Graphics
 			mMeshBuffer.Draw();
 
 			//Draw 2D Lines
-			auto system = GraphicsSystem::Get();
-			const uint32_t w = system->GetBackBufferWidth();
-			const uint32_t h = system->GetBackBufferHeight();
+			const auto& system = GraphicsSystem::Get()->get();
+			const uint32_t w = system.GetBackBufferWidth();
+			const uint32_t h = system.GetBackBufferHeight();
 			Math::Matrix4 screenToNDC
 			{
 				2.0f / w, 0.0f, 0.0f, 0.0f,

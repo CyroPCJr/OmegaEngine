@@ -10,7 +10,7 @@ namespace Omega::Input {
 	public:
 		static void StaticInitialize(HWND window);
 		static void StaticTerminate();
-		static InputSystem* Get();
+		static std::optional <std::reference_wrapper<InputSystem>> Get();
 
 	public:
 		InputSystem() = default;

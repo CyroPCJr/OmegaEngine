@@ -9,7 +9,7 @@ namespace Omega::Graphics {
 	public:
 		static void StaticInitialize(HWND window, bool fullscreen);
 		static void StaticTerminate();
-		static GraphicsSystem* Get();
+		static std::optional<std::reference_wrapper<GraphicsSystem>> Get();
 
 	public:
 		GraphicsSystem() = default;
@@ -26,7 +26,6 @@ namespace Omega::Graphics {
 
 		void ToggleFullscreen();
 		void Resize(uint32_t width, uint32_t height);
-
 
 		void ResetRenderTarget();
 		void ResetViewport();
@@ -66,7 +65,7 @@ namespace Omega::Graphics {
 		D3D11_VIEWPORT mViewport{};
 
 		Color mClearColor = Colors::White;
-		UINT mVSync = 1;
+		UINT mVSync{ 1u };
 	};
 
 }

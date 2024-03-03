@@ -151,10 +151,14 @@ void InputSystem::StaticTerminate()
 	}
 }
 
-InputSystem* InputSystem::Get()
+std::optional <std::reference_wrapper<InputSystem>> InputSystem::Get()
 {
 	OMEGAASSERT(sInputSystem != nullptr, "[InputSystem] No system registered.");
-	return sInputSystem.get();
+	if (sInputSystem) 
+	{
+		return std::reference_wrapper<InputSystem>(*sInputSystem);
+	}
+	return std::nullopt;
 }
 
 InputSystem::~InputSystem()
