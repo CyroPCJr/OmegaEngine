@@ -46,7 +46,7 @@ void BlendState::Initialize(Mode mode)
 	desc.RenderTarget[0].BlendOp = desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	HRESULT hr = GetDevice()->CreateBlendState(&desc, &mBlendState);
+	const HRESULT hr = GetDevice()->CreateBlendState(&desc, &mBlendState);
 	OMEGAASSERT(SUCCEEDED(hr), "[BlendState] Failed to createa blend state.");
 }
 

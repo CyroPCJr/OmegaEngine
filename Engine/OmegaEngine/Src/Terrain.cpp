@@ -19,7 +19,8 @@ void Terrain::Initialize(uint32_t numRows, uint32_t numCols, float cellSize)
 	mTerrainPixelShader.Initialize(L"../../Assets/Shaders/Terrain.fx");
 
 	mSampler.Initialize(Graphics::Sampler::Filter::Anisotropic, Graphics::Sampler::AddressMode::Wrap);
-	mGrassTexture.Initialize("../../Assets/Images/grass_2048.jpg");
+	//TODO: corrigir isso e executar o ctor ao inves do metodo Initialize
+	//mGrassTexture.Initialize("../../Assets/Images/grass_2048.jpg");
 
 	GenerateIndices();
 	GenerateVertices();
@@ -29,7 +30,6 @@ void Terrain::Initialize(uint32_t numRows, uint32_t numCols, float cellSize)
 
 void Terrain::Terminate()
 {
-	mGrassTexture.Terminate();
 	mSampler.Terminate();
 	mTerrainPixelShader.Terminate();
 	mTerrainVertexShader.Terminate();

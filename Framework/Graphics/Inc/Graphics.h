@@ -58,7 +58,8 @@
 #include "SpriteRenderer.h"
 
 // Sprite Renderer Manager
-#include "SpriteRendererManager.h"
+#include "RendererManager.h"
 
 // Font
 #include "Font.h"
+#include "FontRenderer.h"

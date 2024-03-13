@@ -23,7 +23,8 @@ void Cloth::Initialize(const Settings& settings)
 	mVertexShader.Initialize(doTexturingShaderPath, VertexPX::Format);
 	mPixelShader.Initialize(doTexturingShaderPath);
 	mSampler.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Border);
-	mTexture.Initialize(mSettings.path);
+	//TODO: corrigir isso e executar o ctor ao inves do metodo Initialize
+	//mTexture.Initialize(mSettings.path); 
 
 	mConstantBuffer.Initialize(sizeof(Matrix4));
 	mRasterizer.Initialize(RasterizerState::CullMode::None, RasterizerState::FillMode::Solid);
@@ -76,7 +77,6 @@ void Cloth::Terminate()
 {
 	mConstantBuffer.Terminate();
 	mSampler.Terminate();
-	mTexture.Terminate();
 	mPixelShader.Terminate();
 	mVertexShader.Terminate();
 	mMeshBuffer.Terminate();

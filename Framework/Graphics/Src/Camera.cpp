@@ -5,7 +5,7 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-void Camera::SetPosition(const Math::Vector3& position)
+void Camera::SetPosition(const Math::Vector3& position) noexcept
 {
 	mPosition = position;
 }
@@ -63,17 +63,17 @@ void Camera::SetFov(float fov)
 	mFov = Math::Clamp(fov, kMinFov, kMaxFov);
 }
 
-void Omega::Graphics::Camera::SetAspectRatio(float ratio)
+void Omega::Graphics::Camera::SetAspectRatio(float ratio) noexcept
 {
 	mAspectRatio = ratio;
 }
 
-void Camera::SetNearPlane(float nearPlane)
+void Camera::SetNearPlane(float nearPlane) noexcept
 {
 	mNearPlane = nearPlane;
 }
 
-void Camera::SetFarPlane(float farPlane)
+void Camera::SetFarPlane(float farPlane) noexcept
 {
 	mFarPlane = farPlane;
 }
@@ -95,7 +95,7 @@ Math::Matrix4 Camera::GetViewMatrix() const
 	};
 }
 
-Math::Matrix4 Omega::Graphics::Camera::GetOrthoGraphiMatrix(float width, float height) const
+Math::Matrix4 Omega::Graphics::Camera::GetOrthoGraphiMatrix(float width, float height) const noexcept
 {
 	const float w = width;
 	const float h = height;
@@ -113,11 +113,12 @@ Math::Matrix4 Omega::Graphics::Camera::GetOrthoGraphiMatrix(float width, float h
 Math::Matrix4 Camera::GetPerspectiveMatrix() const
 {
 	float aspectRatio = mAspectRatio;
-	if (mAspectRatio == 0.0f)
+	if (auto graphics = GraphicsSystem::Get(); 
+		graphics && 
+		mAspectRatio == 0.0f)
 	{
-		const auto& graphics = GraphicsSystem::Get()->get();
-		const float width = static_cast<float>(graphics.GetBackBufferWidth());
-		const float height =static_cast<float>(graphics.GetBackBufferHeight());
+		const float width = static_cast<float>(graphics->get().GetBackBufferWidth());
+		const float height =static_cast<float>(graphics->get().GetBackBufferHeight());
 		aspectRatio = width / height;
 	}
 	const float h = 1.0f / tan(mFov * 0.5f);

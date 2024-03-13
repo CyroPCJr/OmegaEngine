@@ -67,8 +67,8 @@ void GameState::DebugUI()
 void GameState::SettingInit()
 {
 	mSettings.partitionGridSize = 100.0f;
-	mSettings.worldSize = { static_cast<float>(GraphicsSystem::Get()->GetBackBufferWidth()),
-		static_cast<float>(GraphicsSystem::Get()->GetBackBufferHeight()) };
+	mSettings.worldSize = { static_cast<float>(GraphicsSystem::Get()->get().GetBackBufferWidth()),
+		static_cast<float>(GraphicsSystem::Get()->get().GetBackBufferHeight()) };
 	mAIWorld.Initialize(mSettings);
 	mAIWorld.AddObstacles({ { 300.0f,300.0f }, 100.0f });
 	mAIWorld.AddObstacles({ { 1000.0f,200.0f }, 80.0f });

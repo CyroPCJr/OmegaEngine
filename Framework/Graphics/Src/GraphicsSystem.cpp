@@ -16,15 +16,11 @@ LRESULT CALLBACK GraphicsSystem::GraphicsSystemMessageHandler(HWND window, UINT 
 {
 	if (sGraphicsSystem)
 	{
-		switch (message)
-		{
-		case WM_SIZE:
+		if (message == WM_SIZE)
 		{
 			const uint32_t width = static_cast<uint32_t>(LOWORD(lParam));
 			const uint32_t height = static_cast<uint32_t>(HIWORD(lParam));
 			sGraphicsSystem->Resize(width, height);
-			break;
-		}
 		}
 	}
 
@@ -33,10 +29,9 @@ LRESULT CALLBACK GraphicsSystem::GraphicsSystemMessageHandler(HWND window, UINT 
 
 void Omega::Graphics::GraphicsSystem::SetupRenderTargetView()
 {
-	HRESULT hr;
 	// Create a render target view
 	ID3D11Texture2D* backBuffer = nullptr;
-	hr = mSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+	HRESULT hr = mSwapChain->GetBuffer(0u, IID_PPV_ARGS(&backBuffer));
 	OMEGAASSERT(SUCCEEDED(hr), "[GraphicsSystem] Failed to access swap chain buffer.");
 
 	hr = mD3DDevice->CreateRenderTargetView(backBuffer, nullptr, &mRenderTargetView);
@@ -77,10 +72,10 @@ GraphicsSystem::~GraphicsSystem()
 
 void GraphicsSystem::Initialize(HWND window, bool fullscreen)
 {
-	RECT clientRect = {};
+	RECT clientRect{};
 	GetClientRect(window, &clientRect);
-	UINT width = static_cast<UINT>(clientRect.right - clientRect.left);
-	UINT height = static_cast<UINT>(clientRect.bottom - clientRect.top);
+	const UINT width = clientRect.right - clientRect.left;
+	const UINT height = clientRect.bottom - clientRect.top;
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferCount = 2;
@@ -99,7 +94,7 @@ void GraphicsSystem::Initialize(HWND window, bool fullscreen)
 
 	const D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
 
-	HRESULT hr = D3D11CreateDeviceAndSwapChain
+	const HRESULT hr = D3D11CreateDeviceAndSwapChain
 	(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -143,7 +138,7 @@ void GraphicsSystem::Terminate()
 void GraphicsSystem::BeginRender()
 {
 	mImmediateContext->OMSetRenderTargets(1u, &mRenderTargetView, mDepthStencilView);
-	mImmediateContext->ClearRenderTargetView(mRenderTargetView, (FLOAT*)(&mClearColor));
+	mImmediateContext->ClearRenderTargetView(mRenderTargetView, reinterpret_cast<FLOAT*>(&mClearColor));
 	mImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
@@ -223,12 +218,12 @@ void GraphicsSystem::ResetViewport()
 	mImmediateContext->RSSetViewports(1, &mViewport);
 }
 
-uint32_t GraphicsSystem::GetBackBufferWidth() const
+uint32_t GraphicsSystem::GetBackBufferWidth() const noexcept
 {
 	return mSwapChainDesc.BufferDesc.Width;
 }
 
-uint32_t GraphicsSystem::GetBackBufferHeight() const
+uint32_t GraphicsSystem::GetBackBufferHeight() const noexcept
 {
 	return mSwapChainDesc.BufferDesc.Height;
 }

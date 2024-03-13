@@ -3,32 +3,30 @@
 namespace Omega::Graphics
 {
 
-	class Texture
+	class Texture final
 	{
 	public:
-
-		Texture() = default;
-		~Texture();
+		
+		explicit Texture(const std::filesystem::path& fileName);
+		~Texture() noexcept = default;
 
 		Texture(const Texture&) = delete;
 		Texture& operator=(const Texture&) = delete;
 
-		void Initialize(const std::filesystem::path& fileName);
-		void Terminate();
+		Texture(Texture&&) = default;
+		Texture& operator=(Texture&&) = default;
 
-		void BindPS(uint32_t slot = 0) const;
-		void BindVS(uint32_t slot = 0) const;
+		void BindPS(uint32_t slot = 0u) const;
+		void BindVS(uint32_t slot = 0u) const;
 
-		uint32_t GetWidth() const { return mWidth; }
-		uint32_t GetHeight() const { return mHeight; }
+		constexpr uint32_t GetWidth() const noexcept { return mWidth; }
+		constexpr uint32_t GetHeight() const noexcept { return mHeight; }
+		ID3D11ShaderResourceView* GetShaderResourceView() const noexcept { return mShaderResourceView.Get(); }
 
 	private:
-		friend class SpriteRenderer;
-
-		ID3D11ShaderResourceView* mShaderResourceView = nullptr;
-
-		uint32_t mWidth = 0;
-		uint32_t mHeight = 0;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShaderResourceView;
+		uint32_t mWidth{ 0u };
+		uint32_t mHeight{ 0u };
 	};
 
 }

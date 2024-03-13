@@ -27,7 +27,7 @@ void Carrier::Load()
 	{
 		char name[128];
 		sprintf_s(name, "Sprites/carrier_%02zu.png", i + 1);
-		mTexturesIds[i] = SpriteRendererManager::Get()->LoadTexture(name);
+		mTexturesIds[i] = RendererManager::Get()->get().LoadTexture(name);
 	}
 
 	// Initial settings
@@ -44,30 +44,30 @@ void Carrier::Load()
 	mSteeringModule->AddBehavior<ObstacleAvoidance>("AvoidanceObstacle")->SetActive(false);
 
 	auto Calculator = [this](const Agent& agent, MemoryRecord& m)
-	{
-		float dist = 0.0f;
-		for (size_t i = 0; i < m.properties.size(); ++i)
 		{
-			const Vector2 pos = std::get<Vector2>(m.properties["lastSeenPosition"]);
-			dist += Distance(agent.position, pos);
-		}
-		if (m.importance == 0.0f)
-		{
-			m.importance = dist;
-		}
-		else
-		{
-			if (m.importance > dist)
+			float dist = 0.0f;
+			for (size_t i = 0; i < m.properties.size(); ++i)
 			{
-				m.importance -= dist;
+				const Vector2 pos = std::get<Vector2>(m.properties["lastSeenPosition"]);
+				dist += Distance(agent.position, pos);
+			}
+			if (m.importance == 0.0f)
+			{
+				m.importance = dist;
 			}
 			else
 			{
-				m.importance += dist;
+				if (m.importance > dist)
+				{
+					m.importance -= dist;
+				}
+				else
+				{
+					m.importance += dist;
+				}
 			}
-		}
-		return m.importance;
-	};
+			return m.importance;
+		};
 
 	mPerceptionModule = std::make_unique<PerceptionModule>(*this, Calculator);
 	mVisualSensor = mPerceptionModule->AddSensor<VisualSensor>("VisualSensor");
@@ -80,8 +80,9 @@ void Carrier::Unload()
 
 void Carrier::Update(float deltaTime)
 {
-	destination = { static_cast<float>(InputSystem::Get()->GetMouseScreenX()),
-				   static_cast<float>(InputSystem::Get()->GetMouseScreenY()) };
+	const auto& input = InputSystem::Get()->get();
+	destination = { static_cast<float>(input.GetMouseScreenX()),
+				   static_cast<float>(input.GetMouseScreenY()) };
 
 	auto force = mSteeringModule->Calculate();
 	auto acceleration = (force / mass);
@@ -121,7 +122,7 @@ void Carrier::Render()
 {
 	const float angle = atan2(-heading.x, heading.y) + Constants::Pi;
 	size_t index = static_cast<size_t>(angle / Constants::TwoPi * mTexturesIds.size());
-	SpriteRendererManager::Get()->DrawSprite(mTexturesIds[index], position);
+	RendererManager::Get()->get().DrawSprite(mTexturesIds[index], position);
 }
 
 void Carrier::SwitchBehaviour(const Behaviours& behaviours, bool active) const

@@ -8,7 +8,7 @@ namespace Omega::Graphics
 	class Camera final
 	{
 	public:
-		void SetPosition(const Math::Vector3& position);
+		void SetPosition(const Math::Vector3& position) noexcept;
 		void SetDirection(const Math::Vector3& direction);
 		void SetLookAt(const Math::Vector3& target);
 
@@ -22,15 +22,15 @@ namespace Omega::Graphics
 		void Pitch(float radian); // top and down
 
 		void SetFov(float fov);
-		void SetAspectRatio(float ratio);
-		void SetNearPlane(float nearPlane);
-		void SetFarPlane(float farPlane);
+		void SetAspectRatio(float ratio) noexcept;
+		void SetNearPlane(float nearPlane) noexcept;
+		void SetFarPlane(float farPlane) noexcept;
 
-		const Math::Vector3& GetPosition() const { return mPosition; }
-		const Math::Vector3& GetDirection() const { return mDirection; }
+		const Math::Vector3& GetPosition() const noexcept { return mPosition; }
+		const Math::Vector3& GetDirection() const noexcept { return mDirection; }
 
 		Math::Matrix4 GetViewMatrix() const;
-		Math::Matrix4 GetOrthoGraphiMatrix(float width, float height) const;
+		Math::Matrix4 GetOrthoGraphiMatrix(float width, float height) const noexcept;
 
 		Math::Matrix4 GetPerspectiveMatrix() const;
 

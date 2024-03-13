@@ -8,6 +8,7 @@
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <wrl/client.h>
 
 // DirectX libraries
 #pragma comment(lib, "d3d11.lib")

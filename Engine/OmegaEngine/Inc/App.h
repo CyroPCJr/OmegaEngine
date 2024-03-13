@@ -4,8 +4,6 @@
 
 namespace Omega
 {
-	//String view operatos reference
-	//https://learn.microsoft.com/en-us/cpp/standard-library/string-view-operators?view=msvc-170
 	struct AppConfig
 	{
 		std::string appName{ "Omega" };
@@ -40,7 +38,7 @@ namespace Omega
 
 	private:
 		Core::Window mWindow;
-		std::map<std::string_view, std::unique_ptr<AppState>> mAppState;
+		std::map<std::string, std::unique_ptr<AppState>> mAppState;
 		AppState* mCurrentState = nullptr;
 		AppState* mNextState = nullptr;
 		bool mRunning = false;
