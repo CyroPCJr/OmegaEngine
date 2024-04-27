@@ -27,6 +27,7 @@ namespace Omega::Math
 
 		// multiplity vector by value scalar
 		constexpr Vector3 operator*(const float v) const { return { x * v, y * v, z * v }; }
+		friend constexpr Vector3 operator*(float v, const Vector3& vec) { return { vec.x * v, vec.y * v, vec.z * v }; }
 		constexpr Vector3 operator/(const float v) const { return { x / v, y / v, z / v }; }
 
 		// Assignment operators

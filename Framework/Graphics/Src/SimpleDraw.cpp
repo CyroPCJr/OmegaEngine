@@ -311,7 +311,7 @@ namespace Omega::Graphics
 				for (float theta = 0; theta <= Math::Constants::TwoPi; theta += increment)
 				{
 					Math::Vector3 vec = Math::TransformNormal(
-						Math::Vector3{ sinf(theta)* radius, height* static_cast<float>(y)* ringRatio, cosf(theta)* radius }, rotationMatrix) + base;
+						Math::Vector3{ sinf(theta) * radius, height * static_cast<float>(y) * ringRatio, cosf(theta) * radius }, rotationMatrix) + base;
 					list.push_back(vec);
 				}
 			}
@@ -329,7 +329,7 @@ namespace Omega::Graphics
 						if (y == 0 || y == rings)
 						{
 							Math::Vector3 centerVec =
-								Math::TransformNormal(Math::Vector3{ 0.f, height* y* ringRatio, 0.0f }, rotationMatrix) + base;
+								Math::TransformNormal(Math::Vector3{ 0.f, height * y * ringRatio, 0.0f }, rotationMatrix) + base;
 							AddLine(list[y * sectorCount + x], centerVec, color);
 						}
 					}
@@ -340,13 +340,13 @@ namespace Omega::Graphics
 						if (y == 0)
 						{
 							Math::Vector3 centerVec =
-								Math::TransformNormal(Math::Vector3{ 0.0f, height* y* ringRatio, 0.0f }, rotationMatrix) + base;
+								Math::TransformNormal(Math::Vector3{ 0.0f, height * y * ringRatio, 0.0f }, rotationMatrix) + base;
 							AddFace(list[y * sectorCount + x], centerVec, list[y * sectorCount + x + 1], color);
 						}
 						else if (y == rings)
 						{
 							Math::Vector3 centerVec =
-								Math::TransformNormal(Math::Vector3{ 0.0f, height* y* ringRatio, 0.0f }, rotationMatrix) + base;
+								Math::TransformNormal(Math::Vector3{ 0.0f, height * y * ringRatio, 0.0f }, rotationMatrix) + base;
 							AddFace(list[y * sectorCount + x], list[y * sectorCount + x + 1], centerVec, color);
 						}
 					}
@@ -397,7 +397,7 @@ namespace Omega::Graphics
 
 			for (float theta = 0; theta <= Math::Constants::TwoPi; theta += thetaIncrement)
 			{
-				Math::Vector3 vec3 = Math::TransformNormal(Math::Vector3{ radius* cosf(theta), 0.0f, radius* sinf(theta) }, rotationMatrix) + base;
+				Math::Vector3 vec3 = Math::TransformNormal(Math::Vector3{ radius * cosf(theta), 0.0f, radius * sinf(theta) }, rotationMatrix) + base;
 				list.push_back(vec3);
 			}
 
@@ -445,7 +445,7 @@ namespace Omega::Graphics
 			vector<Vector2> list;
 			for (float theta = 0.0f; theta <= Math::Constants::TwoPi; theta += thetaIncrement)
 			{
-				list.push_back(Math::Vector2{ radius* cosf(theta), radius* sinf(theta) } + center);
+				list.push_back(Math::Vector2{ radius * cosf(theta), radius * sinf(theta) } + center);
 			}
 
 			for (size_t i = 0, totalSize = list.size() - 1; i < totalSize; ++i)
@@ -530,9 +530,9 @@ namespace Omega::Graphics
 			mMeshBuffer.Draw();
 
 			//Draw 2D Lines
-			auto system = GraphicsSystem::Get();
-			const uint32_t w = system->GetBackBufferWidth();
-			const uint32_t h = system->GetBackBufferHeight();
+			const auto& system = GraphicsSystem::Get()->get();
+			const uint32_t w = system.GetBackBufferWidth();
+			const uint32_t h = system.GetBackBufferHeight();
 			Math::Matrix4 screenToNDC
 			{
 				2.0f / w, 0.0f, 0.0f, 0.0f,
@@ -563,10 +563,10 @@ namespace Omega::Graphics
 		unique_ptr<VertexPC[]> mLineVertices;
 		unique_ptr<VertexPC[]> mFillVertices;
 		unique_ptr<VertexPC[]> m2DLineVertices;
-		uint32_t mVertexCount{ 0 };
-		uint32_t m2DVertexCount{ 0 };
-		uint32_t mMaxVertexCount{ 0 };
-		uint32_t mFillVertexCount{ 0 };
+		uint32_t mVertexCount{ 0u };
+		uint32_t m2DVertexCount{ 0u };
+		uint32_t mMaxVertexCount{ 0u };
+		uint32_t mFillVertexCount{ 0u };
 	};
 
 	unique_ptr<SimpleDrawImpl> sInstance{};

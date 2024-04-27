@@ -45,7 +45,7 @@ namespace Omega
 		Omega::Graphics::RasterizerState mRasterizer;
 
 		Omega::Physics::PhysicsWorld mPhysicsWorld;
-		std::vector<std::unique_ptr<Omega::Physics::Particle>> mParticles;
+		//std::vector<std::unique_ptr<Omega::Physics::Particle>> mParticles;
 
 		bool mShowCloth = false;
 		bool mShowTexture = false;

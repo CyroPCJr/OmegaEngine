@@ -56,8 +56,7 @@ void ModelLoader::LoadModel(const std::filesystem::path& fileName, Model& model)
 		{
 			std::string fullFileName = fileName.u8string().c_str();
 			fullFileName = fullFileName.substr(0, fullFileName.rfind('/') + 1);
-			data.diffuseMap = std::make_unique<Texture>();
-			data.diffuseMap->Initialize(fullFileName + data.diffuseMapName);
+			data.diffuseMap = std::make_unique<Texture>(fullFileName + data.diffuseMapName);
 		}
 	}
 }
@@ -133,11 +132,6 @@ void Model::Terminate()
 	for (auto& data : meshData)
 	{
 		data.meshBuffer.Terminate();
-	}
-
-	for (auto& material : materialData)
-	{
-		material.diffuseMap->Terminate();
 	}
 }
 

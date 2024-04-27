@@ -1,8 +1,10 @@
 #include "GameState.h"
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-	Omega::MainApp().AddState<GameState>("GameState");	
-	Omega::MainApp().Run({"VGP334 - Hello FABRIK", 1280,720});
+	Omega::AppConfig config{ "VGP334 - Hello FABRIK" };
+	Omega::App& app = Omega::MainApp();
+	app.AddState<GameState>("GameState");
+	app.Run(config);
 	return 0;
 }

@@ -23,3 +23,4 @@
 #include "DebugUtil.h"
 #include "DialogBoxUtil.h"
 #include "TimeUtil.h"
+#include "FpsHelper.h"

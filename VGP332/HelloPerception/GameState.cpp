@@ -19,9 +19,9 @@ void GameState::Terminate()
 
 	// clean up
 	mCarrier->Unload();
-	mCarrier.reset();	
+	mCarrier.reset();
 }
-	 
+
 void GameState::Update(float deltaTime)
 {
 	mAIWorld.Update();
@@ -44,8 +44,12 @@ void GameState::DebugUI()
 void GameState::InitializeWorld()
 {
 	mSettings.partitionGridSize = 100.0f;
-	mSettings.worldSize = { static_cast<float>(GraphicsSystem::Get()->GetBackBufferWidth()),
-		static_cast<float>(GraphicsSystem::Get()->GetBackBufferHeight()) };
+	if (auto graphics = GraphicsSystem::Get())
+	{
+		mSettings.worldSize = { static_cast<float>(graphics->get().GetBackBufferWidth()),
+		static_cast<float>(graphics->get().GetBackBufferHeight()) };
+	}
+
 	mAIWorld.Initialize(mSettings);
 
 	mAIWorld.AddObstacles({ { 300.0f,300.0f }, 100.0f });

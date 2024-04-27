@@ -4,12 +4,14 @@
 
 namespace Omega::Graphics {
 
-	class GraphicsSystem
+	class Omega::Core::FpsHelper;
+
+	class GraphicsSystem final
 	{
 	public:
 		static void StaticInitialize(HWND window, bool fullscreen);
 		static void StaticTerminate();
-		static GraphicsSystem* Get();
+		static std::optional<std::reference_wrapper<GraphicsSystem>> Get();
 
 	public:
 		GraphicsSystem() = default;
@@ -18,30 +20,26 @@ namespace Omega::Graphics {
 		GraphicsSystem(const GraphicsSystem&) = delete;
 		GraphicsSystem& operator=(const GraphicsSystem&) = delete;
 
+		GraphicsSystem(GraphicsSystem&&) = delete;
+		GraphicsSystem& operator=(GraphicsSystem&&) = delete;
+
 		void Initialize(HWND window, bool fullscreen);
 		void Terminate();
 
-		void BeginRender();
-		void EndRender();
+		void BeginRender(Omega::Core::FpsHelper& funcBeginFrame);
+		void EndRender(Omega::Core::FpsHelper& funcEndFrame) const;
 
 		void ToggleFullscreen();
 		void Resize(uint32_t width, uint32_t height);
 
-
 		void ResetRenderTarget();
 		void ResetViewport();
 
-		void SetClearColor(const Color& clearColor) { mClearColor = clearColor; }
-		void SetVSync(bool vSync) { mVSync = vSync ? 1u : 0u; }
+		void SetClearColor(const Color& clearColor) noexcept { mClearColor = clearColor; }
+		void SetVSync(bool vSync) noexcept { mVSync = vSync ? 1u : 0u; }
 
-		uint32_t GetBackBufferWidth() const;
-		uint32_t GetBackBufferHeight() const;
-
-		//TODO: Remove theses eventually
-		// Video memory manager
-		//ID3D11Device* GetDevice() { return mD3DDevice; }
-		////
-		//ID3D11DeviceContext* GetContext() { return mImmediateContext; };
+		uint32_t GetBackBufferWidth() const noexcept;
+		uint32_t GetBackBufferHeight() const noexcept;
 
 	private:
 		static LRESULT CALLBACK GraphicsSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
@@ -65,8 +63,8 @@ namespace Omega::Graphics {
 		DXGI_SWAP_CHAIN_DESC mSwapChainDesc{};
 		D3D11_VIEWPORT mViewport{};
 
-		Color mClearColor = Colors::White;
-		UINT mVSync = 1;
+		Color mClearColor{ Colors::White };
+		UINT mVSync{ 1u };
 	};
 
 }

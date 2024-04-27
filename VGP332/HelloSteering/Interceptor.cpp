@@ -28,7 +28,7 @@ void Interceptor::Load()
 		{
 			char name[128];
 			sprintf_s(name, "Sprites/interceptor_%02zu.png", i + 1);
-			mTexturesIds.at(i) = SpriteRendererManager::Get()->LoadTexture(name);
+			mTexturesIds.at(i) = RendererManager::Get()->get().LoadTexture(name);
 		}
 	}
 	// Initial settings
@@ -97,7 +97,7 @@ void Interceptor::Render()
 	const float angle = atan2(-heading.x, heading.y) + Math::Constants::Pi;
 	const size_t numFrames = mTexturesIds.size();
 	const size_t index = static_cast<int>(angle / Math::Constants::TwoPi * numFrames) % numFrames;
-	SpriteRendererManager::Get()->DrawSprite(mTexturesIds.at(index), position);
+	RendererManager::Get()->get().DrawSprite(mTexturesIds.at(index), position);
 }
 
 void Interceptor::SwitchBehaviour(const Behaviours& behaviours, bool active) const

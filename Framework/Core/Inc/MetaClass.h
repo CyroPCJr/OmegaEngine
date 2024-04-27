@@ -16,14 +16,9 @@ namespace Omega::Core::Meta
 			std::vector<MetaField> fields,
 			CreateFunc create) noexcept;
 
-		//copy constructor
+		//copy constructor | assigment
 		MetaClass(const MetaClass&) = delete;
-		//copy assignment
 		MetaClass& operator=(const MetaClass&) = delete;
-		//move constructor
-		//MetaClass(MetaClass&&) = delete;
-		////move assigment
-		//MetaClass& operator=(MetaClass&&) = delete;
 
 		const MetaClass* GetParent() const noexcept;
 		const MetaField* FindField(std::string_view name) const;

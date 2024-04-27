@@ -22,6 +22,9 @@
     <Filter Include="Src\Meta">
       <UniqueIdentifier>{75b77f00-cefe-4f45-b128-74309f694cc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Utils">
+      <UniqueIdentifier>{ccd2dc1a-5b1a-42aa-a616-59e6946f0d01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="Inc\MetaRegistration.h">
       <Filter>Inc\Meta</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\RandomHelper.h">
+      <Filter>Inc\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -103,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="Src\MetaRegistration.cpp">
       <Filter>Src\Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RandomHelper.cpp">
+      <Filter>Src\Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

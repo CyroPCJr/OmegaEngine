@@ -34,6 +34,6 @@ const MetaPointer* MetaType::AsMetaPointer() const
 
 void MetaType::Deserialize(void* instance, const rapidjson::Value& jsonValue) const
 {
-	OMEGAASSERT(mDeserialize, "[MetaType] -- No deserialize callable registered for '%s'.", std::string(GetName()).c_str());
+	OMEGAASSERT(mDeserialize == nullptr, "[MetaType] -- No deserialize callable registered for '%s'.", GetName());
 	mDeserialize(instance, jsonValue);
 }

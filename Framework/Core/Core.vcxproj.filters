@@ -81,6 +81,9 @@
     <ClCompile Include="Src\DialogBoxUtil.cpp">
       <Filter>Src\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Src\FpsHelper.cpp">
+      <Filter>Src\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Common.h">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="Inc\ObjectPool.h">
       <Filter>Inc\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\FpsHelper.h">
+      <Filter>Inc\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

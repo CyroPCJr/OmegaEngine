@@ -76,8 +76,9 @@ void RenderTarget::BeginRender()
 
 void RenderTarget::EndRender()
 {
-	GraphicsSystem::Get()->ResetRenderTarget();
-	GraphicsSystem::Get()->ResetViewport();
+	const auto& graphics = GraphicsSystem::Get();
+	graphics->get().ResetRenderTarget();
+	graphics->get().ResetViewport();
 }
 
 void RenderTarget::BindPS(uint32_t slot)

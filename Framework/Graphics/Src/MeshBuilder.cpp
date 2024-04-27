@@ -157,17 +157,17 @@ MeshPX MeshBuilder::CreateCylinderPX(float radius, int rings, int slices)
 		mesh.vertices.emplace_back(VertexPX{ { 0.0f, (height * 0.5f), 0.0f }, j * uStep, 1.0f });
 	}
 
-	for (int i = 0; i + 1 < rings + 2; ++i)
+	for (size_t i{ 0u }; i + 1 < rings + 2; ++i)
 	{
-		for (int j = 0; j < slices; ++j)
+		for (size_t j{ 0u }; j < slices; ++j)
 		{
-			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
-			mesh.indices.push_back((j + 0) + ((i + 1) * (slices + 1)));
-			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
+			mesh.indices.push_back((j + 0u) + ((i + 0u) * (slices + 1u)));
+			mesh.indices.push_back((j + 0u) + ((i + 1u) * (slices + 1u)));
+			mesh.indices.push_back((j + 1u) + ((i + 1u) * (slices + 1u)));
 
-			mesh.indices.push_back((j + 0) + ((i + 0) * (slices + 1)));
-			mesh.indices.push_back((j + 1) + ((i + 1) * (slices + 1)));
-			mesh.indices.push_back((j + 1) + ((i + 0) * (slices + 1)));
+			mesh.indices.push_back((j + 0u) + ((i + 0u) * (slices + 1u)));
+			mesh.indices.push_back((j + 1u) + ((i + 1u) * (slices + 1u)));
+			mesh.indices.push_back((j + 1u) + ((i + 0u) * (slices + 1u)));
 		}
 	}
 	return mesh;
@@ -312,6 +312,57 @@ MeshPN MeshBuilder::CreateSpherePN(float radius, int rings, int slices, bool isS
 
 Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace)
 {
+
+	/*
+	* TODO: testar essa alteracao depois....
+	 Mesh mesh;
+    const float phiSteps = Constants::Pi / static_cast<float>(rings);
+    const float thetaSteps = Constants::TwoPi / static_cast<float>(slices);
+
+    // Preallocate memory for vertices and indices
+    mesh.vertices.reserve((rings + 1) * (slices + 1));
+    mesh.indices.reserve(rings * slices * 6);
+
+    for (int y = 0; y <= rings; ++y)
+    {
+        float phi = y * phiSteps;
+        for (int x = 0; x <= slices; ++x)
+        {
+            float theta = x * thetaSteps;
+            auto vec = Vector3{
+                sinf(phi) * cosf(theta) * radius,
+                cosf(phi) * radius,
+                sinf(phi) * sinf(theta) * radius
+            };
+            Vector3 normal = Normalize(vec);
+            Vector3 normalTangent = { -normal.z, 0.0f, normal.x };
+            mesh.vertices.emplace_back(Vertex{vec, normal, normalTangent, {theta / Constants::TwoPi, phi / Constants::Pi}});
+        }
+    }
+
+    for (int y = 0; y < rings; ++y)
+    {
+        for (int x = 0; x < slices; ++x)
+        {
+            size_t a = x + (y * (slices + 1));
+            size_t b = (x + 1) + (y * (slices + 1));
+            size_t c = x + ((y + 1) * (slices + 1));
+            size_t d = (x + 1) + ((y + 1) * (slices + 1));
+
+            if (!isSpace)
+            {
+                mesh.indices.insert(mesh.indices.end(), {a, b, c, b, d, c});
+            }
+            else
+            {
+                mesh.indices.insert(mesh.indices.end(), {a, c, b, a, d, c});
+            }
+        }
+    }
+
+    return mesh;
+	
+	*/
 	Mesh mesh;
 	const float phiSteps = (Constants::Pi / static_cast<float>(rings));
 	const float thetaSteps = (Constants::TwoPi / static_cast<float>(slices));
@@ -337,16 +388,16 @@ Mesh MeshBuilder::CreateSphere(float radius, int rings, int slices, bool isSpace
 			);
 		}
 	}
-
-	int a, b, c, d;
-	for (int y = 0; y < rings; ++y)
+	
+	size_t a, b, c, d;
+	for (size_t y{ 0u }; y < rings; ++y)
 	{
-		for (int x = 0; x <= slices; ++x)
+		for (size_t x{ 0u }; x <= slices; ++x)
 		{
-			a = (x % (slices + 1));
-			b = ((x + 1) % (slices + 1));
+			a = (x % (slices + 1u));
+			b = ((x + 1u) % (slices + 1u));
 			c = (y * (slices + 1));
-			d = ((y + 1) * (slices + 1));
+			d = ((y + 1u) * (slices + 1u));
 
 			if (!isSpace)
 			{

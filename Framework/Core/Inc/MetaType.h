@@ -19,14 +19,13 @@ namespace Omega::Core::Meta
 			Pointer
 		};
 
-		MetaType(Category category, 
-			std::string_view name, 
+		MetaType(Category category,
+			std::string_view name,
 			size_t size,
 			DeserializeFunc deserialize = nullptr) noexcept;
 
-		// copy constructor
+		// copy ctor and assigment
 		MetaType(const MetaType&) = delete;
-		// copy assignment
 		MetaType& operator=(const MetaType&) = delete;
 
 		virtual ~MetaType() = default;
@@ -37,13 +36,14 @@ namespace Omega::Core::Meta
 		const MetaPointer* AsMetaPointer() const;
 
 		constexpr Category GetCategory() const noexcept { return mCategory; }
-		constexpr std::string_view GetName() const noexcept { return mName; }
+		const std::string& GetName() const noexcept { return mName; }
 		constexpr size_t GetSize() const noexcept { return mSize; }
 
 	private:
 		const DeserializeFunc mDeserialize;
-		const std::string_view mName;
+		const std::string mName;
 		const Category mCategory;
 		const size_t mSize;
+		const size_t mPadding{ 0 };
 	};
 }

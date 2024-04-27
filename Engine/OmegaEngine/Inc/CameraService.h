@@ -12,6 +12,8 @@ namespace Omega
 
 		void Initialize() override;
 
+		void Terminate() override;
+
 		Graphics::Camera* AddCamera(std::string_view name);
 		Graphics::Camera* FindCamera(std::string_view name);
 

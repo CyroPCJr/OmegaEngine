@@ -169,6 +169,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Random.cpp" />
+    <ClCompile Include="Src\RandomHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\AABB.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="Inc\Plane.h" />
     <ClInclude Include="Inc\Quaternion.h" />
     <ClInclude Include="Inc\Random.h" />
+    <ClInclude Include="Inc\RandomHelper.h" />
     <ClInclude Include="Inc\Ray.h" />
     <ClInclude Include="Inc\Rect.h" />
     <ClInclude Include="Inc\Sphere.h" />

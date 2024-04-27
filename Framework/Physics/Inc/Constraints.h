@@ -12,7 +12,7 @@ namespace Omega::Physics
 		virtual ~Constraint() noexcept = default;
 
 		virtual void Apply() const = 0;
-		virtual void DebugDraw() const {}
+		virtual void DebugDraw() const{}
 	};
 
 	class Fixed final : public Constraint

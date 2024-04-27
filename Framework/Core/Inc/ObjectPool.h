@@ -1,45 +1,63 @@
 #pragma once
 
-namespace Omega
+namespace Omega::Core
 {
-    // Object pool class
-    template <typename T, size_t PoolSize>
-    class ObjectPool
-    {
-    public:
-        std::shared_ptr<T> AcquireObject()
-        {
-            for (size_t i{ 0 }; i < PoolSize; ++i)
-            {
-                if (!inUse[i])
-                {
-                    inUse[i] = true;
-                    return std::shared_ptr<T>(&objects[i], [](T*) {}); // Custom deleter to prevent deletion
-                }
-            }
-            return nullptr; // Pool is full
-        }
+	template <typename T, size_t PoolSize>
+	class ObjectPool
+	{
+	public:
+		ObjectPool() noexcept(false)
+		{
+			pool.reserve(PoolSize);
+			for (size_t i{ 0u }; i < PoolSize; ++i)
+			{
+				pool.push_back(std::make_shared<T>());
+			}
+		}
 
-        std::array<T, PoolSize>& GetAllObjects() const
-        {
-            return objects;
-        }
+		std::weak_ptr<T> AcquireObject()
+		{
+			if (numObjectsInUse == PoolSize)
+			{
+				throw std::runtime_error("Pool is full. Cannot acquire more objects.");
+			}
 
-        void ReleaseObject(const std::shared_ptr<T>& obj)
-        {
-            for (size_t i{ 0 }; i < PoolSize; ++i)
-            {
-                if (obj.get() == &objects[i])
-                {
-                    inUse[i] = false;
-                    return;
-                }
-            }
-            throw std::invalid_argument("Object does not belong to this pool.");
-        }
+			auto obj = pool.at(nextIndex);
+			++numObjectsInUse;
+			nextIndex = (nextIndex + 1u) % PoolSize;
+			return obj;
+		}
 
-    private:
-        std::array<T, PoolSize> objects;
-        std::array<bool, PoolSize> inUse = { false }; // Indicates whether each object slot is in use
-    };
+		void ReleaseObject(std::shared_ptr<T> obj)
+		{
+			if (std::find(pool.begin(), pool.end(), obj) != pool.end())
+			{
+				--numObjectsInUse;
+			}
+			else
+			{
+				throw std::invalid_argument("Object does not belong to this pool.");
+			}
+		}
+
+		void ReleaseAllObjects() noexcept
+		{
+			numObjectsInUse = 0u;
+			nextIndex = 0u;
+		}
+
+		const std::vector<std::shared_ptr<T>>& GetAllObjects() const noexcept
+		{
+			return pool;
+		}
+
+		constexpr size_t Size() const noexcept { return PoolSize; }
+		
+		constexpr size_t ObjectInUse() const noexcept { return numObjectsInUse; }
+
+	private:
+		std::vector<std::shared_ptr<T>> pool;
+		size_t nextIndex = 0u;
+		size_t numObjectsInUse = 0u;
+	};
 }

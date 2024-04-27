@@ -10,7 +10,7 @@ using namespace Omega::Core;
 
 void TileMap::Load()
 {
-	auto renderer = SpriteRendererManager::Get();
+	auto renderer = RendererManager::Get();
 	
 	mTextureIds[0] = renderer->LoadTexture("Sprites/grass.png");
 	mTextureIds[1] = renderer->LoadTexture("Sprites/stone.png");
@@ -376,7 +376,7 @@ void TileMap::RenderGridBoardNeighbors()
 			const int index = GetIndex(x, y);
 			Vector2 pos = { static_cast<float>(x) * mTileSize,  static_cast<float>(y) * mTileSize };
 
-			SpriteRendererManager::Get()->DrawSprite(mTextureIds[mTiles[index]], pos, Pivot::TopLeft);
+			RendererManager::Get()->DrawSprite(mTextureIds[mTiles[index]], pos, Pivot::TopLeft);
 
 			if (mShowGraph)
 			{

@@ -3,35 +3,9 @@
 
 using namespace Omega::Graphics;
 
-namespace
-{
-	std::unique_ptr<TextureManager> sTextureManager = nullptr;
-}
-
-void TextureManager::StaticInitialize(const std::filesystem::path& root)
-{
-	OMEGAASSERT(sTextureManager == nullptr, "[TextureManager] Manager already initialized!");
-	sTextureManager = std::make_unique<TextureManager>();
-	sTextureManager->SetRootPath(root);
-}
-
-void TextureManager::StaticTerminate()
-{
-	if (sTextureManager != nullptr)
-	{
-		sTextureManager->Clear();
-		sTextureManager.reset();
-	}
-}
-
-TextureManager* TextureManager::Get()
-{
-	OMEGAASSERT(sTextureManager != nullptr, "[TextureManager] No instance registered.");
-	return sTextureManager.get();
-}
-
 TextureManager::~TextureManager()
 {
+	Clear();
 	OMEGAASSERT(mInventory.empty(), "[TextureManager] Clear() must be called to clean up.");
 }
 
@@ -41,25 +15,22 @@ TextureId TextureManager::Load(const std::filesystem::path& fileName, bool isUse
 	fullName = (isUseRootPath) ? fullName / fileName : fileName;
 
 	std::hash<std::string> hasher;
-	TextureId hash = hasher(fullName.u8string());
+	const TextureId hash = hasher(fullName.u8string());
 	auto [iter, successful] = mInventory.insert({ hash , nullptr });
 	if (successful)
 	{
-		std::unique_ptr<Texture> texture = std::make_unique<Texture>();
-		texture->Initialize(fullName);
-		iter->second = std::move(texture);
+		iter->second = std::move(std::make_unique<Texture>(fullName));
 	}
 
 	return hash;
 }
 
-void TextureManager::Clear()
+void TextureManager::Clear() noexcept
 {
 	for (auto& [id, texture] : mInventory)
 	{
 		if (texture)
 		{
-			texture->Terminate();
 			texture.reset();
 		}
 	}
@@ -68,7 +39,7 @@ void TextureManager::Clear()
 
 void TextureManager::BindVS(TextureId id, uint32_t slot)
 {
-	if (Texture* texture = GetTexture(id); texture)
+	if (const Texture* texture = GetTexture(id); texture)
 	{
 		texture->BindVS(slot);
 	}
@@ -76,7 +47,7 @@ void TextureManager::BindVS(TextureId id, uint32_t slot)
 
 void TextureManager::BindPS(TextureId id, uint32_t slot)
 {
-	if (Texture* texture = GetTexture(id); texture)
+	if (const Texture* texture = GetTexture(id); texture)
 	{
 		texture->BindPS(slot);
 	}

@@ -5,11 +5,11 @@
 using namespace Omega;
 using namespace Omega::Graphics;
 
-
-void Camera::SetPosition(const Math::Vector3& position)
+void Camera::SetPosition(const Math::Vector3& position) noexcept
 {
 	mPosition = position;
 }
+
 void Camera::SetDirection(const Math::Vector3& direction)
 {
 	mDirection = Math::Normalize(direction);
@@ -24,6 +24,7 @@ void Camera::Walk(float distance)
 {
 	mPosition += mDirection * distance;
 }
+
 void Camera::Strafe(float distance)
 {
 	const Math::Vector3 right = Math::Normalize(Math::Cross(Math::Vector3::YAxis, mDirection));
@@ -64,17 +65,17 @@ void Camera::SetFov(float fov)
 	mFov = Math::Clamp(fov, kMinFov, kMaxFov);
 }
 
-void Omega::Graphics::Camera::SetAspectRatio(float ratio)
+void Omega::Graphics::Camera::SetAspectRatio(float ratio) noexcept
 {
 	mAspectRatio = ratio;
 }
 
-void Camera::SetNearPlane(float nearPlane)
+void Camera::SetNearPlane(float nearPlane) noexcept
 {
 	mNearPlane = nearPlane;
 }
 
-void Camera::SetFarPlane(float farPlane)
+void Camera::SetFarPlane(float farPlane) noexcept
 {
 	mFarPlane = farPlane;
 }
@@ -96,7 +97,7 @@ Math::Matrix4 Camera::GetViewMatrix() const
 	};
 }
 
-Math::Matrix4 Omega::Graphics::Camera::GetOrthoGraphiMatrix(float width, float height) const
+Math::Matrix4 Omega::Graphics::Camera::GetOrthoGraphiMatrix(float width, float height) const noexcept
 {
 	const float w = width;
 	const float h = height;
@@ -114,11 +115,13 @@ Math::Matrix4 Omega::Graphics::Camera::GetOrthoGraphiMatrix(float width, float h
 Math::Matrix4 Camera::GetPerspectiveMatrix() const
 {
 	float aspectRatio = mAspectRatio;
-	if (mAspectRatio == 0.0f)
+	if (auto graphics = GraphicsSystem::Get(); 
+		graphics && 
+		mAspectRatio == 0.0f)
 	{
-		const auto width = GraphicsSystem::Get()->GetBackBufferWidth();
-		const auto height = GraphicsSystem::Get()->GetBackBufferHeight();
-		aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+		const float width = static_cast<float>(graphics->get().GetBackBufferWidth());
+		const float height =static_cast<float>(graphics->get().GetBackBufferHeight());
+		aspectRatio = width / height;
 	}
 	const float h = 1.0f / tan(mFov * 0.5f);
 	const float w = h / aspectRatio;

@@ -4,12 +4,18 @@
 using namespace Omega;
 
 META_DERIVED_BEGIN(CameraService, Service)
-	META_NO_FIELD
+META_NO_FIELD
 META_CLASS_END
 
 void CameraService::Initialize()
 {
 	mActiveCamera = AddCamera("Default");
+}
+
+void CameraService::Terminate()
+{
+	mCameraMap.clear();
+	mActiveCamera = nullptr;
 }
 
 Graphics::Camera* CameraService::AddCamera(std::string_view name)

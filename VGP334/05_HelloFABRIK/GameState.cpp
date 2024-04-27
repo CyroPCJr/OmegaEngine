@@ -9,76 +9,84 @@ using namespace Omega::Physics;
 
 void GameState::Initialize()
 {
-	GraphicsSystem::Get()->SetClearColor(Colors::Black);
+	GraphicsSystem::Get()->get().SetClearColor(Colors::Black);
 
-	mCamera.SetNearPlane(0.1f);
-	mCamera.SetFarPlane(300.0f);
-	mCamera.SetPosition({ 0.0f, 1.0f, -5.0f });
-	mCamera.SetLookAt({ 0.0f, 1.0f, 0.0f });
+	mCameraService.Initialize();
+	Camera& camera = mCameraService.GetActiveCamera();
 
-	const int numBones = 5;
-	const float boneLength = 1.0f;
-	mPoints.reserve(numBones + 1);
-	mPoints.push_back(Vector3::Zero);
-	for (size_t i = 1; i < mPoints.capacity(); ++i)
+	camera.SetNearPlane(0.1f);
+	camera.SetFarPlane(300.0f);
+	camera.SetPosition({ 0.0f, 1.0f, -5.0f });
+	camera.SetLookAt({ 0.0f, 1.0f, 0.0f });
+
+	constexpr int numBones = 5;
+	constexpr float boneLength = 1.0f;
+	mPoints.reserve(numBones + 1u);
+	mPoints.emplace_back(Vector3::Zero);
+	for (size_t i{ 1 }; i < mPoints.capacity(); ++i)
 	{
-		mPoints.push_back(mPoints.back() + Vector3{ 0.0f, boneLength, 0.0f });
+		mPoints.emplace_back(mPoints.back() + Vector3{ 0.0f, boneLength, 0.0f });
 	}
 	mTarget = mPoints.back();
-	mVecFrames.reserve(mMaxFrameSize);
+	mVecFrames.reserve(MAX_FRAME);
 }
 
 void GameState::Terminate()
 {
+	mCameraService.Terminate();
 }
 
 void GameState::Update(float deltaTime)
 {
-	auto inputSystem = InputSystem::Get();
-
-	const float kMoveSpeed = inputSystem->IsKeyDown(KeyCode::LSHIFT) ? 100.0f : 10.0f;
-	const float kTurnSpeed = 1.0f;
+	const auto& inputSystem = InputSystem::Get()->get();
+	
+	Camera& camera = mCameraService.GetActiveCamera();
+	
+	const float kMoveSpeed = inputSystem.IsKeyDown(KeyCode::LSHIFT) ? 100.0f : 10.0f;
+	const float movementSpeed = kMoveSpeed * deltaTime;
 
 	// control camera
-	if (inputSystem->IsKeyDown(KeyCode::W))
+	if (inputSystem.IsKeyDown(KeyCode::W))
 	{
-		mCamera.Walk(kMoveSpeed * deltaTime);
+		camera.Walk(movementSpeed);
 	}
-	if (inputSystem->IsKeyDown(KeyCode::S))
+	if (inputSystem.IsKeyDown(KeyCode::S))
 	{
-		mCamera.Walk(-kMoveSpeed * deltaTime);
+		camera.Walk(-movementSpeed);
 	}
-	if (inputSystem->IsKeyDown(KeyCode::D))
+	if (inputSystem.IsKeyDown(KeyCode::D))
 	{
-		mCamera.Strafe(kMoveSpeed * deltaTime);
+		camera.Strafe(movementSpeed);
 	}
-	if (inputSystem->IsKeyDown(KeyCode::A))
+	if (inputSystem.IsKeyDown(KeyCode::A))
 	{
-		mCamera.Strafe(-kMoveSpeed * deltaTime);
+		camera.Strafe(-movementSpeed);
 	}
 
-	if (inputSystem->IsMouseDown(MouseButton::RBUTTON))
+	if (inputSystem.IsMouseDown(MouseButton::RBUTTON))
 	{
-		mCamera.Yaw(inputSystem->GetMouseMoveX() * kTurnSpeed * deltaTime);
-		mCamera.Pitch(inputSystem->GetMouseMoveY() * kTurnSpeed * deltaTime);
+		constexpr float kTurnSpeed = 1.0f;
+
+		camera.Yaw(static_cast<float>(inputSystem.GetMouseMoveX()) * kTurnSpeed * deltaTime);
+		camera.Pitch(static_cast<float>(inputSystem.GetMouseMoveY()) * kTurnSpeed * deltaTime);
 	}
 
 	// control the target
-	if (inputSystem->IsKeyDown(KeyCode::UP))
+	if (inputSystem.IsKeyDown(KeyCode::UP))
 	{
-		mTarget.y += kMoveSpeed * deltaTime;
+		mTarget.y += movementSpeed;
 	}
-	else if (inputSystem->IsKeyDown(KeyCode::DOWN))
+	else if (inputSystem.IsKeyDown(KeyCode::DOWN))
 	{
-		mTarget.y -= kMoveSpeed * deltaTime;
+		mTarget.y -= movementSpeed;
 	}
-	if (inputSystem->IsKeyDown(KeyCode::RIGHT))
+	if (inputSystem.IsKeyDown(KeyCode::RIGHT))
 	{
-		mTarget.x += kMoveSpeed * deltaTime;
+		mTarget.x += movementSpeed;
 	}
-	else if (inputSystem->IsKeyDown(KeyCode::LEFT))
+	else if (inputSystem.IsKeyDown(KeyCode::LEFT))
 	{
-		mTarget.x -= kMoveSpeed * deltaTime;
+		mTarget.x -= movementSpeed;
 	}
 
 	AnimationUtil::RunFABRIK(mPoints, mTarget);
@@ -86,19 +94,22 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render()
 {
-	for (size_t i = 0; i + 1 < mPoints.size(); ++i)
+	const size_t totalSize = mPoints.size();
+	for (size_t i{ 0 }; i + 1u < totalSize; ++i)
 	{
-		SimpleDraw::AddLine(mPoints[i], mPoints[i + 1], Colors::Green);
-		if (i + 1 != mPoints.size())
+		const Vector3 points = mPoints.at(i + 1);
+		SimpleDraw::AddLine(mPoints.at(i), points, Colors::Green);
+		if (i + 1u != totalSize)
 		{
-			SimpleDraw::AddSphere(mPoints[i + 1], 0.1f, 4, 8, Colors::Cyan);
+			SimpleDraw::AddSphere(points, 0.1f, 4, 8, Colors::Cyan);
 		}
 	}
 	SimpleDraw::AddAABB({ mTarget, { 0.2f, 0.2f, 0.2f } }, Colors::Red);
 
 	SimpleDraw::AddGroundPlane(30.0f);
 	SimpleDraw::AddTransform(Matrix4::Identity);
-	SimpleDraw::Render(mCamera);
+	const Camera& camera = mCameraService.GetActiveCamera();
+	SimpleDraw::Render(camera);
 }
 
 void GameState::DebugUI()
@@ -115,17 +126,17 @@ void GameState::DrawCounterFramesUI(bool active)
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	float fps = ImGui::GetIO().Framerate; //Get frames
 	const size_t frameSize = mVecFrames.size();
-	if (frameSize > mMaxFrameSize) //Max seconds to show
+	if (frameSize > MAX_FRAME) //Max seconds to show
 	{
 		for (size_t i = 1; i < frameSize; ++i)
 		{
-			mVecFrames[i - 1] = mVecFrames[i];
+			mVecFrames.at(i - 1u) = mVecFrames.at(i);
 		}
-		mVecFrames[frameSize - 1] = fps;
+		mVecFrames.at(frameSize - 1) = fps;
 	}
 	else
 	{
 		mVecFrames.push_back(fps);
 	}
-	ImGui::PlotLines("", &mVecFrames[0], static_cast<int>(frameSize), 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
+	ImGui::PlotLines("", &mVecFrames.at(0), MAX_FRAME, 0, NULL, 0.0f, 300.0f, ImVec2(250, 30));
 }

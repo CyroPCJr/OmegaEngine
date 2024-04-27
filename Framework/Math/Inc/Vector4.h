@@ -30,6 +30,7 @@ namespace Omega::Math
 
 		// multiplity vector by value scalar
 		constexpr Vector4 operator*(const float v) const { return { x * v, y * v, z * v, w * v }; }
+		friend constexpr Vector4 operator*(float v, const Vector4& vec) { return { vec.x * v, vec.y * v, vec.z * v, vec.w * v  }; }
 		constexpr Vector4 operator/(const float v) const { return { x / v, y / v, z / v, w / v }; }
 
 		// Assignment operators

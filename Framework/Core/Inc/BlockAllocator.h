@@ -15,7 +15,7 @@ namespace Omega::Core
 		BlockAllocator(BlockAllocator&&) = delete;
 		BlockAllocator& operator=(BlockAllocator&&) = delete;
 
-		void* Allocate();
+		void* Allocate() noexcept;
 		void Free(void* ptr);
 
 		constexpr size_t GetCapacity() const noexcept { return mCapacity; }

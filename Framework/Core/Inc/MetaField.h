@@ -13,12 +13,12 @@ namespace Omega::Core::Meta
 		void* GetFieldInstance(void* classInstance) const noexcept;
 
 		const MetaType* GetMetaType() const noexcept { return mType; }
-		constexpr std::string_view GetName() const noexcept { return mName; }
+		const std::string& GetName() const noexcept { return mName; }
 		constexpr size_t GetOffset() const noexcept { return mOffset; }
 
 	private:
 		const MetaType* mType;
-		const std::string_view mName;
+		const std::string mName;
 		const size_t mOffset;
 	};
 }

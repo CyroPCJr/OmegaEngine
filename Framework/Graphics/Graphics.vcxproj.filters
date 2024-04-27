@@ -150,9 +150,6 @@
     <ClInclude Include="Inc\SpriteRenderer.h">
       <Filter>Inc\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\SpriteRendererManager.h">
-      <Filter>Inc\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\TextureManager.h">
       <Filter>Inc\Renderer</Filter>
     </ClInclude>
@@ -161,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="Inc\RasterizerState.h">
       <Filter>Inc\RenderState</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\FontRenderer.h">
+      <Filter>Inc\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -251,10 +251,13 @@
     <ClCompile Include="Src\Font.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="Src\SpriteRendererManager.cpp">
+    <ClCompile Include="Src\RasterizerState.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="Src\RasterizerState.cpp">
+    <ClCompile Include="Src\FontRenderer.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RendererManager.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

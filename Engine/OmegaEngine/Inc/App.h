@@ -4,8 +4,6 @@
 
 namespace Omega
 {
-	//String view operatos reference
-	//https://learn.microsoft.com/en-us/cpp/standard-library/string-view-operators?view=msvc-170
 	struct AppConfig
 	{
 		std::string appName{ "Omega" };
@@ -28,7 +26,7 @@ namespace Omega
 				"[App] -- Cannot add type AppState which is not derived from StateType.");
 			// move semantic = ownership transfer, i.e pass the temporarily values to new owner. 
 			// could be represent as swallow copy
-			mAppState.emplace(name, std::make_unique<StateType>());
+			mAppState.emplace(std::string(name), std::make_unique<StateType>());
 		}
 
 		void ChangeState(std::string_view name);
@@ -36,14 +34,14 @@ namespace Omega
 		void Run(const AppConfig& appConfig);
 		void Quit() noexcept { mRunning = false; }
 
-		float GetTime();
-
 	private:
+		void Terminate();
+
 		Core::Window mWindow;
-		std::map<std::string_view, std::unique_ptr<AppState>> mAppState;
+		std::map<std::string, std::unique_ptr<AppState>> mAppState;
 		AppState* mCurrentState = nullptr;
 		AppState* mNextState = nullptr;
-		bool mRunning = false;
+		bool mRunning{ false };
 		char mPadding[3]{};
 	};
 

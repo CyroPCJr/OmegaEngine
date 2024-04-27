@@ -2,6 +2,6 @@
 
 namespace Omega::Core::TimeUtil
 {
-	float GetTime() noexcept;
-	float GetDeltaTime() noexcept;
+	const float GetTime() noexcept;
+	const float GetDeltaTime() noexcept;
 }

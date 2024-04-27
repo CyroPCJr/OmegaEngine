@@ -15,7 +15,8 @@ void Skydome::Initialize(const std::filesystem::path& texturePath)
 
 	std::filesystem::path rootImages = L"../../Assets/Textures";
 	mSamplers.Initialize(Sampler::Filter::Anisotropic, Sampler::AddressMode::Wrap);
-	mSkyDomeTexture.Initialize(rootImages / texturePath);
+	//TODO: corrigir isso e executar o ctor ao inves do metodo Initialize
+	//mSkyDomeTexture.Initialize(rootImages / texturePath);
 	mConstantBufferSkyDome.Initialize(sizeof(Matrix4));
 }
 
@@ -52,7 +53,6 @@ void Skydome::Update(const Camera& camera)
 void Skydome::Terminate()
 {
 	mConstantBufferSkyDome.Terminate();
-	mSkyDomeTexture.Terminate();
 	mSamplers.Terminate();
 	mPSSkyDome.Terminate();
 	mVSSkyDome.Terminate();
