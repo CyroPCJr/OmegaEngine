@@ -66,10 +66,10 @@ void Cloth::Update(float deltaTime)
 
 	if (mShowCloth)
 	{
-		for (size_t i = 0; i < mPhysicsWorld.GetParticles().size(); ++i)
+		/*for (size_t i = 0; i < mPhysicsWorld.GetParticles().size(); ++i)
 		{
 			mMeshPlane.vertices[i].position = mPhysicsWorld.GetParticles()[i]->position;
-		}
+		}*/
 	}
 }
 
@@ -86,18 +86,19 @@ void Cloth::Terminate()
 void Cloth::InitializeParticles()
 {
 	Math::Vector3 offset = { -0.5f * mSettings.width + mSettings.startPosition.x, 0.5f * mSettings.height + mSettings.startPosition.y, 0.0f };
-	mParticles.clear();
+	//mParticles.clear();
 	mPhysicsWorld.Clear(true);
 	for (uint32_t y = 0; y < mSettings.height; y++)
 	{
 		for (uint32_t x = 0; x < mSettings.width; x++)
 		{
-			auto particle = std::make_unique<Particle>();
-			particle->SetPosition({ offset.x + static_cast<float>(x), offset.y - static_cast<float>(y) , offset.z });
+			//auto particle = std::make_unique<Particle>();
+			
+			/*particle->SetPosition({ offset.x + static_cast<float>(x), offset.y - static_cast<float>(y) , offset.z });
 			particle->SetVelocity(Random::RandomVector3({ -0.05f, -0.01f, -0.05f }, { 0.01f, 0.5f, 0.05f }));
 			particle->radius = 0.1f;
-			particle->bounce = 0.3f;
-			mPhysicsWorld.AddParticle(particle);
+			particle->bounce = 0.3f;*/
+			//mPhysicsWorld.AddParticle(particle);
 
 
 			//BCK
@@ -111,38 +112,38 @@ void Cloth::InitializeParticles()
 	}
 
 
-	for (uint32_t y = 0; y < mSettings.height; y++)
-	{
-		for (uint32_t x = 0; x < mSettings.width; x++)
-		{
-			const auto particle = mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get();
+	//for (uint32_t y = 0; y < mSettings.height; y++)
+	//{
+	//	for (uint32_t x = 0; x < mSettings.width; x++)
+	//	{
+	//		const auto particle = mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get();
 
-			////if (y == 0 && (x == 0 || x == static_cast<int>(mWidth * 0.5f) || x == mWidth - 1))
-			if (y == 0 || x == mSettings.width) // now fixed the particles all in the top position
-			{
-				//auto c1 = new Fixed(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get()); // fixed
-				std::unique_ptr<Constraint> c1 = std::make_unique<Fixed>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get());
-				
-				mPhysicsWorld.AddConstraint(c1);
-			}
+	//		////if (y == 0 && (x == 0 || x == static_cast<int>(mWidth * 0.5f) || x == mWidth - 1))
+	//		if (y == 0 || x == mSettings.width) // now fixed the particles all in the top position
+	//		{
+	//			//auto c1 = new Fixed(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get()); // fixed
+	//			std::unique_ptr<Constraint> c1 = std::make_unique<Fixed>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get());
+	//			
+	//			mPhysicsWorld.AddConstraint(c1);
+	//		}
 
-			if (x + 1 < mSettings.width)
-			{
-				//auto c1 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
-				std::unique_ptr<Constraint> c1 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
-				//auto nextParticle = mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get();
-				//std::unique_ptr<Constraint> c1 = std::make_unique<Spring>(particle, nextParticle);
-				mPhysicsWorld.AddConstraint(c1);
-			}
+	//		if (x + 1 < mSettings.width)
+	//		{
+	//			//auto c1 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
+	//			std::unique_ptr<Constraint> c1 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get());
+	//			//auto nextParticle = mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get();
+	//			//std::unique_ptr<Constraint> c1 = std::make_unique<Spring>(particle, nextParticle);
+	//			mPhysicsWorld.AddConstraint(c1);
+	//		}
 
-			if (y + 1 < mSettings.height)
-			{
-				//auto c2 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
-				std::unique_ptr<Constraint> c2 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
-				//auto nextParticle = mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get();
-				//std::unique_ptr<Constraint> c2 = std::make_unique<Spring>(particle, nextParticle);
-				mPhysicsWorld.AddConstraint(c2);
-			}
-		}
-	}
+	//		if (y + 1 < mSettings.height)
+	//		{
+	//			//auto c2 = new Spring(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
+	//			std::unique_ptr<Constraint> c2 = std::make_unique<Spring>(mPhysicsWorld.GetParticles()[GetIndex(x, y, mSettings.width)].get(), mPhysicsWorld.GetParticles()[GetIndex(x, y + 1, mSettings.width)].get());
+	//			//auto nextParticle = mPhysicsWorld.GetParticles()[GetIndex(x + 1, y, mSettings.width)].get();
+	//			//std::unique_ptr<Constraint> c2 = std::make_unique<Spring>(particle, nextParticle);
+	//			mPhysicsWorld.AddConstraint(c2);
+	//		}
+	//	}
+	//}
 }

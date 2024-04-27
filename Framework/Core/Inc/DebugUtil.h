@@ -2,6 +2,7 @@
 
 #include "EventHandler.h"
 #include "TimeUtil.h"
+#include <sstream>
 
 namespace Omega::Core
 {
@@ -38,6 +39,28 @@ namespace Omega::Core
 #define LOG(format, ...)
 #define OMEGAASSERT(condition, format, ...) do { (void)(sizeof(condition)); } while (false)
 #endif
+
+//#ifdef _DEBUG
+//#define LOG(format, ...) \
+//    do { \
+//        std::ostringstream oss; \
+//        oss << "[" << Omega::Core::TimeUtil::GetTime() << "]: " << __VA_ARGS__ << '\n'; \
+//        OutputDebugStringA(oss.str().c_str()); \
+//        Omega::Core::OnDebugLog(oss.str()); \
+//    } while (false)
+//
+//#define OMEGAASSERT(condition, format, ...) \
+//    do { \
+//        if (!(condition)) \
+//        { \
+//            LOG("%s(%d) "##format, __FILE__, __LINE__, __VA_ARGS__); \
+//            DebugBreak(); \
+//        } \
+//    } while (false)
+//#else
+//#define LOG(format, ...)
+//#define OMEGAASSERT(condition, format, ...) do { (void)(sizeof(condition)); } while (false)
+//#endif
 
 
 /*

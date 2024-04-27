@@ -38,9 +38,8 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint
 	classInfo.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
 	RegisterClassExA(&classInfo);
 
-
 	//  Compute the correct window dimension
-	RECT rc = { 0l,0l, {width}, {height} };
+	RECT rc = { 0l,0l, static_cast<LONG>(width), static_cast<LONG>(height) };
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
 	const int screenWidth = GetSystemMetrics(SM_CXSCREEN);

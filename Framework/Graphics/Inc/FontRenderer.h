@@ -12,7 +12,7 @@ namespace Omega::Graphics
 		struct TextCommand
 		{
 			TextCommand(std::wstring inStr, float inSize, float inX, float inY, const Color& inColor) noexcept
-				: str(std::move(inStr)), size(inSize), x(inX), y(inY), color(inColor)
+				: str(std::move(inStr)), color(inColor), size(inSize), x(inX), y(inY)
 			{}
 
 			TextCommand(std::wstring_view inStr, float inSize, const Math::Vector2& inPosition, const Color& inColor)

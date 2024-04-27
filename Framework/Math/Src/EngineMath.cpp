@@ -267,9 +267,10 @@ bool Omega::Math::Intersect(const Ray& ray, const Plane& plane, float& distance)
 	const float dirDotN = Dot(ray.direction, plane.n);
 
 	// Check if ray is parallel to the plane
-	if (Abs(dirDotN) < 0.0001f)
+	
+	if (Abs(dirDotN) < Constants::Epsilon) //0.0001f
 	{
-		if (Abs(orgDotN - plane.d) < 0.0001f)
+		if (Abs(orgDotN - plane.d) < Constants::Epsilon)
 		{
 			distance = 0.0f;
 			return true;
@@ -302,7 +303,14 @@ bool Omega::Math::IsContained(const Vector3& point, const AABB& aabb)
 bool Omega::Math::IsContained(const Vector3& point, const OBB& obb)
 {
 	// Compute the world-to-local matrices
-	const Math::Matrix4 toLocal = WorldToLocalMatrix(obb.center, obb.rot, obb.extend);
+	//const Math::Matrix4 toLocal = WorldToLocalMatrix(obb.center, obb.rot, obb.extend);
+
+	// Compute the world-to-local matrices
+	const Math::Matrix4 matTrans = Math::Matrix4::Translation(obb.center);
+	const Math::Matrix4 matRotation = Math::Matrix4::RotationQuaternion(obb.rot);
+	Math::Matrix4 matScale = Math::Matrix4::Scaling(obb.extend);
+	const Math::Matrix4 toWorld = matScale * matRotation * matTrans;
+	const Math::Matrix4 toLocal = Inverse(toWorld);
 
 	// Transform the point into the OBB's local space
 	const Vector3 localPoint = TransformCoord(point, toLocal);
@@ -314,11 +322,17 @@ bool Omega::Math::IsContained(const Vector3& point, const OBB& obb)
 bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal)
 {
 	// Compute the local-to-world/world-to-local matrices
-	const Math::Matrix4 toLocal = WorldToLocalMatrix(obb.center, obb.rot);
+	// Compute the local-to-world/world-to-local matrices
+	const Matrix4 matTrans = Matrix4::Translation(obb.center);
+	Matrix4 matRot = Matrix4::RotationQuaternion(obb.rot);
+	const Matrix4 matWorld = matRot * matTrans;
+	const Matrix4 matWorldInv = Inverse(matWorld);
+
+	//const Math::Matrix4 toLocal = WorldToLocalMatrix(obb.center, obb.rot);
 
 	// Transform the ray into the OBB's local space
-	const Vector3 org = TransformCoord(ray.origin, toLocal);
-	const Vector3 dir = TransformNormal(ray.direction, toLocal);
+	const Vector3 org = TransformCoord(ray.origin, matWorldInv);
+	const Vector3 dir = TransformNormal(ray.direction, matWorldInv);
 	const Ray localRay{ org, dir };
 
 	std::vector<Plane> planes = {
@@ -358,8 +372,8 @@ bool Omega::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point
 		return false;
 	}
 
-	point = TransformCoord(point, toLocal);
-	normal = TransformNormal(normal, toLocal);
+	point = TransformCoord(point, matWorld);
+	normal = TransformNormal(normal, matWorld);
 	return true;
 
 }

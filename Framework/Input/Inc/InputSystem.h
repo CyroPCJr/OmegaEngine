@@ -80,17 +80,17 @@ namespace Omega::Input {
 
 	private:
 		static LRESULT CALLBACK InputSystemMessageHandler(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
-
-		HWND mWindow = nullptr;
-
-		std::unique_ptr<DirectX::GamePad> mGamePad;
 		DirectX::GamePad::State mGamePadState[4]{};
 
 		bool mCurrKeys[512]{};
 		bool mPrevKeys[512]{};
 		bool mPressedKeys[512]{};
 
-		bool mClipMouseToWindow = false;
+		HWND mWindow = nullptr;
+
+		std::unique_ptr<DirectX::GamePad> mGamePad;
+
+		float mMouseWheel = 0.0f;
 
 		int mCurrMouseX = -1;
 		int mCurrMouseY = -1;
@@ -98,11 +98,13 @@ namespace Omega::Input {
 		int mPrevMouseY = -1;
 		int mMouseMoveX = 0;
 		int mMouseMoveY = 0;
+		int mPadding{0};
 
-		float mMouseWheel = 0.0f;
+		bool mClipMouseToWindow = false;
 
 		bool mCurrMouseButtons[3]{};
 		bool mPrevMouseButtons[3]{};
+		bool mSecondPadding{};
 		bool mPressedMouseButtons[3]{};
 
 		bool mMouseLeftEdge = false;

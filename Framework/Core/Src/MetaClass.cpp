@@ -59,7 +59,7 @@ size_t MetaClass::GetFieldCount() const noexcept
 
 void* MetaClass::Create() const
 {
-	OMEGAASSERT(mCreate, "[MetaClass] -- No creation callable registered for '%s'.", GetName());
+	OMEGAASSERT(mCreate == nullptr, "[MetaClass] -- No creation callable registered for '%s'.", GetName());
 	return mCreate();
 }
 

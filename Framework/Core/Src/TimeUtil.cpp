@@ -23,4 +23,5 @@ namespace Omega::Core::TimeUtil
 		lastTime = currentTime;
 		return delta.count();
 	}
+	
 }

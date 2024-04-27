@@ -17,8 +17,7 @@ namespace Omega::Graphics
 		struct SpriteCommand
 		{
 			SpriteCommand(TextureId t_textureId, const Math::Vector2& t_posiiton, float t_rotation) noexcept
-				: textureId(t_textureId), sourceRect({ 0.0f, 0.0f, 0.0f, 0.0f }), position(t_posiiton)
-				, rotation(t_rotation)
+				: sourceRect({ 0.0f, 0.0f, 0.0f, 0.0f }), position(t_posiiton), textureId(t_textureId), rotation(t_rotation)
 			{}
 
 			SpriteCommand(TextureId t_textureId, const Math::Vector2& t_posiiton, float t_rotation, Pivot t_pivot, Flip t_flip) noexcept

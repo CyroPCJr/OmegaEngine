@@ -5,6 +5,9 @@
 class GameState final : public Omega::AppState
 {
 public:
+
+	~GameState() noexcept = default;
+
 	void Initialize() override;
 	void Terminate() override;
 
@@ -12,8 +15,13 @@ public:
 	void Render() override;
 	void DebugUI() override;
 
+	void RawParticles();
+	void UseStickParticles();
+	void UseTetrahedronParticles();
+
 private:
+	Omega::Physics::PhysicsWorld mPhysicsWorld;
 	Omega::CameraService mCameraService;
 	std::optional<std::reference_wrapper<Omega::Graphics::RendererManager>> mRenderManager;
-	std::array<Omega::Graphics::TextureId, 1> mTexturesIds{ 0 };
+	std::array<Omega::Graphics::TextureId, 1u> mTexturesIds{ 0u };
 };

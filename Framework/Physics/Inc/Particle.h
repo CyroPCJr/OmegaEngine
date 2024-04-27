@@ -24,5 +24,6 @@ namespace Omega::Physics
 		{
 			lastPosition = position - vel;
 		}
+
 	};
 }

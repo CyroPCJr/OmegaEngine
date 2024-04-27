@@ -1,10 +1,10 @@
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
-#include "Colors.h"
-
+#include <Core/Inc/FpsHelper.h>
 
 using namespace Omega;
 using namespace Omega::Graphics;
+using namespace Omega::Core;
 
 namespace
 {
@@ -135,15 +135,17 @@ void GraphicsSystem::Terminate()
 	SafeRelease(mD3DDevice);
 }
 
-void GraphicsSystem::BeginRender()
+void GraphicsSystem::BeginRender(Omega::Core::FpsHelper& funcBeginFrame) 
 {
+	funcBeginFrame.BeginFrame();
 	mImmediateContext->OMSetRenderTargets(1u, &mRenderTargetView, mDepthStencilView);
 	mImmediateContext->ClearRenderTargetView(mRenderTargetView, reinterpret_cast<FLOAT*>(&mClearColor));
 	mImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
-void GraphicsSystem::EndRender()
+void GraphicsSystem::EndRender(Omega::Core::FpsHelper& funcEndFrame) const
 {
+	funcEndFrame.EndFrame();
 	mSwapChain->Present(mVSync, 0u);
 }
 

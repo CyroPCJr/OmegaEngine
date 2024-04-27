@@ -10,13 +10,12 @@ BlockAllocator::BlockAllocator(size_t blockSize, size_t capacity)
 	, mBlockSize(blockSize)
 	, mCapacity(capacity)
 {
-	OMEGAASSERT(capacity > 0, "[%s] Invalid capacity.", __FUNCTION__);
-	mFreeSlots.reserve(capacity);
+	OMEGAASSERT(capacity > 0u, "Invalid capacity.");
+	mFreeSlots.resize(capacity);
 	mData = malloc(blockSize * capacity);
-	for (size_t i = 0; i < capacity; ++i)
-	{
-		mFreeSlots.emplace_back(i);
-	}
+	int i = 0;
+	std::generate(mFreeSlots.begin(), mFreeSlots.end(), [&i]() {
+		return ++i; });
 }
 
 BlockAllocator::~BlockAllocator()
@@ -25,7 +24,7 @@ BlockAllocator::~BlockAllocator()
 	free(mData);
 }
 
-void* BlockAllocator::Allocate()
+void* BlockAllocator::Allocate() noexcept
 {
 	if (mFreeSlots.empty()) return nullptr;
 	const size_t key = mFreeSlots.back();
@@ -35,6 +34,8 @@ void* BlockAllocator::Allocate()
 
 void BlockAllocator::Free(void* ptr)
 {
-	auto giveBackSlot = sizeof(&ptr - &mData) / mBlockSize;
+	constexpr int sizePtr = sizeof(&ptr);
+	constexpr int sizeData = sizeof(&mData);
+	auto giveBackSlot = (sizePtr - sizeData) / mBlockSize;
 	mFreeSlots.emplace_back(giveBackSlot);
 }

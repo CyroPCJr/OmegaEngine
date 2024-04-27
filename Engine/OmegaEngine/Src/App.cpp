@@ -16,7 +16,7 @@ namespace
 
 void App::ChangeState(std::string_view name)
 {
-	if (const auto& iter = mAppState.find(std::string(name)); 
+	if (const auto& iter = mAppState.find(std::string(name));
 		iter != mAppState.end())
 	{
 		mNextState = iter->second.get();
@@ -40,6 +40,7 @@ void App::Run(const AppConfig& appConfig)
 		appConfig.windowHeight);
 
 	// Initialize the input system
+	Omega::Core::FpsHelper fpsCounter;
 	const auto& handle = mWindow.GetWindow();
 	InputSystem::StaticInitialize(handle);
 
@@ -59,9 +60,9 @@ void App::Run(const AppConfig& appConfig)
 	mCurrentState->Initialize();
 
 	mRunning = true;
-	
 	auto& inputSystem = InputSystem::Get()->get();
 	auto& rendererManager = RendererManager::Get()->get();
+
 	while (mRunning)
 	{
 		mWindow.ProcessMessage();
@@ -77,44 +78,39 @@ void App::Run(const AppConfig& appConfig)
 			mCurrentState = std::exchange(mNextState, nullptr);
 			mCurrentState->Initialize();
 		}
-		
+
 		inputSystem.Update();
 
 		mCurrentState->Update(TimeUtil::GetDeltaTime());
 
-		graphicsSystem.BeginRender();
-
+		graphicsSystem.BeginRender(fpsCounter);
 		mCurrentState->Render();
+		fpsCounter.Update();
 		rendererManager.Render();
 
 		DebugUI::BeginRender();
 		mCurrentState->DebugUI();
 		DebugUI::EndRender();
 
-		graphicsSystem.EndRender();
+		graphicsSystem.EndRender(fpsCounter);
 
 		//OnGameLoop
 	}
 	// OnCleanUp
 #pragma endregion
+	Terminate();
 
-#pragma region Terminate engine system
+}
 
+void App::Terminate()
+{
 	DebugUI::StaticTerminate();
 	InputSystem::StaticTerminate();
 	GraphicsSystem::StaticTerminate();
 	SimpleDraw::StaticTerminate();
 	RendererManager::StaticTerminate();
-	
+
 	mCurrentState->Terminate();
 
 	mWindow.Terminate();
-
-#pragma endregion
-
-}
-
-float App::GetTime()
-{
-	return TimeUtil::GetTime();
 }

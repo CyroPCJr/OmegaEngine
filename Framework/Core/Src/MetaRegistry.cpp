@@ -27,6 +27,6 @@ void Meta::Register(const Meta::MetaClass* metaClass)
 const Meta::MetaClass* Meta::FindMetaClass(std::string_view className)
 {
 	const auto iter = GetRegistry().find(className);
-	OMEGAASSERT(iter != GetRegistry().end(), "[MetaRegistry] --- Meta class for %s not found.", className);
+	OMEGAASSERT(iter != GetRegistry().end(), "[MetaRegistry] --- Meta class for %s not found.", std::string(className));
 	return iter->second;
 }

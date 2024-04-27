@@ -231,8 +231,10 @@ void InputSystem::Update()
 	memcpy(mPrevMouseButtons, mCurrMouseButtons, sizeof(mCurrMouseButtons));
 
 	// Update game pad
-	for (size_t i = 0; i < std::size(mGamePadState); ++i)
+	for (size_t i = 0, size = std::size(mGamePadState); i < size; ++i)
+	{
 		mGamePadState[i] = mGamePad->GetState((int)i);
+	}
 }
 
 bool InputSystem::IsKeyDown(KeyCode key) const

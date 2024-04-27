@@ -113,7 +113,7 @@ void SpriteRenderer::Draw(const Texture& texture, SpriteCommand&& spriteCommands
 		rect.top = static_cast<LONG>(rectangle.top);
 		rect.right = static_cast<LONG>(rectangle.right);
 		rect.bottom = static_cast<LONG>(rectangle.bottom);
-		origin = GetOrigin((rect.right - rect.left), (rect.bottom - rect.top), pivot);
+		origin = GetOrigin(static_cast<uint32_t>(rectangle.right - rectangle.left), static_cast<uint32_t>(rectangle.bottom - rectangle.top), pivot);
 	}
 	else
 	{
@@ -122,7 +122,6 @@ void SpriteRenderer::Draw(const Texture& texture, SpriteCommand&& spriteCommands
 	const DirectX::SpriteEffects effects = GetSpriteEffects(flip);
 	mSpriteBatch->Draw(texture.GetShaderResourceView(), ToXMFLOAT2(position), !emptyRect ? &rect : nullptr, DirectX::Colors::White, rotation, origin, 1.0f, effects);
 }
-
 
 DirectX::XMFLOAT2 SpriteRenderer::GetOrigin(uint32_t width, uint32_t height, Pivot pivot)
 {

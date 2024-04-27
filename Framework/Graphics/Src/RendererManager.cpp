@@ -34,7 +34,7 @@ std::optional<std::reference_wrapper<RendererManager>> RendererManager::Get()
 	OMEGAASSERT(sRendererManager != nullptr, "[SpriteRendererManager] Sprite Renderer Manager is not initialized.");
 	if (sRendererManager)
 	{
-		return std::reference_wrapper<RendererManager>(*sRendererManager);
+		return std::reference_wrapper<RendererManager>(*sRendererManager).get();
 	}
 	return std::nullopt;
 }

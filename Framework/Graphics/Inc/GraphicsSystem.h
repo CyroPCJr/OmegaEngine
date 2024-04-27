@@ -4,6 +4,8 @@
 
 namespace Omega::Graphics {
 
+	class Omega::Core::FpsHelper;
+
 	class GraphicsSystem final
 	{
 	public:
@@ -24,8 +26,8 @@ namespace Omega::Graphics {
 		void Initialize(HWND window, bool fullscreen);
 		void Terminate();
 
-		void BeginRender();
-		void EndRender();
+		void BeginRender(Omega::Core::FpsHelper& funcBeginFrame);
+		void EndRender(Omega::Core::FpsHelper& funcEndFrame) const;
 
 		void ToggleFullscreen();
 		void Resize(uint32_t width, uint32_t height);

@@ -64,7 +64,7 @@ namespace Omega
 		constexpr GameWorld& GetWorld() noexcept { return *mWorld; }
 		constexpr const GameWorld& GetWorld() const noexcept { return *mWorld; }
 
-		void SetName(std::string_view name) noexcept { mName = name; }
+		void SetName(std::string_view name) { mName = name; }
 		std::string_view GetName() const noexcept { return mName; }
 
 		GameObjectHandle GetHandle() const noexcept { return mHandle; }

@@ -9,6 +9,7 @@ void Camera::SetPosition(const Math::Vector3& position) noexcept
 {
 	mPosition = position;
 }
+
 void Camera::SetDirection(const Math::Vector3& direction)
 {
 	mDirection = Math::Normalize(direction);
@@ -23,6 +24,7 @@ void Camera::Walk(float distance)
 {
 	mPosition += mDirection * distance;
 }
+
 void Camera::Strafe(float distance)
 {
 	const Math::Vector3 right = Math::Normalize(Math::Cross(Math::Vector3::YAxis, mDirection));
