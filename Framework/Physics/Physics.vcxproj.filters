@@ -27,7 +27,9 @@
     <ClInclude Include="Inc\Constraints.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Inc\ParticleManager.h" />
+    <ClInclude Include="Inc\ParticleManager.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -39,6 +41,8 @@
     <ClCompile Include="Src\Constraints.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="Src\ParticleManager.cpp" />
+    <ClCompile Include="Src\ParticleManager.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
