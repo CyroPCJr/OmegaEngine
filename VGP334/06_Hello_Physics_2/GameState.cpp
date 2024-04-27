@@ -41,29 +41,20 @@ void GameState::Terminate()
 
 void GameState::Update(float deltaTime)
 {
-	const auto inputSystem = InputSystem::Get();
+	const auto& inputSystem = InputSystem::Get();
 	const float kMoveSpeed = inputSystem->get().IsKeyDown(KeyCode::LSHIFT) ? 100.0f : 10.0f;
 	const float moveSpeedDelta = kMoveSpeed * deltaTime;
 
 	Camera& camera = mCameraService.GetActiveCamera();
 
-	if (inputSystem->get().IsKeyDown(KeyCode::W))
-	{
-		camera.Walk(moveSpeedDelta);
-	}
+	const bool moveForward = inputSystem->get().IsKeyDown(KeyCode::W);
+	const bool moveBackward = inputSystem->get().IsKeyDown(KeyCode::S);
+	const bool moveRight = inputSystem->get().IsKeyDown(KeyCode::D);
+	const bool moveLeft = inputSystem->get().IsKeyDown(KeyCode::A);
 
-	if (inputSystem->get().IsKeyDown(KeyCode::S))
-	{
-		camera.Walk(-moveSpeedDelta);
-	}
-	if (inputSystem->get().IsKeyDown(KeyCode::D))
-	{
-		camera.Strafe(moveSpeedDelta);
-	}
-	if (inputSystem->get().IsKeyDown(KeyCode::A))
-	{
-		camera.Strafe(-moveSpeedDelta);
-	}
+	camera.Walk(moveSpeedDelta * (moveForward - moveBackward));
+	camera.Strafe(moveSpeedDelta * (moveRight - moveLeft));
+
 	if (inputSystem->get().IsMouseDown(MouseButton::RBUTTON))
 	{
 		constexpr float kTurnSpeed = 1.0f;
@@ -126,82 +117,4 @@ void GameState::DebugUI()
 	}
 
 	ImGui::End();
-}
-
-void GameState::RawParticles()
-{
-	/*if (auto& tempPool = mPhysicsWorld.GetPoolParticle();
-		tempPool.ObjectInUse() < tempPool.Size())
-	{
-		auto InitializeParticle = [&](Particle& particle, const Omega::Math::Vector3& position)
-			{
-				Omega::Math::RandomHelper randomHelper;
-				particle.SetPosition(position);
-				particle.SetVelocity({ randomHelper.RandomVector3({-0.05f, 0.1f, -0.05f},{0.05f, 0.5f, 0.05f}) });
-				particle.radius = 0.1f;
-				particle.bounce = 0.3f;
-			};
-
-		const auto& particle = tempPool.AcquireObject().lock();
-		InitializeParticle(*particle, { 0.0f, 5.0f, 0.0f });
-	}*/
-}
-
-void GameState::UseStickParticles()
-{
-	/*if (auto& pool = mPhysicsWorld.GetPoolParticle();
-		pool.ObjectInUse() <= pool.Size() - 2u)
-	{
-		auto InitializeParticle = [&](Particle& particle, const Omega::Math::Vector3& position)
-			{
-				Omega::Math::RandomHelper randomHelper;
-				particle.SetPosition(position);
-				particle.SetVelocity({ randomHelper.RandomVector3({-0.05f, 0.1f, -0.05f},{0.05f, 0.5f, 0.05f}) });
-				particle.radius = 0.1f;
-				particle.bounce = 0.3f;
-			};
-
-		auto particle1 = pool.AcquireObject().lock();
-		auto particle2 = pool.AcquireObject().lock();
-
-		InitializeParticle(*particle1, { 0.5f, 5.0f, 0.0f });
-		InitializeParticle(*particle2, { -0.5f, 5.0f, 0.0f });
-
-		mPhysicsWorld.CreateSpring({ particle1.get(), particle2.get() });
-	}*/
-}
-
-void GameState::UseTetrahedronParticles()
-{
-	/*if (auto& pool = mPhysicsWorld.GetPoolParticle();
-		pool.ObjectInUse() <= pool.Size() - 4u)
-	{
-		auto InitializeParticle = [&](Particle& particle, const Omega::Math::Vector3& position)
-			{
-				Omega::Math::RandomHelper randomHelper;
-				particle.SetPosition(position);
-				particle.SetVelocity({ randomHelper.RandomVector3({-0.05f, 0.1f, -0.05f},{0.05f, 0.5f, 0.05f}) });
-				particle.radius = 0.1f;
-				particle.bounce = 0.3f;
-			};
-
-		auto particle1 = pool.AcquireObject().lock();
-		auto particle2 = pool.AcquireObject().lock();
-		auto particle3 = pool.AcquireObject().lock();
-		auto particle4 = pool.AcquireObject().lock();
-
-		InitializeParticle(*particle1, { -0.5f, 5.0f, 0.0f });
-		InitializeParticle(*particle2, { 0.0f, 5.0f, 1.0f });
-		InitializeParticle(*particle3, { 0.5f, 5.0f, 0.0f });
-		InitializeParticle(*particle4, { 0.0f, 6.0f, 0.0f });
-
-		mPhysicsWorld.CreateSpring({ particle1.get(), particle2.get() });
-		mPhysicsWorld.CreateSpring({ particle2.get(), particle3.get() });
-		mPhysicsWorld.CreateSpring({ particle3.get(), particle1.get() });
-
-		mPhysicsWorld.CreateSpring({ particle1.get(), particle4.get() });
-		mPhysicsWorld.CreateSpring({ particle2.get(), particle4.get() });
-		mPhysicsWorld.CreateSpring({ particle3.get(), particle4.get() });
-	}*/
-
 }

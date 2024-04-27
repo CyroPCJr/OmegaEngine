@@ -15,10 +15,6 @@ public:
 	void Render() override;
 	void DebugUI() override;
 
-	void RawParticles();
-	void UseStickParticles();
-	void UseTetrahedronParticles();
-
 private:
 	Omega::Physics::PhysicsWorld mPhysicsWorld;
 	Omega::CameraService mCameraService;
